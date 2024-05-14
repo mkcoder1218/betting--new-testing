@@ -12,18 +12,20 @@ function App() {
 
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false)
+  const [cancelRedeem, setCancelRedeem] = useState("redeem")
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleRedeemOpen = () => setRedeemStatus(true);
   const handleRedeemClose = () => setRedeemStatus(false);
+  const handleCancelRedeem = (val: string) => setCancelRedeem(val);
 
   return (
     <div className='bg-white'>
       <CashierOptions open={open} handleClose={handleClose} />
-      <RedeemTicket open={redeemOpen} handleClose={handleRedeemClose} type='redeem' />
-      <CashierHeader handleOpen={handleOpen} handleRedeemOpen={handleRedeemOpen} />
+      <RedeemTicket open={redeemOpen} handleClose={handleRedeemClose} type={cancelRedeem} />
+      <CashierHeader handleOpen={handleOpen} handleRedeemOpen={handleRedeemOpen} handleCancelRedeem={handleCancelRedeem} />
       <div className='border-gray-300 border-t-4 p-4 flex justify-between'>
         <div className='left gap-4'>
           <GameIllustration />

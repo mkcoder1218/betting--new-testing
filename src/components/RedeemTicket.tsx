@@ -2,6 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { MdOutlineCancel } from "react-icons/md";
+import NumberPad from './NumberPad';
 
 
 interface RedeemTicketProps {
@@ -26,6 +27,20 @@ const style = {
 };
 
 export default function RedeemTicket({ open, handleClose, type }: RedeemTicketProps) {
+    const [value, setValue] = React.useState('');
+
+    const handleEnter = (input: any) => {
+        console.log('Entered:', input);
+    };
+
+    const handleClear = () => {
+        console.log('Cleared');
+    };
+
+    const handleDelete = () => {
+        console.log('Deleted');
+    };
+
     return (
         <div>
             <Modal
@@ -40,8 +55,12 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                         <MdOutlineCancel onClick={handleClose} size={24} className='text-black' />
                     </div>
                     <div className='options-content bg-white p-6'>
-                        <Box sx={{ width: '100%' }}>
-
+                        <Box>
+                            <div className=''>
+                                <p>Enter betslip code or scan</p>
+                                <input maxLength={20} style={{ width: "40%" }} type="text" className='p-2 mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
+                            </div>
+                            <NumberPad onEnter={handleEnter} onClear={handleClear} onDelete={handleDelete} />
                         </Box>
                     </div>
                 </Box>

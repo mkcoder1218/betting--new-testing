@@ -4,9 +4,15 @@ import { TiCancel } from "react-icons/ti";
 interface CashierHeaderOptions {
     handleOpen: () => void;
     handleRedeemOpen: () => void;
+    handleCancelRedeem: (val: string) => void
 }
 
-export default function CashierHeader({ handleOpen, handleRedeemOpen }: CashierHeaderOptions) {
+export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCancelRedeem }: CashierHeaderOptions) {
+    const openCancelRedeem = (val: string) => {
+        handleCancelRedeem(val);
+        handleRedeemOpen();
+    }
+
     return (
         <div className='header-container bg-slate-200 items-center pl-4 pr-4 flex justify-between'>
             <div className='text-xl text-black font-bold'>
@@ -16,11 +22,11 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen }: CashierH
                 <button onClick={handleOpen} className='p-2 bg-green-600 text-white rounded-md'>
                     Cashier Options
                 </button>
-                <button onClick={handleRedeemOpen} className='p-2 flex items-center gap-1 bg-blue-800 text-white rounded-md'>
+                <button onClick={() => openCancelRedeem("redeem")} className='p-2 flex items-center gap-1 bg-blue-800 text-white rounded-md'>
                     <span className='pl-2'>Redeem</span>
                     <GiConfirmed size={20} />
                 </button>
-                <button className='p-2 flex items-center gap-1 bg-yellow-600 text-white rounded-md'>
+                <button onClick={() => openCancelRedeem("cancel")} className='p-2 flex items-center gap-1 bg-yellow-600 text-white rounded-md'>
                     <span className='pl-2'>Cancel</span>
                     <TiCancel size={20} />
                 </button>
