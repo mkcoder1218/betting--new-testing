@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../features/hooks';
+import { addPickedNumbers } from '../features/slices/pickerSlice';
 
 const NumberPicker: React.FC = () => {
+    const dispatch = useAppDispatch();
+    const pickedNumbers = useAppSelector(state => state.picker.selected);
     const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
 
     const toggleNumber = (number: number) => {
         setSelectedNumbers(prevNumbers =>
             prevNumbers.includes(number)
                 ? prevNumbers.filter(n => n !== number)
-                : [...prevNumbers, number]
+                : selectedNumbers.length >= 10 ? [...prevNumbers] : [...prevNumbers, number]
         );
+
+        dispatch(addPickedNumbers(number));
+        console.log(pickedNumbers);
     };
 
     return (

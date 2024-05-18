@@ -1,6 +1,5 @@
 import { FaShuffle } from "react-icons/fa6"
 
-
 export default function TicketSelector() {
     return (
         <div className='mid-row flex items-center content-center mt-2 gap-3'>
