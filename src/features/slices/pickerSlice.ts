@@ -41,37 +41,53 @@ const pickerSlice = createSlice({
         },
         addToBetSlip: (state, action: PayloadAction<Ticket>) => {
             state.betSlip = [...state.betSlip, action.payload];
-            state.totalStake = state.betSlip.reduce((acc, curr) => acc + curr.stake, 0)
-            state.totalToWin = state.betSlip.reduce((acc, curr) => acc + curr.toWin, 0)
+            const totals = calculateTotals(state.betSlip);
+
+            state.totalStake = totals.totalStake
+            state.totalToWin = totals.totalToWin
         },
         removeFromBetSlip: (state, action: PayloadAction<Ticket>) => {
             state.betSlip = state.betSlip.filter((item) => item.selected.length !== action.payload.selected.length)
-            state.totalStake = state.betSlip.reduce((acc, curr) => acc + curr.stake, 0)
-            state.totalToWin = state.betSlip.reduce((acc, curr) => acc + curr.toWin, 0)
+            const totals = calculateTotals(state.betSlip);
+
+            state.totalStake = totals.totalStake
+            state.totalToWin = totals.totalToWin
         },
         updateBetSlipItem: (state, action: PayloadAction<{ index: number, changes: Partial<Ticket> }>) => {
             const { index, changes } = action.payload;
 
             if (index !== -1) {
+                changes.toWin = changes.stake && changes.stake * state.betSlip[index].multiplier;
+                console.log(changes.toWin);
                 state.betSlip[index] = { ...state.betSlip[index], ...changes }
             }
 
-            state.totalStake = state.betSlip.reduce((acc, curr) => acc + curr.stake, 0)
-            state.totalToWin = state.betSlip.reduce((acc, curr) => acc + curr.toWin, 0)
+            const totals = calculateTotals(state.betSlip);
+
+            state.totalStake = totals.totalStake
+            state.totalToWin = totals.totalToWin
         },
         updateStakeForAllTickets: (state, action: PayloadAction<number>) => {
             state.betSlip = state.betSlip.filter((item) => {
-                return item.stake += action.payload, item.toWin *= item.stake;
+                return item.stake += action.payload;
             })
 
-            state.totalStake = state.betSlip.reduce((acc, curr) => acc + curr.stake, 0)
-            state.totalToWin = state.betSlip.reduce((acc, curr) => acc + curr.toWin, 0)
+            const totals = calculateTotals(state.betSlip);
+
+            state.totalStake = totals.totalStake
+            state.totalToWin = totals.totalToWin
         },
         clearBetSlip: (state) => {
             state.betSlip = [];
         }
     }
 })
+
+function calculateTotals(betSlip: Ticket[]) {
+    const totalStake = betSlip.reduce((acc, curr) => acc + curr.stake, 0);
+    const totalToWin = betSlip.reduce((acc, curr) => acc + (curr.multiplier * curr.stake), 0);
+    return { totalStake, totalToWin };
+}
 
 export const { addPickedNumbers, clearNumbers, addRandomNumbers, addToBetSlip, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets, clearBetSlip } = pickerSlice.actions;
 

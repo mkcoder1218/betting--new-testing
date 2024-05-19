@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../features/hooks"
 import { Ticket, addToBetSlip, clearNumbers } from "../features/slices/pickerSlice";
 import { useEffect, useState } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
+import { defaultStake } from "../config/constants";
 
 export default function TicketSlipHolder() {
     const pickedNumbers = useAppSelector(state => state.picker.selected);
@@ -21,6 +22,7 @@ export default function TicketSlipHolder() {
 
     const clearList = () => {
         dispatch(clearNumbers());
+        setOdds([]);
     }
 
     const addToSlip = ({ selected, multiplier, toWin, stake, gameId }: Ticket) => {
@@ -57,9 +59,9 @@ export default function TicketSlipHolder() {
 
     return (
         <div className="picker-right-slip mr-2 mt-2">
-            {pickedNumbers.length > 0 && <>
+            {odds.length > 0 && <>
                 <button onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white rounded-md p-2'>CLEAR <span><RiDeleteBin6Line /></span> </button>
-                <button onClick={() => addToSlip({ selected: pickedNumbers, multiplier: 4, toWin: 400, stake: 10, gameId: "ID1044" })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
+                <button onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, stake: defaultStake, gameId: "ID1044" })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
                     ADD TO BETSLIP
                 </button>
                 <div className="slip-container w-80 mt-3 flex flex-col flex-shrink-0">

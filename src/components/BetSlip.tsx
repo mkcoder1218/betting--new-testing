@@ -11,7 +11,7 @@ export default function BetSlip() {
     }
 
     const changeIndividualSlipStake = (index: number, stake: number) => {
-        dispatch(updateBetSlipItem({ index, changes: { stake: stake, toWin: stake * 200 } }))
+        dispatch(updateBetSlipItem({ index, changes: { stake: stake } }))
     }
 
     const updateStakeAll = (stake: number) => {
@@ -43,7 +43,7 @@ export default function BetSlip() {
                             <p className='text-xs mb-2 flex items-center'><span className='rounded-xl h-5 w-5 flex items-center justify-center border-2 mr-2'>8</span> Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
                         </div>
-                        <p className='text-xs'>{item.selected.join(", ")} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.toWin}</span></p>
+                        <p className='text-xs'>{item.selected.join(", ")} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.multiplier}</span></p>
                         <p className='text-xs mt-1'>2024/10/10 10:22:20 ID|5463</p>
                         <div className="inc-dec mt-2 flex bg-white p-1 items-center justify-between flex-shrink-0">
                             <div onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-500 cursor-pointer transition-all h-6 w-6 justify-center inc bg-black rounded-md flex items-center p-1'>
@@ -56,7 +56,7 @@ export default function BetSlip() {
                                 -
                             </div>
                         </div>
-                        <p className='text-white text-xs text-center mt-1'>TO WIN Br. {item.toWin}</p>
+                        <p className='text-white text-xs text-center mt-1'>TO WIN Br. {item.stake * item.multiplier}</p>
                     </div>
 
                 })}
