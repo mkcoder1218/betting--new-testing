@@ -1,29 +1,73 @@
 import { RiDeleteBin6Line } from "react-icons/ri"
 import SlipItem from "./SlipItem"
 import { useAppDispatch, useAppSelector } from "../features/hooks"
-import { clearNumbers } from "../features/slices/pickerSlice";
+import { Ticket, addToBetSlip, clearNumbers } from "../features/slices/pickerSlice";
+import { useEffect, useState } from "react";
+import { OddMultiplier } from "../features/slices/oddSlice";
 
 export default function TicketSlipHolder() {
     const pickedNumbers = useAppSelector(state => state.picker.selected);
+    const betSlip = useAppSelector(state => state.picker.betSlip);
+    const odd = useAppSelector(state => state.odd);
+    const [odds, setOdds] = useState<OddMultiplier[]>([]);
     const dispatch = useAppDispatch();
+
+    const groupedMultipliersByNumLength = odd.odd?.OddMultipliers.reduce((acc: any, item) => {
+        const { numberLength, ...rest } = item;
+        acc[numberLength] = acc[numberLength] || [];
+        acc[numberLength].push(rest);
+        return acc;
+    }, {});
 
     const clearList = () => {
         dispatch(clearNumbers());
     }
 
+    const addToSlip = ({ selected, multiplier, toWin, stake, gameId }: Ticket) => {
+        for (let item of betSlip) {
+            if (selected === item.selected) {
+                return;
+            }
+        }
+
+        dispatch(addToBetSlip({ selected: selected, multiplier, toWin, stake, gameId }))
+    }
+
+    const calculateHitsAndWins = (userPicks: number[]) => {
+        let rule = odd.odd?.OddMultipliers.filter(rule => rule.numberLength === userPicks.length);
+
+        if (rule && rule?.length < 1) {
+            return;
+        }
+
+        console.log(rule);
+
+        rule = rule?.sort((a, b) => a.winLength - b.winLength)
+
+        rule ? setOdds([...rule]) : setOdds([]);
+    };
+
+    useEffect(() => {
+        console.log(groupedMultipliersByNumLength);
+    }, [])
+
+    useEffect(() => {
+        calculateHitsAndWins(pickedNumbers);
+    }, [pickedNumbers])
+
     return (
         <div className="picker-right-slip mr-2 mt-2">
             {pickedNumbers.length > 0 && <>
                 <button onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white rounded-md p-2'>CLEAR <span><RiDeleteBin6Line /></span> </button>
-                <button className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
+                <button onClick={() => addToSlip({ selected: pickedNumbers, multiplier: 4, toWin: 400, stake: 10, gameId: "ID1044" })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
                     ADD TO BETSLIP
                 </button>
                 <div className="slip-container w-80 mt-3 flex flex-col flex-shrink-0">
                     <div className='slip-head bg-amber-500 text-sm bg-amber-500 p-2'>
-                        HIGHEST PAYOUT FROM 7
+                        HIGHEST PAYOUT FROM {pickedNumbers.length}
                     </div>
-                    {pickedNumbers.map((item, index) => {
-                        return <SlipItem selected={item} maxWin={item * 3} key={index} />
+                    {odds.map((item, index) => {
+                        return <SlipItem selected={item.winLength} maxWin={item.multiplier} key={index} />
                     })}
 
                     <div className='slip-footer pl-10 pr-10 text-black flex justify-between items-center p-1.5'>

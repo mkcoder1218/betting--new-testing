@@ -1,10 +1,33 @@
 import { FaShuffle } from "react-icons/fa6"
+import { useAppDispatch } from "../features/hooks";
+import { addRandomNumbers } from "../features/slices/pickerSlice";
+import { FormEvent } from "react";
 
 export default function TicketSelector() {
+    const dispatch = useAppDispatch();
+
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const count = parseInt(event.target.value);
+        generateRandomSelections(count);
+    }
+
+    const generateRandomSelections = (count: number) => {
+        const selections = [];
+        const numbers = Array.from({ length: 80 }, (_, i) => i + 1); // Generate numbers 1 to 80
+
+        for (let i = 0; i < count; i++) {
+            const randomIndex = Math.floor(Math.random() * numbers.length);
+            selections.push(numbers[randomIndex]);
+            numbers.splice(randomIndex, 1); // Remove the selected number to avoid duplicates
+        }
+
+        dispatch(addRandomNumbers(selections));
+    };
+
     return (
         <div className='mid-row flex items-center content-center mt-2 gap-3'>
             <div className='bg-green-500 p-2 text-sm rounded-md flex items-center gap-3 rounded-br-md text-white'>QUICK PICK <span className='text-black rounded-md bg-gray-400'>
-                <select>
+                <select onChange={handleSelectChange}>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
                         return <option key={index} className='bg-gray-500 text-white'>{item}</option>
                     })}

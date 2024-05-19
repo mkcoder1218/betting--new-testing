@@ -1,5 +1,8 @@
 import { GiConfirmed } from "react-icons/gi";
 import { TiCancel } from "react-icons/ti";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { useEffect, useState } from "react";
+import { logoutUser } from "../features/slices/userSlice";
 
 interface CashierHeaderOptions {
     handleOpen: () => void;
@@ -8,6 +11,26 @@ interface CashierHeaderOptions {
 }
 
 export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCancelRedeem }: CashierHeaderOptions) {
+    const userData = useAppSelector(state => state.user);
+    const dispatch = useAppDispatch();
+
+    const [date, setDate] = useState(new Date());
+
+    useEffect(() => {
+        const timerID = setInterval(() => tick(), 1000);
+        return () => {
+            clearInterval(timerID);
+        };
+    }, []);
+
+    function tick() {
+        setDate(new Date());
+    }
+
+    const logout = () => {
+        dispatch(logoutUser());
+    }
+
     const openCancelRedeem = (val: string) => {
         handleCancelRedeem(val);
         handleRedeemOpen();
@@ -33,10 +56,10 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
             </div>
             <div className='flex items-center justify-center'>
                 <div className='w-80 flex justify-end flex-col items-end'>
-                    <p>cashier.one</p>
-                    <p className='text-xs'>2024-10-10 10:40:10 P.M</p>
+                    <p>{userData.user?.username}</p>
+                    <p className='text-xs'>{date.toLocaleDateString()} {date.toLocaleTimeString()}</p>
                 </div>
-                <a className='ml-4 bg-red-400 p-2 text-white rounded-md hover:bg-red-500 cursor-pointer' href="#">Logout</a>
+                <a onClick={logout} className='ml-4 bg-red-400 p-2 text-white rounded-md hover:bg-red-500 cursor-pointer' href="#">Logout</a>
             </div>
         </div>
     )

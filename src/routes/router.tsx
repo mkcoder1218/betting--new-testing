@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "../pages/Login";
 import App from "../App";
+import AuthGuard from "../auth/AuthGuard";
 
 export const routes = createBrowserRouter([
     {
@@ -9,6 +10,6 @@ export const routes = createBrowserRouter([
     },
     {
         path: "/home",
-        element: <App />
+        element: <AuthGuard element={<App />} />
     }
 ])

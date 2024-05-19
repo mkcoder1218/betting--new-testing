@@ -5,17 +5,9 @@ import { addPickedNumbers } from '../features/slices/pickerSlice';
 const NumberPicker: React.FC = () => {
     const dispatch = useAppDispatch();
     const pickedNumbers = useAppSelector(state => state.picker.selected);
-    const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
 
     const toggleNumber = (number: number) => {
-        setSelectedNumbers(prevNumbers =>
-            prevNumbers.includes(number)
-                ? prevNumbers.filter(n => n !== number)
-                : selectedNumbers.length >= 10 ? [...prevNumbers] : [...prevNumbers, number]
-        );
-
         dispatch(addPickedNumbers(number));
-        console.log(pickedNumbers);
     };
 
     return (
@@ -24,7 +16,7 @@ const NumberPicker: React.FC = () => {
                 <div className="grid gap-x-6 gap-y-2 grid-cols-10 pb-4 border-b-2 border-slate-400">
                     {[...Array(40)].map((_, index) => {
                         const number = index + 1;
-                        const isSelected = selectedNumbers.includes(number);
+                        const isSelected = pickedNumbers.includes(number);
                         return (
                             <button
                                 key={number}
@@ -42,7 +34,7 @@ const NumberPicker: React.FC = () => {
                 <div className="grid gap-x-6 gap-y-2 grid-cols-10">
                     {[...Array(40)].map((_, index) => {
                         const number = index + 41;
-                        const isSelected = selectedNumbers.includes(number);
+                        const isSelected = pickedNumbers.includes(number);
                         return (
                             <button
                                 key={number}

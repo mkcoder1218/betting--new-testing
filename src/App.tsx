@@ -4,13 +4,17 @@ import CashierHeader from './components/CashierHeader';
 import GameIllustration from './components/GameIllustration';
 import TicketSlipHolder from './components/TicketSlipHolder';
 import TicketSelector from './components/TicketSelector';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CashierOptions from './components/CashierOptions';
 import RedeemTicket from './components/RedeemTicket';
 import BetSlip from './components/BetSlip';
+import { useAppDispatch, useAppSelector } from './features/hooks';
+import { getOdds } from './features/slices/oddSlice';
 
 function App() {
-
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(state => state.user);
+  const oddData = useAppSelector(state => state.odd);
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false)
   const [cancelRedeem, setCancelRedeem] = useState("redeem")
@@ -21,6 +25,10 @@ function App() {
   const handleRedeemOpen = () => setRedeemStatus(true);
   const handleRedeemClose = () => setRedeemStatus(false);
   const handleCancelRedeem = (val: string) => setCancelRedeem(val);
+
+  useEffect(() => {
+    dispatch(getOdds(user.user?.Cashier.shopId));
+  }, [])
 
   return (
     <div className='bg-white'>
@@ -47,7 +55,7 @@ function App() {
                 <NumberPicker />
               </div>
             </div>
-            <TicketSlipHolder />
+            {oddData.odd && <TicketSlipHolder />}
           </div>
         </div>
         <BetSlip />
