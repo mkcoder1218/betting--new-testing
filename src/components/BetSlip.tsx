@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { Ticket, clearBetSlip, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets } from "../features/slices/pickerSlice";
 
@@ -5,6 +6,9 @@ import { Ticket, clearBetSlip, removeFromBetSlip, updateBetSlipItem, updateStake
 export default function BetSlip() {
     const dispatch = useAppDispatch();
     const betState = useAppSelector(state => state.picker);
+    const gameState = useAppSelector(state => state.game);
+    const betSlipState = useAppSelector(state => state.betSlip.data?.betSlipNumber);
+    const [expiryTime, setExpiry] = useState(new Date());
 
     const removeItemFromSlip = (item: Ticket) => {
         dispatch(removeFromBetSlip(item));
@@ -22,6 +26,31 @@ export default function BetSlip() {
         dispatch(clearBetSlip());
     }
 
+    const handleCreateTicket = () => {
+        const newBetSlipNumber = betSlipState ? betSlipState + 1 : generateRandomNumber();
+        console.log(betState);
+    }
+
+    function generateRandomNumber() {
+        const randomNumber = Math.floor(Math.random() * 1000000000);
+
+        let randomNumberString = randomNumber.toString();
+
+        randomNumberString = randomNumberString.padStart(9, '0');
+
+        return randomNumberString;
+    }
+
+    useEffect(() => {
+        if (gameState.game) {
+            const lastUpdatedTime = gameState.game?.updatedAt ? new Date(gameState.game.updatedAt).getTime() : new Date().getTime();
+            // update the 20 hrs diff to 5 mins later, this is just for longevity of the test
+            const targetTime = lastUpdatedTime + (20 * 60 * 60 * 1000);
+            const newDate = new Date(targetTime);
+            setExpiry(newDate)
+        }
+    }, [gameState])
+
     return (
         <div className='right basis-2/5 flex items-center flex-col'>
             <div className='text-l text-orange-500 font-bold flex items-center justify-center text-center'>
@@ -38,14 +67,14 @@ export default function BetSlip() {
                     </div>
                 </div>
 
-                {betState.betSlip.length > 0 && betState.betSlip.map((item, index) => {
+                {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
                     return <div key={index} className="selected-nums-con w-3/4 bg-gray-500 rounded-md p-1 mt-2 text-white">
                         <div className="flex justify-between items-center">
                             <p className='text-xs flex items-center'><span className='rounded-xl h-5 w-5 flex items-center justify-center border-2 mr-2'>8</span> Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
                         </div>
                         <p className='text-xs'>{item.selected.join(", ")} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.multiplier}</span></p>
-                        <p className='text-xs'>2024/10/10 10:22:20 ID|5463</p>
+                        <p className='text-xs'>{expiryTime.toLocaleDateString()} {expiryTime.toLocaleTimeString()} ID|{gameState.game?.gamenumber}</p>
                         <div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
                             <div onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-500 cursor-pointer transition-all h-6 w-6 justify-center inc bg-slate-700 rounded-sm flex items-center p-1'>
                                 +
@@ -82,7 +111,7 @@ export default function BetSlip() {
                     </div>
                     <div className='confirm-cancel w-3/4 gap-1 text-white mt-2 flex justify-between items-center'>
                         <button onClick={clearSlip} className='p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CANCEL</button>
-                        <button className='p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 bg-green-500'>PLACE BET</button>
+                        <button onClick={handleCreateTicket} className='p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 bg-green-500'>PLACE BET</button>
                     </div>
                 </>}
 

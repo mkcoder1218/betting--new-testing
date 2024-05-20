@@ -9,6 +9,7 @@ import { defaultStake } from "../config/constants";
 export default function TicketSlipHolder() {
     const pickedNumbers = useAppSelector(state => state.picker.selected);
     const betSlip = useAppSelector(state => state.picker.betSlip);
+    const gameState = useAppSelector(state => state.game)
     const odd = useAppSelector(state => state.odd);
     const [odds, setOdds] = useState<OddMultiplier[]>([]);
     const dispatch = useAppDispatch();
@@ -42,16 +43,10 @@ export default function TicketSlipHolder() {
             return;
         }
 
-        console.log(rule);
-
         rule = rule?.sort((a, b) => a.winLength - b.winLength)
 
         rule ? setOdds([...rule]) : setOdds([]);
     };
-
-    useEffect(() => {
-        console.log(groupedMultipliersByNumLength);
-    }, [])
 
     useEffect(() => {
         calculateHitsAndWins(pickedNumbers);
@@ -59,9 +54,9 @@ export default function TicketSlipHolder() {
 
     return (
         <div className="picker-right-slip mr-2 mt-2">
-            {odds.length > 0 && <>
+            {(gameState.game && odds.length > 0) && <>
                 <button onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white rounded-md p-2'>CLEAR <span><RiDeleteBin6Line /></span> </button>
-                <button onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, stake: defaultStake, gameId: "ID1044" })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
+                <button onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, stake: defaultStake, gameId: gameState.game?.gamenumber })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
                     ADD TO BETSLIP
                 </button>
                 <div className="slip-container w-80 mt-3 flex flex-col flex-shrink-0">

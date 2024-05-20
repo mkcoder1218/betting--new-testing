@@ -6,7 +6,7 @@ export interface Ticket {
     multiplier: number,
     toWin: number,
     stake: number,
-    gameId: string
+    gameId: number | undefined
 }
 
 export interface PickerType {

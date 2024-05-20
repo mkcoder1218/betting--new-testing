@@ -11,6 +11,7 @@ import BetSlip from './components/BetSlip';
 import { useAppDispatch, useAppSelector } from './features/hooks';
 import { getOdds } from './features/slices/oddSlice';
 import { getLastGame } from './features/slices/gameSlice';
+import { getLastBetSlip } from './features/slices/betSlip';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -41,6 +42,7 @@ function App() {
   useEffect(() => {
     if (gameData) {
       setRemainingTime(calculateRemainingTime())
+      dispatch(getLastBetSlip());
     }
   }, [gameData]);
 

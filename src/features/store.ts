@@ -3,13 +3,15 @@ import pickerReducer from "./slices/pickerSlice";
 import userReducer from "./slices/userSlice";
 import oddReducer from "./slices/oddSlice";
 import gameReducer from "./slices/gameSlice";
+import betSlipReducer from "./slices/betSlip";
 
 export const store = configureStore({
     reducer: {
         picker: pickerReducer,
         user: userReducer,
         odd: oddReducer,
-        game: gameReducer
+        game: gameReducer,
+        betSlip: betSlipReducer
     }
 })
 
