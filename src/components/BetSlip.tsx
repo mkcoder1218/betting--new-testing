@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
-import { Ticket, clearBetSlip, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets } from "../features/slices/pickerSlice";
+import { Ticket, clearBetSlip, clearNumbers, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets } from "../features/slices/pickerSlice";
 import { createBetSlipAndTicket, getLastBetSlip } from "../features/slices/betSlip";
 import ProgressCircular from "./ProgressCircular";
 import FormStatus from "./FormStatus";
@@ -14,6 +14,11 @@ export default function BetSlip() {
     const oddState = useAppSelector(state => state.odd);
     const betSlipState = useAppSelector(state => state.betSlip);
     const [expiryTime, setExpiry] = useState(new Date());
+    const [statusVisible, setStatusVisible] = useState(false);
+
+    const toggleStatus = (val: boolean) => {
+        setStatusVisible(val);
+    }
 
     const removeItemFromSlip = (item: Ticket) => {
         dispatch(removeFromBetSlip(item));
@@ -43,7 +48,7 @@ export default function BetSlip() {
             let ticketItem = {
                 toWin: ticket.toWin,
                 stake: ticket.stake,
-                maxWin: ticket.multiplier * ticket.toWin,
+                maxWin: ticket.multiplier * ticket.stake,
                 nums: ticket.selected,
                 gameId: gameState.game?.id,
                 oddId: oddState.odd?.id
@@ -52,8 +57,13 @@ export default function BetSlip() {
             newTicketToSend.push(ticketItem);
         }
 
+        console.log(newTicketToSend);
+
+        const minWin = Math.min(...newTicketToSend.map((item) => item.toWin * item.stake))
+        const maxWin = newTicketToSend.reduce((a, b) => a + b.maxWin, 0)
+
         const requestPayload = {
-            minWin: 10,
+            minWin: minWin,
             maxWin: betState.totalToWin,
             betSlipNumber: newBetSlipNumber,
             cashierCreateId: userState.user?.Cashier.id,
@@ -61,7 +71,12 @@ export default function BetSlip() {
             ticketData: newTicketToSend
         }
 
-        dispatch(createBetSlipAndTicket(requestPayload, refreshBetSlipNumber, clearSlip));
+        // return;
+        dispatch(createBetSlipAndTicket(requestPayload, refreshBetSlipNumber, clearSlip, toggleStatus, clearNumberSelection));
+    }
+
+    const clearNumberSelection = () => {
+        dispatch(clearNumbers());
     }
 
     const refreshBetSlipNumber = () => {
@@ -82,7 +97,8 @@ export default function BetSlip() {
         if (gameState.game) {
             const lastUpdatedTime = gameState.game?.updatedAt ? new Date(gameState.game.updatedAt).getTime() : new Date().getTime();
             // update the 20 hrs diff to 5 mins later, this is just for longevity of the test
-            const targetTime = lastUpdatedTime + (20 * 60 * 60 * 1000);
+            // fetch the last waiting game when countdown ends
+            const targetTime = lastUpdatedTime + (40 * 60 * 60 * 1000);
             const newDate = new Date(targetTime);
             setExpiry(newDate)
         }
@@ -104,8 +120,8 @@ export default function BetSlip() {
                     </div>
                 </div>
 
-                {(!betSlipState.loading && betSlipState.error) && <FormStatus type="error" content={betSlipState.error} />}
-                {(!betSlipState.loading && betSlipState.message) && <FormStatus type="success" content={betSlipState.message} />}
+                {(!betSlipState.loading && betSlipState.error && statusVisible) && <FormStatus type="error" content={betSlipState.error} />}
+                {(!betSlipState.loading && betSlipState.message && statusVisible) && <FormStatus type="success" content={betSlipState.message} />}
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
                     return <div key={index} className="selected-nums-con w-3/4 bg-gray-500 rounded-md p-1 mt-2 text-white">

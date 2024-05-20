@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
 import { AxiosError } from "axios";
+import { clearNumbers } from "./pickerSlice";
 
 interface BetSlipData {
     betSlipNumber: string;
@@ -58,19 +59,22 @@ export const { addBetSlipNumber, addTicketAndBetSlip } = betSlipSlice.actions;
 
 export default betSlipSlice.reducer;
 
-export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => void, clearSlip: () => void) => async (dispatch: (arg0: { payload: BetSlipState<BetSlip>; type: "betSlip/addTicketAndBetSlip"; }) => void) => {
+export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => void, clearSlip: () => void, toggleStatus: (val: boolean) => void, clearNumberSelection: () => void) => async (dispatch: (arg0: { payload: BetSlipState<BetSlip>; type: "betSlip/addTicketAndBetSlip"; }) => void) => {
     dispatch(addTicketAndBetSlip({ loading: true, error: null, message: null, data: null }))
 
     try {
         const betSlipResponse: BetSlipResponse<BetSlip> = (await axiosInstance.post("ticket/betslip", data)).data;
 
         if (betSlipResponse.message === "betslip added successfully") {
-            dispatch(addTicketAndBetSlip({ loading: false, error: null, message: betSlipResponse.message, data: betSlipResponse.data }))
+            dispatch(addTicketAndBetSlip({ loading: false, error: null, message: betSlipResponse.message, data: null }))
             refreshBetSlipNumber();
+            toggleStatus(true);
 
             setTimeout(() => {
                 clearSlip();
-            }, 2000);
+                toggleStatus(false);
+                clearNumberSelection();
+            }, 3000);
         } else {
             dispatch(addTicketAndBetSlip({ loading: false, error: betSlipResponse.error, message: null, data: null }))
         }

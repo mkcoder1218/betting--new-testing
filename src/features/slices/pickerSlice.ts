@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit"
-import { RootState } from "@reduxjs/toolkit/query"
 
 export interface Ticket {
     selected: number[],

@@ -26,7 +26,7 @@ const NumberPad: React.FC<Props> = ({ onEnter, onClear, onDelete }) => {
 
     return (
         <div className="mt-4">
-            <div className="grid grid-cols-3 gap-5" style={{ width: "40%" }}>
+            <div className="grid grid-cols-3 gap-5 w-full">
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'X',].map((value) => (
                     <button
                         key={value}
@@ -45,7 +45,7 @@ const NumberPad: React.FC<Props> = ({ onEnter, onClear, onDelete }) => {
                     </button>
                     <button
                         onClick={() => handleClick('Enter')}
-                        className="col-span-3 p-2 pl-8 pr-8 text-center bg-orange-500 text-white border border-gray-300 rounded-md hover:opacity-75 transition-all focus:outline-none"
+                        className="col-span-3 p-2 pl-5 pr-5 text-center bg-orange-500 text-white border border-gray-300 rounded-md hover:opacity-75 transition-all focus:outline-none"
                     >
                         Enter
                     </button>

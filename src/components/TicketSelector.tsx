@@ -13,12 +13,12 @@ export default function TicketSelector() {
 
     const generateRandomSelections = (count: number) => {
         const selections = [];
-        const numbers = Array.from({ length: 80 }, (_, i) => i + 1); // Generate numbers 1 to 80
+        const numbers = Array.from({ length: 80 }, (_, i) => i + 1);
 
         for (let i = 0; i < count; i++) {
             const randomIndex = Math.floor(Math.random() * numbers.length);
             selections.push(numbers[randomIndex]);
-            numbers.splice(randomIndex, 1); // Remove the selected number to avoid duplicates
+            numbers.splice(randomIndex, 1);
         }
 
         dispatch(addRandomNumbers(selections));

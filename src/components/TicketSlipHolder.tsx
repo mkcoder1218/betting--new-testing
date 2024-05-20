@@ -9,17 +9,11 @@ import { defaultStake } from "../config/constants";
 export default function TicketSlipHolder() {
     const pickedNumbers = useAppSelector(state => state.picker.selected);
     const betSlip = useAppSelector(state => state.picker.betSlip);
-    const gameState = useAppSelector(state => state.game)
+    const betState = useAppSelector(state => state.betSlip);
+    const gameState = useAppSelector(state => state.game);
     const odd = useAppSelector(state => state.odd);
     const [odds, setOdds] = useState<OddMultiplier[]>([]);
     const dispatch = useAppDispatch();
-
-    const groupedMultipliersByNumLength = odd.odd?.OddMultipliers.reduce((acc: any, item) => {
-        const { numberLength, ...rest } = item;
-        acc[numberLength] = acc[numberLength] || [];
-        acc[numberLength].push(rest);
-        return acc;
-    }, {});
 
     const clearList = () => {
         dispatch(clearNumbers());
@@ -50,6 +44,10 @@ export default function TicketSlipHolder() {
 
     useEffect(() => {
         calculateHitsAndWins(pickedNumbers);
+
+        if (betState.message === "betslip added successfully") {
+            setOdds([]);
+        }
     }, [pickedNumbers])
 
     return (
@@ -60,7 +58,7 @@ export default function TicketSlipHolder() {
                     ADD TO BETSLIP
                 </button>
                 <div className="slip-container w-80 mt-3 flex flex-col flex-shrink-0">
-                    <div className='slip-head bg-amber-500 text-sm bg-amber-500 p-2'>
+                    <div className='slip-head bg-amber-500 text-sm p-2'>
                         HIGHEST PAYOUT FROM {pickedNumbers.length}
                     </div>
                     {odds.map((item, index) => {
