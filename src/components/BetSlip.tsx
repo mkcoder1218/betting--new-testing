@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { Ticket, clearBetSlip, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets } from "../features/slices/pickerSlice";
+import { createBetSlipAndTicket, getLastBetSlip } from "../features/slices/betSlip";
+import ProgressCircular from "./ProgressCircular";
+import FormStatus from "./FormStatus";
 
 
 export default function BetSlip() {
     const dispatch = useAppDispatch();
     const betState = useAppSelector(state => state.picker);
     const gameState = useAppSelector(state => state.game);
-    const betSlipState = useAppSelector(state => state.betSlip.data?.betSlipNumber);
+    const userState = useAppSelector(state => state.user);
+    const oddState = useAppSelector(state => state.odd);
+    const betSlipState = useAppSelector(state => state.betSlip);
     const [expiryTime, setExpiry] = useState(new Date());
 
     const removeItemFromSlip = (item: Ticket) => {
@@ -27,8 +32,40 @@ export default function BetSlip() {
     }
 
     const handleCreateTicket = () => {
-        const newBetSlipNumber = betSlipState ? betSlipState + 1 : generateRandomNumber();
-        console.log(betState);
+        refreshBetSlipNumber();
+
+        let newBetSlipNumber = betSlipState.data ? parseInt(betSlipState.data?.betSlipNumber) + 1 : generateRandomNumber();
+        console.log(betSlipState.data);
+        console.log(newBetSlipNumber);
+        let newTicketToSend = [];
+
+        for (let ticket of betState.betSlip) {
+            let ticketItem = {
+                toWin: ticket.toWin,
+                stake: ticket.stake,
+                maxWin: ticket.multiplier * ticket.toWin,
+                nums: ticket.selected,
+                gameId: gameState.game?.id,
+                oddId: oddState.odd?.id
+            }
+
+            newTicketToSend.push(ticketItem);
+        }
+
+        const requestPayload = {
+            minWin: 10,
+            maxWin: betState.totalToWin,
+            betSlipNumber: newBetSlipNumber,
+            cashierCreateId: userState.user?.Cashier.id,
+            shopId: userState.user?.Cashier.shopId,
+            ticketData: newTicketToSend
+        }
+
+        dispatch(createBetSlipAndTicket(requestPayload, refreshBetSlipNumber, clearSlip));
+    }
+
+    const refreshBetSlipNumber = () => {
+        dispatch(getLastBetSlip());
     }
 
     function generateRandomNumber() {
@@ -66,6 +103,9 @@ export default function BetSlip() {
                         MULTIPLES
                     </div>
                 </div>
+
+                {(!betSlipState.loading && betSlipState.error) && <FormStatus type="error" content={betSlipState.error} />}
+                {(!betSlipState.loading && betSlipState.message) && <FormStatus type="success" content={betSlipState.message} />}
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
                     return <div key={index} className="selected-nums-con w-3/4 bg-gray-500 rounded-md p-1 mt-2 text-white">
@@ -109,6 +149,9 @@ export default function BetSlip() {
                             <p>{betState.totalToWin} BR</p>
                         </div>
                     </div>
+
+                    {betSlipState.loading && <ProgressCircular />}
+
                     <div className='confirm-cancel w-3/4 gap-1 text-white mt-2 flex justify-between items-center'>
                         <button onClick={clearSlip} className='p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CANCEL</button>
                         <button onClick={handleCreateTicket} className='p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 bg-green-500'>PLACE BET</button>

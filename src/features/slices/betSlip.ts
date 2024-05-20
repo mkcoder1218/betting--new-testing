@@ -58,14 +58,22 @@ export const { addBetSlipNumber, addTicketAndBetSlip } = betSlipSlice.actions;
 
 export default betSlipSlice.reducer;
 
-export const createBetSlipAndTicket = (data: any) => async (dispatch: (arg0: { payload: BetSlipState<BetSlip>; type: "betSlip/addTicketAndBetSlip"; }) => void) => {
+export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => void, clearSlip: () => void) => async (dispatch: (arg0: { payload: BetSlipState<BetSlip>; type: "betSlip/addTicketAndBetSlip"; }) => void) => {
     dispatch(addTicketAndBetSlip({ loading: true, error: null, message: null, data: null }))
 
     try {
-        const betSlipResponse: BetSlipResponse<BetSlip> = (await axiosInstance.post("ticket/betslip")).data;
+        const betSlipResponse: BetSlipResponse<BetSlip> = (await axiosInstance.post("ticket/betslip", data)).data;
 
-        console.log(betSlipResponse);
+        if (betSlipResponse.message === "betslip added successfully") {
+            dispatch(addTicketAndBetSlip({ loading: false, error: null, message: betSlipResponse.message, data: betSlipResponse.data }))
+            refreshBetSlipNumber();
 
+            setTimeout(() => {
+                clearSlip();
+            }, 2000);
+        } else {
+            dispatch(addTicketAndBetSlip({ loading: false, error: betSlipResponse.error, message: null, data: null }))
+        }
     } catch (err: AxiosError | any) {
         console.log(err);
         dispatch(addTicketAndBetSlip({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
