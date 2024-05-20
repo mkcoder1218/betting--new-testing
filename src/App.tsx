@@ -10,11 +10,13 @@ import RedeemTicket from './components/RedeemTicket';
 import BetSlip from './components/BetSlip';
 import { useAppDispatch, useAppSelector } from './features/hooks';
 import { getOdds } from './features/slices/oddSlice';
+import { getLastGame } from './features/slices/gameSlice';
 
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user);
   const oddData = useAppSelector(state => state.odd);
+  const gameData = useAppSelector(state => state.game);
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false)
   const [cancelRedeem, setCancelRedeem] = useState("redeem")
@@ -26,8 +28,37 @@ function App() {
   const handleRedeemClose = () => setRedeemStatus(false);
   const handleCancelRedeem = (val: string) => setCancelRedeem(val);
 
+  const [remainingTime, setRemainingTime] = useState(0);
+
+  function calculateRemainingTime() {
+    const lastUpdatedTime = gameData.game?.updatedAt ? new Date(gameData.game.updatedAt).getTime() : new Date().getTime();
+    const targetTime = lastUpdatedTime + (20 * 60 * 60 * 1000);
+    const currentTime = new Date().getTime();
+    const difference = targetTime - currentTime;
+    return difference > 0 ? difference : 0;
+  }
+
+  useEffect(() => {
+    if (gameData) {
+      setRemainingTime(calculateRemainingTime())
+    }
+  }, [gameData]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime(prevTime => prevTime > 0 ? prevTime - 1000 : 0);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = Math.floor(remainingTime / (1000 * 60 * 60));
+  const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
+    dispatch(getLastGame(user.user?.Cashier.shopId));
   }, [])
 
   return (
@@ -35,11 +66,11 @@ function App() {
       <CashierOptions open={open} handleClose={handleClose} />
       <RedeemTicket open={redeemOpen} handleClose={handleRedeemClose} type={cancelRedeem} />
       <CashierHeader handleOpen={handleOpen} handleRedeemOpen={handleRedeemOpen} handleCancelRedeem={handleCancelRedeem} />
-      <div className='border-gray-300 border-t-4 p-4 flex justify-between'>
+      <div className='border-gray-300 border-t-4 p-4 ml-4 flex justify-between'>
         <div className='left gap-4'>
           <GameIllustration />
           <div className="next-draw flex mt-4">
-            <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>04:12</span></div>
+            {gameData.game && <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{hours}:{minutes}:{seconds}</span></div>}
             <div className='bg-green-600 p-2 text-sm rounded-tr-md rounded-br-md text-white'>REPEAT <span className='text-black rounded-md bg-gray-400'>
               <select>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {

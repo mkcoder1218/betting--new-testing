@@ -98,8 +98,8 @@ export const authUser = (username: string, password: string, navigate: NavigateF
     dispatch(loginUser({ message: "", error: "", loading: true, user: null }))
 
     try {
-        dispatch(loginUser({ message: "", error: "", loading: false, user: null }))
         const loginResponse: AxiosResponseWrapper<AuthResponse> = await axiosInstance.post("user/login", { username, password });
+        dispatch(loginUser({ message: "", error: "", loading: false, user: null }))
 
         if (loginResponse.data.message === "login successful") {
             dispatch(loginUser({ message: "", error: "", loading: true, user: loginResponse.data.data.user }))

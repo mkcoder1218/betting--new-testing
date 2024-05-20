@@ -41,17 +41,17 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
             <div className='text-xl text-black font-bold'>
                 CASHIER
             </div>
-            <div className='flex gap-4 justify-center w-full p-4'>
+            <div className='flex gap-4 justify-center w-full p-2'>
                 <button onClick={handleOpen} className='p-2 bg-green-600 text-white rounded-md'>
                     Cashier Options
-                </button>
-                <button onClick={() => openCancelRedeem("redeem")} className='p-2 flex items-center gap-1 bg-blue-800 text-white rounded-md'>
-                    <span className='pl-2'>Redeem</span>
-                    <GiConfirmed size={20} />
                 </button>
                 <button onClick={() => openCancelRedeem("cancel")} className='p-2 flex items-center gap-1 bg-yellow-600 text-white rounded-md'>
                     <span className='pl-2'>Cancel</span>
                     <TiCancel size={20} />
+                </button>
+                <button onClick={() => openCancelRedeem("redeem")} className='p-2 flex items-center gap-1 bg-green-400 text-white rounded-md'>
+                    <span className='pl-2'>Redeem</span>
+                    <GiConfirmed size={20} />
                 </button>
             </div>
             <div className='flex items-center justify-center'>

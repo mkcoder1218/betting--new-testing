@@ -61,8 +61,8 @@ export const getOdds = (shopId: string | undefined) => async (dispatch: (arg0: {
     dispatch(addOdd({ loading: true, error: "", message: "", odd: null }))
 
     try {
-        dispatch(addOdd({ loading: false, error: "", message: "", odd: null }))
         const oddResponse: AxiosResponseWrapper<ApiResponse> = (await axiosInstance.get(`odd/${shopId}`));
+        dispatch(addOdd({ loading: false, error: "", message: "", odd: null }))
 
         if (oddResponse.data.message === "success") {
             dispatch(addOdd({ loading: false, error: "", message: "success", odd: oddResponse.data.data }))
