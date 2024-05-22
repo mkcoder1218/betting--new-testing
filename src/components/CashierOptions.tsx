@@ -246,13 +246,13 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
 
                                     {ticketList.loading && <div className='w-full flex items-center p-4 justify-center'>
                                         <ProgressCircular /></div>}
-                                    {ticketList.error && <FormStatus type='error' content={ticketList.error} />}
+                                    {/* {ticketList.error && <FormStatus type='error' content={ticketList.error} />} */}
                                     {(!ticketList.loading && ticketList.data.length < 1) &&
                                         <div className='w-full text-center p-4 mt-4'>
                                             No Tickets found
                                         </div>
                                     }
-                                    {ticketList.data.length > 0 && <div className='summary-content  max-h-80  overflow-scroll w-full mt-4'>
+                                    {(!ticketList.loading && ticketList.data.length > 0) && <div className='summary-content  max-h-80  overflow-scroll w-full mt-4'>
                                         <table className='w-full table table-fixed'>
                                             <thead className='border-2 border-slate-300 bg-slate-300'>
                                                 <tr className='text-sm p-2 table-row'>
