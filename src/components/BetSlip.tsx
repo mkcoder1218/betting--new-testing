@@ -110,6 +110,7 @@ export default function BetSlip() {
                 Betslip
             </div>
 
+
             <div className='right-slip-content w-full flex flex-col items-center p-4'>
                 <div className="slip-right-head flex items-center justify-center bg-orange-500 rounded-md p-1">
                     <div className="left bg-orange-500 p-1 pr-2 pl-2 text-sm text-white rounded-md">

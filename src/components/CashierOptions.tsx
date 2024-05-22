@@ -14,6 +14,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MdOutlineCancel } from "react-icons/md";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPrint } from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from '../features/hooks';
+import { getSummaryData } from '../features/slices/summarySlice';
+import ProgressCircular from './ProgressCircular';
+import FormStatus from './FormStatus';
+import { recallTickets } from '../features/slices/ticketSlice';
 
 
 interface CashierOptionsProps {
@@ -29,12 +34,12 @@ interface TabPanelProps {
 
 const style = {
     position: 'absolute' as 'absolute',
-    top: '40%',
+    top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: "86%",
     margin: "auto",
-    height: '500px',
+    height: '660px',
     overflow: "auto",
     borderRadius: "10px",
     bgcolor: 'background.paper',
@@ -117,13 +122,29 @@ function a11yProps(index: number) {
 }
 
 export default function CashierOptions({ open, handleClose }: CashierOptionsProps) {
-
+    const dispatch = useAppDispatch();
+    const userData = useAppSelector(state => state.user)
+    const summaryData = useAppSelector(state => state.summary)
+    const ticketList = useAppSelector(state => state.ticket);
     const [value, setValue] = React.useState(0);
-    const [dateVal, setDateValue] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+    const [to, setTo] = React.useState<Dayjs | null>(dayjs(new Date().toDateString()));
+    const [from, setFrom] = React.useState<Dayjs | null>(dayjs(new Date().toDateString()));
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    const handleFetchSummary = () => {
+        dispatch(getSummaryData(from?.toISOString(), to?.toISOString(), userData.user?.Cashier.id));
+    }
+
+    const getTicketList = () => {
+        dispatch(recallTickets(userData.user?.Cashier.id))
+    }
+
+    React.useEffect(() => {
+        getTicketList();
+    }, [])
 
     return (
         <div>
@@ -142,8 +163,8 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <Tabs value={value} onChange={handleChange} aria-label="tickets tab">
-                                    <Tab label="Summary" style={{ textTransform: "unset" }} {...a11yProps(0)} />
-                                    <Tab label="Recall Tickets" style={{ textTransform: "unset" }} {...a11yProps(1)} />
+                                    <Tab label="Summary" style={{ textTransform: "unset", color: value === 0 ? "#FFFFFF" : "#000000" }} {...a11yProps(0)} />
+                                    <Tab label="Recall Tickets" style={{ textTransform: "unset", color: value === 1 ? "#FFFFFF" : "#000000" }} {...a11yProps(1)} />
                                 </Tabs>
                             </Box>
                             <div className='border-2 mt-4 border-amber-300 w-full rounded-md'>
@@ -154,8 +175,8 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DemoContainer components={['DatePicker', 'DatePicker']}>
                                                     <DatePicker
-                                                        value={dateVal}
-                                                        onChange={(newValue) => setDateValue(newValue)}
+                                                        value={from}
+                                                        onChange={(newValue) => setFrom(newValue)}
                                                     />
                                                 </DemoContainer>
                                             </LocalizationProvider>
@@ -166,15 +187,23 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                 <DemoContainer components={['DatePicker', 'DatePicker']}>
                                                     <DatePicker
 
-                                                        value={dateVal}
-                                                        onChange={(newValue) => setDateValue(newValue)}
+                                                        value={to}
+                                                        onChange={(newValue) => setTo(newValue)}
                                                     />
                                                 </DemoContainer>
                                             </LocalizationProvider>
                                         </div>
-                                        <button className='p-2 mb-2 bg-green-600 rounded-md text-white flex items-center gap-2'>Refresh <span><IoMdRefresh className='text-white' size={20} /></span></button>
+                                        <button onClick={handleFetchSummary} className='p-2 mb-2 bg-green-600 rounded-md text-white flex items-center gap-2'>Refresh <span><IoMdRefresh className='text-white' size={20} /></span></button>
                                     </div>
-                                    <div className='summary-content w-full mt-4'>
+                                    {summaryData.loading && <div className='w-full flex items-center p-4 justify-center'>
+                                        <ProgressCircular /></div>}
+                                    {summaryData.error && <FormStatus type='error' content={summaryData.error} />}
+                                    {summaryData.data?.totalTickets === "0" &&
+                                        <div className='w-full text-center p-4 mt-4'>
+                                            No Tickets found
+                                        </div>
+                                    }
+                                    {(summaryData.data !== null && parseInt(summaryData.data.totalTickets) > 0) && <div className='summary-content w-full mt-4'>
                                         <table className='w-full table table-fixed'>
                                             <thead className='border-2 border-slate-300 bg-slate-300'>
                                                 <tr className='text-sm p-2 table-row'>
@@ -190,28 +219,40 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className='text-center text-sm p-2 border border-slate-300'>
-                                                    <td className='border border-slate-400 p-2 flex items-center justify-center'><FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' /></td>
-                                                    <td className='border border-slate-400 p-2'>Cashier.One</td>
-                                                    <td className='border border-slate-400 p-2'>2024-10-11</td>
-                                                    <td className='border border-slate-400 p-2'>2024-10-12</td>
-                                                    <td className='border border-slate-400 p-2'>3</td>
-                                                    <td className='border border-slate-400 p-2'>300</td>
-                                                    <td className='border border-slate-400 p-2'>50</td>
-                                                    <td className='border border-slate-400 p-2'>3</td>
-                                                    <td className='border border-slate-400 p-2'>5000</td>
+                                                <tr className='text-center text-sm p-2 '>
+                                                    <td className='border border-slate-400'>
+                                                        <span className='flex items-center justify-center cursor-pointer'>
+                                                            <FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' />
+                                                        </span>
+                                                    </td>
+                                                    <td className='border border-slate-400 p-2'>{userData.user?.username}</td>
+                                                    <td className='border border-slate-400 p-2'>{from?.toDate().toLocaleDateString()}</td>
+                                                    <td className='border border-slate-400 p-2'>{to?.toDate().toLocaleDateString()}</td>
+                                                    <td className='border border-slate-400 p-2'>{summaryData.data.totalTickets}</td>
+                                                    <td className='border border-slate-400 p-2'>{summaryData.data.totalBets ? parseFloat(summaryData.data?.totalBets).toFixed(2) : 0.00} Br.</td>
+                                                    <td className='border border-slate-400 p-2'>{summaryData.data.redeemCount}</td>
+                                                    <td className='border border-slate-400 p-2'>{summaryData.data.cancelCount}</td>
+                                                    <td className='border border-slate-400 p-2'>{summaryData.data.netAmount ? summaryData.data?.netAmount?.toFixed(2) : 0.00} Br.</td>
                                                 </tr>
 
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div>}
                                 </CustomTabPanel>
                                 <CustomTabPanel value={value} index={1}>
                                     <div className='date-picker-form flex gap-6 items-end'>
-
-                                        <button className='p-2 mb-2 bg-orange-500 rounded-md text-white flex items-center gap-2'>Refresh<span><IoMdRefresh className='text-white' size={20} /></span></button>
+                                        <button onClick={getTicketList} className='p-2 mb-2 bg-orange-500 rounded-md text-white flex items-center gap-2'>Refresh<span><IoMdRefresh className='text-white' size={20} /></span></button>
                                     </div>
-                                    <div className='summary-content w-full mt-4'>
+
+                                    {ticketList.loading && <div className='w-full flex items-center p-4 justify-center'>
+                                        <ProgressCircular /></div>}
+                                    {ticketList.error && <FormStatus type='error' content={ticketList.error} />}
+                                    {(!ticketList.loading && ticketList.data.length < 1) &&
+                                        <div className='w-full text-center p-4 mt-4'>
+                                            No Tickets found
+                                        </div>
+                                    }
+                                    {ticketList.data.length > 0 && <div className='summary-content  max-h-80  overflow-scroll w-full mt-4'>
                                         <table className='w-full table table-fixed'>
                                             <thead className='border-2 border-slate-300 bg-slate-300'>
                                                 <tr className='text-sm p-2 table-row'>
@@ -219,22 +260,27 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                     <th className='border border-slate-400'>Ticket Number</th>
                                                     <th className='border border-slate-400'>Cashier Name</th>
                                                     <th className='border border-slate-400'>Player Numbers</th>
-                                                    <th className='border border-slate-400'>Net Stack</th>
+                                                    <th className='border border-slate-400'>Net Stake</th>
                                                     <th className='border border-slate-400'>Win</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className='text-center text-sm p-2 border border-slate-300'>
-                                                    <td className='border border-slate-400 p-2 flex items-center justify-center'><FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' /></td>
-                                                    <td className='border border-slate-400 p-2'>000182781</td>
-                                                    <td className='border border-slate-400 p-2'>Cashier.One</td>
-                                                    <td className='border border-slate-400 p-2'>1,2,4,7,8</td>
-                                                    <td className='border border-slate-400 p-2'>10</td>
-                                                    <td className='border border-slate-400 p-2'>5000</td>
-                                                </tr>
+                                                {ticketList.data.map((item) => {
+                                                    return <tr key={item.id} className='text-center text-sm p-2 border border-slate-300'>
+                                                        <td className='border border-slate-400 p-2'>
+                                                            <div className='border  flex items-center justify-center'><FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' /></div>
+                                                        </td>
+                                                        <td className='border border-slate-400 p-2'>{item.ticketno}</td>
+                                                        <td className='border border-slate-400 p-2'>{userData.user?.username}</td>
+                                                        <td className='border border-slate-400 p-2'>{item.nums.join(",")}</td>
+                                                        <td className='border border-slate-400 p-2'>{parseFloat(item.stake).toFixed(2)} Br</td>
+                                                        <td className='border border-slate-400 p-2'>{item.win ? item.win.toFixed(2) : 0.00} Br.</td>
+                                                    </tr>
+                                                })}
+
                                             </tbody>
                                         </table>
-                                    </div>
+                                    </div>}
                                 </CustomTabPanel>
                             </div>
 

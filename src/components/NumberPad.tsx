@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
 interface Props {
+    onInput: (input: number | null, type: string) => void;
     onEnter: (input: string) => void;
     onClear: () => void;
     onDelete: () => void;
 }
 
-const NumberPad: React.FC<Props> = ({ onEnter, onClear, onDelete }) => {
+const NumberPad: React.FC<Props> = ({ onEnter, onClear, onDelete, onInput }) => {
     const [input, setInput] = useState<string>('');
 
     const handleClick = (value: string | number) => {
@@ -16,11 +17,13 @@ const NumberPad: React.FC<Props> = ({ onEnter, onClear, onDelete }) => {
         } else if (value === 'Clear') {
             onClear();
             setInput('');
+            onInput(null, "removeAll")
         } else if (value === 'X') {
             onDelete();
             setInput(input.slice(0, -1));
+            onInput(null, "remove")
         } else {
-            setInput(input + value);
+            typeof value === "number" && onInput(value, "add")
         }
     };
 

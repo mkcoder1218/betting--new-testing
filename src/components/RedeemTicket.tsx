@@ -4,6 +4,10 @@ import Modal from '@mui/material/Modal';
 import { MdOutlineCancel } from "react-icons/md";
 import NumberPad from './NumberPad';
 import BetSlipTable from './BetSlipTable';
+import { useAppDispatch, useAppSelector } from '../features/hooks';
+import { getTicketsToCancel, getTicketsToRedeem } from '../features/slices/betData';
+import ProgressCircular from './ProgressCircular';
+import FormStatus from './FormStatus';
 
 
 interface RedeemTicketProps {
@@ -28,10 +32,36 @@ const style = {
 };
 
 export default function RedeemTicket({ open, handleClose, type }: RedeemTicketProps) {
-    const [value, setValue] = React.useState('');
+    const dispatch = useAppDispatch();
+
+    const [betslip, setSlip] = React.useState('');
+    const betSlipData = useAppSelector(state => state.betData)
+    const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+    const handleInput = (input: number | null, action: string) => {
+        if (action === "add" && input !== null && listOfNums.includes(input) && betslip.length <= 20) {
+            setSlip(prevEl => prevEl + input.toString());
+        }
+
+        if (action === "remove") {
+            const values = betslip.split("");
+            values.pop();
+            let newVal = values.join("");
+
+            setSlip(newVal)
+        }
+
+        if (action === "removeAll") {
+            setSlip('');
+        }
+    };
 
     const handleEnter = (input: any) => {
-        console.log('Entered:', input);
+        if (type === "cancel") {
+            dispatch(getTicketsToCancel(parseInt(betslip)))
+        } else {
+            dispatch(getTicketsToRedeem(parseInt(betslip)))
+        }
     };
 
     const handleClear = () => {
@@ -57,17 +87,26 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                         <MdOutlineCancel onClick={handleClose} size={24} className='text-black' />
                     </div>
                     <div className='options-content w-full bg-white p-6'>
-
                         <Box>
                             <div className='flex'>
                                 <div className='w-1/3'>
                                     <div className='w-full'>
                                         <p>Enter betslip code or scan</p>
-                                        <input maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
+                                        <input onChange={(e) => setSlip(e.target.value)} value={betslip} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
                                     </div>
-                                    <NumberPad onEnter={handleEnter} onClear={handleClear} onDelete={handleDelete} />
+                                    <NumberPad onInput={handleInput} onEnter={handleEnter} onClear={handleClear} onDelete={handleDelete} />
                                 </div>
-                                <BetSlipTable type={type} />
+                                {betSlipData.loading && <div className='w-full flex items-center justify-center'>
+                                    <ProgressCircular /></div>}
+                                {betSlipData.error && <div className='w-1/2 p-0 flex items-start justify-center'>
+                                    <FormStatus type='error' content={betSlipData.error} />
+                                </div>}
+                                {(betSlipData.message && betSlipData.message !== "success") && <div className='w-1/2 p-0 flex items-start justify-center'>
+                                    <FormStatus type='success' content={betSlipData.message} />
+                                </div>}
+                                {(!betSlipData.loading && betSlipData.data) &&
+                                    <BetSlipTable data={betSlipData.data} type={type} />
+                                }
                             </div>
                         </Box>
                     </div>

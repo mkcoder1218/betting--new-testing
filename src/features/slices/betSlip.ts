@@ -13,7 +13,24 @@ interface BetSlipResponse<T> {
     error: null;
 }
 
-interface BetSlip {
+export interface Ticket {
+    id: string;
+    ticketno: string;
+    nums: number[];
+    redeem: null | any;
+    stake: string;
+    ticketExpiry: string;
+    maxWin: number;
+    win: number;
+    oddId: string;
+    cashierRedeemId: null | string;
+    gameId: string;
+    betSlipId: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface BetSlip {
     id: string;
     minWin: number;
     betSlipNumber: string;
@@ -23,6 +40,7 @@ interface BetSlip {
     shopId: string;
     updatedAt: string;
     createdAt: string;
+    Tickets: Ticket[] | null
 }
 
 interface BetSlipState<T> {

@@ -4,6 +4,9 @@ import userReducer from "./slices/userSlice";
 import oddReducer from "./slices/oddSlice";
 import gameReducer from "./slices/gameSlice";
 import betSlipReducer from "./slices/betSlip";
+import summaryReducer from "./slices/summarySlice";
+import ticketReducer from "./slices/ticketSlice";
+import betDataReducer from "./slices/betData";
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +14,10 @@ export const store = configureStore({
         user: userReducer,
         odd: oddReducer,
         game: gameReducer,
-        betSlip: betSlipReducer
+        betSlip: betSlipReducer,
+        summary: summaryReducer,
+        ticket: ticketReducer,
+        betData: betDataReducer
     }
 })
 

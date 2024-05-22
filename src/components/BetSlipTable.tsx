@@ -1,11 +1,34 @@
 import { IoIosPrint } from "react-icons/io";
 import { FaEye } from "react-icons/fa";
+import { BetSlip, cancelTicket, redeemTicket } from "../features/slices/betData";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { useEffect } from "react";
 
 interface ActionType {
-    type: string
+    type: string,
+    data: BetSlip
 }
 
-const BetSlipTable = ({ type }: ActionType) => {
+const BetSlipTable = ({ type, data }: ActionType) => {
+
+    const dispatch = useAppDispatch();
+    const gameState = useAppSelector(state => state.game.game?.gamenumber);
+    const userData = useAppSelector(state => state.user);
+    const gameNumber = data.Tickets?.map((items) => items.Game.gamenumber);
+    const totalStake = data.Tickets?.reduce((a, b) => a + parseInt(b?.stake), 0)
+
+    const handleCancel = () => {
+        dispatch(cancelTicket(gameNumber?.[0], parseInt(data?.betSlipNumber)));
+    }
+
+    const handleRedeem = () => {
+        dispatch(redeemTicket(userData.user?.Cashier.id, parseInt(data?.betSlipNumber)));
+    }
+
+    useEffect(() => {
+
+    }, [])
+
     return (
         <div className='right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6'>
             <div className='slip-header text-green-600 font-semibold text-xl'>
@@ -29,13 +52,13 @@ const BetSlipTable = ({ type }: ActionType) => {
                     <tbody>
                         <tr className="bg-white border-b">
                             <td scope="row" className="px-3 py-3">
-                                8172878
+                                {data.betSlipNumber}
                             </td>
                             <td className="px-3 py-3">
-                                40,000.00 Br
+                                {data.maxWin} Br.
                             </td>
                             <td className="px-3 py-3">
-                                2024-10-12 10:10:00 A.M
+                                {new Date(data.createdAt).toDateString()}
                             </td>
                         </tr>
                     </tbody>
@@ -72,47 +95,49 @@ const BetSlipTable = ({ type }: ActionType) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="bg-white border-b">
-                            {type === "redeem" && <td scope="row" className="px-1 flex gap-4 py-2">
-                                <FaEye className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
-                                <IoIosPrint className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
-                            </td>}
-                            <td scope="row" className="px-3 py-2">
-                                8172878
-                            </td>
-                            <td className="px-3 py-2">
-                                Keno
-                            </td>
-                            <td className="px-3 py-2">
-                                918298
-                            </td>
-                            <td scope="row" className="px-3 py-2">
-                                Win
-                            </td>
-                            <td className="px-3 py-2">
-                                4,23,42,11,23
-                            </td>
-                            <td className="px-3 py-2">
-                                0.00 Br
-                            </td>
-                        </tr>
+                        {data.Tickets?.map((item) => {
+                            return <tr key={item.id} className="bg-white border-b">
+                                {type === "redeem" && <td scope="row" className="px-1 flex gap-4 py-2">
+                                    <FaEye className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
+                                    <IoIosPrint className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
+                                </td>}
+                                <td scope="row" className="px-3 py-2">
+                                    {data.betSlipNumber}
+                                </td>
+                                <td className="px-3 py-2">
+                                    Keno
+                                </td>
+                                <td className="px-3 py-2">
+                                    {item.Game.gamenumber}
+                                </td>
+                                <td scope="row" className="px-3 py-2">
+                                    {item.win > 0 ? "Win" : "Lost"}
+                                </td>
+                                <td className="px-3 py-2">
+                                    {item.nums.join(", ")}
+                                </td>
+                                <td className="px-3 py-2">
+                                    {item.win && item.win > 0 ? item.win.toFixed(2) : 0.00} Br
+                                </td>
+                            </tr>
+                        })}
                     </tbody>
                 </table>
             </div>
             <div className="bet-footer">
                 <div className="flex justify-between text-sm items-center p-3">
                     <div>
-                        2024-10-14 11:12:00 A.M
+                        {new Date(data.createdAt).toLocaleDateString()} A.M
                     </div>
                     <div className="mr-6">
-                        0.00 Br
+                        {data.Tickets?.reduce((a, b) => a + b?.win, 0).toFixed(2)} Br
                     </div>
                 </div>
                 <div className="flex items-center justify-end mt-3">
-                    {type === "redeem" ? <div className="font-bold text-l">Not a Winning Ticket</div> : <div className="font-bold text-l">Total Stake Br. 50.00</div>}
-                    {type === "redeem" ? <button className="ml-3 px-4 py-2 bg-green-600 text-white rounded-md">
+                    {type === "redeem" ? <div className="font-bold text-l">Not a Winning Ticket</div> : <div className="font-bold text-l">Total Stake Br. {totalStake?.toFixed(2)}</div>}
+                    {type === "redeem" ? <button onClick={handleRedeem} className="ml-3 px-4 py-2 bg-green-600 text-white rounded-md">
                         Redeem $
-                    </button> : <button className="ml-3 px-4 py-2 bg-orange-600 text-white rounded-md">
+                    </button> : <button onClick={handleCancel} className="ml-3 px-4 py-2 bg-orange-600 text-white rounded-md">
                         Cancel $
                     </button>}
                 </div>

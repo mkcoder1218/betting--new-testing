@@ -5,6 +5,7 @@ import { Ticket, addToBetSlip, clearNumbers } from "../features/slices/pickerSli
 import { useEffect, useState } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
 import { defaultStake } from "../config/constants";
+// import { writeToPrinter } from "./SlipPrinter";
 
 export default function TicketSlipHolder() {
     const pickedNumbers = useAppSelector(state => state.picker.selected);
@@ -45,9 +46,12 @@ export default function TicketSlipHolder() {
     useEffect(() => {
         calculateHitsAndWins(pickedNumbers);
 
-        if (betState.message === "betslip added successfully") {
+        if (betState.loading) {
             setOdds([]);
         }
+
+        // writeToPrinter();
+
     }, [pickedNumbers])
 
     return (
