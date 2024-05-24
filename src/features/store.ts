@@ -7,6 +7,7 @@ import betSlipReducer from "./slices/betSlip";
 import summaryReducer from "./slices/summarySlice";
 import ticketReducer from "./slices/ticketSlice";
 import betDataReducer from "./slices/betData";
+import expiryReducer from "./slices/ticketExpiry";
 
 export const store = configureStore({
     reducer: {
@@ -17,7 +18,8 @@ export const store = configureStore({
         betSlip: betSlipReducer,
         summary: summaryReducer,
         ticket: ticketReducer,
-        betData: betDataReducer
+        betData: betDataReducer,
+        expiry: expiryReducer
     }
 })
 

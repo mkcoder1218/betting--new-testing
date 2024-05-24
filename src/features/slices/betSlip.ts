@@ -94,6 +94,7 @@ export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => vo
                 clearNumberSelection();
             }, 3000);
         } else {
+            toggleStatus(true)
             dispatch(addTicketAndBetSlip({ loading: false, error: betSlipResponse.error, message: null, data: null }))
         }
     } catch (err: AxiosError | any) {

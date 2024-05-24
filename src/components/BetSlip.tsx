@@ -13,8 +13,34 @@ export default function BetSlip() {
     const userState = useAppSelector(state => state.user);
     const oddState = useAppSelector(state => state.odd);
     const betSlipState = useAppSelector(state => state.betSlip);
-    const [expiryTime, setExpiry] = useState(new Date());
     const [statusVisible, setStatusVisible] = useState(false);
+    const currentDate = new Date().getTime();
+    const [expired, setExpired] = useState(false);
+
+    useEffect(() => {
+        console.log("check")
+
+        const timer = setInterval(() => {
+            for (let ticket of betState.betSlip) {
+                if (currentDate > ticket.expiry) {
+                    console.log("Ticket expired.... removing")
+                    setExpired(true);
+                    break;
+                }
+            }
+        }, 1000)
+
+
+        if (expired) {
+            setExpired(false);
+            console.log("clearing slip");
+
+            setTimeout(() => {
+                clearSlip();
+            }, 3000);
+        }
+        return () => clearInterval(timer)
+    });
 
     const toggleStatus = (val: boolean) => {
         setStatusVisible(val);
@@ -34,6 +60,7 @@ export default function BetSlip() {
 
     const clearSlip = () => {
         dispatch(clearBetSlip());
+        dispatch(clearNumbers());
     }
 
     const handleCreateTicket = () => {
@@ -56,8 +83,6 @@ export default function BetSlip() {
 
             newTicketToSend.push(ticketItem);
         }
-
-        console.log(newTicketToSend);
 
         const minWin = Math.min(...newTicketToSend.map((item) => item.toWin * item.stake))
         const maxWin = newTicketToSend.reduce((a, b) => a + b.maxWin, 0)
@@ -93,23 +118,11 @@ export default function BetSlip() {
         return randomNumberString;
     }
 
-    useEffect(() => {
-        if (gameState.game) {
-            const lastUpdatedTime = gameState.game?.updatedAt ? new Date(gameState.game.updatedAt).getTime() : new Date().getTime();
-            // update the 20 hrs diff to 5 mins later, this is just for longevity of the test
-            // fetch the last waiting game when countdown ends
-            const targetTime = lastUpdatedTime + (40 * 60 * 60 * 1000);
-            const newDate = new Date(targetTime);
-            setExpiry(newDate)
-        }
-    }, [gameState])
-
     return (
         <div className='right basis-2/5 flex items-center flex-col'>
             <div className='text-l text-orange-500 font-bold flex items-center justify-center text-center'>
                 Betslip
             </div>
-
 
             <div className='right-slip-content w-full flex flex-col items-center p-4'>
                 <div className="slip-right-head flex items-center justify-center bg-orange-500 rounded-md p-1">
@@ -121,18 +134,18 @@ export default function BetSlip() {
                     </div>
                 </div>
 
-                {(!betSlipState.loading && betSlipState.error && statusVisible) && <FormStatus type="error" content={betSlipState.error} />}
+                {(!betSlipState.loading && betSlipState.error) && <FormStatus type="error" content={betSlipState.error} />}
                 {(!betSlipState.loading && betSlipState.message && statusVisible) && <FormStatus type="success" content={betSlipState.message} />}
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
-                    return <div key={index} className="selected-nums-con w-3/4 bg-gray-500 rounded-md p-1 mt-2 text-white">
+                    return <div key={index} className={`selected-nums-con w-3/4 ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-500'} rounded-md p-1 mt-2 text-white`}>
                         <div className="flex justify-between items-center">
                             <p className='text-xs flex items-center'><span className='rounded-xl h-5 w-5 flex items-center justify-center border-2 mr-2'>8</span> Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
                         </div>
                         <p className='text-xs'>{item.selected.join(", ")} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.multiplier}</span></p>
-                        <p className='text-xs'>{expiryTime.toLocaleDateString()} {expiryTime.toLocaleTimeString()} ID|{gameState.game?.gamenumber}</p>
-                        <div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
+                        <p className='text-xs'>{new Date(item.expiry).toLocaleDateString()} {new Date(item.expiry).toLocaleTimeString()} ID|{gameState.game?.gamenumber}</p>
+                        {currentDate < betState.betSlip[0].expiry && <><div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
                             <div onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-500 cursor-pointer transition-all h-6 w-6 justify-center inc bg-slate-700 rounded-sm flex items-center p-1'>
                                 +
                             </div>
@@ -143,7 +156,8 @@ export default function BetSlip() {
                                 -
                             </div>
                         </div>
-                        <p className='text-white text-xs text-center mt-1'>TO WIN Br. {item.stake * item.multiplier}</p>
+                            <p className='text-white text-xs text-center mt-1'>TO WIN Br. {item.stake * item.multiplier}</p>
+                        </>}
                     </div>
 
                 })}
@@ -159,11 +173,11 @@ export default function BetSlip() {
                     <div className="amounts mt-2 w-3/4 text-black">
                         <div className='text-lg mt-1 flex justify-between items-center'>
                             <p>TOTAL STAKE</p>
-                            <p>{betState.totalStake} BR</p>
+                            <p>{betState.totalStake}.00 BR</p>
                         </div>
                         <div className='text-lg mt-1 flex justify-between items-center'>
                             <p>TOTAL "TO WIN"</p>
-                            <p>{betState.totalToWin} BR</p>
+                            <p>{betState.totalToWin}.00 BR</p>
                         </div>
                     </div>
 
@@ -171,7 +185,7 @@ export default function BetSlip() {
 
                     <div className='confirm-cancel w-3/4 gap-1 text-white mt-2 flex justify-between items-center'>
                         <button onClick={clearSlip} className='p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CANCEL</button>
-                        <button onClick={handleCreateTicket} className='p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 bg-green-500'>PLACE BET</button>
+                        <button disabled={currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={`p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 ${currentDate < betState.betSlip[0].expiry ? 'bg-green-500' : 'bg-green-300'}`}>PLACE BET</button>
                     </div>
                 </>}
 

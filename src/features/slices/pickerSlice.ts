@@ -3,6 +3,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 export interface Ticket {
     selected: number[],
     multiplier: number,
+    expiry: number,
     toWin: number,
     stake: number,
     gameId: number | undefined
@@ -78,6 +79,8 @@ const pickerSlice = createSlice({
         },
         clearBetSlip: (state) => {
             state.betSlip = [];
+            state.totalStake = 0;
+            state.totalToWin = 0;
         }
     }
 })
