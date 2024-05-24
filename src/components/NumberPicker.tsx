@@ -5,8 +5,12 @@ import { addPickedNumbers } from '../features/slices/pickerSlice';
 const NumberPicker: React.FC = () => {
     const dispatch = useAppDispatch();
     const pickedNumbers = useAppSelector(state => state.picker.selected);
+    const ticketExpiry = useAppSelector(state => state.expiry.expiry);
+    const currentDate = new Date().getTime();
 
     const toggleNumber = (number: number) => {
+        if (currentDate > ticketExpiry) return;
+
         dispatch(addPickedNumbers(number));
     };
 

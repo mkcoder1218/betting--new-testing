@@ -38,6 +38,9 @@ function App() {
     const currentTime = new Date().getTime();
     const difference = targetTime - currentTime;
 
+    dispatch(addExpiry({ expiry: targetTime }));
+    console.log(new Date(targetTime));
+
     return difference > 0 ? difference : 0;
   }
 
@@ -45,10 +48,6 @@ function App() {
     if (gameData.game) {
       const currentDiff = new Date().getTime() - new Date(gameData.game?.createdAt).getTime();
       const diffInMinutes = currentDiff / (1000 * 60);
-
-      console.log(new Date(diffInMinutes).getMinutes())
-      console.log(new Date())
-      console.log(new Date(gameData.game.createdAt));
 
       if (diffInMinutes <= 5) {
         console.log(diffInMinutes)
@@ -77,6 +76,19 @@ function App() {
   const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
+  function formatTime(minutes: number, seconds: number): string {
+    const date = new Date();
+    date.setMinutes(minutes);
+    date.setSeconds(seconds);
+
+    return date.toLocaleTimeString('en-US', {
+      hour12: false,
+      timeZone: 'UTC', // Adjust timezone as needed
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  }
+
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
 
@@ -95,7 +107,7 @@ function App() {
         <div className='left gap-4'>
           <GameIllustration />
           <div className="next-draw flex mt-4">
-            {(gameData.game && remainingTime > 0) ? <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{minutes}:{seconds}</span></div> : <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{"00"}:{"00"}</span></div>}
+            {(gameData.game && remainingTime > 0) ? <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{formatTime(minutes, seconds)}</span></div> : <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{"00"}:{"00"}</span></div>}
             <div className='bg-green-600 p-2 text-sm rounded-tr-md rounded-br-md text-white'>REPEAT <span className='text-black rounded-md bg-gray-400'>
               <select>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {

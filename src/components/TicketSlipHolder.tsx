@@ -15,6 +15,7 @@ export default function TicketSlipHolder() {
     const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
     const expiryOfGame = gameCreatedDate?.setMinutes(gameCreatedDate.getMinutes() + 5);
     const ticketExpiry = useAppSelector(state => state.expiry.expiry);
+    const currentDate = new Date().getTime();
     const [error, setError] = useState("");
 
     const odd = useAppSelector(state => state.odd);
@@ -31,6 +32,10 @@ export default function TicketSlipHolder() {
             if (selected === item.selected) {
                 return;
             }
+        }
+
+        if (currentDate > ticketExpiry) {
+            return;
         }
 
         dispatch(addToBetSlip({ selected: selected, expiry: expiryOfGame ? expiryOfGame : ticketExpiry, multiplier, toWin, stake, gameId }))
@@ -67,7 +72,7 @@ export default function TicketSlipHolder() {
         <div className="picker-right-slip mr-2 mt-2">
             {(gameState.game && odds.length > 0) && <>
                 <button onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white rounded-md p-2'>CLEAR <span><RiDeleteBin6Line /></span> </button>
-                <button onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, expiry: ticketExpiry, stake: defaultStake, gameId: gameState.game?.gamenumber })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
+                <button disabled={currentDate > ticketExpiry} onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, expiry: ticketExpiry, stake: defaultStake, gameId: gameState.game?.gamenumber })} className='p-3 rounded-md bg-green-600 text-white text-lg mt-2'>
                     ADD TO BETSLIP
                 </button>
                 <div className="slip-container w-80 mt-3 flex flex-col flex-shrink-0">

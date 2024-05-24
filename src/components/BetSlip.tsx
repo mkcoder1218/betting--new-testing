@@ -4,7 +4,7 @@ import { Ticket, clearBetSlip, clearNumbers, removeFromBetSlip, updateBetSlipIte
 import { createBetSlipAndTicket, getLastBetSlip } from "../features/slices/betSlip";
 import ProgressCircular from "./ProgressCircular";
 import FormStatus from "./FormStatus";
-
+import { BsCheck2All } from "react-icons/bs";
 
 export default function BetSlip() {
     const dispatch = useAppDispatch();
@@ -136,6 +136,13 @@ export default function BetSlip() {
 
                 {(!betSlipState.loading && betSlipState.error) && <FormStatus type="error" content={betSlipState.error} />}
                 {(!betSlipState.loading && betSlipState.message && statusVisible) && <FormStatus type="success" content={betSlipState.message} />}
+
+                {currentDate > betState?.betSlip[0]?.expiry &&
+                    <div className="p-1 w-2/3 flex items-center justify-between mt-2 text-center text-s bg-red-400 text-white">
+                        <p className="ml-3">Expired Bets</p>
+                        <BsCheck2All className="mr-3" size={24} />
+                    </div>
+                }
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
                     return <div key={index} className={`selected-nums-con w-3/4 ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-500'} rounded-md p-1 mt-2 text-white`}>

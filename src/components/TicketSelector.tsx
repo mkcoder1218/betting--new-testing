@@ -1,10 +1,12 @@
 import { FaShuffle } from "react-icons/fa6"
-import { useAppDispatch } from "../features/hooks";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { addRandomNumbers } from "../features/slices/pickerSlice";
 import { FormEvent } from "react";
 
 export default function TicketSelector() {
     const dispatch = useAppDispatch();
+    const ticketExpiry = useAppSelector(state => state.expiry.expiry);
+    const currentDate = new Date().getTime();
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const count = parseInt(event.target.value);
@@ -12,6 +14,7 @@ export default function TicketSelector() {
     }
 
     const generateRandomSelections = (count: number) => {
+        if (currentDate > ticketExpiry) return;
         const selections = [];
         const numbers = Array.from({ length: 80 }, (_, i) => i + 1);
 
