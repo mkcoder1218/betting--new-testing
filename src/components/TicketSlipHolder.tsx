@@ -20,6 +20,7 @@ export default function TicketSlipHolder() {
 
     const odd = useAppSelector(state => state.odd);
     const [odds, setOdds] = useState<OddMultiplier[]>([]);
+    const repeatState = useAppSelector(state => state.repeat);
     const dispatch = useAppDispatch();
 
     const clearList = () => {
@@ -38,7 +39,9 @@ export default function TicketSlipHolder() {
             return;
         }
 
-        dispatch(addToBetSlip({ selected: selected, expiry: expiryOfGame ? expiryOfGame : ticketExpiry, multiplier, toWin, stake, gameId }))
+        for (let i = 0; i < repeatState.repeat; i++) {
+            dispatch(addToBetSlip({ selected: selected, expiry: expiryOfGame ? expiryOfGame : ticketExpiry, multiplier, toWin, stake, gameId }))
+        }
     }
 
     const calculateHitsAndWins = (userPicks: number[]) => {
