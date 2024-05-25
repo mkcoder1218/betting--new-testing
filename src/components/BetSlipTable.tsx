@@ -114,7 +114,10 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                                     {item.win > 0 ? "Win" : "Lost"}
                                 </td>
                                 <td className="px-3 py-2">
-                                    {item.nums.join(", ")}
+                                    {(!item.nums.includes(-2) && !item.nums.includes(-4) && !item.nums.includes(-6)) && item.nums.join(", ")}
+                                    {item.nums.includes(-2) && 'Heads'}
+                                    {item.nums.includes(-4) && 'Evens'}
+                                    {item.nums.includes(-6) && 'Tails'}
                                 </td>
                                 <td className="px-3 py-2">
                                     {item.win && item.win > 0 ? item.win.toFixed(2) : 0.00} Br
