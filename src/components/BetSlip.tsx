@@ -17,13 +17,11 @@ export default function BetSlip() {
     const currentDate = new Date().getTime();
     const [expired, setExpired] = useState(false);
 
+    // Check every second for the expiry of the current game and clear from betslip if it did. And try to fetch the last game every 5 seconds if no game exists currently
     useEffect(() => {
-        console.log("check")
-
         const timer = setInterval(() => {
             for (let ticket of betState.betSlip) {
                 if (currentDate > ticket.expiry) {
-                    console.log("Ticket expired.... removing")
                     setExpired(true);
                     break;
                 }
@@ -33,7 +31,6 @@ export default function BetSlip() {
 
         if (expired) {
             setExpired(false);
-            console.log("clearing slip");
 
             setTimeout(() => {
                 clearSlip();
@@ -150,7 +147,7 @@ export default function BetSlip() {
                             <p className='text-xs flex items-center'><span className='rounded-xl h-5 w-5 flex items-center justify-center border-2 mr-2'>8</span> Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
                         </div>
-                        <p className='text-xs'>{item.selected.join(", ")} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.multiplier}</span></p>
+                        <p className='text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.multiplier}</span></p>
                         <p className='text-xs'>{new Date(item.expiry).toLocaleDateString()} {new Date(item.expiry).toLocaleTimeString()} ID|{gameState.game?.gamenumber}</p>
                         {currentDate < betState.betSlip[0].expiry && <><div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
                             <div onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-500 cursor-pointer transition-all h-6 w-6 justify-center inc bg-slate-700 rounded-sm flex items-center p-1'>
@@ -169,7 +166,7 @@ export default function BetSlip() {
 
                 })}
 
-                {betState.betSlip.length > 0 && <>
+                {(currentDate > betState?.betSlip[0]?.expiry && betState.betSlip.length > 0) && <>
 
                     <div className='btn-container-bet mt-1 flex gap-2 justify-stretch w-3/4 items-center'>
                         <button onClick={() => updateStakeAll(10)} className='bg-green-600 hover:opacity-75 transition-all flex-grow p-2 rounded-md text-white'>10 <span className='ml-3'>$</span> </button>

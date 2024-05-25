@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { MdOutlineCancel } from "react-icons/md";
@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '../features/hooks';
 import { getTicketsToCancel, getTicketsToRedeem } from '../features/slices/betData';
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
-
+import Dynamsoft, { TextResult } from 'dynamsoft-javascript-barcode';
 
 interface RedeemTicketProps {
     open: boolean,
@@ -31,10 +31,17 @@ const style = {
     p: 0,
 };
 
+const deviceConfiguration = {
+    deviceType: 'USB',
+    deviceId: '04e9:8190', // Example USB vendor and product IDs
+    communicationType: 'HID', // Common communication protocol for USB barcode scanners
+};
+
 export default function RedeemTicket({ open, handleClose, type }: RedeemTicketProps) {
     const dispatch = useAppDispatch();
 
     const [betslip, setSlip] = React.useState('');
+    const [data, setData] = React.useState("Not Found");
     const betSlipData = useAppSelector(state => state.betData)
     const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
@@ -72,8 +79,34 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
         console.log('Deleted');
     };
 
+    const handleBarCode = (e: React.FormEvent) => {
+        console.log("submitted");
+    }
+
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+
+                setTimeout(() => {
+                    const inputElement = event.target as HTMLInputElement;
+                    const barcodeData = inputElement.value;
+                    console.log('Barcode scanned:', barcodeData);
+
+                }, 1000);
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     return (
         <div>
+
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -82,6 +115,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
             >
 
                 <Box sx={style}>
+
                     <div className='cashier-options-header flex justify-between items-center p-2 bg-amber-500 rounded-tl-lg rounded-tr-lg'>
                         <p className='text-white font-bold text-lg'>{type === "redeem" ? "Redeem Betslip" : "Cancel Betslip"}</p>
                         <MdOutlineCancel onClick={handleClose} size={24} className='text-black' />
@@ -90,10 +124,10 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                         <Box>
                             <div className='flex'>
                                 <div className='w-1/3'>
-                                    <div className='w-full'>
+                                    <form onSubmit={handleBarCode} className='w-full'>
                                         <p>Enter betslip code or scan</p>
                                         <input onChange={(e) => setSlip(e.target.value)} value={betslip} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
-                                    </div>
+                                    </form>
                                     <NumberPad onInput={handleInput} onEnter={handleEnter} onClear={handleClear} onDelete={handleDelete} />
                                 </div>
                                 {betSlipData.loading && <div className='w-full flex items-center justify-center'>

@@ -47,7 +47,7 @@ const pickerSlice = createSlice({
             state.totalToWin = totals.totalToWin
         },
         removeFromBetSlip: (state, action: PayloadAction<Ticket>) => {
-            state.betSlip = state.betSlip.filter((item) => item.selected.length !== action.payload.selected.length)
+            state.betSlip = state.betSlip.filter((item) => item.selected.join(",") !== action.payload.selected.join(","))
             const totals = calculateTotals(state.betSlip);
 
             state.totalStake = totals.totalStake
