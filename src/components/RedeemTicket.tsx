@@ -42,6 +42,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
 
     const [betslip, setSlip] = React.useState('');
     const [data, setData] = React.useState("Not Found");
+    const [barcodeSubmit, toggleBarcode] = useState(false);
     const betSlipData = useAppSelector(state => state.betData)
     const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
@@ -83,17 +84,21 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
         console.log("submitted");
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
+        if (barcodeSubmit && betslip !== '') {
+            handleEnter(betslip);
+            toggleBarcode(false);
+        }
+    }, [barcodeSubmit])
+
+    useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Enter') {
-                event.preventDefault();
-
-                setTimeout(() => {
-                    const inputElement = event.target as HTMLInputElement;
-                    const barcodeData = inputElement.value;
-                    console.log('Barcode scanned:', barcodeData);
-
-                }, 1000);
+                toggleBarcode(true);
+            } else {
+                if (!isNaN(parseInt(event.key))) {
+                    setSlip((prevValue) => prevValue + event.key);
+                }
             }
         };
 
