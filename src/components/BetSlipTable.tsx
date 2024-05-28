@@ -18,7 +18,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
     const totalStake = data.Tickets?.reduce((a, b) => a + parseInt(b?.stake), 0)
 
     const handleCancel = () => {
-        dispatch(cancelTicket(gameNumber?.[0], parseInt(data?.betSlipNumber)));
+        dispatch(cancelTicket(gameNumber?.[0], parseInt(data?.betSlipNumber), userData.user?.Cashier.id));
     }
 
     const handleRedeem = () => {

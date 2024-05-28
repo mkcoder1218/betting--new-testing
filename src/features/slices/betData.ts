@@ -113,11 +113,11 @@ export const getTicketsToRedeem = (betslip: number | undefined) => async (dispat
     }
 }
 
-export const cancelTicket = (gamenumber: number | undefined, betslip: number | undefined) => async (dispatch: (arg0: { payload: BetSlipState; type: "betSlip/addBetData"; }) => void) => {
+export const cancelTicket = (gamenumber: number | undefined, betslip: number | undefined, cashierCreateId: string | undefined) => async (dispatch: (arg0: { payload: BetSlipState; type: "betSlip/addBetData"; }) => void) => {
     dispatch(addBetData({ loading: true, error: null, message: null, data: null }))
 
     try {
-        const cancelTicketResponse: BetSlipResponse = (await axiosInstance.put("ticket/cancel", { gamenumber, betslip })).data;
+        const cancelTicketResponse: BetSlipResponse = (await axiosInstance.put("ticket/cancel", { gamenumber, betslip, cashierCreateId })).data;
 
         if (cancelTicketResponse.message === "Bet cancelled successfully") {
             dispatch(addBetData({ loading: false, error: null, message: "Ticket cancelled successfully", data: null }))
