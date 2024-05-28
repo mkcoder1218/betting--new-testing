@@ -88,6 +88,8 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
         if (barcodeSubmit && betslip !== '') {
             handleEnter(betslip);
             toggleBarcode(false);
+            setSlip('');
+            console.log(betslip)
         }
     }, [barcodeSubmit])
 

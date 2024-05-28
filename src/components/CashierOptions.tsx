@@ -257,7 +257,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                             <thead className='border-2 border-slate-300 bg-slate-300'>
                                                 <tr className='text-sm p-2 table-row'>
                                                     <th className='border p-2 border-slate-400'>Print</th>
-                                                    <th className='border border-slate-400'>Ticket Number</th>
+                                                    <th className='border border-slate-400'>Game Number</th>
                                                     <th className='border border-slate-400'>Cashier Name</th>
                                                     <th className='border border-slate-400'>Player Numbers</th>
                                                     <th className='border border-slate-400'>Net Stake</th>
@@ -270,7 +270,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                         <td className='border border-slate-400 p-2'>
                                                             <div className='border  flex items-center justify-center'><FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' /></div>
                                                         </td>
-                                                        <td className='border border-slate-400 p-2'>{item.ticketno}</td>
+                                                        <td className='border border-slate-400 p-2'>{item.Game.gamenumber}</td>
                                                         <td className='border border-slate-400 p-2'>{userData.user?.username}</td>
                                                         <td className='border border-slate-400 p-2'>
                                                             {(!item.nums.includes(-2) && !item.nums.includes(-4) && !item.nums.includes(-6)) && item.nums.join(", ")}

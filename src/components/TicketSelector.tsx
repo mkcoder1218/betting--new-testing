@@ -18,6 +18,12 @@ export default function TicketSelector() {
     const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
     const expiryOfGame = gameCreatedDate?.setMinutes(gameCreatedDate.getMinutes() + 5);
 
+    const clearHeadTail = () => {
+        setHeads(false);
+        setEvens(false);
+        setTails(false);
+    }
+
     const addToSlip = ({ selected, multiplier, toWin, stake, gameId }: Ticket) => {
         if (currentDate > ticketExpiry) {
             return;

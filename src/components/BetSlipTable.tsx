@@ -25,10 +25,6 @@ const BetSlipTable = ({ type, data }: ActionType) => {
         dispatch(redeemTicket(userData.user?.Cashier.id, parseInt(data?.betSlipNumber)));
     }
 
-    useEffect(() => {
-
-    }, [])
-
     return (
         <div className='right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6'>
             <div className='slip-header text-green-600 font-semibold text-xl'>
