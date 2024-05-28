@@ -20,6 +20,7 @@ function App() {
   const user = useAppSelector(state => state.user);
   const oddData = useAppSelector(state => state.odd);
   const gameData = useAppSelector(state => state.game);
+  const ticketExpiry = useAppSelector(state => state.expiry);
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false)
   const [cancelRedeem, setCancelRedeem] = useState("redeem")
@@ -55,7 +56,6 @@ function App() {
       const diffInMinutes = currentDiff / (1000 * 60);
 
       if (diffInMinutes <= 5) {
-        console.log(diffInMinutes)
         setRemainingTime(calculateRemainingTime());
         dispatch(getLastBetSlip());
       }
@@ -97,8 +97,7 @@ function App() {
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
 
-
-    if (remainingTime < 1) {
+    if (remainingTime === 0) {
       dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [])
