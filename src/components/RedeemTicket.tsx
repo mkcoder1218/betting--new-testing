@@ -86,18 +86,27 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
 
     useEffect(() => {
         if (barcodeSubmit && betslip !== '') {
-            handleEnter(betslip);
-            toggleBarcode(false);
-            setSlip('');
-            console.log(betslip)
+            // handleEnter(betslip);
+            // toggleBarcode(false);
+            // setSlip('');
+            // console.log(betslip)
         }
     }, [barcodeSubmit])
 
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSlip(event.target.value);
+    };
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.target instanceof HTMLInputElement) {
+                return;
+            }
+
             if (event.key === 'Enter') {
                 toggleBarcode(true);
             } else {
+                console.log("input event")
                 if (!isNaN(parseInt(event.key))) {
                     setSlip((prevValue) => prevValue + event.key);
                 }
@@ -133,7 +142,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                                 <div className='w-1/3'>
                                     <form onSubmit={handleBarCode} className='w-full'>
                                         <p>Enter betslip code or scan</p>
-                                        <input onChange={(e) => setSlip(e.target.value)} value={betslip} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
+                                        <input onChange={handleChange} value={betslip} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
                                     </form>
                                     <NumberPad onInput={handleInput} onEnter={handleEnter} onClear={handleClear} onDelete={handleDelete} />
                                 </div>

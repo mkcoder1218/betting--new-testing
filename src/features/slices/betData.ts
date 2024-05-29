@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
 
 interface Game {
-    gamenumber: number
+    gamenumber: number,
+    status: string
 }
 
 interface Ticket {

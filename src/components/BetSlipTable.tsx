@@ -1,6 +1,6 @@
 import { IoIosPrint } from "react-icons/io";
 import { FaEye } from "react-icons/fa";
-import { BetSlip, cancelTicket, redeemTicket } from "../features/slices/betData";
+import betData, { BetSlip, cancelTicket, redeemTicket } from "../features/slices/betData";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { useEffect } from "react";
 
@@ -107,7 +107,9 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                                     {item.Game.gamenumber}
                                 </td>
                                 <td scope="row" className="px-3 py-2">
-                                    {item.win > 0 ? "Win" : "Lost"}
+                                    {(item.Game.status === "COMPLETED" && item.win > 0) && "Win"}
+                                    {(item.Game.status === "COMPLETED" && item.win < 1) && "Lost"}
+                                    {item.Game.status !== "COMPLETED" && "Unknown"}
                                 </td>
                                 <td className="px-3 py-2">
                                     {(!item.nums.includes(-2) && !item.nums.includes(-4) && !item.nums.includes(-6)) && item.nums.join(", ")}
@@ -133,7 +135,10 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                     </div>
                 </div>
                 <div className="flex items-center justify-end mt-3">
-                    {type === "redeem" ? <div className="font-bold text-l">Not a Winning Ticket</div> : <div className="font-bold text-l">Total Stake Br. {totalStake?.toFixed(2)}</div>}
+                    {type === "redeem" ? <div className="font-bold text-l">
+                        {data.Tickets && data.Tickets?.reduce((a, b) => a + b.win, 0) < 1 && "Not a Winning Ticket"}
+                        {data.Tickets && data.Tickets?.reduce((a, b) => a + b.win, 0) > 0 && "A Winning Ticket"}
+                    </div> : <div className="font-bold text-l">Total Stake Br. {totalStake?.toFixed(2)}</div>}
                     {type === "redeem" ? <button onClick={handleRedeem} className="ml-3 px-4 py-2 bg-green-600 text-white rounded-md">
                         Redeem $
                     </button> : <button onClick={handleCancel} className="ml-3 px-4 py-2 bg-orange-600 text-white rounded-md">
