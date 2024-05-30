@@ -2,17 +2,22 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
 
-
-interface SummaryData {
+export interface CashierData {
+    cashierCreateId: string;
     totalTickets: string;
     totalBets: string;
-    redeemCount: number;
-    cancelCount: number;
-    netAmount: number;
+    cancelCount: string;
+    redeemCount: string;
+    totalRedeemAmount: string;
+    totalCancelAmount: string;
+    netAmount: string;
+    "Cashier.id": string;
+    "Cashier.User.id": string;
+    "Cashier.User.username": string;
 }
 
 interface Response {
-    data: SummaryData;
+    data: CashierData[];
     message: string;
     error: null | any;
 }
@@ -21,7 +26,7 @@ interface SummaryState {
     loading: boolean,
     error: string | null,
     message: string | null,
-    data: SummaryData | null
+    data: CashierData[] | null
 }
 
 let initialState: SummaryState = {
@@ -60,7 +65,6 @@ export const getSummaryData = (from: string | undefined, to: string | undefined,
             dispatch(addSummary({ loading: false, error: summaryData.error, message: null, data: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
-        dispatch(addSummary({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
+        dispatch(addSummary({ message: "", error: typeof err?.response?.data?.error === "string" ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }

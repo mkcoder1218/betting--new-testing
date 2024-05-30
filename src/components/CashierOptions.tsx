@@ -3,10 +3,9 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { styled } from '@mui/material/styles';
-import Tooltip from '@mui/material/Tooltip';
-import Stack from '@mui/material/Stack';
 import dayjs, { Dayjs } from 'dayjs';
+import * as XLSX from 'xlsx';
+
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -14,12 +13,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { MdOutlineCancel } from "react-icons/md";
 import { IoMdRefresh } from "react-icons/io";
 import { FaPrint } from "react-icons/fa";
+import { FaRegFileLines } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from '../features/hooks';
-import { getSummaryData } from '../features/slices/summarySlice';
+import { CashierData, getSummaryData } from '../features/slices/summarySlice';
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
 import { recallTickets } from '../features/slices/ticketSlice';
-
 
 interface CashierOptionsProps {
     open: boolean,
@@ -46,52 +45,6 @@ const style = {
     boxShadow: 24,
     p: 0,
 };
-
-const ProSpan = styled('span')({
-    display: 'inline-block',
-    height: '1em',
-    width: '1em',
-    verticalAlign: 'middle',
-    marginLeft: '0.3em',
-    marginBottom: '0.08em',
-    backgroundSize: 'contain',
-    backgroundRepeat: 'no-repeat',
-    backgroundImage: 'url(https://mui.com/static/x/pro.svg)',
-});
-
-function Label({
-    componentName,
-    valueType,
-    isProOnly,
-}: {
-    componentName: string;
-    valueType: string;
-    isProOnly?: boolean;
-}) {
-    const content = (
-        <span>
-            <strong>{componentName}</strong> for {valueType} editing
-        </span>
-    );
-
-    if (isProOnly) {
-        return (
-            <Stack direction="row" spacing={0.5} component="span">
-                <Tooltip title="Included on Pro package">
-                    <a
-                        href="https://mui.com/x/introduction/licensing/#pro-plan"
-                        aria-label="Included on Pro package"
-                    >
-                        <ProSpan />
-                    </a>
-                </Tooltip>
-                {content}
-            </Stack>
-        );
-    }
-
-    return content;
-}
 
 function CustomTabPanel(props: TabPanelProps) {
     const { children, value, index, ...other } = props;
@@ -135,7 +88,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
     };
 
     const handleFetchSummary = () => {
-        dispatch(getSummaryData(from?.toISOString(), to?.toISOString(), userData.user?.Cashier.id));
+        dispatch(getSummaryData(from?.toISOString(), to?.toISOString(), userData.user?.Cashier.shopId));
     }
 
     const getTicketList = () => {
@@ -145,6 +98,42 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
     React.useEffect(() => {
         getTicketList();
     }, [])
+
+    const exportToExcel = (data: CashierData[] | null) => {
+        if (!data) {
+            return;
+        }
+
+        let newData = [];
+
+        for (let item of data) {
+            const newReport = {
+                RetailUser: item['Cashier.User.username'],
+                ["From Date"]: from?.toDate().toDateString(),
+                ["To Date"]: to?.toDate().toDateString(),
+                ["Start Balance"]: `Br.0.00`,
+                ["Deposits"]: `Br. 0.00`,
+                ["Bets"]: `Br. ${parseInt(item.totalBets).toFixed(2)}`,
+                ["Cancellations"]: `Br. ${parseInt(item.totalCancelAmount).toFixed(2)}`,
+                ["Redeemed"]: `Br. ${parseInt(item.totalRedeemAmount).toFixed(2)}`,
+                ["Withdraws"]: `Br. 0.00`,
+                ["End Balance"]: `Br. ${parseInt(item.netAmount).toFixed(2)}`
+            }
+
+            newData.push(newReport);
+        }
+        // Create a new workbook
+        const workbook = XLSX.utils.book_new();
+
+        // Convert the data to a worksheet
+        const worksheet = XLSX.utils.json_to_sheet(newData);
+
+        // Append the worksheet to the workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary Report');
+
+        // Generate a Blob for the workbook
+        XLSX.writeFile(workbook, `Summary Report ${from?.toDate().toDateString()} - ${to?.toDate().toDateString()}.xlsx`);
+    };
 
     return (
         <div>
@@ -169,7 +158,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                             </Box>
                             <div className='border-2 mt-4 border-amber-300 w-full rounded-md'>
                                 <CustomTabPanel value={value} index={0}>
-                                    <div className='date-picker-form flex gap-6 items-end'>
+                                    <div className='date-picker-form flex gap-4 items-end'>
                                         <div>
                                             <p className='mb-1'>From Date</p>
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -193,19 +182,20 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                 </DemoContainer>
                                             </LocalizationProvider>
                                         </div>
-                                        <button onClick={handleFetchSummary} className='p-2 mb-2 bg-green-600 rounded-md text-white flex items-center gap-2'>Refresh <span><IoMdRefresh className='text-white' size={20} /></span></button>
+                                        <button onClick={handleFetchSummary} className='p-2 text-sm mb-2 bg-green-600 rounded-md text-white flex items-center gap-2'>Refresh <span><IoMdRefresh className='text-white' size={16} /></span></button>
+                                        {(summaryData.data && summaryData.data.length > 0) && <button onClick={() => exportToExcel(summaryData?.data)} className='p-2 text-sm mb-2 bg-green-600 rounded-md text-white flex items-center gap-2'>Export to Excel<span><FaRegFileLines className='text-white' size={16} /></span></button>}
                                     </div>
                                     {summaryData.loading && <div className='w-full flex items-center p-4 justify-center'>
                                         <ProgressCircular /></div>}
-                                    {summaryData.error && <FormStatus type='error' content={summaryData.error} />}
-                                    {summaryData.data?.totalTickets === "0" &&
+                                    {summaryData.error !== null && <FormStatus type='error' content={summaryData.error} />}
+                                    {!summaryData.data || summaryData.data?.length < 0 &&
                                         <div className='w-full text-center p-4 mt-4'>
                                             No Tickets found
                                         </div>
                                     }
-                                    {(summaryData.data !== null && parseInt(summaryData.data.totalTickets) > 0) && <div className='summary-content w-full mt-4'>
+                                    {(summaryData.data !== null && summaryData.data.length > 0) && <div className='summary-content w-full mt-4'>
                                         <table className='w-full table table-fixed'>
-                                            <thead className='border-2 border-slate-300 bg-slate-300'>
+                                            <thead className='border-2 border-slate-300 bg-white'>
                                                 <tr className='text-sm p-2 table-row'>
                                                     <th className='border p-2 border-slate-400'>Print</th>
                                                     <th className='border border-slate-400'>Cashier Name</th>
@@ -219,21 +209,24 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr className='text-center text-sm p-2 '>
-                                                    <td className='border border-slate-400'>
-                                                        <span className='flex items-center justify-center cursor-pointer'>
-                                                            <FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' />
-                                                        </span>
-                                                    </td>
-                                                    <td className='border border-slate-400 p-2'>{userData.user?.username}</td>
-                                                    <td className='border border-slate-400 p-2'>{from?.toDate().toLocaleDateString()}</td>
-                                                    <td className='border border-slate-400 p-2'>{to?.toDate().toLocaleDateString()}</td>
-                                                    <td className='border border-slate-400 p-2'>{summaryData.data.totalTickets}</td>
-                                                    <td className='border border-slate-400 p-2'>{summaryData.data.totalBets ? parseFloat(summaryData.data?.totalBets).toFixed(2) : 0.00} Br.</td>
-                                                    <td className='border border-slate-400 p-2'>{summaryData.data.redeemCount}</td>
-                                                    <td className='border border-slate-400 p-2'>{summaryData.data.cancelCount}</td>
-                                                    <td className='border border-slate-400 p-2'>{summaryData.data.netAmount ? summaryData.data?.netAmount?.toFixed(2) : 0.00} Br.</td>
-                                                </tr>
+                                                {summaryData.data.map((item) => {
+                                                    return <tr key={item.cashierCreateId} className='text-center text-sm p-2 '>
+                                                        <td className='border border-slate-400'>
+                                                            <span className='flex items-center justify-center cursor-pointer'>
+                                                                <FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' />
+                                                            </span>
+                                                        </td>
+                                                        <td className='border border-slate-400 p-2'>{item['Cashier.User.username']}</td>
+                                                        <td className='border border-slate-400 p-2'>{from?.toDate().toLocaleDateString()}</td>
+                                                        <td className='border border-slate-400 p-2'>{to?.toDate().toLocaleDateString()}</td>
+                                                        <td className='border border-slate-400 p-2'>{item.totalTickets}</td>
+                                                        <td className='border border-slate-400 p-2'>{parseFloat(item.totalBets).toFixed(2)} Br.</td>
+                                                        <td className='border border-slate-400 p-2'>{item.redeemCount}</td>
+                                                        <td className='border border-slate-400 p-2'>{item.cancelCount}</td>
+                                                        <td className='border border-slate-400 p-2'>{parseInt(item.netAmount).toFixed(2)} Br.</td>
+                                                    </tr>
+                                                })}
+
 
                                             </tbody>
                                         </table>

@@ -26,6 +26,7 @@
     "dayjs": "^1.11.11",
     "dynamsoft-javascript-barcode": "^9.6.42",
     "escpos": "^3.0.0-alpha.6",
+    "file-saver": "^2.0.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
     "react": "^18.2.0",
@@ -37,7 +38,8 @@
     "react-thermal-printer": "^0.18.1",
     "react-usb-barcode-scanner": "^0.1.12",
     "serialport": "^12.0.0",
-    "sort-by": "^1.2.0"
+    "sort-by": "^1.2.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/dom-serial": "^1.0.6",
