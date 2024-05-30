@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../features/hooks';
 import { getTicketsToCancel, getTicketsToRedeem } from '../features/slices/betData';
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
+import { Ticket, printSelectedTickets } from '../features/slices/ticketSlice';
 
 interface RedeemTicketProps {
     open: boolean,
@@ -34,6 +35,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
     const dispatch = useAppDispatch();
     const [betslip, setSlip] = useState('');
     const [eventType, toggleEvent] = useState('change');
+    const userData = useAppSelector(state => state.user);
     const betSlipData = useAppSelector(state => state.betData);
     const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 

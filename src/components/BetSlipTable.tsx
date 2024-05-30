@@ -3,6 +3,8 @@ import { FaEye } from "react-icons/fa";
 import betData, { BetSlip, cancelTicket, redeemTicket } from "../features/slices/betData";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { useEffect } from "react";
+import { printSelectedTickets } from "../features/slices/ticketSlice";
+import { Ticket } from "../features/slices/betSlip";
 
 interface ActionType {
     type: string,
@@ -16,6 +18,16 @@ const BetSlipTable = ({ type, data }: ActionType) => {
     const userData = useAppSelector(state => state.user);
     const gameNumber = data.Tickets?.map((items) => items.Game.gamenumber);
     const totalStake = data.Tickets?.reduce((a, b) => a + parseInt(b?.stake), 0)
+
+    const printSelected = (item: Ticket) => {
+        const payload = {
+            betslipId: item.betSlipId,
+            shopId: userData.user?.Cashier.shopId,
+            cashierCreateId: userData.user?.Cashier.id
+        }
+
+        printSelectedTickets(payload);
+    }
 
     const handleCancel = () => {
         dispatch(cancelTicket(gameNumber?.[0], parseInt(data?.betSlipNumber), userData.user?.Cashier.id));
@@ -95,7 +107,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                             return <tr key={item.id} className="bg-white border-b">
                                 {type === "redeem" && <td scope="row" className="px-1 flex gap-4 py-2">
                                     <FaEye className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
-                                    <IoIosPrint className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
+                                    <IoIosPrint onClick={() => printSelected(item)} className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer" size={40} />
                                 </td>}
                                 <td scope="row" className="px-3 py-2">
                                     {data.betSlipNumber}

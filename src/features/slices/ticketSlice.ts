@@ -14,7 +14,7 @@ interface Game {
     updatedAt: string;
 }
 
-interface Ticket {
+export interface Ticket {
     id: string;
     ticketno: string;
     nums: number[];
@@ -84,5 +84,14 @@ export const recallTickets = (cashierId: string | undefined) => async (dispatch:
 
     } catch (err: AxiosError | any) {
         dispatch(addTicket({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: [] }));
+    }
+}
+
+export const printSelectedTickets = async (req: any) => {
+    try {
+        const printSelectedResponse = await axiosInstance.post("ticket/printSelected", req);
+        console.log(printSelectedResponse);
+    } catch (err) {
+        console.log(err);
     }
 }

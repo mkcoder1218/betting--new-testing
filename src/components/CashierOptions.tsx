@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from '../features/hooks';
 import { CashierData, getSummaryData, printSummaryToBackend } from '../features/slices/summarySlice';
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
-import { recallTickets } from '../features/slices/ticketSlice';
+import { Ticket, printSelectedTickets, recallTickets } from '../features/slices/ticketSlice';
 
 interface CashierOptionsProps {
     open: boolean,
@@ -117,6 +117,16 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
         printSummaryToBackend(dataToSend);
     }
 
+    const printSelected = (item: Ticket) => {
+        const payload = {
+            betslipId: item.betSlipId,
+            shopId: userData.user?.Cashier.shopId,
+            cashierCreateId: userData.user?.Cashier.id
+        }
+
+        printSelectedTickets(payload);
+    }
+
     const exportToExcel = (data: CashierData[] | null) => {
         if (!data) {
             return;
@@ -141,8 +151,24 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
             newData.push(newReport);
         }
 
+        const totalEndBalance = data.reduce((a, b) => a + parseInt(b.netAmount), 0);
+        newData.push({
+            RetailUser: '',
+            ["From Date"]: '',
+            ["To Date"]: '',
+            ["Start Balance"]: '',
+            ["Deposits"]: ``,
+            ["Bets"]: ``,
+            ["Cancellations"]: ``,
+            ["Redeemed"]: ``,
+            ["Withdraws"]: `Total End Balance`,
+            ["End Balance"]: `Br. ${totalEndBalance.toFixed(2)}`
+        });
+
+
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.json_to_sheet(newData);
+
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary Report');
         XLSX.writeFile(workbook, `Summary Report ${from?.toDate().toDateString()} - ${to?.toDate().toDateString()}.xlsx`);
     };
@@ -271,7 +297,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                             <tbody>
                                                 {ticketList.data.map((item) => {
                                                     return <tr key={item.id} className='text-center text-sm p-2 border border-slate-300'>
-                                                        <td className='border border-slate-400 p-2'>
+                                                        <td onClick={() => printSelected(item)} className='border border-slate-400 p-2'>
                                                             <div className='border  flex items-center justify-center'><FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' /></div>
                                                         </td>
                                                         <td className='border border-slate-400 p-2'>{item.Game.gamenumber}</td>
