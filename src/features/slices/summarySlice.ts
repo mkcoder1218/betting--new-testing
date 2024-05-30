@@ -68,3 +68,13 @@ export const getSummaryData = (from: string | undefined, to: string | undefined,
         dispatch(addSummary({ message: "", error: typeof err?.response?.data?.error === "string" ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }
+
+export const printSummaryToBackend = async (data: any) => {
+    try {
+        const printResponse = await axiosInstance.post("ticket/printSummary", data);
+
+        console.log(printResponse);
+    } catch (err) {
+        console.log(err);
+    }
+}

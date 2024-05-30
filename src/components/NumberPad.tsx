@@ -2,24 +2,20 @@ import React, { useState } from 'react';
 
 interface Props {
     onInput: (input: number | null, type: string) => void;
-    onEnter: (input: string) => void;
-    onClear: () => void;
-    onDelete: () => void;
+    onSubmit: (input: string) => void;
 }
 
-const NumberPad: React.FC<Props> = ({ onEnter, onClear, onDelete, onInput }) => {
+const NumberPad: React.FC<Props> = ({ onSubmit, onInput }) => {
     const [input, setInput] = useState<string>('');
 
     const handleClick = (value: string | number) => {
         if (value === 'Enter') {
-            onEnter(input);
+            onSubmit(input);
             setInput('');
         } else if (value === 'Clear') {
-            onClear();
             setInput('');
             onInput(null, "removeAll")
         } else if (value === 'X') {
-            onDelete();
             setInput(input.slice(0, -1));
             onInput(null, "remove")
         } else {

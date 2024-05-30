@@ -15,7 +15,7 @@ import { IoMdRefresh } from "react-icons/io";
 import { FaPrint } from "react-icons/fa";
 import { FaRegFileLines } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from '../features/hooks';
-import { CashierData, getSummaryData } from '../features/slices/summarySlice';
+import { CashierData, getSummaryData, printSummaryToBackend } from '../features/slices/summarySlice';
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
 import { recallTickets } from '../features/slices/ticketSlice';
@@ -99,6 +99,24 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
         getTicketList();
     }, [])
 
+    const printSummary = (item: CashierData) => {
+        const dataToSend = {
+            cashierName: item['Cashier.User.username'],
+            from: from?.toDate().toDateString(),
+            to: to?.toDate().toDateString(),
+            startBalance: 0.00,
+            deposits: 0.00,
+            bets: item.totalBets,
+            cancellations: item.totalCancelAmount,
+            redeemed: item.totalRedeemAmount,
+            withdraws: 0.00,
+            endBalance: item.netAmount,
+            shopId: userData.user?.Cashier.shopId
+        }
+
+        printSummaryToBackend(dataToSend);
+    }
+
     const exportToExcel = (data: CashierData[] | null) => {
         if (!data) {
             return;
@@ -122,16 +140,10 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
 
             newData.push(newReport);
         }
-        // Create a new workbook
+
         const workbook = XLSX.utils.book_new();
-
-        // Convert the data to a worksheet
         const worksheet = XLSX.utils.json_to_sheet(newData);
-
-        // Append the worksheet to the workbook
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Summary Report');
-
-        // Generate a Blob for the workbook
         XLSX.writeFile(workbook, `Summary Report ${from?.toDate().toDateString()} - ${to?.toDate().toDateString()}.xlsx`);
     };
 
@@ -175,7 +187,6 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DemoContainer components={['DatePicker', 'DatePicker']}>
                                                     <DatePicker
-
                                                         value={to}
                                                         onChange={(newValue) => setTo(newValue)}
                                                     />
@@ -211,7 +222,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                             <tbody>
                                                 {summaryData.data.map((item) => {
                                                     return <tr key={item.cashierCreateId} className='text-center text-sm p-2 '>
-                                                        <td className='border border-slate-400'>
+                                                        <td onClick={() => printSummary(item)} className='border border-slate-400'>
                                                             <span className='flex items-center justify-center cursor-pointer'>
                                                                 <FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' />
                                                             </span>

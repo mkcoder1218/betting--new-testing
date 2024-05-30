@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from '../features/hooks';
 import { getTicketsToCancel, getTicketsToRedeem } from '../features/slices/betData';
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
-import Dynamsoft, { TextResult } from 'dynamsoft-javascript-barcode';
 
 interface RedeemTicketProps {
     open: boolean,
@@ -31,19 +30,11 @@ const style = {
     p: 0,
 };
 
-const deviceConfiguration = {
-    deviceType: 'USB',
-    deviceId: '04e9:8190', // Example USB vendor and product IDs
-    communicationType: 'HID', // Common communication protocol for USB barcode scanners
-};
-
 export default function RedeemTicket({ open, handleClose, type }: RedeemTicketProps) {
     const dispatch = useAppDispatch();
-
-    const [betslip, setSlip] = React.useState('');
-    const [data, setData] = React.useState("Not Found");
-    const [barcodeSubmit, toggleBarcode] = useState(false);
-    const betSlipData = useAppSelector(state => state.betData)
+    const [betslip, setSlip] = useState('');
+    const [eventType, toggleEvent] = useState('change');
+    const betSlipData = useAppSelector(state => state.betData);
     const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
     const handleInput = (input: number | null, action: string) => {
@@ -56,7 +47,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
             values.pop();
             let newVal = values.join("");
 
-            setSlip(newVal)
+            setSlip(newVal);
         }
 
         if (action === "removeAll") {
@@ -65,52 +56,33 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
     };
 
     const handleEnter = (input: any) => {
+        if (betslip === '') {
+            return;
+        }
+
         if (type === "cancel") {
             dispatch(getTicketsToCancel(parseInt(betslip)))
         } else {
             dispatch(getTicketsToRedeem(parseInt(betslip)))
         }
+
+        setSlip('');
     };
-
-    const handleClear = () => {
-        console.log('Cleared');
-    };
-
-    const handleDelete = () => {
-        console.log('Deleted');
-    };
-
-    const handleBarCode = (e: React.FormEvent) => {
-        console.log("submitted");
-    }
-
-    useEffect(() => {
-        if (barcodeSubmit && betslip !== '') {
-            // handleEnter(betslip);
-            // toggleBarcode(false);
-            // setSlip('');
-            // console.log(betslip)
-        }
-    }, [barcodeSubmit])
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSlip(event.target.value);
+        toggleEvent(event.type);
     };
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.target instanceof HTMLInputElement) {
-                return;
+            if (eventType === 'change') return;
+
+            if (!isNaN(parseInt(event.key))) {
+                setSlip((prevValue) => prevValue + event.key);
             }
 
-            if (event.key === 'Enter') {
-                toggleBarcode(true);
-            } else {
-                console.log("input event")
-                if (!isNaN(parseInt(event.key))) {
-                    setSlip((prevValue) => prevValue + event.key);
-                }
-            }
+            console.log(event.type);
         };
 
         document.addEventListener('keydown', handleKeyDown);
@@ -129,9 +101,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-
                 <Box sx={style}>
-
                     <div className='cashier-options-header flex justify-between items-center p-2 bg-amber-500 rounded-tl-lg rounded-tr-lg'>
                         <p className='text-white font-bold text-lg'>{type === "redeem" ? "Redeem Betslip" : "Cancel Betslip"}</p>
                         <MdOutlineCancel onClick={handleClose} size={24} className='text-black' />
@@ -140,11 +110,11 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                         <Box>
                             <div className='flex'>
                                 <div className='w-1/3'>
-                                    <form onSubmit={handleBarCode} className='w-full'>
+                                    <div className='w-full'>
                                         <p>Enter betslip code or scan</p>
-                                        <input onChange={handleChange} value={betslip} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
-                                    </form>
-                                    <NumberPad onInput={handleInput} onEnter={handleEnter} onClear={handleClear} onDelete={handleDelete} />
+                                        <input value={betslip} onChange={handleChange} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
+                                    </div>
+                                    <NumberPad onInput={handleInput} onSubmit={handleEnter} />
                                 </div>
                                 {betSlipData.loading && <div className='w-full flex items-center justify-center'>
                                     <ProgressCircular /></div>}
