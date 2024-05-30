@@ -81,8 +81,6 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
             if (!isNaN(parseInt(event.key))) {
                 setSlip((prevValue) => prevValue + event.key);
             }
-
-            console.log(event.type);
         };
 
         document.addEventListener('keydown', handleKeyDown);

@@ -3,6 +3,7 @@ import { TiCancel } from "react-icons/ti";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { useEffect, useState } from "react";
 import { logoutUser } from "../features/slices/userSlice";
+import { clearBetData } from "../features/slices/betData";
 
 interface CashierHeaderOptions {
     handleOpen: () => void;
@@ -34,6 +35,7 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
     const openCancelRedeem = (val: string) => {
         handleCancelRedeem(val);
         handleRedeemOpen();
+        dispatch(clearBetData());
     }
 
     return (

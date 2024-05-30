@@ -68,11 +68,17 @@ const betDataSlice = createSlice({
             state.error = action.payload.error;
             state.message = action.payload.message;
             state.data = action.payload.data;
+        },
+        clearBetData: (state) => {
+            state.data = null;
+            state.error = null;
+            state.message = null;
+            state.loading = false;
         }
     }
 })
 
-export const { addBetData } = betDataSlice.actions;
+export const { addBetData, clearBetData } = betDataSlice.actions;
 
 export default betDataSlice.reducer;
 
