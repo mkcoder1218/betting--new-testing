@@ -71,6 +71,7 @@ function App() {
   useEffect(() => {
     if (remainingTime === 0) {
       const timeerFetch = setInterval(() => {
+        console.log("fetching last game");
         dispatch(getLastGame(user.user?.Cashier.shopId));
       }, 5000);
 
@@ -111,8 +112,8 @@ function App() {
         <div className='left gap-4'>
           <GameIllustration />
           <div className="next-draw flex mt-4">
-            {(gameData.game && remainingTime > 0) ? <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 font-bold ml-4'>{formatTime(minutes, seconds)}</span></div> : <div className='bg-red-500 p-2 text-sm rounded-tl-md rounded-bl-md text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{"00"}:{"00"}</span></div>}
-            <div className='bg-green-600 p-2 text-sm rounded-tr-md rounded-br-md text-white'>REPEAT <span className='text-black rounded-md bg-gray-400'>
+            {(gameData.game && remainingTime > 0) ? <div className='bg-red-500 p-2 text-sm text-white flex items-center'>NEXT DRAW <span className='text-amber-300 font-bold ml-4'>{formatTime(minutes, seconds)}</span></div> : <div className='bg-red-500 p-2 text-sm text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{"00"}:{"00"}</span></div>}
+            <div className='bg-green-600 p-2 text-sm text-white'>REPEAT <span className='text-black rounded-md bg-gray-400'>
               <select onChange={handleRepeat}>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
                   return <option key={index} className='bg-gray-500 text-white'>{item}</option>

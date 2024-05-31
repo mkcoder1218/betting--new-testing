@@ -63,8 +63,6 @@ export default function BetSlip() {
         refreshBetSlipNumber();
 
         let newBetSlipNumber = betSlipState.data ? parseInt(betSlipState.data?.betSlipNumber) + 1 : generateRandomNumber();
-        console.log(betSlipState.data);
-        console.log(newBetSlipNumber);
         let newTicketToSend = [];
 
         for (let ticket of betState.betSlip) {

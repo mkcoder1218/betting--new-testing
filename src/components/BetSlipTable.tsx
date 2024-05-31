@@ -148,12 +148,12 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                 </div>
                 <div className="flex items-center justify-end mt-3">
                     {type === "redeem" ? <div className="font-bold text-l">
-                        {data.Tickets && data.Tickets?.reduce((a, b) => a + b.win, 0) < 1 && "Not a Winning Ticket"}
+                        {(data.Tickets && data.Tickets[0].Game.status === "COMPLETED" && data.Tickets?.reduce((a, b) => a + b.win, 0) < 1) && "Not a Winning Ticket"}
                         {data.Tickets && data.Tickets?.reduce((a, b) => a + b.win, 0) > 0 && "A Winning Ticket"}
                     </div> : <div className="font-bold text-l">Total Stake Br. {totalStake?.toFixed(2)}</div>}
-                    {type === "redeem" ? <button onClick={handleRedeem} className="ml-3 px-4 py-2 bg-green-600 text-white rounded-md">
+                    {type === "redeem" ? <button onClick={handleRedeem} className="ml-3 px-4 py-2 bg-green-600 text-white rounded-sm">
                         Redeem $
-                    </button> : <button onClick={handleCancel} className="ml-3 px-4 py-2 bg-orange-600 text-white rounded-md">
+                    </button> : <button onClick={handleCancel} className="ml-3 px-4 py-2 bg-orange-600 text-white rounded-sm">
                         Cancel $
                     </button>}
                 </div>
