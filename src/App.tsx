@@ -121,7 +121,7 @@ function App() {
               </select>
             </span></div>
           </div>
-          <div className='picker-container flex justify-start items-start'>
+          <div className='picker-container flex w-90 justify-start items-start'>
             <div className="picker-left">
               <TicketSelector />
               <div className="number-picker mt-4">
@@ -129,6 +129,7 @@ function App() {
               </div>
             </div>
             {oddData.odd && <TicketSlipHolder />}
+            {!oddData.odd && <div></div>}
           </div>
         </div>
         <BetSlip />

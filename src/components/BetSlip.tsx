@@ -113,17 +113,17 @@ export default function BetSlip() {
     }
 
     return (
-        <div className='right basis-2/5 flex items-center flex-col'>
-            <div className='text-l text-orange-500 font-bold flex items-center justify-center text-center'>
+        <div className='right relative ml-20 basis-1/3 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400'>
+            <div className='text-l text-green-600 font-bold flex items-center justify-center text-center'>
                 Betslip
             </div>
 
-            <div className='right-slip-content w-full flex flex-col items-center p-4'>
-                <div className="slip-right-head flex items-center justify-center bg-orange-500 rounded-sm p-1">
-                    <div className="left cursor-pointer bg-orange-500 p-1 pr-2 pl-2 text-sm text-white rounded-sm">
+            <div className='right-slip-content w-full flex flex-col items-center mt-2'>
+                <div className="slip-right-head flex items-center justify-center bg-green-500 rounded-sm p-1">
+                    <div className="left cursor-pointer bg-green-500 pr-3 pl-4 text-xs text-white rounded-sm">
                         SINGLE
                     </div>
-                    <div className="left cursor-pointer bg-black p-1 pr-2 pl-2 text-sm text-white rounded-sm">
+                    <div className="left cursor-pointer bg-white pr-3 pl-4 text-xs text-black rounded-sm">
                         MULTIPLES
                     </div>
                 </div>
@@ -139,7 +139,7 @@ export default function BetSlip() {
                 }
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
-                    return <div key={index} className={`selected-nums-con w-3/4 ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-500'} rounded-md p-1 mt-2 text-white`}>
+                    return <div key={index} className={`selected-nums-con ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-500'} w-full rounded-sm m-2 p-1 text-white`}>
                         <div className="flex justify-between items-center">
                             <p className='text-xs flex items-center'><span className='rounded-xl h-5 w-5 flex items-center justify-center border-2 mr-2'>8</span> Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
@@ -165,13 +165,13 @@ export default function BetSlip() {
 
                 {betState.betSlip.length > 0 && <>
 
-                    <div className='btn-container-bet mt-1 flex gap-2 justify-stretch w-3/4 items-center'>
+                    <div className='btn-container-bet w-full mt-1 p-1 flex gap-2 justify-stretch items-center'>
                         <button onClick={() => updateStakeAll(10)} className='bg-green-600 hover:opacity-75 transition-all flex-grow p-2 rounded-md text-white'>10 <span className='ml-3'>$</span> </button>
                         <button onClick={() => updateStakeAll(20)} className='bg-pink-600 hover:opacity-75 transition-all flex-grow p-2 rounded-md text-white'>20 <span className='ml-3'>$</span> </button>
                         <button onClick={() => updateStakeAll(50)} className='bg-blue-600 hover:opacity-75 transition-all flex-grow p-2 rounded-md text-white'>50 <span className='ml-3'>$</span> </button>
                         <button onClick={() => updateStakeAll(100)} className='bg-blue-400 hover:opacity-75 transition-all flex-grow p-2 rounded-md text-white'>100 <span className='ml-3'>$</span> </button>
                     </div>
-                    <div className="amounts mt-2 w-3/4 text-black">
+                    <div className="amounts mt-2 w-full p-1 text-black">
                         <div className='text-lg mt-1 flex justify-between items-center'>
                             <p>TOTAL STAKE</p>
                             <p>{betState.totalStake}.00 BR</p>
@@ -184,7 +184,7 @@ export default function BetSlip() {
 
                     {betSlipState.loading && <ProgressCircular />}
 
-                    <div className='confirm-cancel w-3/4 gap-1 text-white mt-2 flex justify-between items-center'>
+                    <div className='confirm-cancel w-full gap-1 text-white mt-2 flex justify-between items-center'>
                         <button onClick={clearSlip} className='p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CANCEL</button>
                         <button disabled={currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={`p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 ${currentDate < betState.betSlip[0].expiry ? 'bg-green-500' : 'bg-green-300'}`}>PLACE BET</button>
                     </div>

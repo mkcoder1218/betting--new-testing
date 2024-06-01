@@ -109,17 +109,17 @@ export default function TicketSelector() {
                 </select>
             </span>
                 <span><FaShuffle /></span></div>
-            <div onClick={() => addHeads(!heads)} className={`${!heads ? 'bg-amber-600' : 'bg-green-600 shadow-md'} hover:opacity-70 cursor-pointer transition-all p-2 text-sm rounded-sm text-white`}>HEADS
+            <div onClick={() => addHeads(!heads)} className={`${!heads ? 'bg-amber-600' : 'bg-green-600 shadow-md'} hover:opacity-70 pl-6 pr-6 cursor-pointer transition-all p-2 text-sm rounded-sm text-white`}>HEADS
                 <span className='text-white p-1 pl-2 pr-2 ml-16 bg-black rounded-sm'>
                     2
                 </span>
             </div>
-            <div onClick={() => addEvens(!evens)} className={`${!evens ? 'bg-red-500' : 'bg-green-600'} hover:opacity-70 cursor-pointer transition-all p-2 text-sm rounded-sm text-white`}>EVENS
+            <div onClick={() => addEvens(!evens)} className={`${!evens ? 'bg-red-500' : 'bg-green-600'} hover:opacity-70 cursor-pointer pl-6 pr-6 transition-all p-2 text-sm rounded-sm text-white`}>EVENS
                 <span className='text-white p-1 pl-2 pr-2 ml-16 bg-black rounded-sm'>
                     4
                 </span>
             </div>
-            <div onClick={() => addTails(!tails)} className={`${!tails ? 'bg-orange-500' : 'bg-green-600'} hover:opacity-70 cursor-pointer transition-all p-2 text-sm rounded-sm text-white`}>TAILS
+            <div onClick={() => addTails(!tails)} className={`${!tails ? 'bg-orange-500' : 'bg-green-600'} hover:opacity-70 cursor-pointer pl-6 pr-6 transition-all p-2 text-sm rounded-sm text-white`}>TAILS
                 <span className='text-white p-1 pl-2 pr-2 ml-16 bg-black rounded-sm'>
                     2
                 </span>

@@ -1,5 +1,6 @@
 import { GiConfirmed } from "react-icons/gi";
 import { TiCancel } from "react-icons/ti";
+import { TfiMoney } from "react-icons/tfi";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { useEffect, useState } from "react";
 import { logoutUser } from "../features/slices/userSlice";
@@ -51,9 +52,9 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
                     <span className='pl-2'>Cancel</span>
                     <TiCancel size={20} />
                 </button>
-                <button onClick={() => openCancelRedeem("redeem")} className='p-2 flex items-center gap-1 bg-green-400 text-white rounded-md'>
+                <button onClick={() => openCancelRedeem("redeem")} className='p-2 flex items-center gap-1 bg-green-600 text-white rounded-md'>
                     <span className='pl-2'>Redeem</span>
-                    <GiConfirmed size={20} />
+                    <TfiMoney size={18} />
                 </button>
             </div>
             <div className='flex items-center justify-center'>
