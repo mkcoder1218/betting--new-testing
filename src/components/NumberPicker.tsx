@@ -15,7 +15,7 @@ const NumberPicker: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-wrap">
+        <div className="mr-10 basis-5/6">
             <div className="mb-3">
                 <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4 border-b-2 border-red-400">
                     {[...Array(40)].map((_, index) => {

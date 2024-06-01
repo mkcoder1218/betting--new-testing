@@ -41,9 +41,9 @@ export default function GameIllustration() {
             <button className="text-green-500 hover:text-green-500 w-8">
                 <Bicycle />
             </button>
-            {/* <button className="text-green-500 hover:text-green-500 w-8">
+            <button className="text-green-500 hover:text-green-500 w-8">
                 <HorseJump />
-            </button> */}
+            </button>
         </div>
     )
 }

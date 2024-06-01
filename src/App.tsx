@@ -20,7 +20,9 @@ function App() {
   const user = useAppSelector(state => state.user);
   const oddData = useAppSelector(state => state.odd);
   const gameData = useAppSelector(state => state.game);
+
   const ticketExpiry = useAppSelector(state => state.expiry);
+  const ticketPicker = useAppSelector(state => state.picker);
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false)
   const [cancelRedeem, setCancelRedeem] = useState("redeem")
@@ -108,7 +110,7 @@ function App() {
       <CashierOptions open={open} handleClose={handleClose} />
       <RedeemTicket open={redeemOpen} handleClose={handleRedeemClose} type={cancelRedeem} />
       <CashierHeader handleOpen={handleOpen} handleRedeemOpen={handleRedeemOpen} handleCancelRedeem={handleCancelRedeem} />
-      <div className='border-gray-300 border-t-4 p-4 ml-4 flex justify-between'>
+      <div className='border-gray-300 w-74 border-t-4 p-4 ml-4 flex justify-between'>
         <div className='left gap-4'>
           <GameIllustration />
           <div className="next-draw flex mt-4">
@@ -121,15 +123,19 @@ function App() {
               </select>
             </span></div>
           </div>
-          <div className='picker-container flex w-90 justify-start items-start'>
-            <div className="picker-left">
+          <div className='picker-container flex justify-stretch items-start'>
+            <div className="picker-left w-94">
               <TicketSelector />
-              <div className="number-picker mt-4">
+              <div className="number-picker mt-4 flex justify-start items-start">
                 <NumberPicker />
+                <div className='w-80'>
+                  {ticketPicker.selected.length < 1 && <div className="speech left">Pick 1 to 10 numbers from 80. Pick numbers which you think randomly will be selected. The more you pick the more you could win.</div>}
+                  {oddData.odd && <TicketSlipHolder />}
+                </div>
+
               </div>
             </div>
-            {oddData.odd && <TicketSlipHolder />}
-            {!oddData.odd && <div></div>}
+
           </div>
         </div>
         <BetSlip />

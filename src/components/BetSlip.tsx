@@ -113,7 +113,7 @@ export default function BetSlip() {
     }
 
     return (
-        <div className='right relative ml-20 basis-1/3 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400'>
+        <div className='right relative ml-20 basis-80 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400'>
             <div className='text-l text-green-600 font-bold flex items-center justify-center text-center'>
                 Betslip
             </div>

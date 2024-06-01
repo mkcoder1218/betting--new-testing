@@ -72,13 +72,13 @@ export default function TicketSlipHolder() {
     }, [pickedNumbers])
 
     return (
-        <div className="picker-right-slip mt-2">
+        <div className="ml-10" style={{ marginTop: "-50px" }}>
             {(gameState.game && odds.length > 0) && <>
                 <button onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white p-2'>CLEAR <span><RiDeleteBin6Line /></span> </button>
                 <button disabled={currentDate > ticketExpiry} onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, expiry: ticketExpiry, stake: defaultStake, gameId: gameState.game?.gamenumber })} className='p-3 bg-green-600 text-white text-lg mt-2'>
                     ADD TO BETSLIP
                 </button>
-                <div className="slip-container w-80 mt-3 flex flex-col flex-shrink-0">
+                <div className="slip-container w-70 mt-3 flex flex-col flex-shrink-0">
                     <div className='slip-head bg-amber-500 text-sm p-2'>
                         HIGHEST PAYOUT FROM {pickedNumbers.length}
                     </div>

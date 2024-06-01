@@ -7,3 +7,31 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+.speech {
+  font-size: 15px;
+  color: #fff;
+  font-weight: 600;
+  background: #595959;
+
+  padding: 20px;
+}
+
+.speech::after {
+  display: block; width: 0; content: "";
+  border: 15px solid transparent;
+}
+
+.speech.left::after {
+  border-right-color: #595959;
+  border-left: 0;
+}
+
+.speech {
+  position: relative;
+  margin: 0px;
+}
+.speech::after { position: absolute; }
+.speech.left::after {
+  left: -15px; top: calc(50% - 15px);
+}
