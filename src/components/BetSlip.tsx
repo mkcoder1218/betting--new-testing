@@ -184,11 +184,13 @@ export default function BetSlip() {
 
                     {betSlipState.loading && <ProgressCircular />}
 
-                    <div className='confirm-cancel w-full gap-1 text-white mt-2 flex justify-between items-center'>
-                        <button onClick={clearSlip} className='p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CANCEL</button>
-                        <button disabled={currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={`p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 ${currentDate < betState.betSlip[0].expiry ? 'bg-green-500' : 'bg-green-300'}`}>PLACE BET</button>
-                    </div>
+
                 </>}
+
+                <div className='confirm-cancel w-full gap-1 text-white mt-2 flex justify-between items-center'>
+                    <button disabled={betState.betSlip.length < 1} onClick={clearSlip} className=' disabled:bg-red-300 p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CLEAR</button>
+                    <button disabled={betState.betSlip.length < 1 || currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 ${currentDate < betState.betSlip[0]?.expiry ? 'bg-green-500' : 'bg-green-300'}`}>PLACE BET</button>
+                </div>
 
             </div>
 
