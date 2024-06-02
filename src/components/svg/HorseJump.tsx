@@ -2,12 +2,11 @@ import { SVGProps } from "react"
 
 export const HorseJump = (props: SVGProps<SVGSVGElement>) => (
     <svg
-        style={{ marginLeft: "38px" }}
         xmlns="http://www.w3.org/2000/svg"
         x="0px"
         y="0px"
-        height={28}
-        viewBox="0 0 100 35.8"
+        height={30}
+        viewBox="0 0 66 35.8"
         data-svg-id="MotorRacingSVG"
         className="fill-current"
     >

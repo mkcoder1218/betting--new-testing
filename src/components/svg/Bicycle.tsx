@@ -8,8 +8,7 @@ export const Bicycle = (props: SVGProps<SVGSVGElement>) => (
         x="0px"
         y="0px"
         height={26}
-        style={{ marginLeft: "30px" }}
-        viewBox="0 0 100 35.8"
+        viewBox="0 0 66 35.8"
         data-svg-id="MotorRacingSVG"
         className="fill-current"
     >

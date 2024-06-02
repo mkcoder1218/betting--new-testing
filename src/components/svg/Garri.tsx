@@ -2,12 +2,11 @@ import { SVGProps } from "react"
 
 export const Garri = (props: SVGProps<SVGSVGElement>) => (
     <svg
-        style={{ marginLeft: "20" }}
         xmlns="http://www.w3.org/2000/svg"
         x="0px"
         y="0px"
-        height={28}
-        viewBox="0 0 100 35.8"
+        height={30}
+        viewBox="0 0 60 35.8"
         data-svg-id="MotorRacingSVG"
         className="fill-current"
     >
@@ -18,4 +17,5 @@ export const Garri = (props: SVGProps<SVGSVGElement>) => (
             ></path>
         </g>
     </svg>
+
 );

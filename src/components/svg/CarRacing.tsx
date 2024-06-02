@@ -6,7 +6,7 @@ export const CarRacing = (props: SVGProps<SVGSVGElement>) => (
         x="0px"
         y="0px"
         height={20}
-        viewBox="0 0 100 35.8"
+        viewBox="0 0 110 35.8"
         data-svg-id="MotorRacingSVG"
         className="fill-current"
     >
