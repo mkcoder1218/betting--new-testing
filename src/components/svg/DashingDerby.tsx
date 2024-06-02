@@ -6,6 +6,7 @@ export const DashingDerby = (props: SVGProps<SVGSVGElement>) => (
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 49.5 36.1"
         data-svg-id="DashingDerbySVG"
+        height={30}
     >
         <g>
             <g>

@@ -113,7 +113,7 @@ export default function BetSlip() {
     }
 
     return (
-        <div className='right relative ml-20 basis-80 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400'>
+        <div style={{ flexBasis: "23%" }} className='right relative ml-20 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400'>
             <div className='text-l text-green-600 font-bold flex items-center justify-center text-center'>
                 Betslip
             </div>
@@ -128,6 +128,10 @@ export default function BetSlip() {
                     </div>
                 </div>
 
+                {betState.betSlip.length < 1 && <div className={`text-center mt-4 mb-4 text-gray-400 font-bold text-md`}>
+                    Add more bets
+                </div>}
+
                 {(!betSlipState.loading && betSlipState.error) && <FormStatus type="error" content={betSlipState.error} />}
                 {(!betSlipState.loading && betSlipState.message && statusVisible) && <FormStatus type="success" content={betSlipState.message} />}
 
@@ -139,12 +143,12 @@ export default function BetSlip() {
                 }
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
-                    return <div key={index} className={`selected-nums-con ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-500'} w-full rounded-sm m-2 p-1 text-white`}>
+                    return <div key={index} className={`selected-nums-con ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-400'} w-full m-2 p-1 text-white font-bold`}>
                         <div className="flex justify-between items-center">
                             <p className='text-xs flex items-center'><span className='rounded-xl h-5 w-5 flex items-center justify-center border-2 mr-2'>8</span> Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
                         </div>
-                        <p className='text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-amber-600 p-1 text-white rounded-lg text-xs'>{item.multiplier}</span></p>
+                        <p className='text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
                         <p className='text-xs'>{new Date(item.expiry).toLocaleDateString()} {new Date(item.expiry).toLocaleTimeString()} ID|{gameState.game?.gamenumber}</p>
                         <><div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
                             <div onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-500 cursor-pointer transition-all h-6 w-6 justify-center inc bg-slate-700 rounded-sm flex items-center p-1'>
@@ -187,9 +191,9 @@ export default function BetSlip() {
 
                 </>}
 
-                <div className='confirm-cancel w-full gap-1 text-white mt-2 flex justify-between items-center'>
+                <div className='confirm-cancel mb-4 w-full gap-1 text-white mt-2 flex justify-between items-center'>
                     <button disabled={betState.betSlip.length < 1} onClick={clearSlip} className=' disabled:bg-red-300 p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CLEAR</button>
-                    <button disabled={betState.betSlip.length < 1 || currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-3/4 ${currentDate < betState.betSlip[0]?.expiry ? 'bg-green-500' : 'bg-green-300'}`}>PLACE BET</button>
+                    <button disabled={betState.betSlip.length < 1 || currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${currentDate < betState.betSlip[0]?.expiry ? 'bg-green-500' : 'bg-green-300'}`}>PLACE BET</button>
                 </div>
 
             </div>
