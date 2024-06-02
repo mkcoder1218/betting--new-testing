@@ -114,8 +114,8 @@ function App() {
         <div className='left gap-4'>
           <GameIllustration />
           <div className="next-draw flex mt-4">
-            {(gameData.game && remainingTime > 0) ? <div className='bg-red-500 p-2 text-sm text-white flex items-center'>NEXT DRAW <span className='text-amber-300 font-bold ml-4'>{formatTime(minutes, seconds)}</span></div> : <div className='bg-red-500 p-2 text-sm text-white flex items-center'>NEXT DRAW <span className='text-amber-300 ml-4'>{"00"}:{"00"}</span></div>}
-            <div className='bg-green-600 p-2 text-sm text-white'>REPEAT <span className='text-black rounded-md bg-gray-400'>
+            {(gameData.game && remainingTime > 0) ? <div className='bg-red-500 font-bold p-2 text-sm text-white flex items-center'>NEXT DRAW <span className='text-amber-300 font-bold ml-4'>{formatTime(minutes, seconds)}</span></div> : <div className='bg-red-500 p-2 text-sm text-white flex font-bold items-center'>NEXT DRAW <span className='font-bold text-amber-300 ml-4'>{"00"}:{"00"}</span></div>}
+            <div className='bg-green-600 p-2 text-sm text-white font-bold'>REPEAT <span className='text-black rounded-md bg-gray-400'>
               <select onChange={handleRepeat}>
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
                   return <option key={index} className='bg-gray-500 text-white'>{item}</option>
@@ -128,9 +128,10 @@ function App() {
               <TicketSelector />
               <div className="number-picker mt-4 flex justify-start items-start">
                 <NumberPicker />
-                <div className='w-80'>
+                <div className='w-80 flex flex-col gap-4'>
+                  <TicketSlipHolder />
                   {ticketPicker.selected.length < 1 && <div className="speech left">Pick 1 to 10 numbers from 80. Pick numbers which you think randomly will be selected. The more you pick the more you could win.</div>}
-                  {oddData.odd && <TicketSlipHolder />}
+
                 </div>
 
               </div>

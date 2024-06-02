@@ -42,7 +42,7 @@ const NumberPicker: React.FC = () => {
                         return (
                             <button
                                 key={number}
-                                className={`rounded-full w-10 h-10 text-white ${isSelected ? 'bg-green-500' : 'bg-orange-700'
+                                className={`rounded-full w-10 h-10 text-white ${isSelected ? 'bg-green-500' : 'bg-orange-600'
                                     }`}
                                 onClick={() => toggleNumber(number)}
                             >
