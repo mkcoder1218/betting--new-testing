@@ -182,7 +182,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <div className='cashier-options-header flex justify-between items-center p-4 bg-amber-500 rounded-tl-lg rounded-tr-lg'>
+                    <div className='cashier-options-header flex justify-between items-center p-3 bg-green-500 rounded-tl-lg rounded-tr-lg'>
                         <p className='text-white font-bold text-lg'>Cashier Options</p>
                         <MdOutlineCancel onClick={handleClose} size={24} className='text-black' />
                     </div>
@@ -194,7 +194,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                     <Tab label="Recall Tickets" style={{ textTransform: "unset", color: value === 1 ? "#FFFFFF" : "#000000" }} {...a11yProps(1)} />
                                 </Tabs>
                             </Box>
-                            <div className='border-2 mt-4 border-amber-300 w-full rounded-md'>
+                            <div className='border-2 mt-4 border-green-500 w-full rounded-md'>
                                 <CustomTabPanel value={value} index={0}>
                                     <div className='date-picker-form flex gap-4 items-end'>
                                         <div>
@@ -271,7 +271,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                 </CustomTabPanel>
                                 <CustomTabPanel value={value} index={1}>
                                     <div className='date-picker-form flex gap-6 items-end'>
-                                        <button onClick={getTicketList} className='p-2 mb-2 bg-orange-500 rounded-md text-white flex items-center gap-2'>Refresh<span><IoMdRefresh className='text-white' size={20} /></span></button>
+                                        <button onClick={getTicketList} className='p-1 mb-2 bg-green-500 rounded-md text-white flex items-center gap-2'>Refresh<span><IoMdRefresh className='text-white' size={20} /></span></button>
                                     </div>
 
                                     {ticketList.loading && <div className='w-full flex items-center p-4 justify-center'>
