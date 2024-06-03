@@ -110,7 +110,7 @@ function App() {
       <CashierOptions open={open} handleClose={handleClose} />
       <RedeemTicket open={redeemOpen} handleClose={handleRedeemClose} type={cancelRedeem} />
       <CashierHeader handleOpen={handleOpen} handleRedeemOpen={handleRedeemOpen} handleCancelRedeem={handleCancelRedeem} />
-      <div className='border-gray-300 w-74 border-t-4 p-4 ml-4 flex items-start justify-between'>
+      <div className='border-gray-300 border-t-4 p-4 ml-4 flex items-start justify-between'>
         <div className='left gap-4'>
           <GameIllustration />
           <div className="next-draw flex mt-4">

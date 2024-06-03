@@ -72,7 +72,7 @@ export default function TicketSlipHolder() {
     }, [pickedNumbers])
 
     return (
-        <div className="ml-10" style={{ marginTop: "-50px" }}>
+        <div className="ml-10" style={{ marginTop: "-54px" }}>
             <button disabled={(!gameState.game || odds.length < 1)} onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white p-2 disabled:bg-red-300'>CLEAR <span><RiDeleteBin6Line /></span> </button>
             {(gameState.game && odds.length > 0) && <>
 
