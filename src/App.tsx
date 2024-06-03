@@ -124,19 +124,16 @@ function App() {
             </span></div>
           </div>
           <div className='picker-container flex justify-stretch items-start'>
-            <div className="picker-left w-94">
+            <div className="picker-left basis-full">
               <TicketSelector />
-              <div className="number-picker mt-4 flex justify-start items-start">
+              <div className="number-picker mt-4 w-full">
                 <NumberPicker />
-                <div className='w-80 flex flex-col gap-4'>
-                  <TicketSlipHolder />
-                  {ticketPicker.selected.length < 1 && <div className="speech left">Pick 1 to 10 numbers from 80. Pick numbers which you think randomly will be selected. The more you pick the more you could win.</div>}
-
-                </div>
-
               </div>
             </div>
-
+            <div className='flex flex-col gap-4 items-start mt-2' style={{ flexBasis: "38%" }}>
+              <TicketSlipHolder />
+              <div className="speech left mt-20" style={{ visibility: ticketPicker.selected.length < 1 ? "visible" : "hidden" }}>Pick 1 to 10 numbers from 80. Pick numbers which you think randomly will be selected. The more you pick the more you could win.</div>
+            </div>
           </div>
         </div>
         <BetSlip />
