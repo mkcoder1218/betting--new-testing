@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
 
 export interface CashierData {
@@ -74,6 +74,10 @@ export const printSummaryToBackend = async (data: any) => {
         const printResponse = await axiosInstance.post("ticket/printSummary", data);
 
         console.log(printResponse);
+
+        if (printResponse.status === 200 || printResponse.status === 201) {
+            const callPrinterWithData = await axios.post("http://localhost:5000/printSummary", printResponse.data.data)
+        }
     } catch (err) {
         console.log(err);
     }

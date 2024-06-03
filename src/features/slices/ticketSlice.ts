@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
 
 
@@ -91,6 +91,10 @@ export const printSelectedTickets = async (req: any) => {
     try {
         const printSelectedResponse = await axiosInstance.post("ticket/printSelected", req);
         console.log(printSelectedResponse);
+
+        if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
+            const printSelectedData = await axios.post("http://localhost:5000/printTicket", printSelectedResponse.data.data)
+        }
     } catch (err) {
         console.log(err);
     }

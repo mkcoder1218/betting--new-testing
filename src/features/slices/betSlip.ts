@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
 
 interface BetSlipData {
@@ -43,6 +43,10 @@ export interface BetSlip {
     Tickets: Ticket[] | null
 }
 
+export interface ToPrint {
+    dataToPrint: any
+}
+
 interface BetSlipState<T> {
     loading: boolean,
     error: string | null,
@@ -81,7 +85,7 @@ export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => vo
     dispatch(addTicketAndBetSlip({ loading: true, error: null, message: null, data: null }))
 
     try {
-        const betSlipResponse: BetSlipResponse<BetSlip> = (await axiosInstance.post("ticket/betslip", data)).data;
+        const betSlipResponse: BetSlipResponse<ToPrint> = (await axiosInstance.post("ticket/betslip", data)).data;
 
         if (betSlipResponse.message === "betslip added successfully") {
             dispatch(addTicketAndBetSlip({ loading: false, error: null, message: betSlipResponse.message, data: null }))
@@ -93,12 +97,17 @@ export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => vo
                 toggleStatus(false);
                 clearNumberSelection();
             }, 3000);
+
+            try {
+                const printResponse = await axios.post("http://localhost:5000/printTicket", betSlipResponse.data);
+            } catch (err) {
+                console.log("print failed")
+            }
         } else {
             toggleStatus(true)
             dispatch(addTicketAndBetSlip({ loading: false, error: betSlipResponse.error, message: null, data: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addTicketAndBetSlip({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }
