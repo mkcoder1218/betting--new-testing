@@ -27,16 +27,16 @@ export default function GameIllustration() {
     };
 
     const dropdownItems = [
-        { icon: <Football />, text1: 'FOOTBALL', text2: 'FOOTBALL', width: 'w-8' },
-        { icon: <DashingDerby />, text1: 'DASHING DERBY', text2: 'DASHING DERBY', width: 'w-10' },
-        { icon: <Jaguar />, text1: 'JAGUAR', text2: 'JAGUAR', width: 'w-16' },
-        { icon: <SmartPlay />, text1: 'SMART PLAY', text2: 'SMART PLAY', width: 'w-8' },
-        { icon: <CircleDraw />, text1: 'CIRCLE DRAW', text2: 'CIRCLE DRAW', width: 'w-8' },
-        { icon: <LuckyLoot />, text1: 'LUCKY LOOT', text2: 'LUCKY LOOT', width: 'w-8' },
-        { icon: <CarRacing />, text1: 'CAR RACING', text2: 'CAR RACING', width: 'w-14' },
-        { icon: <Garri />, text1: 'GARRI', text2: 'GARRI', width: 'w-12' },
-        { icon: <Bicycle />, text1: 'BICYCLE', text2: 'BICYCLE', width: 'w-12' },
-        { icon: <HorseJump />, text1: 'HORSE JUMP', text2: 'HORSE JUMP', width: 'w-12' },
+        { icon: <Football />, text1: 'FOOTBALL', text2: 'GROUP', width: 'w-8' },
+        { icon: <DashingDerby />, text1: 'HORSE RACING', text2: 'DASHING DERBY', width: 'w-10' },
+        { icon: <Jaguar />, text1: 'GREYHOUND RACING', text2: 'PLATINUM HOUNDS', width: 'w-16' },
+        { icon: <SmartPlay />, text1: 'KENO', text2: '', width: 'w-8' },
+        { icon: <CircleDraw />, text1: 'SPIN AND WIN', text2: '', width: 'w-8' },
+        { icon: <LuckyLoot />, text1: 'LUCKY LOOT', text2: '', width: 'w-8' },
+        { icon: <CarRacing />, text1: 'MOTOR RACING', text2: 'MAXCAR', width: 'w-14' },
+        { icon: <Garri />, text1: 'HARNESS RACING', text2: 'CHARGING CHARIOTS', width: 'w-12' },
+        { icon: <Bicycle />, text1: 'TRACK RACING', text2: 'SLIP STREAM', width: 'w-12' },
+        { icon: <HorseJump />, text1: 'STEEPLE CHASE RACING', text2: 'JUMPS', width: 'w-12' },
     ];
 
     return (
@@ -75,8 +75,8 @@ export default function GameIllustration() {
             </div>
             <div className="drop-down w-64 flex">
                 <div className="w-full items-center relative inline-block text-left">
-                    <div onClick={() => toggleDropdown()} className="flex items-center cursor-pointer">
-                        <BsFillGrid3X3GapFill className="text-green-600" size={36} />
+                    <div className="flex items-center cursor-pointer">
+                        <BsFillGrid3X3GapFill onClick={() => toggleDropdown()} className="text-green-600" size={36} />
                         <div className="flex ml-2 items-center">
                             <button className={`text-green-500 hover:text-green-300 transition-all ${dropdownItems[selectedGame].width}`}>
                                 {dropdownItems[selectedGame].icon}
@@ -97,10 +97,10 @@ export default function GameIllustration() {
                                         </button>
                                     </div>
                                     <div className="ml-2 text-green-600  hover:text-green-300 transition-all">
-                                        <div className="font-bold text-sm">
+                                        <div className="text-sm">
                                             {item.text1}
                                         </div>
-                                        <div className="font-bold text-xs">
+                                        <div className="text-xs">
                                             {item.text2}
                                         </div>
                                     </div>
