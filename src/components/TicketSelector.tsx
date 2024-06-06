@@ -104,15 +104,17 @@ export default function TicketSelector() {
 
     return (
         <div className='mid-row flex items-center content-center mt-2 gap-3 w-full'>
-            <div className='bg-green-600 p-2 flex-2 text-sm rounded-sm flex font-bold items-center gap-3 text-white'>QUICK PICK <span className='text-black rounded-sm bg-gray-400'>
+            <div style={{ backgroundColor: "#008000" }} className='p-2 flex-2 text-sm rounded-sm flex font-bold items-center gap-3 text-white'>QUICK PICK <span className='text-black rounded-sm bg-gray-400'>
                 <select onChange={handleSelectChange}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                    {["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
                         return <option key={index} className='bg-gray-500 text-white'>{item}</option>
                     })}
                 </select>
             </span>
-                <span><FaShuffle /></span></div>
-            <div onClick={() => addHeads(!heads)} className={`${!heads ? 'bg-orange-700' : 'bg-green-600 shadow-md'} hover:opacity-70 cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}>HEADS
+                <span className="cursor-pointer"><FaShuffle /></span></div>
+            <div style={{
+                backgroundColor: `${!tails ? '#BC4307' : '#008000'}`
+            }} onClick={() => addHeads(!heads)} className={`hover:opacity-70 cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}>HEADS
                 <span className='text-black text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     2
                 </span>
@@ -122,7 +124,9 @@ export default function TicketSelector() {
                     4
                 </span>
             </div>
-            <div onClick={() => addTails(!tails)} className={`${!tails ? 'bg-orange-700' : 'bg-green-600'} hover:opacity-70 cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>TAILS
+            <div style={{
+                backgroundColor: `${!tails ? '#D75D1A' : '#008000'}`
+            }} onClick={() => addTails(!tails)} className={` hover:opacity-70 cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>TAILS
                 <span className='text-black text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     2
                 </span>

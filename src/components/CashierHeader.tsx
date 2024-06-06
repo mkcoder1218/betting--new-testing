@@ -45,7 +45,7 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
                 Retail Logo
             </div>
             <div className='flex gap-4 justify-center w-full p-2 pb-0'>
-                <button onClick={handleOpen} className='p-2 bg-green-600 text-white rounded-md'>
+                <button style={{ backgroundColor: "#37B34A" }} onClick={handleOpen} className='p-2 text-white rounded-md'>
                     Cashier Options
                 </button>
                 <button onClick={() => openCancelRedeem("cancel")} className='p-2 flex items-center gap-1 bg-yellow-600 text-white rounded-md'>

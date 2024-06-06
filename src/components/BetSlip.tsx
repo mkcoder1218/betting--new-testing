@@ -145,7 +145,9 @@ export default function BetSlip() {
                 }
 
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
-                    return <div key={index} className={`selected-nums-con ${currentDate > betState.betSlip[0].expiry ? 'bg-red-400' : 'bg-gray-400'} w-full m-1 p-1 text-white font-bold`}>
+                    return <div style={{
+                        backgroundColor: `${currentDate > betState.betSlip[0].expiry ? '#f87171' : '#969696'}`
+                    }} key={index} className={`selected-nums-con w-full m-1 p-1 text-white font-bold`}>
                         <div className="flex justify-between items-center">
                             <p className='text-xs flex items-center'>Win</p>
                             <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>

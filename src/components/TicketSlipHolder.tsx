@@ -76,7 +76,7 @@ export default function TicketSlipHolder() {
             <button disabled={(!gameState.game || odds.length < 1)} onClick={clearList} className='flex items-center gap-3 bg-red-500 text-white p-2 disabled:bg-red-300'>CLEAR <span><RiDeleteBin6Line /></span> </button>
             {(gameState.game && odds.length > 0) && <>
 
-                <button disabled={currentDate > ticketExpiry} onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, expiry: ticketExpiry, stake: defaultStake, gameId: gameState.game?.gamenumber })} className='p-3 bg-green-500 text-white text-lg mt-2'>
+                <button style={{ backgroundColor: "#37B34A" }} disabled={currentDate > ticketExpiry} onClick={() => addToSlip({ selected: pickedNumbers, multiplier: odds[odds.length - 1].multiplier, toWin: odds[odds.length - 1].multiplier, expiry: ticketExpiry, stake: defaultStake, gameId: gameState.game?.gamenumber })} className='p-3 text-white text-lg mt-2'>
                     ADD TO BETSLIP
                 </button>
                 <div className="slip-container w-70 mt-3 flex flex-col flex-shrink-0">

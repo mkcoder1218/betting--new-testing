@@ -23,9 +23,12 @@ const NumberPicker: React.FC = () => {
                         const isSelected = pickedNumbers.includes(number);
                         return (
                             <button
+                                style={{
+                                    backgroundColor: `${isSelected ? '#008000' : '#c2410c'
+                                        }`
+                                }}
                                 key={number}
-                                className={`rounded-full w-10 h-10 text-white ${isSelected ? 'bg-green-500' : 'bg-orange-700'
-                                    }`}
+                                className={`rounded-full w-10 h-10 text-white`}
                                 onClick={() => toggleNumber(number)}
                             >
                                 {number}
@@ -41,9 +44,12 @@ const NumberPicker: React.FC = () => {
                         const isSelected = pickedNumbers.includes(number);
                         return (
                             <button
+                                style={{
+                                    backgroundColor: `${isSelected ? '#008000' : '#ea580c'
+                                        }`
+                                }}
                                 key={number}
-                                className={`rounded-full w-10 h-10 text-white ${isSelected ? 'bg-green-500' : 'bg-orange-600'
-                                    }`}
+                                className={`rounded-full w-10 h-10 text-white`}
                                 onClick={() => toggleNumber(number)}
                             >
                                 {number}
