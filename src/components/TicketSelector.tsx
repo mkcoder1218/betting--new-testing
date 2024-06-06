@@ -17,6 +17,7 @@ export default function TicketSelector() {
     const gameState = useAppSelector(state => state.game);
     const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
     const expiryOfGame = gameCreatedDate?.setMinutes(gameCreatedDate.getMinutes() + 5);
+    const [count, setCount] = useState(0);
 
     const clearHeadTail = () => {
         setHeads(false);
@@ -85,6 +86,7 @@ export default function TicketSelector() {
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const count = parseInt(event.target.value);
+        setCount(count);
         generateRandomSelections(count);
     }
 
@@ -111,7 +113,7 @@ export default function TicketSelector() {
                     })}
                 </select>
             </span>
-                <span className="cursor-pointer"><FaShuffle /></span></div>
+                <span onClick={() => generateRandomSelections(count)} className="cursor-pointer"><FaShuffle /></span></div>
             <div style={{
                 backgroundColor: `${!tails ? '#BC4307' : '#008000'}`
             }} onClick={() => addHeads(!heads)} className={`hover:opacity-70 cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}>HEADS
