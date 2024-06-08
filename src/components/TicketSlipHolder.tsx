@@ -81,7 +81,7 @@ export default function TicketSlipHolder() {
                 </button>
                 <div className="slip-container w-70 mt-3 flex flex-col flex-shrink-0">
                     <div className='slip-head bg-green-500 font-bold text-sm text-white p-2'>
-                        HIGHEST PAYOUT FROM {Math.max(...odds.map(item => item.multiplier))} - {pickedNumbers.length}
+                        HIGHEST PAYOUT {Math.max(...odds.map(item => item.multiplier))} FROM {pickedNumbers.length}
                     </div>
                     {odds.map((item, index) => {
                         return <SlipItem selected={item.winLength} maxWin={item.multiplier} key={index} />

@@ -174,11 +174,11 @@ export default function BetSlip() {
                 {betState.betSlip.length > 0 && <>
 
                     <div className='btn-container-bet w-full mt-1 p-1 flex gap-2 justify-stretch items-center'>
-                        <button onClick={() => updateStakeAll(10)} className='bg-orange-500 hover:opacity-75 transition-all flex-grow rounded-md flex p-2 text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">10</span></button>
-                        <button onClick={() => updateStakeAll(20)} className='bg-pink-500 hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">20</span></button>
-                        <button onClick={() => updateStakeAll(50)} className='bg-purple-600 hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">50</span></button>
-                        <button onClick={() => updateStakeAll(100)} className='bg-blue-400 hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">100</span></button>
-                        <button onClick={() => updateStakeAll(150)} className='bg-lime-600 hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">150</span></button>
+                        <button style={{ backgroundColor: "#C9580F" }} onClick={() => updateStakeAll(10)} className='hover:opacity-75 transition-all flex-grow rounded-md flex p-2 text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">10</span></button>
+                        <button style={{ backgroundColor: "#C93362" }} onClick={() => updateStakeAll(20)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">20</span></button>
+                        <button style={{ backgroundColor: "#8830AD" }} onClick={() => updateStakeAll(50)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">50</span></button>
+                        <button style={{ backgroundColor: "#5A95F0" }} onClick={() => updateStakeAll(100)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">100</span></button>
+                        <button style={{ backgroundColor: "#688A37" }} onClick={() => updateStakeAll(150)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">150</span></button>
                     </div>
                     <div className="amounts mt-2 w-full p-1 text-black">
                         <div className='text-lg text-gray-600 mt-1 flex justify-between items-center'>
