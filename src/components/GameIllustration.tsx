@@ -12,6 +12,8 @@ import { LuckyLoot } from "./svg/LuckLoot";
 import { SmartPlay } from "./svg/SmartPlay";
 import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { IoMdHelpCircle } from "react-icons/io";
+import { DogWithVideo } from "./svg/DogWithVideo";
+import { HorseWithSpin } from "./svg/HorseWithSpin";
 
 export default function GameIllustration() {
     const [isOpen, setIsOpen] = useState(false);
@@ -37,6 +39,8 @@ export default function GameIllustration() {
         { icon: <Garri />, text1: 'HARNESS RACING', text2: 'CHARGING CHARIOTS', width: 'w-12' },
         { icon: <Bicycle />, text1: 'TRACK RACING', text2: 'SLIP STREAM', width: 'w-12' },
         { icon: <HorseJump />, text1: 'STEEPLE CHASE RACING', text2: 'JUMPS', width: 'w-12' },
+        { icon: <DogWithVideo />, text1: 'GREYHOUND RACING', text2: 'PLATINUM HOUNDS', width: 'w-12' },
+        { icon: <HorseWithSpin />, text1: 'HORSE RACING', text2: 'ROULETTE', width: 'w-12' }
     ];
 
     return (
@@ -71,6 +75,12 @@ export default function GameIllustration() {
                 </button>
                 <button className="text-gray-500 hover:text-green-500 w-8">
                     <HorseJump />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-8">
+                    <DogWithVideo />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-8">
+                    <HorseWithSpin />
                 </button>
             </div>
             <div className="drop-down w-64 flex">
