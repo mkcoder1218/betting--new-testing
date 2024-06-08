@@ -121,7 +121,7 @@ export default function BetSlip() {
             </div>
 
             <div className='right-slip-content w-full flex flex-col items-center mt-2'>
-                <div className="slip-right-head flex items-center justify-center bg-green-500 rounded-sm p-1">
+                <div className="slip-right-head mb-2 flex items-center justify-center bg-green-500 rounded-sm p-1">
                     <div className="left cursor-pointer bg-green-500 pr-3 pl-4 text-xs text-white rounded-sm">
                         SINGLE
                     </div>
@@ -138,7 +138,7 @@ export default function BetSlip() {
                 {(!betSlipState.loading && betSlipState.message && statusVisible) && <FormStatus type="success" content={betSlipState.message} />}
 
                 {currentDate > betState?.betSlip[0]?.expiry &&
-                    <div className="p-1 w-2/3 flex items-center justify-between mt-2 text-center text-s bg-red-400 text-white">
+                    <div className="p-1 w-full flex items-center justify-between mt-2 text-center text-s bg-red-400 text-white">
                         <p className="ml-3">Expired Bets</p>
                         <BsCheck2All className="mr-3" size={24} />
                     </div>
@@ -147,58 +147,61 @@ export default function BetSlip() {
                 {(gameState.game?.gamenumber && betState.betSlip.length > 0) && betState.betSlip.map((item, index) => {
                     return <div style={{
                         backgroundColor: `${currentDate > betState.betSlip[0].expiry ? '#f87171' : '#969696'}`
-                    }} key={index} className={`selected-nums-con w-full m-1 p-1 text-white font-bold`}>
-                        <div className="flex justify-between items-center">
+                    }} key={index} className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}>
+                        <div className="ml-8 flex justify-between items-center">
                             <p className='text-xs flex items-center'>Win</p>
-                            <span onClick={() => removeItemFromSlip(item)} className="rounded-full h-4 flex items-center justify-center w-4 border border-slate-200 text-white font-bold cursor-pointer">X</span>
+                            <span onClick={() => removeItemFromSlip(item)} className="h-4 flex items-center justify-center w-4 border text-xl text-black border-none font-bold cursor-pointer">X</span>
                         </div>
-                        <p className='text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
-                        <p className='text-xs'>{`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1}/${new Date(item.expiry).getDate()}`} {new Date(item.expiry).toLocaleTimeString('en-US', { hourCycle: "h24" })} ID|{gameState.game?.gamenumber}</p>
+                        <p className='ml-8 mr-8 text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
+                        <p className='ml-8 mr-8 text-xs'>{`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1}/${new Date(item.expiry).getDate()}`} {new Date(item.expiry).toLocaleTimeString('en-US', { hourCycle: "h24" })} ID|{gameState.game?.gamenumber}</p>
                         {currentDate < betState.betSlip[0].expiry &&
-                            <><div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
+                            <><div className="ml-8 mr-8 inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
 
                                 <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake >= 20 ? item.stake - 10 : 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
                                 <div className="flex items-center">
                                     <div className='num text-gray-500 text-end mr-2'>
-                                        {item.stake}
+                                        {item.stake.toFixed(2)}
                                     </div>
                                     <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
                                     />
                                 </div>
                             </div>
-                                <p className='text-white text-xs text-right mt-1'>TO WIN Br. {item.stake * item.multiplier}</p>
+                                <p className='ml-8 mr-8 text-white text-xs text-right mt-1'>TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}</p>
                             </>
                         }
                     </div>
                 })}
-                {(betState.betSlip && betState.betSlip.length > 1) && <>
-                    <p className="text-left w-3/4 mr-4">STAKE</p>
-                    <div className="inc-dec w-3/4 mr-4 mt-1 mb-2 flex bg-white items-center justify-between flex-shrink-0">
-                        <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => updateStakeAll((betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length) - 10 >= 10 ? -10 : 0)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
-                        <div className="flex items-center">
-                            <div className='num text-gray-500 text-end mr-2'>
-                                {betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length}
-                            </div>
-                            <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => updateStakeAll(10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
-                            />
-                        </div>
-                    </div>
-                </>}
+
 
                 {betState.betSlip.length > 0 && <>
-                    <div className='btn-container-bet w-full mt-1 p-1 flex gap-2 justify-stretch items-center'>
+                    <div className='btn-container-bet w-full p-1 flex gap-2 justify-stretch items-center'>
                         <button style={{ backgroundColor: "#C9580F" }} onClick={() => updateStakeAll(10)} className='hover:opacity-75 transition-all flex-grow rounded-md flex p-2 text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">10</span></button>
                         <button style={{ backgroundColor: "#C93362" }} onClick={() => updateStakeAll(20)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">20</span></button>
                         <button style={{ backgroundColor: "#8830AD" }} onClick={() => updateStakeAll(50)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">50</span></button>
                         <button style={{ backgroundColor: "#5A95F0" }} onClick={() => updateStakeAll(100)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">100</span></button>
                         <button style={{ backgroundColor: "#688A37" }} onClick={() => updateStakeAll(150)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">150</span></button>
                     </div>
-                    <div className="amounts mt-2 w-full p-1 text-black">
-                        <div className='text-lg text-gray-600 mt-1 flex justify-between items-center'>
+
+                    {(betState.betSlip && betState.betSlip.length > 1) && <>
+                        <p className="text-left w-3/4 mr-4">STAKE</p>
+                        <div className="inc-dec w-3/4 mr-4 mt-1 mb-2 flex bg-white items-center justify-between flex-shrink-0">
+                            <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => updateStakeAll((betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length) - 10 >= 10 ? -10 : 0)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
+                            <div className="flex items-center">
+                                <div className='num text-gray-500 text-end mr-2'>
+                                    {(betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length).toFixed(2)}
+                                </div>
+                                <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => updateStakeAll(10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
+                                />
+                            </div>
+                        </div>
+                    </>}
+
+                    <div className="amounts w-full p-1 text-black">
+                        <div className='text-lg font-medium text-gray-500 mt-1 flex justify-between items-center'>
                             <p>TOTAL STAKE</p>
                             <p>{betState.totalStake}.00 BR</p>
                         </div>
-                        <div className='text-lg text-gray-600 mt-1 flex justify-between items-center'>
+                        <div className='text-lg font-medium text-gray-500 mt-1 flex justify-between items-center'>
                             <p>TOTAL "TO WIN"</p>
                             <p>{betState.totalToWin}.00 BR</p>
                         </div>
