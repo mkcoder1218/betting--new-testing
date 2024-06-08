@@ -154,25 +154,38 @@ export default function BetSlip() {
                         </div>
                         <p className='text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
                         <p className='text-xs'>{`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1}/${new Date(item.expiry).getDate()}`} {new Date(item.expiry).toLocaleTimeString('en-US', { hourCycle: "h24" })} ID|{gameState.game?.gamenumber}</p>
-                        {currentDate < betState.betSlip[0].expiry && <><div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
+                        {currentDate < betState.betSlip[0].expiry &&
+                            <><div className="inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
 
-                            <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake >= 20 ? item.stake - 10 : 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
-                            <div className="flex items-center">
-                                <div className='num text-gray-500 text-end mr-2'>
-                                    {item.stake}
+                                <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake >= 20 ? item.stake - 10 : 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
+                                <div className="flex items-center">
+                                    <div className='num text-gray-500 text-end mr-2'>
+                                        {item.stake}
+                                    </div>
+                                    <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
+                                    />
                                 </div>
-                                <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
-                                />
                             </div>
-                        </div>
-                            <p className='text-white text-xs text-right mt-1'>TO WIN Br. {item.stake * item.multiplier}</p>
-                        </>}
+                                <p className='text-white text-xs text-right mt-1'>TO WIN Br. {item.stake * item.multiplier}</p>
+                            </>
+                        }
                     </div>
-
                 })}
+                {(betState.betSlip && betState.betSlip.length > 1) && <>
+                    <p className="text-left w-3/4 mr-4">STAKE</p>
+                    <div className="inc-dec w-3/4 mr-4 mt-1 mb-2 flex bg-white items-center justify-between flex-shrink-0">
+                        <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => updateStakeAll((betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length) - 10 >= 10 ? -10 : 0)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
+                        <div className="flex items-center">
+                            <div className='num text-gray-500 text-end mr-2'>
+                                {betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length}
+                            </div>
+                            <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => updateStakeAll(10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
+                            />
+                        </div>
+                    </div>
+                </>}
 
                 {betState.betSlip.length > 0 && <>
-
                     <div className='btn-container-bet w-full mt-1 p-1 flex gap-2 justify-stretch items-center'>
                         <button style={{ backgroundColor: "#C9580F" }} onClick={() => updateStakeAll(10)} className='hover:opacity-75 transition-all flex-grow rounded-md flex p-2 text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">10</span></button>
                         <button style={{ backgroundColor: "#C93362" }} onClick={() => updateStakeAll(20)} className='hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white'><sup className='text-sm self-start'>Br.</sup><span className="self-center mt-1">20</span></button>
@@ -200,10 +213,7 @@ export default function BetSlip() {
                     <button disabled={betState.betSlip.length < 1} onClick={clearSlip} className=' disabled:bg-red-200 p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500'>CLEAR</button>
                     <button disabled={betState.betSlip.length < 1 || currentDate > betState.betSlip[0].expiry} onClick={handleCreateTicket} className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${currentDate < betState.betSlip[0]?.expiry ? 'bg-green-500' : 'bg-green-200'}`}>PLACE BET</button>
                 </div>
-
             </div>
-
-
         </div>
     );
 }
