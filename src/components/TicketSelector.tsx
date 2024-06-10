@@ -115,7 +115,7 @@ export default function TicketSelector() {
             </span>
                 <span onClick={() => generateRandomSelections(count)} className="cursor-pointer"><FaShuffle /></span></div>
             <div style={{
-                backgroundColor: `${!tails ? '#BC4307' : '#008000'}`
+                backgroundColor: `${!heads ? '#BC4307' : '#008000'}`
             }} onClick={() => addHeads(!heads)} className={`hover:opacity-70 cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}>HEADS
                 <span className='text-black text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     2

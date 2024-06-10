@@ -54,3 +54,20 @@
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
+input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Remove arrows in number input (for Firefox) */
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* Remove border when active */
+        input[type="number"]:focus {
+            border: none;
+            outline: none;
+        }

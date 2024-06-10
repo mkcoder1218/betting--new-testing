@@ -67,10 +67,19 @@ const pickerSlice = createSlice({
             state.totalStake = totals.totalStake
             state.totalToWin = totals.totalToWin
         },
-        updateStakeForAllTickets: (state, action: PayloadAction<number>) => {
-            state.betSlip = state.betSlip.filter((item) => {
-                return item.stake += action.payload;
-            })
+        updateStakeForAllTickets: (state, action: PayloadAction<{ type: string, value: number }>) => {
+            if (action.payload.type == "inc") {
+                state.betSlip = state.betSlip.filter((item) => {
+                    return item.stake += action.payload.value;
+                })
+            }
+
+            if (action.payload.type === "add") {
+                state.betSlip = state.betSlip.map(item => ({
+                    ...item,
+                    stake: action.payload.value,
+                }))
+            }
 
             const totals = calculateTotals(state.betSlip);
 
