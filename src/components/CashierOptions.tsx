@@ -23,6 +23,7 @@ import { CashierData, getSummaryData, printSummaryToBackend } from '../features/
 import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
 import { Ticket, printSelectedTickets, recallTickets } from '../features/slices/ticketSlice';
+import { getCashierNames } from '../features/slices/cashierData';
 
 interface CashierOptionsProps {
     open: boolean,
@@ -87,10 +88,22 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
     const [valueParent, setParent] = React.useState(0);
     const [to, setTo] = React.useState<Dayjs | null>(dayjs(new Date().toDateString()));
     const [from, setFrom] = React.useState<Dayjs | null>(dayjs(new Date().toDateString()));
-    const [cashierName, setCashierName] = React.useState('');
+    const [cashierName, setCashierName] = React.useState<string[] | undefined>([]);
+    const [cashierNameVal, setCashier] = React.useState('');
+    const cashierState = useAppSelector(state => state.cashier);
+
+    React.useEffect(() => {
+        dispatch(getCashierNames(userData.user?.Cashier.shopId))
+    }, [])
 
     const handleCashierChoose = (event: SelectChangeEvent) => {
-        setCashierName(event.target.value);
+        setCashier(event.target.value);
+
+        if (event.target.value === "all") {
+            setCashierName(cashierState.data?.map((item) => item.id))
+        } else {
+            setCashierName([event.target.value])
+        }
     };
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -106,12 +119,13 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
     }
 
     const getTicketList = () => {
-        dispatch(recallTickets(userData.user?.Cashier.id))
+        dispatch(recallTickets(cashierName))
     }
 
     React.useEffect(() => {
         getTicketList();
-    }, [])
+        console.log(cashierName);
+    }, [cashierName])
 
     const printSummary = (item: CashierData) => {
         const dataToSend = {
@@ -303,21 +317,19 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                         Retail User
                                                     </div>
                                                     <div className='select-container'>
-                                                        <FormControl sx={{ mt: 1, mb: 2, p: 0, minWidth: 260 }} size="small">
+                                                        {cashierState.data && <FormControl sx={{ mt: 1, mb: 2, p: 0, minWidth: 260 }} size="small">
                                                             <Select
                                                                 labelId="demo-select-small-label"
                                                                 id="demo-select-small"
-                                                                value={cashierName}
                                                                 onChange={handleCashierChoose}
+                                                                value={cashierNameVal}
                                                             >
-                                                                <MenuItem value="">
-                                                                    <em>None</em>
-                                                                </MenuItem>
-                                                                <MenuItem value={"cashier.one"}>sqr.cashier.one</MenuItem>
-                                                                <MenuItem value={"cashier.two"}>sqr.cashier.two</MenuItem>
-                                                                <MenuItem value={"cashier.three"}>sqr.cashier.three</MenuItem>
+                                                                <MenuItem value={"all"}>All</MenuItem>
+                                                                {cashierState.data?.map((item) => {
+                                                                    return <MenuItem key={item.id} value={item.id}>{item.User.username.toLocaleLowerCase()}</MenuItem>
+                                                                })}
                                                             </Select>
-                                                        </FormControl>
+                                                        </FormControl>}
                                                     </div>
                                                 </div>
                                                 <div className='date-picker-form flex gap-6 items-end'>
@@ -334,32 +346,34 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                 }
                                                 {(!ticketList.loading && ticketList.data.length > 0) && <div className='summary-content  max-h-80  overflow-scroll w-full mt-4'>
                                                     <table className='w-full table table-fixed'>
-                                                        <thead className='border-2 border-slate-300 bg-slate-300'>
-                                                            <tr className='text-sm p-2 table-row'>
-                                                                <th className='border p-2 border-slate-400'>Print</th>
-                                                                <th className='border border-slate-400'>Game Number</th>
-                                                                <th className='border border-slate-400'>Cashier Name</th>
-                                                                <th className='border border-slate-400'>Player Numbers</th>
-                                                                <th className='border border-slate-400'>Net Stake</th>
-                                                                <th className='border border-slate-400'>Win</th>
+                                                        <thead className='border-2'>
+                                                            <tr className='text-sm text-left p-4 table-row'>
+
+                                                                <th className='p-2'>Game Number</th>
+                                                                <th className='p-2'>Retail User</th>
+                                                                <th className='p-2'>Player Numbers</th>
+                                                                <th className='p-2'>Net Stake</th>
+                                                                <th className='p-2'>Win</th>
+                                                                <th className='p-2'></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {ticketList.data.map((item) => {
-                                                                return <tr key={item.id} className='text-center text-sm p-2 border border-slate-300'>
-                                                                    <td onClick={() => printSelected(item)} className='border border-slate-400 p-2'>
-                                                                        <div className='border  flex items-center justify-center'><FaPrint size={20} className='text-orange-500 hover:text-orange-300 transition-all' /></div>
-                                                                    </td>
-                                                                    <td className='border border-slate-400 p-2'>{item.Game.gamenumber}</td>
-                                                                    <td className='border border-slate-400 p-2'>{userData.user?.username}</td>
-                                                                    <td className='border border-slate-400 p-2'>
+                                                                return <tr key={item.id} className='even:bg-gray-200 odd:bg-white text-start text-sm p-2 border-l-slate-300'>
+
+                                                                    <td className='border border-l-slate-400 p-3'>{item.Game.gamenumber}</td>
+                                                                    <td className='border border-l-slate-400 p-2'>{item.BetSlip.Cashier.User.username}</td>
+                                                                    <td className='border border-l-slate-400 p-2'>
                                                                         {(item.nums && !item.nums.includes(-2) && !item.nums.includes(-4) && !item.nums.includes(-6)) && item.nums?.join(", ")}
                                                                         {item.nums.includes(-2) && 'Heads'}
                                                                         {item.nums.includes(-4) && 'Evens'}
                                                                         {item.nums.includes(-6) && 'Tails'}
                                                                     </td>
-                                                                    <td className='border border-slate-400 p-2'>{parseFloat(item.stake).toFixed(2)} Br</td>
-                                                                    <td className='border border-slate-400 p-2'>{item.win ? item.win.toFixed(2) : 0.00} Br.</td>
+                                                                    <td className='border border-l-slate-400 p-2'>{parseFloat(item.stake).toFixed(2)} Br</td>
+                                                                    <td className='border border-l-slate-400 p-2'>{item.win ? item.win.toFixed(2) : 0.00} Br.</td>
+                                                                    <td onClick={() => printSelected(item)} className='border border-l-slate-400 p-2'>
+                                                                        <div className='border justify-center'><FaPrint size={20} className='text-green-600 hover:text-green-300 transition-all' /></div>
+                                                                    </td>
                                                                 </tr>
                                                             })}
 

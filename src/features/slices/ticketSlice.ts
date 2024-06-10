@@ -14,6 +14,18 @@ interface Game {
     updatedAt: string;
 }
 
+interface User {
+    username: string
+}
+
+interface Cashier {
+    User: User
+}
+
+interface BetSlip {
+    Cashier: Cashier
+}
+
 export interface Ticket {
     id: string;
     ticketno: string;
@@ -31,6 +43,7 @@ export interface Ticket {
     createdAt: string;
     updatedAt: string;
     Game: Game;
+    BetSlip: BetSlip
 }
 
 interface TicketResponse {
@@ -70,11 +83,11 @@ export const { addTicket } = ticketSlice.actions;
 
 export default ticketSlice.reducer;
 
-export const recallTickets = (cashierId: string | undefined) => async (dispatch: (arg0: { payload: TicketState; type: "ticket/addTicket"; }) => void) => {
+export const recallTickets = (cashierId: string[] | undefined) => async (dispatch: (arg0: { payload: TicketState; type: "ticket/addTicket"; }) => void) => {
     dispatch(addTicket({ loading: true, error: null, message: null, data: [] }));
 
     try {
-        const ticketData: TicketResponse = (await axiosInstance.get(`ticket/cashier/${cashierId}`)).data;
+        const ticketData: TicketResponse = (await axiosInstance.post(`ticket/cashier/`, { cashierCreateId: cashierId })).data;
 
         if (ticketData.message === "success") {
             dispatch(addTicket({ loading: false, error: null, message: ticketData.message, data: ticketData.data }));
