@@ -58,7 +58,20 @@ const pickerSlice = createSlice({
 
             if (index !== -1) {
                 changes.toWin = changes.stake && changes.stake * state.betSlip[index].multiplier;
-                console.log(changes.toWin);
+                state.betSlip[index] = { ...state.betSlip[index], ...changes }
+            }
+
+            const totals = calculateTotals(state.betSlip);
+
+            state.totalStake = totals.totalStake
+            state.totalToWin = totals.totalToWin
+        },
+        incrBetSlipItem: (state, action: PayloadAction<{ index: number, changes: Partial<Ticket> }>) => {
+            const { index, changes } = action.payload;
+
+            if (index !== -1) {
+                changes.toWin = changes.stake && changes.stake * state.betSlip[index].multiplier;
+                changes.stake = state.betSlip[index].stake + (changes.stake ? changes.stake : 0);
                 state.betSlip[index] = { ...state.betSlip[index], ...changes }
             }
 
@@ -69,9 +82,16 @@ const pickerSlice = createSlice({
         },
         updateStakeForAllTickets: (state, action: PayloadAction<{ type: string, value: number }>) => {
             if (action.payload.type == "inc") {
-                state.betSlip = state.betSlip.filter((item) => {
-                    return item.stake += action.payload.value;
-                })
+                const value = action.payload.value;
+                state.betSlip = state.betSlip.map(item => {
+                    if (value < 0) {
+                        // Update only if stake is greater than 10
+                        return item.stake > 10 ? { ...item, stake: item.stake + value } : item;
+                    } else {
+                        // Update all stakes
+                        return { ...item, stake: item.stake + value };
+                    }
+                });
             }
 
             if (action.payload.type === "add") {
@@ -100,6 +120,6 @@ function calculateTotals(betSlip: Ticket[]) {
     return { totalStake, totalToWin };
 }
 
-export const { addPickedNumbers, clearNumbers, addRandomNumbers, addToBetSlip, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets, clearBetSlip } = pickerSlice.actions;
+export const { addPickedNumbers, clearNumbers, addRandomNumbers, addToBetSlip, removeFromBetSlip, updateBetSlipItem, updateStakeForAllTickets, clearBetSlip, incrBetSlipItem } = pickerSlice.actions;
 
 export default pickerSlice.reducer;
