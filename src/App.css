@@ -22,3 +22,11 @@
   padding: 0px 16px 0px 6px !important;
   height: 30px !important;
 }
+
+.balls{
+  transition: background-color 0.3s;
+}
+
+.balls:hover{
+  background-color: #a6c99f !important;
+}

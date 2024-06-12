@@ -28,7 +28,7 @@ const NumberPicker: React.FC = () => {
                                         }`
                                 }}
                                 key={number}
-                                className={`rounded-full w-10 h-10 text-white`}
+                                className={`balls rounded-full w-10 h-10 text-white`}
                                 onClick={() => toggleNumber(number)}
                             >
                                 {number}
@@ -49,7 +49,7 @@ const NumberPicker: React.FC = () => {
                                         }`
                                 }}
                                 key={number}
-                                className={`rounded-full w-10 h-10 text-white`}
+                                className={`balls rounded-full w-10 h-10 text-white`}
                                 onClick={() => toggleNumber(number)}
                             >
                                 {number}
