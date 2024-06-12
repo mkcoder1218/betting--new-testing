@@ -262,7 +262,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                         </LocalizationProvider>
                                                     </div>
                                                     <button onClick={handleFetchSummary} className='p-2 text-sm bg-green-600 rounded-md text-white flex items-center gap-2'>Refresh <span><IoMdRefresh className='text-white' size={16} /></span></button>
-                                                    {(summaryData.data && summaryData.data.length > 0) && <button onClick={() => exportToExcel(summaryData?.data)} className='p-2 text-sm mb-2 bg-green-600 rounded-md text-white flex items-center gap-2'>Export to Excel<span><FaRegFileLines className='text-white' size={16} /></span></button>}
+                                                    {(summaryData.data && summaryData.data.length > 0) && <button onClick={() => exportToExcel(summaryData?.data)} className='p-2 text-sm bg-green-600 rounded-md text-white flex items-center gap-2'>Export to Excel<span><FaRegFileLines className='text-white' size={16} /></span></button>}
                                                 </div>
                                                 {summaryData.loading && <div className='w-full flex items-center p-4 justify-center'>
                                                     <ProgressCircular /></div>}
