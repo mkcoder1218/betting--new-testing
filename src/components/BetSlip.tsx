@@ -222,7 +222,7 @@ export default function BetSlip() {
                             </div>
                                 <p className='ml-8 mr-8 text-white text-xs text-right mt-1'>TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}</p>
                             </>
-                        }{(selected === index && currentDate > betState.betSlip[index].expiry) && <PriceButton index={index} changeIndividualStake={changeIndividualSlipStakeIncr} />}
+                        }{(selected === index && currentDate < betState.betSlip[index].expiry) && <PriceButton index={index} changeIndividualStake={changeIndividualSlipStakeIncr} />}
                     </div>
 
 
