@@ -73,7 +73,7 @@ export default function BetSlip() {
         setStatusVisible(val);
     }
 
-    const removeItemFromSlip = (item: Ticket) => {
+    const removeItemFromSlip = (item: number) => {
         dispatch(removeFromBetSlip(item));
     }
 
@@ -193,7 +193,7 @@ export default function BetSlip() {
                     }} key={index} className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}>
                         <div className="ml-8 flex justify-between items-center">
                             <p className='text-xs flex items-center'>Win</p>
-                            <span onClick={() => removeItemFromSlip(item)} className="h-4 flex items-center justify-center w-4 border text-xl text-black border-none font-bold cursor-pointer">X</span>
+                            <span onClick={() => removeItemFromSlip(index)} className="h-4 flex items-center justify-center w-4 border text-xl text-black border-none font-bold cursor-pointer">X</span>
                         </div>
                         <p className='ml-8 mr-8 text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
                         <p className='ml-8 mr-8 text-xs'>{`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1}/${new Date(item.expiry).getDate()}`} {new Date(item.expiry).toLocaleTimeString('en-US', { hourCycle: "h24" })} ID|{gameState.game?.gamenumber}</p>
