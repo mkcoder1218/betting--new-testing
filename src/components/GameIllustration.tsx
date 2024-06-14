@@ -46,42 +46,49 @@ export default function GameIllustration() {
     return (
         <div className="flex justify-between">
             <div className="buttons basis-3/4 flex gap-4 items-center">
-                <button className="text-gray-500 hover:text-green-500 w-8">
-                    <DashingDerby />
-                </button>
                 <button className="text-gray-500 hover:text-green-500 w-5">
                     <Football />
                 </button>
-                <button className="text-gray-500 hover:text-green-500 w-8">
+                <button className="text-gray-500 hover:text-green-500 w-10">
+                    <Bicycle />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-12">
+                    <DogWithVideo />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-12">
+                    <Garri />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-13">
+                    <CarRacing />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-3">
+                    <LuckyLoot />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-12">
+                    <HorseWithSpin />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 w-12">
                     <Jaguar />
                 </button>
+                <button className="text-gray-500 hover:text-green-500 w-8">
+                    <DashingDerby />
+                </button>
+
+
                 <button className="text-green-500 ml-4 hover:text-green-300 w-6">
                     <SmartPlay />
                 </button>
                 <button className="text-gray-500 hover:text-green-500 w-8">
                     <CircleDraw />
                 </button>
-                <button className="text-gray-500 hover:text-green-500 w-8">
-                    <LuckyLoot />
-                </button>
-                <button className="text-gray-500 hover:text-green-500 w-12">
-                    <CarRacing />
-                </button>
-                <button className="text-gray-500 hover:text-green-500 w-12">
-                    <Garri />
-                </button>
-                <button className="text-gray-500 hover:text-green-500 w-10">
-                    <Bicycle />
-                </button>
+
+
+
+
                 <button className="text-gray-500 hover:text-green-500 w-8">
                     <HorseJump />
                 </button>
-                <button className="text-gray-500 hover:text-green-500 w-8">
-                    <DogWithVideo />
-                </button>
-                <button className="text-gray-500 hover:text-green-500 w-8">
-                    <HorseWithSpin />
-                </button>
+
             </div>
             <div className="drop-down w-64 flex">
                 <div className="w-full items-center relative inline-block text-left">
