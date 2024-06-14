@@ -30,7 +30,7 @@ const NumberPad: React.FC<Props> = ({ onSubmit, onInput }) => {
                     <button
                         key={value}
                         onClick={() => handleClick(value)}
-                        className={`p-2 text-center ${value === "X" && 'col-start-3'} ${value === 0 && 'col-start-2'} bg-orange-500 transition-all text-white border-gray-300 rounded-md hover:opacity-75 focus:outline-none`}
+                        className={`p-2 text-center ${value === "X" && 'col-start-3'} ${value === 0 && 'col-start-2'} bg-green-500 transition-all text-white border-gray-300 rounded-md hover:opacity-75 focus:outline-none`}
                     >
                         {value}
                     </button>
@@ -44,7 +44,7 @@ const NumberPad: React.FC<Props> = ({ onSubmit, onInput }) => {
                     </button>
                     <button
                         onClick={() => handleClick('Enter')}
-                        className="col-span-3 p-2 pl-5 pr-5 text-center bg-orange-500 text-white border border-gray-300 rounded-md hover:opacity-75 transition-all focus:outline-none"
+                        className="col-span-3 p-2 pl-5 pr-5 text-center bg-green-500 text-white border border-gray-300 rounded-md hover:opacity-75 transition-all focus:outline-none"
                     >
                         Enter
                     </button>

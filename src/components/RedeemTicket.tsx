@@ -102,7 +102,7 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <div className='cashier-options-header flex justify-between items-center p-2 bg-amber-500 rounded-tl-lg rounded-tr-lg'>
+                    <div className='cashier-options-header flex justify-between items-center p-2 bg-green-600 rounded-tl-lg rounded-tr-lg'>
                         <p className='text-white font-bold text-lg'>{type === "redeem" ? "Redeem Betslip" : "Cancel Betslip"}</p>
                         <MdOutlineCancel onClick={handleClose} size={24} className='text-black' />
                     </div>
