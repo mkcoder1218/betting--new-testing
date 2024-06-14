@@ -371,7 +371,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                                                                     <td className='border border-l-slate-400 p-3'>{item.Game.gamenumber}</td>
                                                                     <td className='border border-l-slate-400 p-2'>{item.BetSlip.Cashier.User.username}</td>
                                                                     <td className='border border-l-slate-400 p-2'>
-                                                                        {(item.nums && !item.nums.includes(-2) && !item.nums.includes(-4) && !item.nums.includes(-6)) && item?.nums?.join(", ")}
+                                                                        {(item.nums && !item.nums.includes(-2) && !item.nums.includes(-4) && !item.nums.includes(-6)) && item?.nums}
                                                                         {item.nums.includes(-2) && 'Heads'}
                                                                         {item.nums.includes(-4) && 'Evens'}
                                                                         {item.nums.includes(-6) && 'Tails'}
