@@ -21,7 +21,7 @@ export default function BetSlip() {
     const [expired, setExpired] = useState(false);
     const [stakeInput, setStake] = useState<number[]>([]);
     const [totalStake, setTotalStake] = useState(10);
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState(-1);
 
     const handleTotalStake = (val: number, type: string) => {
         if (val <= 5000) {

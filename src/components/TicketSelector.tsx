@@ -121,7 +121,9 @@ export default function TicketSelector() {
                     2
                 </span>
             </div>
-            <div onClick={() => addEvens(!evens)} className={`${!evens ? 'bg-red-400' : 'bg-green-600'} head-tail cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>EVENS
+            <div style={{
+                backgroundColor: evens ? '#257832' : '#f87171'
+            }} onClick={() => addEvens(!evens)} className={`head-tail cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>EVENS
                 <span className='text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     4
                 </span>
