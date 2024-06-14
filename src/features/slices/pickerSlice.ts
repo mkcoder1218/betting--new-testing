@@ -86,8 +86,15 @@ const pickerSlice = createSlice({
                 state.betSlip = state.betSlip.map(item => {
                     if (value < 0) {
                         // Update only if stake is greater than 10
-                        return item.stake > 10 ? { ...item, stake: item.stake + value } : item;
+                        if (item.stake === 10) {
+                            return { ...item, stake: value }
+                        } else {
+                            return item.stake > 10 ? { ...item, stake: item.stake + value } : item;
+                        }
                     } else {
+                        if (item.stake === 10) {
+                            return { ...item, stake: value }
+                        }
                         // Update all stakes
                         return { ...item, stake: item.stake + value };
                     }

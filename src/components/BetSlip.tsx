@@ -37,6 +37,10 @@ export default function BetSlip() {
         }
     }
 
+    useEffect(() => {
+        setSelected(-1)
+    }, [betState.selected])
+
     // useEffect(() => {
     //     const totalStakeVal = betState.betSlip.reduce((a, b) => a + b.stake, 0) / betState.betSlip.length;
     //     setTotalStake(totalStakeVal);
