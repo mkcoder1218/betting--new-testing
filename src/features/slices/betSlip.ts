@@ -91,9 +91,9 @@ export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => vo
             dispatch(addTicketAndBetSlip({ loading: false, error: null, message: betSlipResponse.message, data: null }))
             refreshBetSlipNumber();
             toggleStatus(true);
+            clearSlip();
 
             setTimeout(() => {
-                clearSlip();
                 toggleStatus(false);
                 clearNumberSelection();
             }, 3000);

@@ -42,6 +42,8 @@ export default function TicketSlipHolder() {
         for (let i = 0; i < repeatState.repeat; i++) {
             dispatch(addToBetSlip({ selected: selected, expiry: expiryOfGame ? expiryOfGame : ticketExpiry, multiplier, toWin, stake, gameId }))
         }
+
+        dispatch(clearNumbers());
     }
 
     const calculateHitsAndWins = (userPicks: number[]) => {

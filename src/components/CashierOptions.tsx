@@ -24,6 +24,7 @@ import ProgressCircular from './ProgressCircular';
 import FormStatus from './FormStatus';
 import { Ticket, printSelectedTickets, recallTickets } from '../features/slices/ticketSlice';
 import { getCashierNames } from '../features/slices/cashierData';
+import { getNetBalance } from '../features/slices/netBalance';
 
 interface CashierOptionsProps {
     open: boolean,
@@ -84,6 +85,7 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
     const userData = useAppSelector(state => state.user)
     const summaryData = useAppSelector(state => state.summary)
     const ticketList = useAppSelector(state => state.ticket);
+    const balanceState = useAppSelector(state => state.balance);
     const [value, setValue] = React.useState(0);
     const [valueParent, setParent] = React.useState(0);
     const [to, setTo] = React.useState<Dayjs | null>(dayjs(new Date().toDateString()));
@@ -94,7 +96,12 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
 
     React.useEffect(() => {
         dispatch(getCashierNames(userData.user?.Cashier.shopId))
+        dispatch(getNetBalance(userData.user?.Cashier.shopId));
     }, [])
+
+    const refreshNetBalance = () => {
+        dispatch(getNetBalance(userData.user?.Cashier.shopId));
+    }
 
     const handleCashierChoose = (event: SelectChangeEvent) => {
         setCashier(event.target.value);
@@ -216,8 +223,8 @@ export default function CashierOptions({ open, handleClose }: CashierOptionsProp
                     </div>
                     <div className='options-content bg-white p-6'>
                         <div className='flex items-center justify-end'>
-                            <div className='text-green-500 text-lg'>Balance: Br. 50.00</div>
-                            <span><IoMdRefresh className='text-green-600 pt-0 pb-0 pl-2 pr-2 border rounded-md ml-2 border-green-500' size={36} /></span>
+                            {!balanceState.loading && <div className='text-green-500 text-lg'>Balance: Br. {balanceState.data && parseInt(balanceState.data[0].netAmount) > 0 ? balanceState.data[0].netAmount : 0}.00</div>}
+                            <span onClick={refreshNetBalance} className='hover:opacity-50 transition-all'><IoMdRefresh className='text-green-600 pt-0 pb-0 pl-2 pr-2 border rounded-md ml-2 border-green-500' size={36} /></span>
                         </div>
                         <Box sx={{ width: '100%' }}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

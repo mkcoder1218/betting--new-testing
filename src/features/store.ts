@@ -10,6 +10,7 @@ import betDataReducer from "./slices/betData";
 import expiryReducer from "./slices/ticketExpiry";
 import repeatReducer from "./slices/betRepeat";
 import cashierReducer from "./slices/cashierData";
+import balanceReducer from "./slices/netBalance";
 
 export const store = configureStore({
     reducer: {
@@ -23,7 +24,8 @@ export const store = configureStore({
         betData: betDataReducer,
         expiry: expiryReducer,
         repeat: repeatReducer,
-        cashier: cashierReducer
+        cashier: cashierReducer,
+        balance: balanceReducer
     }
 })
 
