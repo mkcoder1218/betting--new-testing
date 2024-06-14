@@ -14,6 +14,7 @@ import { BsFillGrid3X3GapFill } from "react-icons/bs";
 import { IoMdHelpCircle } from "react-icons/io";
 import { DogWithVideo } from "./svg/DogWithVideo";
 import { HorseWithSpin } from "./svg/HorseWithSpin";
+import { F1 } from "./svg/F1";
 
 export default function GameIllustration() {
     const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +61,9 @@ export default function GameIllustration() {
                 </button>
                 <button className="text-gray-500 hover:text-green-500 w-13">
                     <CarRacing />
+                </button>
+                <button className="text-gray-500 hover:text-green-500 ">
+                    <F1 />
                 </button>
                 <button className="text-gray-500 hover:text-green-500 w-3">
                     <LuckyLoot />
