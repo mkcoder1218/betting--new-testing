@@ -41,7 +41,7 @@ export default function TicketSelector() {
         if (!val) {
             for (let item of betSlip) {
                 if (item.selected[0] === -2) {
-                    dispatch(removeFromBetSlip(item));
+                    dispatch(removeFromBetSlip(betSlip.indexOf(item)));
                     return;
                 }
             }
@@ -58,7 +58,7 @@ export default function TicketSelector() {
         if (!val) {
             for (let item of betSlip) {
                 if (item.selected[0] === -4) {
-                    dispatch(removeFromBetSlip(item));
+                    dispatch(removeFromBetSlip(betSlip.indexOf(item)));
                     return;
                 }
             }
@@ -75,7 +75,7 @@ export default function TicketSelector() {
         if (!val) {
             for (let item of betSlip) {
                 if (item.selected[0] === -6) {
-                    dispatch(removeFromBetSlip(item));
+                    dispatch(removeFromBetSlip(betSlip.indexOf(item)));
                     return;
                 }
             }
@@ -116,20 +116,20 @@ export default function TicketSelector() {
                 <span onClick={() => generateRandomSelections(count)} className="cursor-pointer"><FaShuffle /></span></div>
             <div style={{
                 backgroundColor: `${!heads ? '#BC4307' : '#008000'}`
-            }} onClick={() => addHeads(!heads)} className={`hover:opacity-70 cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}>HEADS
-                <span className='text-black text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
+            }} onClick={() => addHeads(!heads)} className={` head-tail cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}>HEADS
+                <span className='text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     2
                 </span>
             </div>
-            <div onClick={() => addEvens(!evens)} className={`${!evens ? 'bg-red-400' : 'bg-green-600'} hover:opacity-70 cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>EVENS
-                <span className='text-black text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
+            <div onClick={() => addEvens(!evens)} className={`${!evens ? 'bg-red-400' : 'bg-green-600'} head-tail cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>EVENS
+                <span className='text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     4
                 </span>
             </div>
             <div style={{
                 backgroundColor: `${!tails ? '#D75D1A' : '#008000'}`
-            }} onClick={() => addTails(!tails)} className={` hover:opacity-70 cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>TAILS
-                <span className='text-black text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
+            }} onClick={() => addTails(!tails)} className={`cursor-pointer head-tail transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}>TAILS
+                <span className='text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm'>
                     2
                 </span>
             </div>

@@ -30,3 +30,11 @@
 .balls:hover{
   background-color: #a6c99f !important;
 }
+
+.head-tail{
+  transition: background-color 0.3s;
+}
+
+.head-tail:hover .head-tail-sub{
+  background-color: #008000;
+}
