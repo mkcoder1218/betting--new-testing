@@ -17,7 +17,7 @@ import { HorseWithSpin } from "./svg/HorseWithSpin";
 
 export default function GameIllustration() {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedGame, setSelected] = useState(0);
+    const [selectedGame, setSelected] = useState(3);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
