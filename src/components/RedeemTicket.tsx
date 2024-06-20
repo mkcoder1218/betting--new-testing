@@ -111,15 +111,16 @@ export default function RedeemTicket({ open, handleClose, type }: RedeemTicketPr
                             <div className='flex'>
                                 <div className='w-1/3'>
                                     <div className='w-full'>
-                                        <p>Enter betslip code or scan</p>
+                                        <p className='text-green-500'>Enter betslip code or scan</p>
                                         <input value={betslip} onChange={handleChange} maxLength={20} type="text" className='p-2 w-full mt-3 border border-slate-500 bg-white rounded-md' placeholder='betslip code' />
                                     </div>
                                     <NumberPad onInput={handleInput} onSubmit={handleEnter} />
                                 </div>
                                 {betSlipData.loading && <div className='w-full flex items-center justify-center'>
                                     <ProgressCircular /></div>}
-                                {betSlipData.error && <div className='w-1/2 p-0 flex items-start justify-center'>
-                                    <FormStatus type='error' content={betSlipData.error} />
+                                {betSlipData.error && <div className='w-3/4 p-0 flex items-start justify-center'>
+                                    {/* <FormStatus type='error' content={betSlipData.error} /> */}
+                                    <p className='text-gray-600'>{betSlipData.error}</p>
                                 </div>}
                                 {(betSlipData.message && betSlipData.message !== "success") && <div className='w-1/2 p-0 flex items-start justify-center'>
                                     <FormStatus type='success' content={betSlipData.message} />

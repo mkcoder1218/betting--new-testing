@@ -19,7 +19,9 @@
 }
 
 .speech::after {
-  display: block; width: 0; content: "";
+  display: block;
+  width: 0;
+  content: "";
   border: 15px solid transparent;
 }
 
@@ -32,9 +34,14 @@
   position: relative;
   margin: 0px;
 }
-.speech::after { position: absolute; }
+
+.speech::after {
+  position: absolute;
+}
+
 .speech.left::after {
-  left: -15px; top: calc(50% - 15px);
+  left: -15px;
+  top: calc(50% - 15px);
 }
 
 .custom-scrollbar {
@@ -56,18 +63,22 @@
 }
 
 input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
-        /* Remove arrows in number input (for Firefox) */
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
+/* Remove arrows in number input (for Firefox) */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
 
-        /* Remove border when active */
-        input[type="number"]:focus {
-            border: none;
-            outline: none;
-        }
+/* Remove border when active */
+input[type="number"]:focus {
+  border: none;
+  outline: none;
+}
+
+.my-cancel-btn {
+  background-color: #F0AD4E;
+}

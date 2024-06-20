@@ -48,7 +48,7 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
                 <button style={{ backgroundColor: "#37B34A" }} onClick={handleOpen} className='p-2 text-white rounded-md'>
                     Cashier Options
                 </button>
-                <button onClick={() => openCancelRedeem("cancel")} className='p-2 flex items-center gap-1 bg-yellow-600 text-white rounded-md'>
+                <button onClick={() => openCancelRedeem("cancel")} className='my-cancel-btn p-2 flex items-center gap-1 text-white rounded-md'>
                     <span className='pl-2'>Cancel</span>
                     <TiCancel size={20} />
                 </button>

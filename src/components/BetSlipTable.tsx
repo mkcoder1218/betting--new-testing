@@ -153,7 +153,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                     </div> : <div className="font-bold text-l">Total Stake Br. {totalStake?.toFixed(2)}</div>}
                     {type === "redeem" ? <button onClick={handleRedeem} className="ml-3 px-4 py-2 bg-green-600 text-white rounded-sm">
                         Redeem $
-                    </button> : <button onClick={handleCancel} className="ml-3 px-4 py-2 bg-orange-600 text-white rounded-sm">
+                    </button> : <button style={{ backgroundColor: "#F0AD4E" }} onClick={handleCancel} className="ml-3 px-4 py-2 text-white rounded-sm">
                         Cancel $
                     </button>}
                 </div>
