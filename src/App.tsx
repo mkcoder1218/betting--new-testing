@@ -47,7 +47,6 @@ function App() {
     const difference = targetTime - currentTime;
 
     dispatch(addExpiry({ expiry: targetTime }));
-    console.log(new Date(targetTime));
 
     return difference > 0 ? difference : 0;
   }

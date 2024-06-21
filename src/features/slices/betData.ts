@@ -90,13 +90,10 @@ export const getTicketsToCancel = (betslip: number | undefined) => async (dispat
 
         if (ticketsToCancel.message === "success") {
             dispatch(addBetData({ loading: false, error: null, message: ticketsToCancel.message, data: ticketsToCancel.data as BetSlip }))
-
-            console.log(ticketsToCancel.data);
         } else {
             dispatch(addBetData({ loading: true, error: ticketsToCancel.error, message: null, data: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addBetData({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }
@@ -109,13 +106,10 @@ export const getTicketsToRedeem = (betslip: number | undefined) => async (dispat
 
         if (ticketsToCancel.message === "success") {
             dispatch(addBetData({ loading: false, error: null, message: ticketsToCancel.message, data: ticketsToCancel.data as BetSlip }))
-
-            console.log(ticketsToCancel.data);
         } else {
             dispatch(addBetData({ loading: true, error: ticketsToCancel.error, message: null, data: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addBetData({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }
@@ -136,7 +130,6 @@ export const cancelTicket = (gamenumber: number | undefined, betslip: number | u
             dispatch(addBetData({ loading: false, error: null, message: null, data: null }))
         }, 2000);
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addBetData({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }
@@ -159,7 +152,6 @@ export const redeemTicket = (cashierRedeemId: string | undefined, betslip: numbe
             dispatch(addBetData({ loading: false, error: null, message: null, data: null }))
         }, 2000);
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addBetData({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }

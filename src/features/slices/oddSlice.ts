@@ -70,7 +70,6 @@ export const getOdds = (shopId: string | undefined) => async (dispatch: (arg0: {
             dispatch(addOdd({ loading: false, error: oddResponse.error, message: "", odd: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addOdd({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, odd: null }))
     }
 }

@@ -56,15 +56,12 @@ export const getCashierNames = (shopId: string | undefined) => async (dispatch: 
     try {
         const cashierResponse: ApiResponse = (await axiosInstance.get(`cashier/${shopId}`)).data;
 
-        console.log(cashierResponse);
-
         if (cashierResponse.message === "success") {
             dispatch(addCashierData({ loading: false, error: null, message: cashierResponse.message, data: cashierResponse.data }))
         } else {
             dispatch(addCashierData({ loading: false, error: cashierResponse.error, message: null, data: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addCashierData({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
     }
 }

@@ -103,7 +103,6 @@ export const recallTickets = (cashierId: string[] | undefined) => async (dispatc
 export const printSelectedTickets = async (req: any) => {
     try {
         const printSelectedResponse = await axiosInstance.post("ticket/printSelected", req);
-        console.log(printSelectedResponse);
 
         if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
             const printSelectedData = await axios.post("http://localhost:5000/printTicket", printSelectedResponse.data.data)

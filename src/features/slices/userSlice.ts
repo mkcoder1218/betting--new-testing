@@ -108,7 +108,6 @@ export const authUser = (username: string, password: string, navigate: NavigateF
             dispatch(loginUser({ message: loginResponse.error, error: loginResponse.error, loading: true, user: null }))
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(loginUser({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, user: null }))
     }
 }

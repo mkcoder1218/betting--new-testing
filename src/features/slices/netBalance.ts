@@ -55,7 +55,6 @@ export const getNetBalance = (shopId: string | undefined) => async (dispatch: (a
             dispatch(addNetBalance({ loading: false, error: netBalanceRes.error, message: null, data: null }));
         }
     } catch (err: AxiosError | any) {
-        console.log(err);
         dispatch(addNetBalance({ data: null, message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false }))
     }
 }
