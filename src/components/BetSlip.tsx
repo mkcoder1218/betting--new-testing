@@ -26,6 +26,7 @@ export default function BetSlip() {
     const [totalStake, setTotalStake] = useState(10);
     const [selected, setSelected] = useState(-1);
     const [printerDialog, setPrinterDialog] = useState(false);
+    const [errorBet, setBetError] = useState("");
 
     const handleClose = () => {
         setPrinterDialog(false);
@@ -76,6 +77,7 @@ export default function BetSlip() {
 
             setTimeout(() => {
                 clearSlip();
+                setBetError("");
             }, 3000);
         }
         return () => clearInterval(timer)
@@ -104,9 +106,20 @@ export default function BetSlip() {
     const clearSlip = () => {
         dispatch(clearBetSlip());
         dispatch(clearNumbers());
+        setBetError("")
     }
 
     const handleCreateTicket = async () => {
+
+        setBetError("");
+
+        const getBiggest = betState.betSlip.filter((item) => item.stake > 1000 || (item.stake * item.multiplier) > 50000);
+        const biggetsFirst = getBiggest[0].stake;
+
+        if (biggetsFirst > 1000) {
+            setBetError("The stake on one or more of your bets is not within the allowed betting limits");
+            return;
+        }
 
         const checkPrinter = await isPrinterUp();
 
@@ -223,13 +236,13 @@ export default function BetSlip() {
                         <p className='ml-8 mr-8 text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
                         <p className='ml-8 mr-8 text-xs'>{`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1}/${new Date(item.expiry).getDate()}`} {new Date(item.expiry).toLocaleTimeString('en-US', { hourCycle: "h24" })} ID|{gameState.game?.gamenumber}</p>
                         {currentDate < betState.betSlip[0].expiry &&
-                            <><div className={`ml-8 ${stakeInput[index] > 1000 ? 'bg-red-600 text-white' : 'bg-white'} mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}>
+                            <><div className={`ml-8 ${stakeInput[index] > 1000 || (item.stake * item.multiplier) > 50000 ? 'bg-red-600 text-white' : 'bg-white'} mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}>
 
                                 <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake >= 20 ? item.stake - 10 : 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
                                 <div className="flex items-center">
                                     <input
 
-                                        className={`num input-picker ${stakeInput[index] > 1000 && 'bg-red-600 text-white'} text-gray-500 text-end border-none focus:border-none active:border-none`}
+                                        className={`num input-picker ${(stakeInput[index] > 1000 || (item.stake * item.multiplier) > 50000) && 'bg-red-600 text-white'} text-gray-500 text-end border-none focus:border-none active:border-none`}
                                         value={stakeInput[index]}
                                         defaultValue={10}
                                         onChange={(e) => (parseInt(e.target.value) <= 5000 && parseInt(e.target.value) >= 1) && changeItemStake(parseInt(e.target.value), index)}
@@ -240,12 +253,12 @@ export default function BetSlip() {
                                         max={5000}
                                         min={1}
                                         required
-                                    /><div className={`mr-2 ${stakeInput[index] > 1000 ? 'text-white' : 'text-gray-500'}`}>.00</div>
+                                    /><div className={`mr-2 ${stakeInput[index] > 1000 || (item.stake * item.multiplier) > 50000 ? 'text-white' : 'text-gray-500'}`}>.00</div>
                                     <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
                                     />
                                 </div>
                             </div>
-                                <p className='ml-8 mr-8 text-white text-xs text-right mt-1'>TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}</p>
+                                <p className={`ml-8 mr-8 text-white text-xs text-right mt-1`}>TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}</p>
                             </>
                         }{(selected === index && currentDate < betState.betSlip[index].expiry) && <PriceButton index={index} changeIndividualStake={changeIndividualSlipStakeIncr} />}
                     </div>
@@ -291,6 +304,8 @@ export default function BetSlip() {
                             <p>{betState.totalToWin}.00 BR</p>
                         </div>
                     </div>
+
+                    {errorBet !== "" && <div style={{ width: "98%", margin: "auto" }} className="p-1 text-center text-sm bg-red-700 text-white">{errorBet}</div>}
 
                     {betSlipState.loading && <ProgressCircular />}
 
