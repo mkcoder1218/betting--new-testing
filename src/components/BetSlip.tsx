@@ -223,13 +223,13 @@ export default function BetSlip() {
                         <p className='ml-8 mr-8 text-xs'>{(!item.selected.includes(-2) && !item.selected.includes(-4) && !item.selected.includes(-6)) && item.selected.join(", ")} {item.selected.includes(-2) && 'HEADS'} {item.selected.includes(-4) && 'EVENS'} {item.selected.includes(-6) && 'TAILS'} <span className='bg-green-600 p-1 text-white text-xs'>{item.multiplier}</span></p>
                         <p className='ml-8 mr-8 text-xs'>{`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1}/${new Date(item.expiry).getDate()}`} {new Date(item.expiry).toLocaleTimeString('en-US', { hourCycle: "h24" })} ID|{gameState.game?.gamenumber}</p>
                         {currentDate < betState.betSlip[0].expiry &&
-                            <><div className="ml-8 mr-8 inc-dec mt-1 flex bg-white items-center justify-between flex-shrink-0">
+                            <><div className={`ml-8 ${stakeInput[index] > 1000 ? 'bg-red-600 text-white' : 'bg-white'} mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}>
 
                                 <FaMinus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake >= 20 ? item.stake - 10 : 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl' />
                                 <div className="flex items-center">
                                     <input
 
-                                        className='num input-picker text-gray-500 text-end border-none focus:border-none active:border-none'
+                                        className={`num input-picker ${stakeInput[index] > 1000 && 'bg-red-600 text-white'} text-gray-500 text-end border-none focus:border-none active:border-none`}
                                         value={stakeInput[index]}
                                         defaultValue={10}
                                         onChange={(e) => (parseInt(e.target.value) <= 5000 && parseInt(e.target.value) >= 1) && changeItemStake(parseInt(e.target.value), index)}
@@ -240,7 +240,7 @@ export default function BetSlip() {
                                         max={5000}
                                         min={1}
                                         required
-                                    /><div className="mr-2 text-gray-500">.00</div>
+                                    /><div className={`mr-2 ${stakeInput[index] > 1000 ? 'text-white' : 'text-gray-500'}`}>.00</div>
                                     <FaPlus style={{ backgroundColor: "#C7C7C7" }} onClick={() => changeIndividualSlipStake(index, item.stake + 10)} className='text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl'
                                     />
                                 </div>

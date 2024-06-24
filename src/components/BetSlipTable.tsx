@@ -50,10 +50,10 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                                 Number
                             </th>
                             <th scope="col" className="px-3 py-3">
-                                Max Win
+                                Date
                             </th>
                             <th scope="col" className="px-3 py-3">
-                                Date
+                                Time
                             </th>
                         </tr>
                     </thead>
@@ -63,10 +63,10 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                                 {data.betSlipNumber}
                             </td>
                             <td className="px-3 py-3">
-                                {data.maxWin} Br.
+                                {new Date(data.createdAt).toLocaleDateString()}
                             </td>
                             <td className="px-3 py-3">
-                                {new Date(data.createdAt).toDateString()}
+                                {new Date(data.createdAt).toLocaleTimeString()}
                             </td>
                         </tr>
                     </tbody>
