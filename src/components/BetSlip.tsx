@@ -8,6 +8,9 @@ import { FaPlus } from "react-icons/fa";
 import { FaMinus } from "react-icons/fa";
 import { BsCheck2All } from "react-icons/bs";
 import PriceButton from "./PriceButton";
+import { isPrinterUp } from "../features/slices/ticketSlice";
+import PrinterDialog from "./PrinterDialog";
+import { logoutUser } from "../features/slices/userSlice";
 
 export default function BetSlip() {
     const dispatch = useAppDispatch();
@@ -22,6 +25,11 @@ export default function BetSlip() {
     const [stakeInput, setStake] = useState<number[]>([]);
     const [totalStake, setTotalStake] = useState(10);
     const [selected, setSelected] = useState(-1);
+    const [printerDialog, setPrinterDialog] = useState(false);
+
+    const handleClose = () => {
+        setPrinterDialog(false);
+    };
 
     const handleTotalStake = (val: number, type: string) => {
         if (val <= 5000) {
@@ -98,7 +106,15 @@ export default function BetSlip() {
         dispatch(clearNumbers());
     }
 
-    const handleCreateTicket = () => {
+    const handleCreateTicket = async () => {
+
+        const checkPrinter = await isPrinterUp();
+
+        if (checkPrinter) {
+            setPrinterDialog(checkPrinter);
+            return;
+        }
+
         refreshBetSlipNumber();
 
         let newBetSlipNumber = betSlipState.data ? parseInt(betSlipState.data?.betSlipNumber) + 1 : generateRandomNumber();
@@ -161,8 +177,13 @@ export default function BetSlip() {
         return randomNumberString;
     }
 
+    const logout = () => {
+        dispatch(logoutUser());
+    }
+
     return (
         <div style={{ flexBasis: "40%" }} className='right relative ml-2 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400'>
+            <PrinterDialog open={printerDialog} handleClose={handleClose} logout={logout} />
             <div className='text-l text-green-600 font-bold flex items-center justify-center text-center'>
                 Betslip
             </div>

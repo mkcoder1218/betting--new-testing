@@ -111,3 +111,17 @@ export const printSelectedTickets = async (req: any) => {
         console.log(err);
     }
 }
+
+export const isPrinterUp = async () => {
+    try {
+        const printerStatus = await axios.get("http://localhost:5000/check");
+
+        if (printerStatus.status === 200) {
+            return false
+        }
+
+        return true;
+    } catch (err) {
+        return true;
+    }
+}

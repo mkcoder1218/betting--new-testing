@@ -14,12 +14,16 @@ import { getLastGame } from './features/slices/gameSlice';
 import { getLastBetSlip } from './features/slices/betSlip';
 import { addExpiry } from './features/slices/ticketExpiry';
 import { addRepeat } from './features/slices/betRepeat';
+import { isPrinterUp } from './features/slices/ticketSlice';
+import PrinterDialog from './components/PrinterDialog';
+import { logoutUser } from './features/slices/userSlice';
 
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector(state => state.user);
   const oddData = useAppSelector(state => state.odd);
   const gameData = useAppSelector(state => state.game);
+  const [printerDialog, setPrinterDialog] = useState(false);
 
   const ticketExpiry = useAppSelector(state => state.expiry);
   const ticketPicker = useAppSelector(state => state.picker);
@@ -35,6 +39,10 @@ function App() {
   const handleCancelRedeem = (val: string) => setCancelRedeem(val);
 
   const [remainingTime, setRemainingTime] = useState(0);
+
+  const handlePrintDialogClose = () => {
+    setPrinterDialog(false);
+  };
 
   function handleRepeat(event: React.ChangeEvent<HTMLSelectElement>) {
     dispatch(addRepeat({ repeat: parseInt(event.target.value) }));
@@ -72,7 +80,6 @@ function App() {
   useEffect(() => {
     if (remainingTime === 0) {
       const timeerFetch = setInterval(() => {
-        console.log("fetching last game");
         dispatch(getLastGame(user.user?.Cashier.shopId));
       }, 5000);
 
@@ -104,8 +111,24 @@ function App() {
     }
   }, [])
 
+  const checkStatus = async () => {
+    const checkPrinter = await isPrinterUp();
+
+    setPrinterDialog(checkPrinter);
+  }
+
+  const logout = () => {
+    dispatch(logoutUser());
+  }
+
+  useEffect(() => {
+    //check printer status to prevent ticket creation if printer is not running
+    checkStatus();
+  }, [])
+
   return (
     <div className='bg-white'>
+      <PrinterDialog open={printerDialog} handleClose={handlePrintDialogClose} logout={logout} />
       <CashierOptions open={open} handleClose={handleClose} />
       <RedeemTicket open={redeemOpen} handleClose={handleRedeemClose} type={cancelRedeem} />
       <CashierHeader handleOpen={handleOpen} handleRedeemOpen={handleRedeemOpen} handleCancelRedeem={handleCancelRedeem} />
