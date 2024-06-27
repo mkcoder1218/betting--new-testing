@@ -118,34 +118,43 @@ const BetSlipTable = ({ type, data }: ActionType) => {
           <tbody>
             {data.Tickets?.map((item) => {
               return (
-                <tr key={item.id} className="bg-white border-b">
+                <tr key={item.id} className={`${item.win > 0 ? 'bg-orange-300 text-white' : 'bg-white'} border-b`}>
                   {type === "redeem" && (
                     <td scope="row" className="px-1 flex gap-4 py-2">
                       <FaEye
-                        className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer"
+                        className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
                         size={40}
                       />
                       <IoIosPrint
                         onClick={() => printSelected(item)}
-                        className="text-green-500 border-2 border-green-300 rounded-md p-1 cursor-pointer"
+                        className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
                         size={40}
                       />
                     </td>
                   )}
                   <td scope="row" className="px-3 py-2">
-                    {data.betSlipNumber}
+                    {item.ticketNumber}
                   </td>
                   <td className="px-3 py-2">Keno</td>
                   <td className="px-3 py-2">{item.Game.gamenumber}</td>
                   <td scope="row" className="px-3 py-2">
-                    {item.Game.status === "COMPLETED" && item.win > 0 && "Win"}
-                    {item.Game.status === "COMPLETED" && item.win < 1 && "Lost"}
-                    {item.Game.status !== "COMPLETED" && "Unknown"}
+                    {/* {((!item.nums.includes(-2) &&
+                      !item.nums.includes(-4) &&
+                      !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win > 0) && "Win"}
+                    {((!item.nums.includes(-2) &&
+                      !item.nums.includes(-4) &&
+                      !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win < 1) && "Lost"} */}
+                    {(!item.nums.includes(-2) &&
+                      !item.nums.includes(-4) &&
+                      !item.nums.includes(-6)) && "Win"}
+                    {(item.nums.includes(-2) ||
+                      item.nums.includes(-4) ||
+                      item.nums.includes(-6)) && "Heads and Tails"}
                   </td>
                   <td className="px-3 py-2">
                     {!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
-                      !item.nums.includes(-6)}
+                      !item.nums.includes(-6) && item.nums?.join(", ")}
                     {item.nums.includes(-2) && "Heads"}
                     {item.nums.includes(-4) && "Evens"}
                     {item.nums.includes(-6) && "Tails"}
@@ -168,6 +177,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
         </div>
         <div className="flex items-center justify-end mt-3">
           {type === "redeem" ? (
+
             <div className="font-bold text-l">
               {data.Tickets &&
                 data.Tickets[0].Game.status === "COMPLETED" &&
@@ -175,7 +185,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                 "Not a Winning Ticket"}
               {data.Tickets &&
                 data.Tickets?.reduce((a, b) => a + b.win, 0) > 0 &&
-                "A Winning Ticket"}
+                `Unclaimed Winnings Br. ${data.Tickets?.reduce((a, b) => a + b.win, 0)}.00 `}
             </div>
           ) : (
             <div className="font-bold text-l">
