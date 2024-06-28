@@ -105,7 +105,7 @@ export const printSelectedTickets = async (req: any) => {
         const printSelectedResponse = await axiosInstance.post("ticket/printSelected", req);
 
         if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
-            const printSelectedData = await axios.post("http://localhost:5000/printTicket", printSelectedResponse.data.data)
+            const printSelectedData = await axios.post("http://localhost:5000/printTicket", { ...printSelectedResponse.data.data, isCopy: true })
         }
     } catch (err) {
         console.log(err);

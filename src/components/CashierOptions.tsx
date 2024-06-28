@@ -166,6 +166,7 @@ export default function CashierOptions({
       withdraws: 0.0,
       endBalance: item.netAmount,
       shopId: userData.user?.Cashier.shopId,
+      isCopy: true
     };
 
     printSummaryToBackend(dataToSend);
@@ -175,7 +176,7 @@ export default function CashierOptions({
     const payload = {
       betslipId: item.betSlipId,
       shopId: userData.user?.Cashier.shopId,
-      cashierCreateId: userData.user?.Cashier.id,
+      cashierCreateId: userData.user?.Cashier.id
     };
 
     printSelectedTickets(payload);
@@ -257,7 +258,7 @@ export default function CashierOptions({
                     `Credit Balance: Br. ${cashierState.data[0].Shop?.depositBalance} | `}{" "}
                   Balance: Br.{"    "}
                   {balanceState.data &&
-                  parseInt(balanceState.data[0].netAmount) > 0
+                    parseInt(balanceState.data[0].netAmount) > 0
                     ? balanceState.data[0].netAmount
                     : 0}
                   .00
