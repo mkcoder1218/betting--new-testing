@@ -118,7 +118,12 @@ const BetSlipTable = ({ type, data }: ActionType) => {
           <tbody>
             {data.Tickets?.map((item) => {
               return (
-                <tr key={item.id} className={`${item.win > 0 ? 'bg-orange-300 text-white' : 'bg-white'} border-b`}>
+                <tr
+                  key={item.id}
+                  className={`${
+                    item.win > 0 ? "bg-orange-300 text-white" : "bg-white"
+                  } border-b`}
+                >
                   {type === "redeem" && (
                     <td scope="row" className="px-1 flex gap-4 py-2">
                       <FaEye
@@ -144,17 +149,19 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                     {((!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
                       !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win < 1) && "Lost"} */}
-                    {(!item.nums.includes(-2) &&
+                    {!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
-                      !item.nums.includes(-6)) && "Win"}
+                      !item.nums.includes(-6) &&
+                      "Win"}
                     {(item.nums.includes(-2) ||
                       item.nums.includes(-4) ||
-                      item.nums.includes(-6)) && "Heads and Tails"}
+                      item.nums.includes(-6)) &&
+                      "Heads and Tails"}
                   </td>
                   <td className="px-3 py-2">
                     {!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
-                      !item.nums.includes(-6) && item.nums?.join(", ")}
+                      !item.nums.includes(-6)}
                     {item.nums.includes(-2) && "Heads"}
                     {item.nums.includes(-4) && "Evens"}
                     {item.nums.includes(-6) && "Tails"}
@@ -177,7 +184,6 @@ const BetSlipTable = ({ type, data }: ActionType) => {
         </div>
         <div className="flex items-center justify-end mt-3">
           {type === "redeem" ? (
-
             <div className="font-bold text-l">
               {data.Tickets &&
                 data.Tickets[0].Game.status === "COMPLETED" &&
@@ -185,7 +191,10 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                 "Not a Winning Ticket"}
               {data.Tickets &&
                 data.Tickets?.reduce((a, b) => a + b.win, 0) > 0 &&
-                `Unclaimed Winnings Br. ${data.Tickets?.reduce((a, b) => a + b.win, 0)}.00 `}
+                `Unclaimed Winnings Br. ${data.Tickets?.reduce(
+                  (a, b) => a + b.win,
+                  0
+                )}.00 `}
             </div>
           ) : (
             <div className="font-bold text-l">
