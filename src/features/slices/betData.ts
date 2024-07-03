@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
-import { AxiosError } from "axios";
+import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
 
 interface Game {
@@ -120,6 +120,7 @@ export const getTicketsToCancel =
           );
         }
       } catch (err: AxiosError | any) {
+        console.log(err.response.data.error);
         dispatch(
           addBetData({
             message: "",
@@ -200,7 +201,7 @@ export const cancelTicket =
       );
 
       try {
-        const cancelTicketResponse: BetSlipResponse = (
+        const cancelTicketResponse = (
           await axiosInstance.put("ticket/cancel", {
             gamenumber,
             betslip,
@@ -209,6 +210,12 @@ export const cancelTicket =
         ).data;
 
         if (cancelTicketResponse.message === "Bet cancelled successfully") {
+          try {
+            const printCancelRes = await axios.post("http://localhost:5000/printCancel", cancelTicketResponse.data);
+          } catch (err) {
+            console.log(err);
+          }
+
           dispatch(
             addBetData({
               loading: false,
@@ -260,13 +267,19 @@ export const redeemTicket =
       );
 
       try {
-        const redeemTicketResposne: BetSlipResponse = (
+        const redeemTicketResposne = (
           await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
         ).data;
 
-        console.log(redeemTicketResposne);
+        console.log(redeemTicketResposne.message);
 
         if (redeemTicketResposne.message === "Ticket redeemed successfully") {
+          try {
+            await axios.post("http://localhost:5000/printRedeem", redeemTicketResposne.data);
+          } catch (err) {
+            console.log(err);
+          }
+
           dispatch(
             addBetData({
               loading: false,
