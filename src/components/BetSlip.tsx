@@ -138,7 +138,7 @@ export default function BetSlip() {
 
     if (checkPrinter) {
       setPrinterDialog(checkPrinter);
-      //   return;
+      return;
     }
 
     refreshBetSlipNumber();
@@ -276,8 +276,8 @@ export default function BetSlip() {
                   onClick={() => setSelected(index)}
                   style={{
                     backgroundColor: `${currentDate > betState.betSlip[0].expiry
-                        ? "#fc4242"
-                        : "#969696"
+                      ? "#fc4242"
+                      : "#969696"
                       }`,
                   }}
                   key={index}
@@ -316,9 +316,9 @@ export default function BetSlip() {
                     <>
                       <div
                         className={`ml-8 ${stakeInput[index] > 1000 ||
-                            item.stake * item.multiplier > 50000
-                            ? "bg-red-600 text-white"
-                            : "bg-white"
+                          item.stake * item.multiplier > 50000
+                          ? "bg-red-600 text-white"
+                          : "bg-white"
                           } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
                       >
                         <FaMinus
@@ -334,7 +334,7 @@ export default function BetSlip() {
                         <div className="flex items-center">
                           <input
                             className={`num input-picker ${(stakeInput[index] > 1000 ||
-                                item.stake * item.multiplier > 50000) &&
+                              item.stake * item.multiplier > 50000) &&
                               "bg-red-600 text-white"
                               } text-gray-500 text-end border-none focus:border-none active:border-none`}
                             value={stakeInput[index]}
@@ -354,9 +354,9 @@ export default function BetSlip() {
                           />
                           <div
                             className={`mr-2 ${stakeInput[index] > 1000 ||
-                                item.stake * item.multiplier > 50000
-                                ? "text-white"
-                                : "text-gray-500"
+                              item.stake * item.multiplier > 50000
+                              ? "text-white"
+                              : "text-gray-500"
                               }`}
                           >
                             .00
@@ -507,8 +507,8 @@ export default function BetSlip() {
             }
             onClick={handleCreateTicket}
             className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${currentDate < betState.betSlip[0]?.expiry
-                ? "bg-green-500"
-                : "bg-green-200"
+              ? "bg-green-500"
+              : "bg-green-200"
               }`}
           >
             PLACE BET
