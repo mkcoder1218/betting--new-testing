@@ -162,7 +162,7 @@ export default function BetSlip() {
     }
 
     const minWin = Math.min(
-      ...newTicketToSend.map((item) => item.toWin * item.stake)
+      ...newTicketToSend.map((item) => item.stake)
     );
 
     const maxWin = newTicketToSend.reduce((a, b) => a + b.maxWin, 0);
