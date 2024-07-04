@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { MdOutlineKeyboardBackspace } from "react-icons/md";
 
 interface Props {
     onInput: (input: number | null, type: string) => void;
@@ -26,13 +27,13 @@ const NumberPad: React.FC<Props> = ({ onSubmit, onInput }) => {
     return (
         <div className="mt-4">
             <div className="grid grid-cols-3 gap-5 w-full">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 'X',].map((value) => (
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 'L', 0, 'X',].map((value) => (
                     <button
                         key={value}
                         onClick={() => handleClick(value)}
-                        className={`p-2 text-center ${value === "X" && 'col-start-3'} ${value === 0 && 'col-start-2'} bg-green-500 transition-all text-white border-gray-300 rounded-md hover:opacity-75 focus:outline-none`}
+                        className={`p-2 flex items-center justify-center text-center bg-green-500 transition-all text-white border-gray-300 rounded-md hover:opacity-75 focus:outline-none`}
                     >
-                        {value}
+                        {value === "X" ? <MdOutlineKeyboardBackspace size={24} color='white' /> : value}
                     </button>
                 ))}
                 <div className='col-span-3 flex items-center justify-between'>
