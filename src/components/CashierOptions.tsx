@@ -104,7 +104,7 @@ export default function CashierOptions({
   const [cashierName, setCashierName] = React.useState<string[] | undefined>(
     []
   );
-  const [cashierNameVal, setCashier] = React.useState("");
+  const [cashierNameVal, setCashier] = React.useState("all");
   const cashierState = useAppSelector((state) => state.cashier);
 
   React.useEffect(() => {
@@ -152,6 +152,12 @@ export default function CashierOptions({
     getTicketList();
     console.log(cashierName);
   }, [cashierName]);
+  React.useEffect(() => {
+    if (cashierState && cashierState.data) {
+      const eb: any = { target: { value: "all", name: "event" } };
+      handleCashierChoose(eb);
+    }
+  }, [cashierState]);
 
   const printSummary = (item: CashierData) => {
     const dataToSend = {
@@ -258,7 +264,7 @@ export default function CashierOptions({
                     `Credit Balance: Br. ${cashierState.data[0].Shop?.depositBalance} | `}{" "}
                   Balance: Br.{"    "}
                   {balanceState.data &&
-                    parseInt(balanceState.data[0].netAmount) > 0
+                  parseInt(balanceState.data[0].netAmount) > 0
                     ? balanceState.data[0].netAmount
                     : 0}
                   .00
@@ -507,6 +513,7 @@ export default function CashierOptions({
                                   id="demo-select-small"
                                   onChange={handleCashierChoose}
                                   value={cashierNameVal}
+                                  defaultValue="all"
                                 >
                                   <MenuItem value={"all"}>All</MenuItem>
                                   {cashierState.data?.map((item) => {
