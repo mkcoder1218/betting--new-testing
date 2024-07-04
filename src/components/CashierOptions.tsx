@@ -172,7 +172,7 @@ export default function CashierOptions({
       withdraws: 0.0,
       endBalance: item.netAmount,
       shopId: userData.user?.Cashier.shopId,
-      isCopy: true
+      isCopy: true,
     };
 
     printSummaryToBackend(dataToSend);
@@ -182,7 +182,7 @@ export default function CashierOptions({
     const payload = {
       betslipId: item.betSlipId,
       shopId: userData.user?.Cashier.shopId,
-      cashierCreateId: userData.user?.Cashier.id
+      cashierCreateId: userData.user?.Cashier.id,
     };
 
     printSelectedTickets(payload);
@@ -263,10 +263,7 @@ export default function CashierOptions({
                     cashierState.data[0] &&
                     `Credit Balance: Br. ${cashierState.data[0].Shop?.depositBalance} | `}{" "}
                   Balance: Br.{"    "}
-                  {balanceState.data &&
-                  parseInt(balanceState.data[0].netAmount) > 0
-                    ? balanceState.data[0].netAmount
-                    : 0}
+                  {balanceState.data && balanceState.data[0].netAmount}
                   .00
                 </div>
               )}
@@ -618,6 +615,91 @@ export default function CashierOptions({
 
                   <CustomTabPanel value={valueParent} index={1}>
                     <div>Events Here</div>
+                    {summaryData.data !== null &&
+                      summaryData.data.length > 0 && (
+                        <div className="summary-content w-full mt-4">
+                          <table className="w-full table table-fixed">
+                            <thead className="border-2 border-slate-300 bg-white">
+                              <tr className="text-sm p-2 table-row">
+                                <th className="border p-2 border-slate-400">
+                                  Print
+                                </th>
+                                <th className="border border-slate-400">
+                                  Cashier Name
+                                </th>
+                                <th className="border border-slate-400">
+                                  From Date
+                                </th>
+                                <th className="border border-slate-400">
+                                  To Date
+                                </th>
+                                <th className="border border-slate-400">
+                                  Tickets
+                                </th>
+                                <th className="border border-slate-400">
+                                  Bets
+                                </th>
+                                <th className="border border-slate-400">
+                                  Redeemed
+                                </th>
+                                <th className="border border-slate-400">
+                                  Cancelled
+                                </th>
+                                <th className="border border-slate-400">
+                                  Net Balance
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {summaryData.data.map((item) => {
+                                return (
+                                  <tr
+                                    key={item.cashierCreateId}
+                                    className="text-center text-sm p-2 "
+                                  >
+                                    <td
+                                      onClick={() => printSummary(item)}
+                                      className="border border-slate-400"
+                                    >
+                                      <span className="flex items-center justify-center cursor-pointer">
+                                        <FaPrint
+                                          size={20}
+                                          className="text-orange-500 hover:text-orange-300 transition-all"
+                                        />
+                                      </span>
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {item["Cashier.User.username"]}
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {from?.toDate().toLocaleDateString()}
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {to?.toDate().toLocaleDateString()}
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {item.totalTickets}
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {parseFloat(item.totalBets).toFixed(2)}{" "}
+                                      Br.
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {item.redeemCount}
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {item.cancelCount}
+                                    </td>
+                                    <td className="border border-slate-400 p-2">
+                                      {parseInt(item.netAmount).toFixed(2)} Br.
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
                   </CustomTabPanel>
                 </div>
               </Box>

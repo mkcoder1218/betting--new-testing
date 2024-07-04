@@ -170,7 +170,6 @@ export default function BetSlip() {
     const requestPayload = {
       minWin: minWin,
       maxWin: betState.totalToWin,
-      betSlipNumber: newBetSlipNumber,
       cashierCreateId: userState.user?.Cashier.id,
       shopId: userState.user?.Cashier.shopId,
       ticketData: newTicketToSend,
@@ -275,10 +274,11 @@ export default function BetSlip() {
                 <div
                   onClick={() => setSelected(index)}
                   style={{
-                    backgroundColor: `${currentDate > betState.betSlip[0].expiry
+                    backgroundColor: `${
+                      currentDate > betState.betSlip[0].expiry
                         ? "#fc4242"
                         : "#969696"
-                      }`,
+                    }`,
                   }}
                   key={index}
                   className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}
@@ -305,8 +305,9 @@ export default function BetSlip() {
                     </span>
                   </p>
                   <p className="ml-8 mr-8 text-xs">
-                    {`${new Date(item.expiry).getFullYear()}/${new Date(item.expiry).getMonth() + 1
-                      }/${new Date(item.expiry).getDate()}`}{" "}
+                    {`${new Date(item.expiry).getFullYear()}/${
+                      new Date(item.expiry).getMonth() + 1
+                    }/${new Date(item.expiry).getDate()}`}{" "}
                     {new Date(item.expiry).toLocaleTimeString("en-US", {
                       hourCycle: "h24",
                     })}{" "}
@@ -315,11 +316,12 @@ export default function BetSlip() {
                   {currentDate < betState.betSlip[0].expiry && (
                     <>
                       <div
-                        className={`ml-8 ${stakeInput[index] > 1000 ||
-                            item.stake * item.multiplier > 50000
+                        className={`ml-8 ${
+                          stakeInput[index] > 1000 ||
+                          item.stake * item.multiplier > 50000
                             ? "bg-red-600 text-white"
                             : "bg-white"
-                          } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
+                        } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
                       >
                         <FaMinus
                           style={{ backgroundColor: "#C7C7C7" }}
@@ -333,10 +335,11 @@ export default function BetSlip() {
                         />
                         <div className="flex items-center">
                           <input
-                            className={`num input-picker ${(stakeInput[index] > 1000 ||
+                            className={`num input-picker ${
+                              (stakeInput[index] > 1000 ||
                                 item.stake * item.multiplier > 50000) &&
                               "bg-red-600 text-white"
-                              } text-gray-500 text-end border-none focus:border-none active:border-none`}
+                            } text-gray-500 text-end border-none focus:border-none active:border-none`}
                             value={stakeInput[index]}
                             defaultValue={10}
                             onChange={(e) =>
@@ -353,11 +356,12 @@ export default function BetSlip() {
                             required
                           />
                           <div
-                            className={`mr-2 ${stakeInput[index] > 1000 ||
-                                item.stake * item.multiplier > 50000
+                            className={`mr-2 ${
+                              stakeInput[index] > 1000 ||
+                              item.stake * item.multiplier > 50000
                                 ? "text-white"
                                 : "text-gray-500"
-                              }`}
+                            }`}
                           >
                             .00
                           </div>
@@ -506,10 +510,11 @@ export default function BetSlip() {
               currentDate > betState.betSlip[0].expiry
             }
             onClick={handleCreateTicket}
-            className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${currentDate < betState.betSlip[0]?.expiry
+            className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${
+              currentDate < betState.betSlip[0]?.expiry
                 ? "bg-green-500"
                 : "bg-green-200"
-              }`}
+            }`}
           >
             PLACE BET
           </button>
