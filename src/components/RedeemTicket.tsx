@@ -106,10 +106,6 @@ export default function RedeemTicket({
     };
   }, []);
 
-  useEffect(() => {
-    console.log("toredeembetslip", betslip);
-  }, [betslip]);
-
   return (
     <div>
       <Modal
