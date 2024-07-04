@@ -95,8 +95,10 @@ export default function CashierOptions({
   const balanceState = useAppSelector((state) => state.balance);
   const [value, setValue] = React.useState(0);
   const [valueParent, setParent] = React.useState(0);
+  let tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
   const [to, setTo] = React.useState<Dayjs | null>(
-    dayjs(new Date().toDateString())
+    dayjs(tomorrow.toDateString())
   );
   const [from, setFrom] = React.useState<Dayjs | null>(
     dayjs(new Date().toDateString())
@@ -553,11 +555,11 @@ export default function CashierOptions({
                             <table className="w-full table table-fixed">
                               <thead className="border-2">
                                 <tr className="text-sm text-left p-4 table-row">
-                                  <th className="p-2">Game Number</th>
+
                                   <th className="p-2">Retail User</th>
-                                  <th className="p-2">Player Numbers</th>
-                                  <th className="p-2">Net Stake</th>
-                                  <th className="p-2">Win</th>
+                                  <th className="p-2">Date</th>
+                                  <th className="p-2">Stake</th>
+                                  <th className="p-2">Description</th>
                                   <th className="p-2"></th>
                                 </tr>
                               </thead>
@@ -568,28 +570,17 @@ export default function CashierOptions({
                                       key={item.id}
                                       className="even:bg-gray-200 odd:bg-white text-start text-sm p-2 border-l-slate-300"
                                     >
-                                      <td className="border border-l-slate-400 p-3">
-                                        {item.Game.gamenumber}
-                                      </td>
                                       <td className="border border-l-slate-400 p-2">
                                         {item.BetSlip.Cashier.User.username}
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
-                                        {item.nums &&
-                                          !item.nums.includes(-2) &&
-                                          !item.nums.includes(-4) &&
-                                          !item.nums.includes(-6) &&
-                                          item?.nums}
-                                        {item.nums.includes(-2) && "Heads"}
-                                        {item.nums.includes(-4) && "Evens"}
-                                        {item.nums.includes(-6) && "Tails"}
+                                        {`${new Date(item.createdAt).getFullYear()}/${new Date(item.createdAt).getMonth() + 1}/${new Date(item.createdAt).getDate()} ${new Date(item.createdAt).toLocaleTimeString('en-US', { hour12: false })}`}
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
                                         {parseFloat(item.stake).toFixed(2)} Br
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
-                                        {item.win ? item.win.toFixed(2) : 0.0}{" "}
-                                        Br.
+                                        {`Single, Keno-${item.Game.gamenumber}`}
                                       </td>
                                       <td
                                         onClick={() => printSelected(item)}

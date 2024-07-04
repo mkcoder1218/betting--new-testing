@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { MdOutlineCancel } from "react-icons/md";
@@ -45,6 +45,7 @@ export default function RedeemTicket({
   const userData = useAppSelector((state) => state.user);
   const betSlipData = useAppSelector((state) => state.betData);
   const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+  const myInputRef = useRef<HTMLInputElement>(null)
 
   const handleInput = (input: number | null, action: string) => {
     console.log("toredeeminput", input);
@@ -91,6 +92,16 @@ export default function RedeemTicket({
   };
 
   useEffect(() => {
+    if (open) {
+      setTimeout(() => {
+        if (myInputRef.current) {
+          myInputRef.current.focus();
+        }
+      }, 100);
+    }
+  }, [open]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (eventType === "change") return;
 
@@ -106,13 +117,13 @@ export default function RedeemTicket({
     };
   }, []);
 
-  useEffect(() => {
-    console.log("toredeembetslip", betslip);
-  }, [betslip]);
-
   return (
     <div>
       <Modal
+        onTransitionEnter={() => {
+          console.log("onTransitionEnter");
+          myInputRef.current?.focus();
+        }}
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -136,12 +147,14 @@ export default function RedeemTicket({
                   <div className="w-full">
                     <p className="text-green-500">Enter betslip code or scan</p>
                     <input
+
                       value={betslip}
                       onChange={handleChange}
                       maxLength={20}
                       type="text"
                       className="p-2 w-full mt-3 border border-slate-500 bg-white rounded-md"
                       placeholder="betslip code"
+                      ref={myInputRef}
                     />
                   </div>
                   <NumberPad onInput={handleInput} onSubmit={handleEnter} />

@@ -4,7 +4,7 @@ import CashierHeader from './components/CashierHeader';
 import GameIllustration from './components/GameIllustration';
 import TicketSlipHolder from './components/TicketSlipHolder';
 import TicketSelector from './components/TicketSelector';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CashierOptions from './components/CashierOptions';
 import RedeemTicket from './components/RedeemTicket';
 import BetSlip from './components/BetSlip';
@@ -17,6 +17,7 @@ import { addRepeat } from './features/slices/betRepeat';
 import { isPrinterUp } from './features/slices/ticketSlice';
 import PrinterDialog from './components/PrinterDialog';
 import { logoutUser } from './features/slices/userSlice';
+import { LOCAL_USER } from './config/constants';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -125,6 +126,34 @@ function App() {
     //check printer status to prevent ticket creation if printer is not running
     checkStatus();
   }, [])
+
+  const logoutAuto = () => {
+    localStorage.removeItem(LOCAL_USER);
+    window.location.replace("/");
+  }
+
+  const timerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const handleUserActivity = () => {
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        logoutAuto();
+      }, 20 * 60 * 1000);
+    };
+
+    window.addEventListener('mousemove', handleUserActivity);
+    window.addEventListener('click', handleUserActivity);
+
+    handleUserActivity();
+
+    return () => {
+      clearTimeout(timerRef.current);
+      window.removeEventListener('mousemove', handleUserActivity);
+      window.removeEventListener('click', handleUserActivity);
+    };
+  }, []);
 
   return (
     <div className='bg-white'>
