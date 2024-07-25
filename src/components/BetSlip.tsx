@@ -38,6 +38,7 @@ export default function BetSlip() {
   const [selected, setSelected] = useState(-1);
   const [printerDialog, setPrinterDialog] = useState(false);
   const [errorBet, setBetError] = useState("");
+  const balance = useAppSelector((state) => state.balance);
 
   const handleClose = () => {
     setPrinterDialog(false);
@@ -121,13 +122,20 @@ export default function BetSlip() {
 
   const handleCreateTicket = async () => {
     setBetError("");
-
+    console.log("bet_state_handle_create_ticket", betState.betSlip);
     const getBiggest = betState.betSlip.filter(
       (item) => item.stake > 1000 || item.stake * item.multiplier <= 50000
     );
-    const biggetsFirst = getBiggest[0].stake;
-
-    if (biggetsFirst > 1000) {
+    if (getBiggest.length > 0) {
+      const biggetsFirst = getBiggest[0].stake;
+      if (biggetsFirst > 1000) {
+        setBetError(
+          "The stake on one or more of your bets is not within the allowed betting limits"
+        );
+        return;
+      }
+    }
+    if (betState.totalToWin > 50000) {
       setBetError(
         "The stake on one or more of your bets is not within the allowed betting limits"
       );
@@ -138,14 +146,11 @@ export default function BetSlip() {
 
     if (checkPrinter) {
       setPrinterDialog(checkPrinter);
-      return;
+      // return;
     }
 
     refreshBetSlipNumber();
 
-    let newBetSlipNumber = betSlipState.data
-      ? parseInt(betSlipState.data?.betSlipNumber) + 1
-      : generateRandomNumber();
     let newTicketToSend = [];
 
     for (let ticket of betState.betSlip) {
@@ -161,9 +166,7 @@ export default function BetSlip() {
       newTicketToSend.push(ticketItem);
     }
 
-    const minWin = Math.min(
-      ...newTicketToSend.map((item) => item.stake)
-    );
+    const minWin = Math.min(...newTicketToSend.map((item) => item.stake));
 
     const maxWin = newTicketToSend.reduce((a, b) => a + b.maxWin, 0);
 
@@ -204,16 +207,6 @@ export default function BetSlip() {
       changeIndividualSlipStake(b, a);
     }
   };
-
-  function generateRandomNumber() {
-    const randomNumber = Math.floor(Math.random() * 1000000000);
-
-    let randomNumberString = randomNumber.toString();
-
-    randomNumberString = randomNumberString.padStart(9, "0");
-
-    return randomNumberString;
-  }
 
   const logout = () => {
     dispatch(logoutUser());
@@ -274,10 +267,11 @@ export default function BetSlip() {
                 <div
                   onClick={() => setSelected(index)}
                   style={{
-                    backgroundColor: `${currentDate > betState.betSlip[0].expiry
-                      ? "#fc4242"
-                      : "#969696"
-                      }`,
+                    backgroundColor: `${
+                      currentDate > betState.betSlip[0].expiry
+                        ? "#fc4242"
+                        : "#969696"
+                    }`,
                   }}
                   key={index}
                   className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}
@@ -315,11 +309,12 @@ export default function BetSlip() {
                   {currentDate < betState.betSlip[0].expiry && (
                     <>
                       <div
-                        className={`ml-8 ${stakeInput[index] > 1000 ||
+                        className={`ml-8 ${
+                          stakeInput[index] > 1000 ||
                           item.stake * item.multiplier > 50000
-                          ? "bg-red-600 text-white"
-                          : "bg-white"
-                          } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
+                            ? "bg-red-600 text-white"
+                            : "bg-white"
+                        } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
                       >
                         <FaMinus
                           style={{ backgroundColor: "#C7C7C7" }}
@@ -333,8 +328,9 @@ export default function BetSlip() {
                         />
                         <div className="flex items-center">
                           <input
-                            className={`num input-picker ${(stakeInput[index] > 1000 ||
-                              item.stake * item.multiplier > 50000) &&
+                            className={`num input-picker ${
+                              (stakeInput[index] > 1000 ||
+                                item.stake * item.multiplier > 50000) &&
                               "bg-red-600 text-white"
                             } text-gray-500 text-end border-none focus:border-none active:border-none`}
                             value={stakeInput[index]}
@@ -353,11 +349,12 @@ export default function BetSlip() {
                             required
                           />
                           <div
-                            className={`mr-2 ${stakeInput[index] > 1000 ||
+                            className={`mr-2 ${
+                              stakeInput[index] > 1000 ||
                               item.stake * item.multiplier > 50000
-                              ? "text-white"
-                              : "text-gray-500"
-                              }`}
+                                ? "text-white"
+                                : "text-gray-500"
+                            }`}
                           >
                             .00
                           </div>
@@ -506,14 +503,33 @@ export default function BetSlip() {
               currentDate > betState.betSlip[0].expiry
             }
             onClick={handleCreateTicket}
-            className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${currentDate < betState.betSlip[0]?.expiry
-              ? "bg-green-500"
-              : "bg-green-200"
-              }`}
+            className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${
+              currentDate < betState.betSlip[0]?.expiry
+                ? "bg-green-500"
+                : "bg-green-200"
+            }`}
           >
             PLACE BET
           </button>
         </div>
+        {balance.data &&
+          balance.data.length > 0 &&
+          parseInt(balance.data[0].creditAmount) < 2000 && (
+            <div
+              style={{
+                height: 30,
+                backgroundColor: "red",
+                color: "white",
+                width: "100%",
+                textAlign: "center",
+                fontWeight: "bold",
+                fontSize: 12,
+              }}
+            >
+              Low Credit Balance Warning. Balance:
+              {balance.data[0].creditAmount}.00 Br
+            </div>
+          )}
       </div>
     </div>
   );

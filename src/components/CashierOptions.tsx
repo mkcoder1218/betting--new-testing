@@ -9,19 +9,22 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import dayjs, { Dayjs } from "dayjs";
 import * as XLSX from "xlsx";
-
+import moment from "moment";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { MdOutlineCancel } from "react-icons/md";
-import { IoMdRefresh } from "react-icons/io";
+import { IoIosPrint, IoMdRefresh } from "react-icons/io";
 import { FaPrint } from "react-icons/fa";
-import { FaRegFileLines } from "react-icons/fa6";
+import { FaEye, FaRegFileLines } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import {
   CashierData,
+  ResultData,
+  getEventResult,
   getSummaryData,
+  printResultToBackend,
   printSummaryToBackend,
 } from "../features/slices/summarySlice";
 import ProgressCircular from "./ProgressCircular";
@@ -33,6 +36,9 @@ import {
 } from "../features/slices/ticketSlice";
 import { getCashierNames } from "../features/slices/cashierData";
 import { getNetBalance } from "../features/slices/netBalance";
+import { Input } from "@mui/material";
+import { SmartPlay } from "./svg/SmartPlay";
+import { IoChevronBackOutline } from "react-icons/io5";
 
 interface CashierOptionsProps {
   open: boolean;
@@ -90,11 +96,18 @@ export default function CashierOptions({
 }: CashierOptionsProps) {
   const dispatch = useAppDispatch();
   const userData = useAppSelector((state) => state.user);
+  const cashierData = useAppSelector((state) => state.cashier);
   const summaryData = useAppSelector((state) => state.summary);
   const ticketList = useAppSelector((state) => state.ticket);
   const balanceState = useAppSelector((state) => state.balance);
   const [value, setValue] = React.useState(0);
   const [valueParent, setParent] = React.useState(0);
+  const [gameNumber, setGameNumber] = React.useState();
+  const [resultVisible, toggleResult] = React.useState(false);
+  const [gameResult, setGameResult] = React.useState<string[]>();
+  const gameResults = useAppSelector((state) => {
+    return state.summary.eventResult;
+  });
   let tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   const [to, setTo] = React.useState<Dayjs | null>(
@@ -134,6 +147,7 @@ export default function CashierOptions({
 
   const handleParentTab = (event: React.SyntheticEvent, val: number) => {
     setParent(val);
+    setValue(0);
   };
 
   const handleFetchSummary = () => {
@@ -141,6 +155,17 @@ export default function CashierOptions({
       getSummaryData(
         from?.toISOString(),
         to?.toISOString(),
+        userData.user?.Cashier.shopId
+      )
+    );
+  };
+
+  const handleLoadEventResult = () => {
+    dispatch(
+      getEventResult(
+        from?.toISOString(),
+        to?.toISOString(),
+        gameNumber,
         userData.user?.Cashier.shopId
       )
     );
@@ -180,6 +205,24 @@ export default function CashierOptions({
     printSummaryToBackend(dataToSend);
   };
 
+  const printResult = (item: ResultData) => {
+    const dataToSend = {
+      cashierName: item.cashierName,
+      shopName: item.shopName,
+      date: item.date,
+      Game: item.Game,
+      eventId: item.eventId,
+      gameTime: item.gameTime,
+      formattedTime: moment(item.gameTime).format("YYYY/MM/DD hh:mm:ss"),
+      result: item.result
+        .slice()
+        .sort((a, b) => parseInt(a) - parseInt(b))
+        .join(" "),
+    };
+
+    printResultToBackend(dataToSend);
+  };
+
   const printSelected = (item: Ticket) => {
     const payload = {
       betslipId: item.betSlipId,
@@ -189,6 +232,9 @@ export default function CashierOptions({
 
     printSelectedTickets(payload);
   };
+  React.useEffect(() => {
+    console.log("USERDATA", userData.user);
+  }, [userData]);
 
   const exportToExcel = (data: CashierData[] | null) => {
     if (!data) {
@@ -258,26 +304,37 @@ export default function CashierOptions({
             />
           </div>
           <div className="options-content bg-white p-6">
-            <div className="flex items-center justify-end">
+            <div
+              className="flex items-center justify-end"
+              style={{ justifyContent: "space-between" }}
+            >
               {!balanceState.loading && (
                 <div className="text-green-500 text-lg">
                   {cashierState.data &&
                     cashierState.data[0] &&
-                    `Credit Balance: Br. ${cashierState.data[0].Shop?.depositBalance} | `}{" "}
-                  Balance: Br.{"    "}
-                  {balanceState.data && balanceState.data[0].netAmount}
-                  .00
+                    `Credit Balance: Br. ${
+                      balanceState.data && balanceState.data[0].creditAmount
+                    }`}{" "}
                 </div>
               )}
-              <span
-                onClick={refreshNetBalance}
-                className="hover:opacity-50 transition-all"
-              >
-                <IoMdRefresh
-                  className="text-green-600 pt-0 pb-0 pl-2 pr-2 border rounded-md ml-2 border-green-500"
-                  size={36}
-                />
-              </span>
+              <div className="flex">
+                {!balanceState.loading && (
+                  <div className="text-green-500 text-lg">
+                    Balance: Br.{"    "}
+                    {balanceState.data && balanceState.data[0].netAmount}
+                    .00
+                  </div>
+                )}
+                <span
+                  onClick={refreshNetBalance}
+                  className="hover:opacity-50 transition-all"
+                >
+                  <IoMdRefresh
+                    className="text-green-600 pt-0 pb-0 pl-2 pr-2 border rounded-md ml-2 border-green-500"
+                    size={36}
+                  />
+                </span>
+              </div>
             </div>
             <Box sx={{ width: "100%" }}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -555,7 +612,6 @@ export default function CashierOptions({
                             <table className="w-full table table-fixed">
                               <thead className="border-2">
                                 <tr className="text-sm text-left p-4 table-row">
-
                                   <th className="p-2">Retail User</th>
                                   <th className="p-2">Date</th>
                                   <th className="p-2">Stake</th>
@@ -574,7 +630,18 @@ export default function CashierOptions({
                                         {item.BetSlip.Cashier.User.username}
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
-                                        {`${new Date(item.createdAt).getFullYear()}/${new Date(item.createdAt).getMonth() + 1}/${new Date(item.createdAt).getDate()} ${new Date(item.createdAt).toLocaleTimeString('en-US', { hour12: false })}`}
+                                        {`${new Date(
+                                          item.createdAt
+                                        ).getFullYear()}/${
+                                          new Date(item.createdAt).getMonth() +
+                                          1
+                                        }/${new Date(
+                                          item.createdAt
+                                        ).getDate()} ${new Date(
+                                          item.createdAt
+                                        ).toLocaleTimeString("en-US", {
+                                          hour12: false,
+                                        })}`}
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
                                         {parseFloat(item.stake).toFixed(2)} Br
@@ -605,92 +672,371 @@ export default function CashierOptions({
                   </CustomTabPanel>
 
                   <CustomTabPanel value={valueParent} index={1}>
-                    <div>Events Here</div>
-                    {summaryData.data !== null &&
-                      summaryData.data.length > 0 && (
-                        <div className="summary-content w-full mt-4">
-                          <table className="w-full table table-fixed">
-                            <thead className="border-2 border-slate-300 bg-white">
-                              <tr className="text-sm p-2 table-row">
-                                <th className="border p-2 border-slate-400">
-                                  Print
-                                </th>
-                                <th className="border border-slate-400">
-                                  Cashier Name
-                                </th>
-                                <th className="border border-slate-400">
-                                  From Date
-                                </th>
-                                <th className="border border-slate-400">
-                                  To Date
-                                </th>
-                                <th className="border border-slate-400">
-                                  Tickets
-                                </th>
-                                <th className="border border-slate-400">
-                                  Bets
-                                </th>
-                                <th className="border border-slate-400">
-                                  Redeemed
-                                </th>
-                                <th className="border border-slate-400">
-                                  Cancelled
-                                </th>
-                                <th className="border border-slate-400">
-                                  Net Balance
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {summaryData.data.map((item) => {
-                                return (
-                                  <tr
-                                    key={item.cashierCreateId}
-                                    className="text-center text-sm p-2 "
-                                  >
-                                    <td
-                                      onClick={() => printSummary(item)}
-                                      className="border border-slate-400"
-                                    >
-                                      <span className="flex items-center justify-center cursor-pointer">
-                                        <FaPrint
-                                          size={20}
-                                          className="text-orange-500 hover:text-orange-300 transition-all"
-                                        />
-                                      </span>
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {item["Cashier.User.username"]}
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {from?.toDate().toLocaleDateString()}
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {to?.toDate().toLocaleDateString()}
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {item.totalTickets}
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {parseFloat(item.totalBets).toFixed(2)}{" "}
-                                      Br.
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {item.redeemCount}
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {item.cancelCount}
-                                    </td>
-                                    <td className="border border-slate-400 p-2">
-                                      {parseInt(item.netAmount).toFixed(2)} Br.
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                            </tbody>
-                          </table>
+                    {resultVisible && gameResults && gameResult && (
+                      <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
+                        <div className="result-header flex justify-between">
+                          <div className="flex mt-5">
+                            <SmartPlay />
+                            <p className="ml-2">2024/06/30 04:10:32 ID 8129</p>
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => toggleResult(false)}
+                              className="flex p-2 border-2 border-gray-400 hover:bg-slate-200 transition-all items-center rounded-md"
+                            >
+                              <IoChevronBackOutline size={24} /> Back To List
+                            </button>
+                          </div>
                         </div>
-                      )}
+
+                        <div className="results-content flex items-center flex-col w-full">
+                          <div className="w-full mr-20 mt-10 flex items-center justify-center">
+                            RESULTS
+                          </div>
+                          <div className="w-2/3 mr-20 mt-4">
+                            <div className="mb-3">
+                              <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4">
+                                {gameResult &&
+                                  gameResult
+                                    .slice()
+                                    .sort((a, b) => parseInt(a) - parseInt(b))
+                                    .map((_) => {
+                                      // const number = index + 1;
+                                      return (
+                                        <button
+                                          style={{
+                                            backgroundColor: "#c2410c",
+                                          }}
+                                          key={_}
+                                          className={`balls rounded-full w-10 h-10 text-white`}
+                                        >
+                                          {_}
+                                        </button>
+                                      );
+                                    })}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {!resultVisible && (
+                      <div className="border mt-4 border-green-500 w-full rounded-md">
+                        <CustomTabPanel value={value} index={0}>
+                          <div className="date-picker-form flex gap-4 items-end">
+                            <div>
+                              <p className="mb-0 text-sm font-bold">
+                                From Date
+                              </p>
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer
+                                  components={["DatePicker", "DatePicker"]}
+                                >
+                                  <DatePicker
+                                    value={from}
+                                    onChange={(newValue) => setFrom(newValue)}
+                                  />
+                                </DemoContainer>
+                              </LocalizationProvider>
+                            </div>
+                            <div>
+                              <p className="mb-0 text-sm font-bold">To Date</p>
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer
+                                  components={["DatePicker", "DatePicker"]}
+                                >
+                                  <DatePicker
+                                    value={to}
+                                    onChange={(newValue) => setTo(newValue)}
+                                  />
+                                </DemoContainer>
+                              </LocalizationProvider>
+                            </div>
+                            <div>
+                              <p className="mb-0 text-sm font-bold">
+                                Event Number
+                              </p>
+                              <input
+                                value={gameNumber}
+                                onChange={(e) => setGameNumber(e.target.value)}
+                                maxLength={20}
+                                type="text"
+                                className="p-2 w-full mt-3 border border-slate-500 bg-white rounded-md"
+                                placeholder="Event number"
+                                // ref={myInputRef}
+                              />
+                            </div>
+                          </div>
+                          <br />
+                          <div className="flex">
+                            <button
+                              onClick={handleLoadEventResult}
+                              className="p-2 text-sm bg-green-600 rounded-md text-white flex items-center gap-2"
+                            >
+                              Refresh{" "}
+                              <span>
+                                <IoMdRefresh className="text-white" size={16} />
+                              </span>
+                            </button>
+                            {summaryData.data &&
+                              summaryData.data.length > 0 && (
+                                <button
+                                  onClick={() =>
+                                    exportToExcel(summaryData?.data)
+                                  }
+                                  className="p-2 text-sm bg-green-600 rounded-md text-white flex items-center gap-2"
+                                >
+                                  Export to Excel
+                                  <span>
+                                    <FaRegFileLines
+                                      className="text-white"
+                                      size={16}
+                                    />
+                                  </span>
+                                </button>
+                              )}
+                          </div>
+                          {summaryData.loading && (
+                            <div className="w-full flex items-center p-4 justify-center">
+                              <ProgressCircular />
+                            </div>
+                          )}
+                          {summaryData.error !== null && (
+                            <FormStatus
+                              type="error"
+                              content={summaryData.error}
+                            />
+                          )}
+                          {gameResults && gameResults.length < 0 && (
+                            <div className="w-full text-center p-4 mt-4">
+                              No Tickets found
+                            </div>
+                          )}
+
+                          {!resultVisible &&
+                            gameResults &&
+                            gameResults.length > 0 && (
+                              <div className="summary-content w-full mt-4">
+                                <table className="w-full table table-fixed">
+                                  <thead className="border-2 border-slate-300 bg-white">
+                                    <tr className="text-sm p-2 table-row">
+                                      <th className="border p-2 border-slate-400">
+                                        Print
+                                      </th>
+                                      <th className="border border-slate-400">
+                                        Game
+                                      </th>
+                                      <th className="border border-slate-400">
+                                        From Date
+                                      </th>
+                                      <th className="border border-slate-400">
+                                        To Date
+                                      </th>
+                                      <th className="border border-slate-400">
+                                        GameNumber
+                                      </th>
+
+                                      <th className="border border-slate-400">
+                                        Date
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {gameResults &&
+                                      gameResults.map((item) => {
+                                        return (
+                                          <tr
+                                            key={item.id}
+                                            className="text-center text-sm p-2 "
+                                          >
+                                            <td
+                                              // onClick={() => printSummary(item)}
+                                              className="border border-slate-400"
+                                            >
+                                              <span className="flex items-center justify-center cursor-pointer">
+                                                <FaEye
+                                                  onClick={() => {
+                                                    toggleResult(true);
+                                                    setGameResult(item.result);
+                                                  }}
+                                                  className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
+                                                  size={40}
+                                                />
+                                                <IoIosPrint
+                                                  onClick={() =>
+                                                    printResult({
+                                                      result: item.result,
+                                                      cashierName:
+                                                        userData.user
+                                                          ?.username + "",
+                                                      shopName:
+                                                        cashierData.data &&
+                                                        cashierData.data
+                                                          .length > 0
+                                                          ? cashierData.data[0]
+                                                              .Shop?.name + ""
+                                                          : "",
+                                                      gameTime: item.startTime,
+                                                      eventId: item.gamenumber,
+                                                      Game: "Keno",
+                                                      formattedTime: "",
+                                                      date: moment(),
+                                                    })
+                                                  }
+                                                  className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
+                                                  size={40}
+                                                />
+                                              </span>
+                                            </td>
+                                            <td className="border border-slate-400 p-2">
+                                              KENO
+                                            </td>
+                                            <td className="border border-slate-400 p-2">
+                                              {from
+                                                ?.toDate()
+                                                .toLocaleDateString()}
+                                            </td>
+                                            <td className="border border-slate-400 p-2">
+                                              {to
+                                                ?.toDate()
+                                                .toLocaleDateString()}
+                                            </td>
+                                            <td className="border border-slate-400 p-2">
+                                              {item.gamenumber}
+                                            </td>
+
+                                            <td className="border border-slate-400 p-2">
+                                              {moment(item.startTime).format(
+                                                "DD/MM/YYYY hh:mm:ss"
+                                              )}
+                                            </td>
+                                          </tr>
+                                        );
+                                      })}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                        </CustomTabPanel>
+                        <CustomTabPanel value={value} index={1}>
+                          <div className="cashier-box">
+                            <div className="font-bold">Retail User</div>
+                            <div className="select-container">
+                              {cashierState.data && (
+                                <FormControl
+                                  sx={{ mt: 1, mb: 2, p: 0, minWidth: 260 }}
+                                  size="small"
+                                >
+                                  <Select
+                                    labelId="demo-select-small-label"
+                                    id="demo-select-small"
+                                    onChange={handleCashierChoose}
+                                    value={cashierNameVal}
+                                    defaultValue="all"
+                                  >
+                                    <MenuItem value={"all"}>All</MenuItem>
+                                    {cashierState.data?.map((item) => {
+                                      return (
+                                        <MenuItem key={item.id} value={item.id}>
+                                          {item.User.username.toLocaleLowerCase()}
+                                        </MenuItem>
+                                      );
+                                    })}
+                                  </Select>
+                                </FormControl>
+                              )}
+                            </div>
+                          </div>
+                          <div className="date-picker-form flex gap-6 items-end">
+                            <button
+                              onClick={getTicketList}
+                              className="p-1 mb-2 bg-green-500 rounded-md text-white flex items-center gap-2"
+                            >
+                              Refresh
+                              <span>
+                                <IoMdRefresh className="text-white" size={20} />
+                              </span>
+                            </button>
+                          </div>
+
+                          {ticketList.loading && (
+                            <div className="w-full flex items-center p-4 justify-center">
+                              <ProgressCircular />
+                            </div>
+                          )}
+                          {/* {ticketList.error && <FormStatus type='error' content={ticketList.error} />} */}
+                          {!ticketList.loading &&
+                            ticketList.data.length < 1 && (
+                              <div className="w-full text-center p-4 mt-4">
+                                No Tickets found
+                              </div>
+                            )}
+                          {!ticketList.loading &&
+                            ticketList.data.length > 0 && (
+                              <div className="summary-content  max-h-80  overflow-scroll w-full mt-4">
+                                <table className="w-full table table-fixed">
+                                  <thead className="border-2">
+                                    <tr className="text-sm text-left p-4 table-row">
+                                      <th className="p-2">Retail User</th>
+                                      <th className="p-2">Date</th>
+                                      <th className="p-2">Stake</th>
+                                      <th className="p-2">Description</th>
+                                      <th className="p-2"></th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {ticketList.data.map((item) => {
+                                      return (
+                                        <tr
+                                          key={item.id}
+                                          className="even:bg-gray-200 odd:bg-white text-start text-sm p-2 border-l-slate-300"
+                                        >
+                                          <td className="border border-l-slate-400 p-2">
+                                            {item.BetSlip.Cashier.User.username}
+                                          </td>
+                                          <td className="border border-l-slate-400 p-2">
+                                            {`${new Date(
+                                              item.createdAt
+                                            ).getFullYear()}/${
+                                              new Date(
+                                                item.createdAt
+                                              ).getMonth() + 1
+                                            }/${new Date(
+                                              item.createdAt
+                                            ).getDate()} ${new Date(
+                                              item.createdAt
+                                            ).toLocaleTimeString("en-US", {
+                                              hour12: false,
+                                            })}`}
+                                          </td>
+                                          <td className="border border-l-slate-400 p-2">
+                                            {parseFloat(item.stake).toFixed(2)}{" "}
+                                            Br
+                                          </td>
+                                          <td className="border border-l-slate-400 p-2">
+                                            {`Single, Keno-${item.Game.gamenumber}`}
+                                          </td>
+                                          <td
+                                            onClick={() => printSelected(item)}
+                                            className="border border-l-slate-400 p-2"
+                                          >
+                                            <div className="border justify-center">
+                                              <FaPrint
+                                                size={20}
+                                                className="text-green-600 hover:text-green-300 transition-all"
+                                              />
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                        </CustomTabPanel>
+                      </div>
+                    )}
                   </CustomTabPanel>
                 </div>
               </Box>

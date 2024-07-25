@@ -45,7 +45,7 @@ export default function RedeemTicket({
   const userData = useAppSelector((state) => state.user);
   const betSlipData = useAppSelector((state) => state.betData);
   const listOfNums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-  const myInputRef = useRef<HTMLInputElement>(null)
+  const myInputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = (input: number | null, action: string) => {
     console.log("toredeeminput", input);
@@ -147,7 +147,6 @@ export default function RedeemTicket({
                   <div className="w-full">
                     <p className="text-green-500">Enter betslip code or scan</p>
                     <input
-
                       value={betslip}
                       onChange={handleChange}
                       maxLength={20}

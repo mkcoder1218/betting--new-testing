@@ -1,82 +1,241 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
+import { updateBetSlipItem } from "./pickerSlice";
 
 export interface CashierData {
-    cashierCreateId: string;
-    totalTickets: string;
-    totalBets: string;
-    cancelCount: string;
-    redeemCount: string;
-    totalRedeemAmount: string;
-    totalCancelAmount: string;
-    netAmount: string;
-    "Cashier.id": string;
-    "Cashier.User.id": string;
-    "Cashier.User.username": string;
+  cashierCreateId: string;
+  totalTickets: string;
+  totalBets: string;
+  cancelCount: string;
+  redeemCount: string;
+  totalRedeemAmount: string;
+  totalCancelAmount: string;
+  netAmount: string;
+  "Cashier.id": string;
+  "Cashier.User.id": string;
+  "Cashier.User.username": string;
+}
+export interface ResultData {
+  cashierName: string;
+  date: string;
+  Game: string;
+  eventId: string;
+  gameTime: string;
+  formattedTime: string;
+  result: string[];
+  shopName: string;
+}
+interface GameData {
+  id: string;
+  gamenumber: number;
+  result: string[] | null;
+  status: string; // Adjust status values as needed
+  startTime: string; // Use Date if you prefer date objects
+  shopId: string;
+  gameRTP: number | null;
+  actualRTP: number | null;
+  createdAt: string; // Use Date if you prefer date objects
+  updatedAt: string; // Use Date if you prefer date objects
 }
 
 interface Response {
-    data: CashierData[];
-    message: string;
-    error: null | any;
+  data: CashierData[];
+  message: string;
+  error: null | any;
 }
 
 interface SummaryState {
-    loading: boolean,
-    error: string | null,
-    message: string | null,
-    data: CashierData[] | null
+  loading: boolean;
+  error: string | null;
+  message: string | null;
+  data: CashierData[] | null;
+  eventResult?: GameData[] | null;
+}
+interface GameAPIResult {
+  loading: boolean;
+  error: string | null;
+  message: string | null;
+  data: GameData[] | null;
 }
 
 let initialState: SummaryState = {
-    loading: false,
-    error: null,
-    message: null,
-    data: null
-}
+  loading: false,
+  error: null,
+  message: null,
+  data: null,
+  eventResult: null,
+};
 
 const summarySlice = createSlice({
-    name: "summary",
-    initialState: initialState,
-    reducers: {
-        addSummary: (state, action: PayloadAction<SummaryState>) => {
-            state.loading = action.payload.loading;
-            state.error = action.payload.error;
-            state.message = action.payload.message;
-            state.data = action.payload.data
-        }
-    }
-})
+  name: "summary",
+  initialState: initialState,
+  reducers: {
+    addSummary: (state, action: PayloadAction<SummaryState>) => {
+      state.loading = action.payload.loading;
+      state.error = action.payload.error;
+      state.message = action.payload.message;
+      state.data = action.payload.data;
+    },
+    udpateGameResult: (state, action: PayloadAction<GameAPIResult>) => {
+      state.loading = action.payload.loading;
+      state.error = action.payload.error;
+      state.message = action.payload.message;
+      state.eventResult = action.payload.data;
+    },
+  },
+});
 
-export const { addSummary } = summarySlice.actions;
+export const { addSummary, udpateGameResult } = summarySlice.actions;
 
 export default summarySlice.reducer;
 
-export const getSummaryData = (from: string | undefined, to: string | undefined, cashierId: string | undefined) => async (dispatch: (arg0: { payload: SummaryState; type: "summary/addSummary"; }) => void) => {
-    dispatch(addSummary({ loading: true, error: null, message: null, data: null }))
+export const getSummaryData =
+  (
+    from: string | undefined,
+    to: string | undefined,
+    cashierId: string | undefined
+  ) =>
+  async (
+    dispatch: (arg0: {
+      payload: SummaryState;
+      type: "summary/addSummary";
+    }) => void
+  ) => {
+    dispatch(
+      addSummary({ loading: true, error: null, message: null, data: null })
+    );
 
     try {
-        const summaryData: Response = (await axiosInstance.post("ticket/summary", { from: from, to: to, cashierId: cashierId })).data;
+      const summaryData: Response = (
+        await axiosInstance.post("ticket/summary", {
+          from: from,
+          to: to,
+          cashierId: cashierId,
+        })
+      ).data;
 
-        if (summaryData.message === "success") {
-            dispatch(addSummary({ loading: false, error: null, message: summaryData.message, data: summaryData.data }))
-        } else {
-            dispatch(addSummary({ loading: false, error: summaryData.error, message: null, data: null }))
-        }
+      if (summaryData.message === "success") {
+        dispatch(
+          addSummary({
+            loading: false,
+            error: null,
+            message: summaryData.message,
+            data: summaryData.data,
+          })
+        );
+      } else {
+        dispatch(
+          addSummary({
+            loading: false,
+            error: summaryData.error,
+            message: null,
+            data: null,
+          })
+        );
+      }
     } catch (err: AxiosError | any) {
-        dispatch(addSummary({ message: "", error: typeof err?.response?.data?.error === "string" ? err.response.data.error : "Something went wrong", loading: false, data: null }))
+      dispatch(
+        addSummary({
+          message: "",
+          error:
+            typeof err?.response?.data?.error === "string"
+              ? err.response.data.error
+              : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
     }
-}
+  };
+export const getEventResult =
+  (
+    from: string | undefined,
+    to: string | undefined,
+    gameNumber: string | undefined,
+    shopId: string | undefined
+  ) =>
+  async (
+    dispatch: (arg0: {
+      payload: GameAPIResult;
+      type: "summary/udpateGameResult";
+    }) => void
+  ) => {
+    dispatch(
+      udpateGameResult({
+        loading: true,
+        error: null,
+        message: null,
+        data: null,
+      })
+    );
+
+    try {
+      const summaryData: GameAPIResult = (
+        await axiosInstance.post("/game/gameData", {
+          from: from,
+          to: to,
+          gameNumber: gameNumber,
+          shopId: shopId,
+        })
+      ).data;
+
+      if (summaryData.message === "success") {
+        dispatch(
+          udpateGameResult({
+            loading: false,
+            error: null,
+            message: summaryData.message,
+            data: summaryData.data,
+          })
+        );
+      } else {
+        dispatch(
+          udpateGameResult({
+            loading: false,
+            error: summaryData.error,
+            message: null,
+            data: null,
+          })
+        );
+      }
+    } catch (err: AxiosError | any) {
+      dispatch(
+        udpateGameResult({
+          message: "",
+          error:
+            typeof err?.response?.data?.error === "string"
+              ? err.response.data.error
+              : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 
 export const printSummaryToBackend = async (data: any) => {
-    try {
-        const printResponse = await axiosInstance.post("ticket/printSummary", data);
+  try {
+    const printResponse = await axiosInstance.post("ticket/printSummary", data);
 
-        if (printResponse.status === 200 || printResponse.status === 201) {
-            const callPrinterWithData = await axios.post("http://localhost:5000/printSummary", printResponse.data.data)
-        }
-    } catch (err) {
-        console.log(err);
+    if (printResponse.status === 200 || printResponse.status === 201) {
+      const callPrinterWithData = await axios.post(
+        "http://localhost:5000/printSummary",
+        printResponse.data.data
+      );
     }
-}
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const printResultToBackend = async (data: any) => {
+  try {
+    const callPrinterWithData = await axios.post(
+      "http://localhost:5000/PrintResult",
+      data
+    );
+  } catch (err) {
+    console.log(err);
+  }
+};

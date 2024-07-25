@@ -4,126 +4,219 @@ import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
 
 interface BetSlipData {
-    betSlipNumber: string;
+  betSlipNumber: string;
 }
 
 interface BetSlipResponse<T> {
-    data: T | null;
-    message: string;
-    error: null;
+  data: T | null;
+  message: string;
+  error: null;
 }
 
 export interface Ticket {
-    id: string;
-    ticketno: string;
-    nums: number[];
-    redeem: null | any;
-    stake: string;
-    ticketExpiry: string;
-    maxWin: number;
-    win: number;
-    oddId: string;
-    cashierRedeemId: null | string;
-    gameId: string;
-    betSlipId: string;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  ticketno: string;
+  nums: number[];
+  redeem: null | any;
+  stake: string;
+  ticketExpiry: string;
+  maxWin: number;
+  win: number;
+  oddId: string;
+  cashierRedeemId: null | string;
+  gameId: string;
+  betSlipId: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface BetSlip {
-    id: string;
-    minWin: number;
-    betSlipNumber: string;
-    maxWin: number;
-    date: string;
-    cashierCreateId: string;
-    shopId: string;
-    updatedAt: string;
-    createdAt: string;
-    Tickets: Ticket[] | null
+  id: string;
+  minWin: number;
+  betSlipNumber: string;
+  maxWin: number;
+  date: string;
+  cashierCreateId: string;
+  shopId: string;
+  updatedAt: string;
+  createdAt: string;
+  Tickets: Ticket[] | null;
 }
 
 export interface ToPrint {
-    dataToPrint: any
+  dataToPrint: any;
 }
 
 interface BetSlipState<T> {
-    loading: boolean,
-    error: string | null,
-    message: string | null,
-    data: T | null
+  loading: boolean;
+  error: string | null;
+  message: string | null;
+  data: T | null;
 }
 
 let initialState: BetSlipState<BetSlip | BetSlipData> = {
-    loading: false,
-    error: null,
-    message: null,
-    data: null
-}
+  loading: false,
+  error: null,
+  message: null,
+  data: null,
+};
 
 const betSlipSlice = createSlice({
-    name: "betSlip",
-    initialState: initialState,
-    reducers: {
-        addBetSlipNumber: (state, action: PayloadAction<BetSlipState<BetSlipData>>) => {
-            state.data = action.payload.data;
-        },
-        addTicketAndBetSlip: (state, action: PayloadAction<BetSlipState<BetSlip>>) => {
-            state.loading = action.payload.loading;
-            state.error = action.payload.error;
-            state.message = action.payload.message;
-            state.data = action.payload.data;
-        }
-    }
-})
+  name: "betSlip",
+  initialState: initialState,
+  reducers: {
+    addBetSlipNumber: (
+      state,
+      action: PayloadAction<BetSlipState<BetSlipData>>
+    ) => {
+      state.data = action.payload.data;
+    },
+    addTicketAndBetSlip: (
+      state,
+      action: PayloadAction<BetSlipState<BetSlip>>
+    ) => {
+      state.loading = action.payload.loading;
+      state.error = action.payload.error;
+      state.message = action.payload.message;
+      state.data = action.payload.data;
+    },
+  },
+});
 
 export const { addBetSlipNumber, addTicketAndBetSlip } = betSlipSlice.actions;
 
 export default betSlipSlice.reducer;
 
-export const createBetSlipAndTicket = (data: any, refreshBetSlipNumber: () => void, clearSlip: () => void, toggleStatus: (val: boolean) => void, clearNumberSelection: () => void) => async (dispatch: (arg0: { payload: BetSlipState<BetSlip>; type: "betSlip/addTicketAndBetSlip"; }) => void) => {
-    dispatch(addTicketAndBetSlip({ loading: true, error: null, message: null, data: null }))
+export const createBetSlipAndTicket =
+  (
+    data: any,
+    refreshBetSlipNumber: () => void,
+    clearSlip: () => void,
+    toggleStatus: (val: boolean) => void,
+    clearNumberSelection: () => void
+  ) =>
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState<BetSlip>;
+      type: "betSlip/addTicketAndBetSlip";
+    }) => void
+  ) => {
+    dispatch(
+      addTicketAndBetSlip({
+        loading: true,
+        error: null,
+        message: null,
+        data: null,
+      })
+    );
 
     try {
-        const betSlipResponse: BetSlipResponse<ToPrint> = (await axiosInstance.post("ticket/betslip", data)).data;
+      const betSlipResponse: BetSlipResponse<ToPrint> = (
+        await axiosInstance.post("ticket/betslip", data)
+      ).data;
 
-        if (betSlipResponse.message === "betslip added successfully") {
-            dispatch(addTicketAndBetSlip({ loading: false, error: null, message: betSlipResponse.message, data: null }))
-            refreshBetSlipNumber();
-            toggleStatus(true);
-            clearSlip();
+      if (betSlipResponse.message === "betslip added successfully") {
+        dispatch(
+          addTicketAndBetSlip({
+            loading: false,
+            error: null,
+            message: betSlipResponse.message,
+            data: null,
+          })
+        );
+        refreshBetSlipNumber();
+        toggleStatus(true);
+        clearSlip();
 
-            setTimeout(() => {
-                toggleStatus(false);
-                clearNumberSelection();
-            }, 3000);
+        setTimeout(() => {
+          toggleStatus(false);
+          clearNumberSelection();
+        }, 500);
 
-            try {
-                const printResponse = await axios.post("http://localhost:5000/printTicket", betSlipResponse.data);
-            } catch (err) {
-                console.log("print failed")
-            }
-        } else {
-            toggleStatus(true)
-            dispatch(addTicketAndBetSlip({ loading: false, error: betSlipResponse.error, message: null, data: null }))
+        try {
+          const printResponse = await axios.post(
+            "http://localhost:5000/printTicket",
+            betSlipResponse.data
+          );
+        } catch (err) {
+          console.log("print failed");
         }
+      } else {
+        toggleStatus(true);
+        dispatch(
+          addTicketAndBetSlip({
+            loading: false,
+            error: betSlipResponse.error,
+            message: null,
+            data: null,
+          })
+        );
+      }
     } catch (err: AxiosError | any) {
-        dispatch(addTicketAndBetSlip({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
+      dispatch(
+        addTicketAndBetSlip({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
     }
-}
+  };
 
-export const getLastBetSlip = () => async (dispatch: (arg0: { payload: BetSlipState<BetSlipData>; type: "betSlip/addBetSlipNumber"; }) => void) => {
-    dispatch(addBetSlipNumber({ loading: true, error: null, data: null, message: null }))
+export const getLastBetSlip =
+  () =>
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState<BetSlipData>;
+      type: "betSlip/addBetSlipNumber";
+    }) => void
+  ) => {
+    dispatch(
+      addBetSlipNumber({
+        loading: true,
+        error: null,
+        data: null,
+        message: null,
+      })
+    );
 
     try {
-        const lastSlipResponse: BetSlipResponse<BetSlipData> = (await axiosInstance.get("ticket/lastSlip")).data;
+      const lastSlipResponse: BetSlipResponse<BetSlipData> = (
+        await axiosInstance.get("ticket/lastSlip")
+      ).data;
 
-        if (lastSlipResponse.message === "success") {
-            dispatch(addBetSlipNumber({ loading: false, error: null, data: lastSlipResponse.data, message: lastSlipResponse.message }))
-        } else {
-            dispatch(addBetSlipNumber({ loading: false, error: lastSlipResponse.error, data: null, message: null }))
-        }
+      if (lastSlipResponse.message === "success") {
+        dispatch(
+          addBetSlipNumber({
+            loading: false,
+            error: null,
+            data: lastSlipResponse.data,
+            message: lastSlipResponse.message,
+          })
+        );
+      } else {
+        dispatch(
+          addBetSlipNumber({
+            loading: false,
+            error: lastSlipResponse.error,
+            data: null,
+            message: null,
+          })
+        );
+      }
     } catch (err: AxiosError | any) {
-        dispatch(addBetSlipNumber({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, data: null }))
+      dispatch(
+        addBetSlipNumber({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
     }
-}
+  };

@@ -103,7 +103,7 @@ export const authUser = (username: string, password: string, navigate: NavigateF
 
         if (loginResponse.data.message === "login successful") {
             dispatch(loginUser({ message: "", error: "", loading: true, user: loginResponse.data.data.user }))
-            window.location.href = "/home"
+            // window.location.href = "/home"
         } else {
             dispatch(loginUser({ message: loginResponse.error, error: loginResponse.error, loading: true, user: null }))
         }

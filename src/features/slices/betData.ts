@@ -6,6 +6,7 @@ import { clearNumbers } from "./pickerSlice";
 interface Game {
   gamenumber: number;
   status: string;
+  result:string|null;
 }
 
 interface Ticket {

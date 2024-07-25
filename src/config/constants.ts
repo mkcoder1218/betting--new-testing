@@ -1,3 +1,6 @@
 export const LOCAL_USER = "user_session";
-export const SERVER_URI = "http://172.20.10.2:9000/api/v1/";
+const url: string = window.location.href;
+const arr: string[] = url.split("/");
+const newurl: string[] = arr[2].split(":");
+export const SERVER_URI = `http://${newurl[0]}:9000/api/v1/`;
 export const defaultStake = 10.0;
