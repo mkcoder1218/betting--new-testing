@@ -3,8 +3,10 @@ import axiosInstance from "../../config/interceptor";
 import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
 
+
 interface BetSlipData {
   betSlipNumber: string;
+  gameType?: string
 }
 
 interface BetSlipResponse<T> {
@@ -28,6 +30,7 @@ export interface Ticket {
   betSlipId: string;
   createdAt: string;
   updatedAt: string;
+  gameType?: string;
 }
 
 export interface BetSlip {
@@ -41,6 +44,7 @@ export interface BetSlip {
   updatedAt: string;
   createdAt: string;
   Tickets: Ticket[] | null;
+  gameType?: string;
 }
 
 export interface ToPrint {
@@ -54,11 +58,14 @@ interface BetSlipState<T> {
   data: T | null;
 }
 
-let initialState: BetSlipState<BetSlip | BetSlipData> = {
+const initialState: BetSlipState<BetSlip | BetSlipData> = {
   loading: false,
   error: null,
   message: null,
-  data: null,
+  data: {
+    betSlipNumber: '',
+    gameType: 'KENO'
+  },
 };
 
 const betSlipSlice = createSlice({
@@ -71,6 +78,7 @@ const betSlipSlice = createSlice({
     ) => {
       state.data = action.payload.data;
     },
+  
     addTicketAndBetSlip: (
       state,
       action: PayloadAction<BetSlipState<BetSlip>>
@@ -83,7 +91,7 @@ const betSlipSlice = createSlice({
   },
 });
 
-export const { addBetSlipNumber, addTicketAndBetSlip } = betSlipSlice.actions;
+export const { addBetSlipNumber, addTicketAndBetSlip, addGameType } = betSlipSlice.actions;
 
 export default betSlipSlice.reducer;
 

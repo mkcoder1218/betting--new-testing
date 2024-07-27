@@ -22,6 +22,15 @@ import PriceButton from "./PriceButton";
 import { isPrinterUp } from "../features/slices/ticketSlice";
 import PrinterDialog from "./PrinterDialog";
 import { logoutUser } from "../features/slices/userSlice";
+import Tickets from "../ui/Ticket";
+import { CarRacing } from "./svg/CarRacing";
+import { SmartPlay } from "./svg/SmartPlay";
+import { Garri } from "./svg/Garri";
+import { Jaguar } from "./svg/Jaguar";
+import { DashingDerby } from "./svg/DashingDerby";
+import { Bicycle } from "./svg/Bicycle";
+import { HorseJump } from "./svg/HorseJump";
+import { DogWithVideo } from "./svg/DogWithVideo";
 
 export default function BetSlip() {
   const dispatch = useAppDispatch();
@@ -39,7 +48,7 @@ export default function BetSlip() {
   const [printerDialog, setPrinterDialog] = useState(false);
   const [errorBet, setBetError] = useState("");
   const balance = useAppSelector((state) => state.balance);
-
+  const gameType = useAppSelector((state) => state.gameType.gameType);
   const handleClose = () => {
     setPrinterDialog(false);
   };
@@ -161,6 +170,7 @@ export default function BetSlip() {
         nums: ticket.selected,
         gameId: gameState.game?.id,
         oddId: oddState.odd?.id,
+        isCombo: ticket.isCombo,
       };
 
       newTicketToSend.push(ticketItem);
@@ -235,7 +245,7 @@ export default function BetSlip() {
             MULTIPLES
           </div>
         </div>
-
+        {/* <Tickets Icon={CarRacing} isSmall={true} /> */}
         {betState.betSlip.length < 1 && (
           <div
             className={`text-center mt-4 mb-4 text-gray-400 font-bold text-md`}
@@ -261,6 +271,7 @@ export default function BetSlip() {
         {gameState.game?.gamenumber &&
           betState.betSlip.length > 0 &&
           betState.betSlip.map((item, index) => {
+            console.log("itemsFF:", item.gameType);
             return (
               <>
                 {" "}
@@ -277,7 +288,28 @@ export default function BetSlip() {
                   className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}
                 >
                   <div className="ml-8 flex justify-between items-center">
-                    <p className="text-xs flex items-center">Win</p>
+                    <div className="flex items-center -ml-3">
+                      {item.gameType === "KENO" ? (
+                        <SmartPlay isSmall={true} />
+                      ) : item.gameType === "HARNESS RACING" ? (
+                        <Garri isSmall={true} />
+                      ) : item.gameType === "MOTOR RACING" ? (
+                        <CarRacing isSmall={true} />
+                      ) : item.gameType === "GREYHOUND RACING" ? (
+                        <Jaguar isSmall={true} />
+                      ) : item.gameType === "HORSE RACING" ? (
+                        <DashingDerby isSmall={true} />
+                      ) : item.gameType === "TRACK RACING" ? (
+                        <Bicycle isSmall={true} />
+                      ) : item.gameType === "STEEPLE CHASE RACING" ? (
+                        <HorseJump isSmall={true} />
+                      ) : item.gameType === "GREYHOUND RACING" ? (
+                        <DogWithVideo isSmall={true} />
+                      ) : (
+                        ""
+                      )}
+                      <p className="text-xs flex items-center">Win</p>
+                    </div>
                     <span
                       onClick={() => removeItemFromSlip(index)}
                       className="h-4 flex items-center justify-center w-4 border text-xl text-black border-none font-bold cursor-pointer"
@@ -287,9 +319,11 @@ export default function BetSlip() {
                   </div>
                   <p className="ml-8 mr-8 text-xs">
                     {!item.selected.includes(-2) &&
-                      !item.selected.includes(-4) &&
-                      !item.selected.includes(-6) &&
-                      item.selected.join(", ")}{" "}
+                    !item.selected.includes(-4) &&
+                    !item.selected.includes(-6) &&
+                    item.gameType === "KENO"
+                      ? item.selected.join(", ")
+                      : ""}{" "}
                     {item.selected.includes(-2) && "HEADS"}{" "}
                     {item.selected.includes(-4) && "EVENS"}{" "}
                     {item.selected.includes(-6) && "TAILS"}{" "}
@@ -306,6 +340,18 @@ export default function BetSlip() {
                     })}{" "}
                     ID|{gameState.game?.gamenumber}
                   </p>
+                  {item.isCombo ? (
+                    <div className="flex gap-2 ml-7">
+                      <p className="">12</p>
+                      <p className="bg-green-600">2.21</p>
+                      <p className="" style={{ fontSize: 15 }}>
+                        3
+                      </p>
+                      <p className="bg-green-600">1</p>
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   {currentDate < betState.betSlip[0].expiry && (
                     <>
                       <div
@@ -367,11 +413,15 @@ export default function BetSlip() {
                           />
                         </div>
                       </div>
-                      <p
-                        className={`ml-8 mr-8 text-white text-xs text-right mt-1`}
-                      >
-                        TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}
-                      </p>
+                      {!item.isCombo ? (
+                        <p
+                          className={`ml-8 mr-8 text-white text-xs text-right mt-1`}
+                        >
+                          TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}
+                        </p>
+                      ) : (
+                        ""
+                      )}
                     </>
                   )}
                   {selected === index &&

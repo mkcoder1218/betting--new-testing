@@ -1,0 +1,266 @@
+*{
+  margin: 0;
+  padding: 0;
+
+}
+.App{
+  width: 100%;
+  color: rgb(111, 109, 109);
+}
+body{
+  overflow: hidden;
+}
+.TopHead{
+  text-transform: uppercase;
+padding: 0.5%;
+border: rgb(5, 217, 5) solid 1px;
+cursor: pointer;
+}
+.topHead{
+  display: flex;
+  padding: 10px;
+
+}
+.DropContainer .container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  border: rgba(215, 213, 213, 0.308) solid 1px;
+max-height: 10vh;
+margin-top: 10px;
+max-width: 120%;
+width: 100%;
+
+}
+.timePlace{
+  display: flex;
+gap: 1%;
+width: 90%;
+max-width: 500px;
+height: 100%;
+}
+.plusminus svg{
+  font-size: 16px;
+
+}
+.IdAndPlace{
+  display: flex;
+  margin-top: 0.7%;
+  width: 80%;
+  justify-content: flex-start;
+  flex-direction: column;
+ 
+}
+
+.StartTime{
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ flex-direction: column;
+position: relative;
+
+
+}
+
+.Timer{
+  font-size: 11px;
+  background-color: rgb(255, 251, 0);
+  color: black;
+
+  display: flex;
+  justify-content: center;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.115);
+  position: absolute;
+bottom: 65%;
+width: 100%;
+height: 30%;
+}
+.Live{
+   font-size: 11px;
+  background-color: rgb(255, 0, 0);
+  color: black;
+
+  display: flex;
+  justify-content: center;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.115);
+  position: absolute;
+bottom: 65%;
+width: 100%;
+height: 30%;
+}
+.table-container {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin: 20px 0;
+  padding: 0; 
+
+}
+.css-jhd7ab-MuiTable-root{
+  width: 0%;
+}
+.table{
+  border-collapse: collapse;
+  border-spacing:0;
+width: 0% !important;
+
+}
+.button{
+ color: green 1px solid;
+ font-size: 10px;
+}
+.css-177gid-MuiTableCell-root{
+  text-align: center;
+}
+.TableHead th {
+  border: none; 
+  font-size: 0.875rem; 
+  line-height: 1.2; 
+  height: 40px;
+   margin: 0 0 0 0 !important;
+   padding: 5px 1px !important;
+color: gray !important;
+text-transform: uppercase !important;
+   display: table-cell;
+   font-size: 11px !important;
+
+
+}
+.Tablerow{
+  width: 10px;
+}
+.tableBody svg{
+width: 15px;
+ color: rgb(0, 202, 37);
+ gap: 1px;
+}
+.tableBody{
+      display: table-row-group;
+      vertical-align: middle;
+}
+.tableBody td {
+  padding: 3px 3px; /* Minimal padding for body cells */
+  border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
+  line-height: 1;
+ margin: 0 0 0 0 !important;
+font-size: 13px !important;
+}
+.rating .Rating{
+  font-size: 12px !important;
+  margin: 0 !important;
+padding: 0 !important;
+}
+.tableContent{
+  display: flex;
+  align-items: center;
+ 
+  
+}
+.name{
+  padding-left: 3rem !important ;
+  padding-right: 11rem !important ;
+  font-size: 16px !important;
+  color: gray !important;
+text-transform: capitalize !important;
+}
+.container2{
+  display: flex;
+
+}
+.buttonsTable{
+  font-size: 12px !important;
+}
+.miniContainer{
+  margin-top: 3%;
+}
+.miniContainer .button{
+  margin-top: 10px !important;
+  margin-left: -20% !important;
+  border: none;
+  background-color: #fb827f;
+  color: white;
+}
+.waysShow{
+  display: grid;
+  grid-template-columns: repeat(2,auto);
+gap: 10px;
+
+
+}
+.WaysContainer{
+  background-color: #1bee3b;
+  padding: 8px;
+ cursor: pointer;
+}
+
+.WaysContainer p{
+  text-align: center;
+  
+}
+
+.WaysContainer p:nth-child(2),p:nth-child(3){
+  font-size: 10px;
+
+}
+.buttonContaiener{
+  position: relative;
+}
+.buttonContaiener svg{
+  position: absolute;
+  left: 80%;
+  bottom: 50%;
+  color: rgb(120, 120, 1);
+}
+.f{
+  padding-right: 2rem !important ;
+}
+.F{
+  background-color: orange;
+
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  font-size: 10px;
+  align-items: center;
+  justify-content: center;
+}
+.HeadToHeadName{
+  padding-left: 3rem !important;
+}
+.HeadtoHeadContainer{
+  display: flex;
+
+}
+.headtoheadbuttons{
+  display: flex;
+  margin-top: 20%;
+}
+.headtoheadbuttons .button{
+  margin: 15px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
+  padding: 0;
+}
+.miniContainer{
+width: fit-content;
+width: 38%;
+display: flex;
+position: relative;
+
+}
+.miniContainer .buttonContaiener{
+position: absolute;
+top: 100%;
+left: 4%;
+}
+.borderLine{
+  content: '';
+  background-color: white;
+  width: 95%;
+  height: 2px;
+  margin-left: 10px;
+}

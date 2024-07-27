@@ -11,6 +11,7 @@ import expiryReducer from "./slices/ticketExpiry";
 import repeatReducer from "./slices/betRepeat";
 import cashierReducer from "./slices/cashierData";
 import balanceReducer from "./slices/netBalance";
+import gameTypeSlice from './slices/gameType';
 
 export const store = configureStore({
     reducer: {
@@ -25,7 +26,8 @@ export const store = configureStore({
         expiry: expiryReducer,
         repeat: repeatReducer,
         cashier: cashierReducer,
-        balance: balanceReducer
+        balance: balanceReducer,
+        gameType: gameTypeSlice
     }
 })
 

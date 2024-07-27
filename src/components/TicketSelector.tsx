@@ -6,10 +6,12 @@ import {
   addToBetSlip,
   removeFromBetSlip,
 } from "../features/slices/pickerSlice";
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { defaultStake } from "../config/constants";
-
-export default function TicketSelector() {
+interface TicketSelectorProp {
+  gameType: string;
+}
+const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
   const dispatch = useAppDispatch();
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
   const currentDate = new Date().getTime();
@@ -38,6 +40,7 @@ export default function TicketSelector() {
     toWin,
     stake,
     gameId,
+    gameType,
   }: Ticket) => {
     if (currentDate > ticketExpiry) {
       return;
@@ -51,6 +54,7 @@ export default function TicketSelector() {
         toWin,
         stake,
         gameId,
+        gameType,
       })
     );
   };
@@ -210,4 +214,6 @@ export default function TicketSelector() {
       </div>
     </div>
   );
-}
+};
+
+export default TicketSelector;

@@ -39,6 +39,8 @@ import { getNetBalance } from "../features/slices/netBalance";
 import { Input } from "@mui/material";
 import { SmartPlay } from "./svg/SmartPlay";
 import { IoChevronBackOutline } from "react-icons/io5";
+import Result from "../ui/Result";
+import { Jaguar } from "./svg/Jaguar";
 
 interface CashierOptionsProps {
   open: boolean;
@@ -671,7 +673,7 @@ export default function CashierOptions({
                     </div>
                   </CustomTabPanel>
 
-                  <CustomTabPanel value={valueParent} index={1}>
+                  {/* <CustomTabPanel value={valueParent} index={1}>
                     {resultVisible && gameResults && gameResult && (
                       <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
                         <div className="result-header flex justify-between">
@@ -701,7 +703,7 @@ export default function CashierOptions({
                                     .slice()
                                     .sort((a, b) => parseInt(a) - parseInt(b))
                                     .map((_) => {
-                                      // const number = index + 1;
+                                     
                                       return (
                                         <button
                                           style={{
@@ -917,6 +919,7 @@ export default function CashierOptions({
                                 </table>
                               </div>
                             )}
+                          <Result Icon={Jaguar} />
                         </CustomTabPanel>
                         <CustomTabPanel value={value} index={1}>
                           <div className="cashier-box">
@@ -964,7 +967,6 @@ export default function CashierOptions({
                               <ProgressCircular />
                             </div>
                           )}
-                          {/* {ticketList.error && <FormStatus type='error' content={ticketList.error} />} */}
                           {!ticketList.loading &&
                             ticketList.data.length < 1 && (
                               <div className="w-full text-center p-4 mt-4">
@@ -1037,7 +1039,8 @@ export default function CashierOptions({
                         </CustomTabPanel>
                       </div>
                     )}
-                  </CustomTabPanel>
+                  </CustomTabPanel> */}
+                  <Result Icon={Jaguar} isSmall={true} />
                 </div>
               </Box>
             </Box>

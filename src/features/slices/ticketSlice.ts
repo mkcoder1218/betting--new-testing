@@ -43,6 +43,7 @@ export interface Ticket {
   updatedAt: string;
   Game: Game;
   BetSlip: BetSlip;
+  gameType?: string
 }
 
 interface TicketResponse {

@@ -6,7 +6,10 @@ export interface Ticket {
     expiry: number,
     toWin: number,
     stake: number,
-    gameId: number | undefined
+    gameId: number | undefined,
+    gameType?: string;
+    stakeInformation?: string;
+    isCombo?: boolean
 }
 
 export interface PickerType {
