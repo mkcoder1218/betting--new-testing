@@ -8,6 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import BasicRating from "./Rating";
 import ButtonSizes from "./Win";
 import F from "./F";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { addToBetSlip } from "../features/slices/pickerSlice";
 function createData(
   name: string,
   calories: number,
@@ -20,6 +22,7 @@ function createData(
 interface TableProp {
   clickCount: (val: number) => void;
 }
+
 const rows = [
   createData("Name", 159, 6.0, 24, 4.0),
   createData("Name", 237, 9.0, 37, 4.3),
@@ -28,6 +31,40 @@ const rows = [
   createData("Name", 356, 16.0, 49, 3.9),
 ];
 const HeadToHead: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const gameState = useAppSelector((state) => state.game);
+  const gameType = useAppSelector((state) => state.gameType.gameType);
+  const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
+  const repeatState = useAppSelector((state) => state.repeat);
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+  const currentDate = new Date().getTime();
+  const [clickOrder, setClickOrder] = useState<number[]>([]);
+  const expiryOfGame = gameCreatedDate?.setMinutes(
+    gameCreatedDate.getMinutes() + 5
+  );
+  const handleDispatch = (
+    selected: any,
+    multiplier: number,
+    toWin: number,
+    expiry: number,
+    stake: number,
+    gameId: number
+  ) => {
+    for (let i = 0; i < repeatState.repeat; i++) {
+      dispatch(
+        addToBetSlip({
+          selected: selected,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          multiplier: multiplier,
+          toWin: toWin,
+          stake: toWin,
+          gameId: gameId,
+          gameType: gameType,
+        })
+      );
+    }
+  };
   return (
     <div className="HeadtoHeadContainer">
       <TableContainer className="tableContainer">
@@ -69,12 +106,24 @@ const HeadToHead: React.FC = () => {
       </TableContainer>
       <div className="headtoheadbuttons">
         <div className="oddeven">
-          <ButtonSizes text="ODD 1.2" />
-          <ButtonSizes text="EVEN 1.2" />
+          <ButtonSizes
+            text="ODD 1.2"
+            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+          />
+          <ButtonSizes
+            text="EVEN 1.2"
+            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+          />
         </div>
         <div className="highlow">
-          <ButtonSizes text="LOW 1.2" />
-          <ButtonSizes text="HIGH 1.2" />
+          <ButtonSizes
+            text="LOW 1.2"
+            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+          />
+          <ButtonSizes
+            text="HIGH 1.2"
+            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+          />
         </div>
       </div>
     </div>

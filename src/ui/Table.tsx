@@ -65,29 +65,29 @@ const BasicTable: React.FC<TableProp> = ({
   );
   const handleClick = (index: number) => {
     setClickedindex(index);
-    console.log("clickedindex", clickedindex);
+    console.log("clickedindex", clickedindex, "index", index);
+
     setClickCounter((prev) => {
       const newValue = prev + 1;
       clickCount(newValue);
 
       return newValue;
     });
-  };
-  const handleClickorder = () => {
     let newClickOrder = [...clickOrder];
 
-    if (newClickOrder.includes(clickedindex)) {
-      newClickOrder = newClickOrder.filter((i) => i !== clickedindex);
+    if (newClickOrder.includes(index)) {
+      newClickOrder = newClickOrder.filter((i) => i !== index);
     }
 
-    newClickOrder.push(clickedindex);
+    newClickOrder.push(index);
 
-    if (clickCounter > 2) {
-      newClickOrder = newClickOrder.slice(-3);
+    if (newClickOrder.length > 2) {
+      setClickOrder([]);
     }
 
     setClickOrder(newClickOrder);
   };
+
   useEffect(() => {
     console.log("isActivatedad", isActivatedtablebutton);
   }, [isActivatedtablebutton]);
@@ -121,6 +121,9 @@ const BasicTable: React.FC<TableProp> = ({
     }
   };
   const getButtonText = (index: number): string => {
+    if (clickCounter > 3) {
+      return `${index + 1}`;
+    }
     const orderIndex = clickOrder.indexOf(index);
     switch (orderIndex) {
       case -1:
@@ -212,7 +215,6 @@ const BasicTable: React.FC<TableProp> = ({
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4 + 2);
-                        handleClickorder();
                       }}
                       numberofClickedbuttons={clickCounter}
                     />
