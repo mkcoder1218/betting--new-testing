@@ -15,13 +15,25 @@ import {
   clearNumbers,
 } from "../features/slices/pickerSlice";
 import { combineSlices } from "@reduxjs/toolkit";
+import { GameData, RootEventData } from "../features/slices/RacingGameSlice";
 interface DropProp {
   id: string;
   time: string;
   place: string;
   activeIndexValues?: number;
+  gameData?: GameData;
+  data: RootEventData;
+  isActiveGame: boolean;
 }
-const Drop: React.FC<DropProp> = ({ id, time, place, activeIndexValues }) => {
+const Drop: React.FC<DropProp> = ({
+  id,
+  time,
+  place,
+  activeIndexValues,
+  gameData,
+  data,
+  isActiveGame = false,
+}) => {
   const [isActive, setIsActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [clickIndex, setClickIndex] = useState(0);
@@ -138,7 +150,7 @@ const Drop: React.FC<DropProp> = ({ id, time, place, activeIndexValues }) => {
         }}
       >
         <div className="timePlace">
-          <StartTimer text={time} onLive={handleLive} />
+          <StartTimer text={time} onLive={handleLive} isActive={isActiveGame} />
           <IdandPlace Place={place} Id={id} />
         </div>
         <PlusMinus onClick={handleClick} isActive={isActive} />
@@ -147,6 +159,7 @@ const Drop: React.FC<DropProp> = ({ id, time, place, activeIndexValues }) => {
         <div className="container2">
           {activeIndexValues === 0 ? (
             <BasicTable
+              data={data}
               clickCount={handleClickCount}
               isClear={ClearTheClick}
               isActivatedtablebutton={isActivedtableButton}

@@ -17,6 +17,7 @@ import {
 import F from "./F";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import expirySlice from "../features/slices/ticketExpiry";
+import { RootEventData } from "../features/slices/RacingGameSlice";
 function createData(
   name: string,
   calories: number,
@@ -31,22 +32,15 @@ interface TableProp {
   isClear?: boolean;
   isActivatedtablebutton: Set<number>;
   handleColorChange: (index: number) => void;
+  data: RootEventData;
 }
-
-const rows = [
-  createData("Name", 159, 6.0, 1, 1),
-  createData("Name", 237, 9.0, 2, 2),
-  createData("Name", 262, 16.0, 3, 3),
-  createData("Name", 305, 3.7, 4, 4),
-  createData("Name", 356, 16.0, 5, 5),
-  createData("Name", 356, 16.0, 6, 6),
-];
 
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
   isClear,
   isActivatedtablebutton,
   handleColorChange,
+  data,
 }) => {
   const [clickCounter, setClickCounter] = useState<number>(0);
   const [clickedindex, setClickedindex] = useState<number>(0);
@@ -164,78 +158,105 @@ const BasicTable: React.FC<TableProp> = ({
           </TableRow>
         </TableHead>
         <TableBody className="tableBody">
-          {rows.map((row, index: number) => {
-            return (
-              <TableRow key={row.name} className="Tablerow">
-                <TableCell scope="row" className="name">
-                  {row.name}
-                </TableCell>
-                <TableCell align="right" className="tableContent f">
-                  {" "}
-                  <F />
-                </TableCell>
-                <TableCell align="right" className="tableContent rating">
-                  {" "}
-                  <BasicRating />
-                </TableCell>
-                <TableCell align="right" className="tableContent">
-                  1,2,3,4,5,6
-                </TableCell>
-                <TableCell align="right" className="tableContent buttonsTable">
-                  <ButtonSizes
-                    text="12.4"
-                    isActive={isActivatedtablebutton?.has(index * 4) || false}
-                    isLocked={true}
-                    onClick={() => {
-                      handleColorChange(index * 4);
-                      handleDispatch("12.4", 1, 10, 12, 12, 6000);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right" className="tableContent buttonsTable">
-                  <ButtonSizes
-                    text="12.4"
-                    isActive={
-                      isActivatedtablebutton?.has(index * 4 + 1) || false
-                    }
-                    onClick={() => {
-                      handleColorChange(index * 4 + 1);
-                      handleDispatch("12.4", 1, 10, 12, 12, 6000);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right" className="tableContent buttonsTable">
-                  {" "}
-                  {
+          {data &&
+            data.eventDetail &&
+            data.eventDetail.Event &&
+            data.eventDetail.Event.Race &&
+            data.eventDetail.Event.Race.Entries.map((row, index: number) => {
+              return (
+                <TableRow key={row.Name} className="Tablerow">
+                  <TableCell align="center" className="f">
+                    <img
+                      src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
+                      style={{
+                        height: "50px",
+                        width: "50px",
+                        marginLeft: "30px",
+                      }}
+                      width={50}
+                    />
+                  </TableCell>
+                  <TableCell scope="row" className="name">
+                    {row.Draw} {row.Name}
+                  </TableCell>
+                  <TableCell align="right" className="tableContent f">
+                    {" "}
+                    <F />
+                  </TableCell>
+                  <TableCell align="right" className="tableContent rating">
+                    {" "}
+                    <BasicRating />
+                  </TableCell>
+                  <TableCell align="right" className="tableContent">
+                    {row.Form}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent buttonsTable"
+                  >
                     <ButtonSizes
-                      text={getButtonText(index)}
+                      text={row.WinOdds + ""}
+                      isActive={isActivatedtablebutton?.has(index * 4) || false}
+                      isLocked={true}
+                      onClick={() => {
+                        handleColorChange(index * 4);
+                        handleDispatch("12.4", 1, 10, 12, 12, 6000);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent buttonsTable"
+                  >
+                    <ButtonSizes
+                      text={row.PlaceOdds + ""}
                       isActive={
-                        isActivatedtablebutton?.has(index * 4 + 2) || false
+                        isActivatedtablebutton?.has(index * 4 + 1) || false
                       }
                       onClick={() => {
-                        handleClick(index);
-                        handleColorChange(index * 4 + 2);
+                        handleColorChange(index * 4 + 1);
+                        handleDispatch("12.4", 1, 10, 12, 12, 6000);
                       }}
-                      numberofClickedbuttons={clickCounter}
                     />
-                  }
-                </TableCell>
-                <TableCell align="right" className="tableContent buttonsTable">
-                  {" "}
-                  <ButtonSizes
-                    text={row.Bank.toString()}
-                    isActive={
-                      isActivatedtablebutton?.has(index * 4 + 3) || false
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent buttonsTable"
+                  >
+                    {" "}
+                    {
+                      <ButtonSizes
+                        text={getButtonText(index)}
+                        isActive={
+                          isActivatedtablebutton?.has(index * 4 + 2) || false
+                        }
+                        onClick={() => {
+                          handleClick(index);
+                          handleColorChange(index * 4 + 2);
+                        }}
+                        numberofClickedbuttons={clickCounter}
+                      />
                     }
-                    isDesabled={true}
-                    onClick={() => {
-                      handleColorChange(index * 4 + 3);
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          })}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent buttonsTable"
+                  >
+                    {" "}
+                    <ButtonSizes
+                      text={""}
+                      isActive={
+                        isActivatedtablebutton?.has(index * 4 + 3) || false
+                      }
+                      isDesabled={true}
+                      onClick={() => {
+                        handleColorChange(index * 4 + 3);
+                      }}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
         </TableBody>
       </Table>
     </TableContainer>
