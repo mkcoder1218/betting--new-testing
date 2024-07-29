@@ -4,17 +4,21 @@ import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
 import StarIcon from "@mui/icons-material/Star";
 
-export default function BasicRating() {
+interface Rating {
+  isHeadToHead?: boolean;
+}
+export default function BasicRating(Props: Rating) {
   const [value, setValue] = React.useState<number | null>(2);
 
   return (
     <Box
       sx={{
-        "& > legend": { mt: 2 },
+        "& > legend": {},
+        padding: 0,
       }}
     >
       <Rating
-        className="Rating"
+        className="Rating p-0"
         name="text-feedback"
         value={value}
         readOnly

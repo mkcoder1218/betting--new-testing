@@ -27,6 +27,9 @@ import HorseRun from "./pages/HorseRun";
 import HorseJumping from "./pages/HorseJumping";
 import DogWithOutVideo from "./pages/DogWithOutVideo";
 import Car from "./pages/Car";
+import Hockey from "./pages/Hokey";
+import { F1 } from "./components/svg/F1";
+import Formula1 from "./pages/Formula1";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
@@ -278,10 +281,14 @@ function App() {
             <HorseRun />
           ) : WhichGameSelected === "STEEPLE CHASE RACING" ? (
             <HorseJumping />
-          ) : WhichGameSelected === "GREYHOUND RACING" ? (
+          ) : WhichGameSelected === "Jaguar" ? (
             <DogWithOutVideo />
           ) : WhichGameSelected === "MOTOR RACING" ? (
             <Car />
+          ) : WhichGameSelected === "Hockey" ? (
+            <Hockey />
+          ) : WhichGameSelected === "F1" ? (
+            <Formula1 />
           ) : (
             ""
           )}

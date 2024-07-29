@@ -72,7 +72,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
                 : isBankActive
                 ? "	orange"
                 : "transparent",
-            color: isActive ||isChangedForm || isBankActive ? "white" : "gray",
+            color: isActive || isChangedForm || isBankActive ? "white" : "gray",
           }}
           disabled={isDesabled}
           variant="outlined"
@@ -84,7 +84,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
           {isCombo || isHeadToHead ? (
             <div
               className={`flex p-0 ${
-                isHeadToHead ? "gap-8" : "gap-0"
+                isHeadToHead ? "gap-10" : "gap-0"
               } justify-center items-center`}
             >
               <p
