@@ -4,7 +4,17 @@ interface Image {
   src: string;
 }
 function Images(Prop: Image) {
-  return <img className="pr-14" src={Prop.src} style={{ width: "90%" }} />;
+  return (
+    <img
+      src={Prop.src}
+      style={{
+        height: "50px",
+        width: "50px",
+        marginLeft: "30px",
+      }}
+      width={50}
+    />
+  );
 }
 
 export default Images;

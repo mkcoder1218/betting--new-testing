@@ -17,16 +17,10 @@ import {
 import F from "./F";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import expirySlice from "../features/slices/ticketExpiry";
+
 import Images from "./Images";
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  combo: number,
-  Bank: number
-) {
-  return { name, calories, fat, combo, Bank };
-}
+import { RootEventData } from "../features/slices/RacingGameSlice";
+
 interface TableProp {
   clickCount: (val: number) => void;
   isClear?: boolean;
@@ -34,16 +28,9 @@ interface TableProp {
   isActiveBank?: number;
   handleColorChange: (index: number) => void;
   handleBankColorChange: (index: number) => void;
-}
+  data: RootEventData;
 
-const rows = [
-  createData("Name", 159, 6.0, 1, 1),
-  createData("Name", 237, 9.0, 2, 2),
-  createData("Name", 262, 16.0, 3, 3),
-  createData("Name", 305, 3.7, 4, 4),
-  createData("Name", 356, 16.0, 5, 5),
-  createData("Name", 356, 16.0, 6, 6),
-];
+}
 
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
@@ -51,7 +38,9 @@ const BasicTable: React.FC<TableProp> = ({
   isActivatedtablebutton,
   isActiveBank,
   handleColorChange,
+
   handleBankColorChange,
+  data,
 }) => {
   const [clickCounter, setClickCounter] = useState<number>(0);
   const [clickedindex, setClickedindex] = useState<number>(0);
@@ -180,21 +169,23 @@ const BasicTable: React.FC<TableProp> = ({
           </TableRow>
         </TableHead>
         <TableBody className="tableBody">
-          {rows.map((row, index: number) => {
+       {data &&
+            data.eventDetail &&
+            data.eventDetail.Event &&
+            data.eventDetail.Event.Race &&
+            data.eventDetail.Event.Race.Entries.map((row, index: number) => {
             return (
               <TableRow key={row.name} className="Tablerow">
                 <TableCell scope="row" className="name ">
                   <div className="flex items-center w-full">
                     {gameType === "GREYHOUND RACING" ? (
                       <Images
-                        src={`/Images/GreyhoundJackets/raceguimarkers0${
-                          index + 1
-                        }.png`}
+                        src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
                       />
                     ) : (
                       ""
                     )}
-                    <p className="">{row.name}</p>
+                    <p className=""> {row.Draw}{row.Name}</p>
                   </div>
                 </TableCell>
                 <TableCell align="right" className="tableContent f">
@@ -209,11 +200,11 @@ const BasicTable: React.FC<TableProp> = ({
                   align="right"
                   className="tableContent texts text-2xl"
                 >
-                  1,2,3,4,5,6
+              {row.Form}
                 </TableCell>
                 <TableCell align="right" className="tableContent buttonsTable">
                   <ButtonSizes
-                    text="12.4"
+                 text={row.WinOdds + ""}
                     isActive={isActivatedtablebutton?.has(index * 4) || false}
                     isLocked={true}
                     onClick={() => {
@@ -249,14 +240,15 @@ const BasicTable: React.FC<TableProp> = ({
                 >
                   {" "}
                   {
+
                     <ButtonSizes
-                      text={getButtonText(index)}
+                      text={row.PlaceOdds + ""}
                       isActive={
-                        isActivatedtablebutton?.has(index * 4 + 2) || false
+                        isActivatedtablebutton?.has(index * 4 + 1) || false
                       }
                       onClick={() => {
-                        handleClick(index);
-                        handleColorChange(index * 4 + 2);
+                        handleColorChange(index * 4 + 1);
+                        handleDispatch("12.4", 1, 10, 12, 12, 6000);
                       }}
                       numberofClickedbuttons={clickCounter}
                       isCombo={true}

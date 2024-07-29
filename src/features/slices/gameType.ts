@@ -1,32 +1,28 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-
-
 interface gameTypeState {
-    loading: boolean,
-    error: boolean,
-    gameType?: string
+  loading: boolean;
+  error: boolean;
+  gameType?: string;
 }
 
 const initalState: gameTypeState = {
-    loading: false,
-    error: false,
-    gameType: 'KENO'
-}
-
+  loading: false,
+  error: false,
+  gameType: "KENO",
+};
 
 const gameTypeSlice = createSlice({
-    name: 'gameType',
-    initialState: initalState,
-    reducers: {
-        addGameType: (state, action: PayloadAction<string>) => {
-            if (state.gameType) {
-                state.gameType = action.payload
-            }
-        }
-    }
-
-})
+  name: "gameType",
+  initialState: initalState,
+  reducers: {
+    addGameType: (state, action: PayloadAction<string>) => {
+      if (state.gameType) {
+        state.gameType = action.payload;
+      }
+    },
+  },
+});
 
 export const { addGameType } = gameTypeSlice.actions;
 
