@@ -28,8 +28,9 @@ import HorseJumping from "./pages/HorseJumping";
 import DogWithOutVideo from "./pages/DogWithOutVideo";
 import Car from "./pages/Car";
 import Hockey from "./pages/Hokey";
-import { F1 } from "./components/svg/F1";
+
 import Formula1 from "./pages/Formula1";
+import { getLastRacingGames } from "./features/slices/RacingGameSlice";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
@@ -61,7 +62,16 @@ function App() {
   }
   useEffect(() => {
     console.log("whichGame", WhichGameSelected);
-    dispatch(addGameType(WhichGameSelected));
+    if (WhichGameSelected === "KENO") {
+      dispatch(addGameType(WhichGameSelected));
+    } else {
+      dispatch(
+        getLastRacingGames(
+          "9c6d610d-33e9-4847-80ab-5e179833591e",
+          WhichGameSelected
+        )
+      );
+    }
   }, [WhichGameSelected]);
   function calculateRemainingTime() {
     const lastUpdatedTime = gameData.game?.startTime
@@ -271,13 +281,13 @@ function App() {
                 </div>
               </div>
             </>
-          ) : WhichGameSelected === "GREYHOUND RACING" ? (
+          ) : WhichGameSelected === "PreRecRealDogs" ? (
             <DogWithVideo />
-          ) : WhichGameSelected === "TRACK RACING" ? (
+          ) : WhichGameSelected === "SingleSeaterMotorRacing" ? (
             <Bike />
           ) : WhichGameSelected === "HARNESS RACING" ? (
             <Gari />
-          ) : WhichGameSelected === "HORSE RACING" ? (
+          ) : WhichGameSelected === "HarnessRacing" ? (
             <HorseRun />
           ) : WhichGameSelected === "STEEPLE CHASE RACING" ? (
             <HorseJumping />

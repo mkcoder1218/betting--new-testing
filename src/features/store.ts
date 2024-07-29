@@ -11,25 +11,27 @@ import expiryReducer from "./slices/ticketExpiry";
 import repeatReducer from "./slices/betRepeat";
 import cashierReducer from "./slices/cashierData";
 import balanceReducer from "./slices/netBalance";
-import gameTypeSlice from './slices/gameType';
+import gameTypeSlice from "./slices/gameType";
+import RacingGameSlice from "./slices/RacingGameSlice";
 
 export const store = configureStore({
-    reducer: {
-        picker: pickerReducer,
-        user: userReducer,
-        odd: oddReducer,
-        game: gameReducer,
-        betSlip: betSlipReducer,
-        summary: summaryReducer,
-        ticket: ticketReducer,
-        betData: betDataReducer,
-        expiry: expiryReducer,
-        repeat: repeatReducer,
-        cashier: cashierReducer,
-        balance: balanceReducer,
-        gameType: gameTypeSlice
-    }
-})
+  reducer: {
+    picker: pickerReducer,
+    user: userReducer,
+    odd: oddReducer,
+    game: gameReducer,
+    betSlip: betSlipReducer,
+    summary: summaryReducer,
+    ticket: ticketReducer,
+    betData: betDataReducer,
+    expiry: expiryReducer,
+    repeat: repeatReducer,
+    cashier: cashierReducer,
+    balance: balanceReducer,
+    gameType: gameTypeSlice,
+    racingGame: RacingGameSlice,
+  },
+});
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

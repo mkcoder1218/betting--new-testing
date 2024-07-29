@@ -15,13 +15,25 @@ import {
   clearNumbers,
 } from "../features/slices/pickerSlice";
 import { combineSlices } from "@reduxjs/toolkit";
+import { GameData, RootEventData } from "../features/slices/RacingGameSlice";
 interface DropProp {
   id: string;
   time: string;
   place: string;
   activeIndexValues?: number;
+  gameData?: GameData;
+  data: RootEventData;
+  isActiveGame: boolean;
 }
-const Drop: React.FC<DropProp> = ({ id, time, place, activeIndexValues }) => {
+const Drop: React.FC<DropProp> = ({
+  id,
+  time,
+  place,
+  activeIndexValues,
+  gameData,
+  data,
+  isActiveGame = false,
+}) => {
   const [isActive, setIsActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [clickIndex, setClickIndex] = useState(0);
@@ -165,6 +177,7 @@ return (
         ) : (
           ""
         )}
+
 
         <div
           className={`${
