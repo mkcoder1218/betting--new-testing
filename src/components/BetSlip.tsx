@@ -327,8 +327,12 @@ export default function BetSlip() {
                     {item.selected.includes(-2) && "HEADS"}{" "}
                     {item.selected.includes(-4) && "EVENS"}{" "}
                     {item.selected.includes(-6) && "TAILS"}{" "}
-                    <span className="bg-green-600 p-1 text-white text-xs">
-                      {item.multiplier}
+                    <span
+                      className={`${
+                        !item.isCombo ? "bg-green-600" : "transparent"
+                      } p-1 text-white text-xs`}
+                    >
+                      {!item.isCombo ? item.multiplier : "[1-2]"}
                     </span>
                   </p>
                   <p className="ml-8 mr-8 text-xs">
@@ -342,12 +346,12 @@ export default function BetSlip() {
                   </p>
                   {item.isCombo ? (
                     <div className="flex gap-2 ml-7">
-                      <p className="">12</p>
-                      <p className="bg-green-600">2.21</p>
+                      <p className="">[1-2]</p>
+                      <p className="bg-green-600">2.21 (min)</p>
                       <p className="" style={{ fontSize: 15 }}>
-                        3
+                        [3-4]
                       </p>
-                      <p className="bg-green-600">1</p>
+                      <p className="bg-green-600">1(max)</p>
                     </div>
                   ) : (
                     ""

@@ -17,6 +17,7 @@ import { HorseWithSpin } from "./svg/HorseWithSpin";
 import { F1 } from "./svg/F1";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { addGameType } from "../features/slices/betSlip";
+import Hockey from "./svg/Hockey";
 
 interface gameSelection {
   WhichGame: (val: string) => boolean;
@@ -42,25 +43,11 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   };
 
   const dropdownItems = [
-    { icon: <Football />, text1: "FOOTBALL", text2: "GROUP", width: "w-8" },
-    {
-      icon: <DashingDerby />,
-      text1: "HORSE RACING",
-      text2: "DASHING DERBY",
-      width: "w-10",
-    },
     { icon: <SmartPlay />, text1: "KENO", text2: "", width: "w-8" },
-    { icon: <CircleDraw />, text1: "SPIN AND WIN", text2: "", width: "w-8" },
     {
-      icon: <CarRacing />,
-      text1: "MOTOR RACING",
-      text2: "MAXCAR",
-      width: "w-14",
-    },
-    {
-      icon: <Garri />,
-      text1: "HARNESS RACING",
-      text2: "CHARGING CHARIOTS",
+      icon: <DogWithVideo />,
+      text1: "GREYHOUND RACING",
+      text2: "PLATINUM HOUNDS",
       width: "w-12",
     },
     {
@@ -75,25 +62,44 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       text2: "JUMPS",
       width: "w-12",
     },
+    { icon: <CircleDraw />, text1: "SPIN AND WIN", text2: "", width: "w-8" },
+    { icon: <Hockey />, text1: "Hockey", text2: "", width: "w-8" },
+    { icon: <F1 />, text1: "F1", text2: "", width: "w-8" },
     {
-      icon: <DogWithVideo />,
-      text1: "GREYHOUND RACING",
-      text2: "PLATINUM HOUNDS",
+      icon: <CarRacing />,
+      text1: "MOTOR RACING",
+      text2: "MAXCAR",
+      width: "w-14",
+    },
+    {
+      icon: <DashingDerby />,
+      text1: "HORSE RACING",
+      text2: "DASHING DERBY",
+      width: "w-10",
+    },
+
+    {
+      icon: <Garri />,
+      text1: "HARNESS RACING",
+      text2: "CHARGING CHARIOTS",
+      width: "w-12",
+    },
+    {
+      icon: <Jaguar />,
+      text1: "Jaguar",
+      text2: "CHARGING CHARIOTS",
       width: "w-12",
     },
   ];
 
   return (
     <div className="flex justify-between" style={{ width: "100%" }}>
-      <div
-        className="buttons flex justify-between items-center"
-        style={{ width: "70%" }}
-      >
+      <div className="buttons flex gap-2 items-center" style={{ width: "70%" }}>
         {dropdownItems
           ? dropdownItems.map((item: any, index: number) => {
               return (
                 <button
-                  className="text-gray-500 hover:text-green-500 w-1 "
+                  className="text-gray-500 hover:text-green-500 "
                   onClick={() => handleClickGame(item.text1)}
                 >
                   {item.icon}

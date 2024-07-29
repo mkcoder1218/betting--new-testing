@@ -1,3 +1,12 @@
+@font-face {
+    font-family: "Roboto Condensed";
+    src: url("https://db.onlinewebfonts.com/t/8f7b8dc753ec34b0c7c3d748a835c38c.eot");
+    src: url("https://db.onlinewebfonts.com/t/8f7b8dc753ec34b0c7c3d748a835c38c.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/8f7b8dc753ec34b0c7c3d748a835c38c.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/8f7b8dc753ec34b0c7c3d748a835c38c.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/8f7b8dc753ec34b0c7c3d748a835c38c.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/8f7b8dc753ec34b0c7c3d748a835c38c.svg#Roboto Condensed")format("svg");
+}
 *{
   margin: 0;
   padding: 0;
@@ -8,7 +17,7 @@
   color: rgb(111, 109, 109);
 }
 body{
-  overflow: hidden;
+  font-family: 'Roboto Condensed' !important;
 }
 .TopHead{
   text-transform: uppercase;
@@ -105,24 +114,51 @@ height: 30%;
 width: 0% !important;
 
 }
-.button{
- color: green 1px solid;
- font-size: 10px;
+.svgI{
+  color: gray !important;
+}
+.notCombo{
+  
+ color: rgba(5, 8, 5, 0.808) !important;
+ border-radius: 10% !important;
+ font-size: 19px !important;
+ border-color: rgba(6, 231, 6, 0.637) !important;
+   font-family: 'Roboto Condensed' !important;
+text-align: center !important;
+height: 5px !important;
+
+min-height: 30px !important;
+}
+.override{
+  background-color: #02ad1c !important;
+}
+.notCombo-color{
+background-color: rgba(255, 255, 0, 0.574) !important;
+}
+.whiteColor{
+  color: white !important;
+}
+.isCombo{
+min-width: 40px !important;
+border-radius: 10% !important;
+min-height: 30px !important;
+font-size: 17px !important;
+height: 5px !important;
+
 }
 .css-177gid-MuiTableCell-root{
   text-align: center;
 }
 .TableHead th {
   border: none; 
-  font-size: 0.875rem; 
+  font-size: 14px !important; 
   line-height: 1.2; 
-  height: 40px;
+  height: 50px;
    margin: 0 0 0 0 !important;
    padding: 5px 1px !important;
 color: gray !important;
 text-transform: uppercase !important;
    display: table-cell;
-   font-size: 11px !important;
 
 
 }
@@ -137,16 +173,29 @@ width: 15px;
 .tableBody{
       display: table-row-group;
       vertical-align: middle;
+    
 }
-.tableBody td {
-  padding: 3px 3px; /* Minimal padding for body cells */
+.tableBody td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7) {
+  padding: 1px 3px; /* Minimal padding for body cells */
   border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
   line-height: 1;
  margin: 0 0 0 0 !important;
-font-size: 13px !important;
+font-size: 15px !important;
+  padding-top: 10px !important;
+}
+.tableBody td:nth-child(6) {
+  padding: 1px 0px; /* Minimal padding for body cells */
+  border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
+  line-height: 1;
+ margin: 0 0 0 0 !important;
+  padding-top: 10px !important;
+}
+.bank{
+  padding: 0 !important;
+  padding-top: 9px !important;
 }
 .rating .Rating{
-  font-size: 12px !important;
+  font-size: 17px !important;
   margin: 0 !important;
 padding: 0 !important;
 }
@@ -156,13 +205,7 @@ padding: 0 !important;
  
   
 }
-.name{
-  padding-left: 3rem !important ;
-  padding-right: 11rem !important ;
-  font-size: 16px !important;
-  color: gray !important;
-text-transform: capitalize !important;
-}
+
 .container2{
   display: flex;
 
@@ -183,20 +226,81 @@ text-transform: capitalize !important;
 .waysShow{
   display: grid;
   grid-template-columns: repeat(2,auto);
-gap: 10px;
+align-items: center;
 
 
 }
+.Need button{
+  background-color: #fb827f !important;
+  border: none !important;
+  color: white !important;
+  min-height: 40px !important;
+ text-align: start !important;
+ border-radius: 0 !important;
+ position: relative;
+}
+.Need svg{
+  font-size: 25px !important;
+  color: white !important;
+  text-align: center !important;
+
+}
 .WaysContainer{
-  background-color: #1bee3b;
-  padding: 8px;
+  background-color: #02ad1c;
  cursor: pointer;
+position: relative;
+z-index: 1;
+transition:background-color 0.5s;
+}
+.Need button::after{
+  content: '';
+position: absolute;
+width: 100%;
+height: 100%;
+/* display: none; */
+top: 0px;
+left: 0px;
+z-index: 1;
+
+transition:all 0.5s;
+
+}
+.waysbut button{
+  margin-top: -30px !important;
+  margin-left: -30px !important;
+}
+.Need button:hover::after{
+  display: flex;
+   box-shadow:inset 0 0 2px 3px rgba(17, 13, 13, 0.385);
+
+}
+.WaysContainer::after{
+  content: '';
+position: absolute;
+width: 0%;
+height: 0%;
+display: none;
+top: 0px;
+left: 0px;
+z-index: -1;
+  background-color: #02ad1c;
+background-color: transparent;
+transition:all 0.5s;
+
+} 
+.WaysContainer:hover::after{
+  display: flex;
+   box-shadow:inset 0 0 7px 4px rgba(17, 13, 13, 0.385);
+background-color: #05a149;
+width: 100%;
+height: 100%;
 }
 
 .WaysContainer p{
   text-align: center;
-  
+  color: rgba(255, 255, 255, 0.864);
 }
+
 
 .WaysContainer p:nth-child(2),p:nth-child(3){
   font-size: 10px;
@@ -205,7 +309,7 @@ gap: 10px;
 .buttonContaiener{
   position: relative;
 }
-.buttonContaiener svg{
+.buttonContaiener .lock{
   position: absolute;
   left: 80%;
   bottom: 50%;
@@ -213,15 +317,16 @@ gap: 10px;
 }
 .f{
   padding-right: 2rem !important ;
+  padding-left: 10rem !important ;
 }
 .F{
-  background-color: orange;
-
+  background-color: rgb(255, 94, 0);
+color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   display: flex;
-  font-size: 10px;
+  font-size: 15px;
   align-items: center;
   justify-content: center;
 }
@@ -235,6 +340,17 @@ gap: 10px;
 .headtoheadbuttons{
   display: flex;
   margin-top: 20%;
+}
+.lock{
+  color: black !important;
+}
+.button{
+  transition: all 0.3s !important;
+}
+.button:hover{
+  background-color: #02ad1c !important;
+  color: black !important;
+  border: none !important;
 }
 .headtoheadbuttons .button{
   margin: 15px;
@@ -263,4 +379,16 @@ left: 4%;
   width: 95%;
   height: 2px;
   margin-left: 10px;
+}
+.tableBody td:nth-child(1){
+  padding-right: 8rem !important ;
+  font-size: 17px !important;
+  color: gray !important;
+text-transform: capitalize !important;
+padding: 5px !important;
+}
+.headtohead{
+  border-radius: 0 !important;
+  width: 8rem !important;
+  min-width: 5rem !important;
 }

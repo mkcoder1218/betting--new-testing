@@ -65,6 +65,7 @@ const HeadToHead: React.FC = () => {
       );
     }
   };
+
   return (
     <div className="HeadtoHeadContainer">
       <TableContainer className="tableContainer">
@@ -109,19 +110,23 @@ const HeadToHead: React.FC = () => {
           <ButtonSizes
             text="ODD 1.2"
             onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+            isHeadToHead={true}
           />
           <ButtonSizes
             text="EVEN 1.2"
             onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+            isHeadToHead={true}
           />
         </div>
         <div className="highlow">
           <ButtonSizes
             text="LOW 1.2"
+            isHeadToHead={true}
             onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
           />
           <ButtonSizes
             text="HIGH 1.2"
+            isHeadToHead={true}
             onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
           />
         </div>
