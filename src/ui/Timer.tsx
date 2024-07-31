@@ -3,10 +3,13 @@ import moment, { Moment } from "moment";
 import Live from "./Live";
 interface Time {
   isLive: (val: boolean) => void;
+  _time: string;
 }
-const Timer: React.FC<Time> = ({ isLive }) => {
+const Timer: React.FC<Time> = ({ isLive, _time }) => {
   const initialTime = 0.5 * 60; // Initial time set to 3 seconds
-  const [time, setTime] = useState<number>(initialTime); // State to track the countdown
+  const [time, setTime] = useState<number>(
+    moment(_time).diff(moment(), "seconds")
+  ); // State to track the countdown
   const [isgetLive, setisLive] = useState(false);
   useEffect(() => {
     const timerId = setInterval(() => {
@@ -23,7 +26,9 @@ const Timer: React.FC<Time> = ({ isLive }) => {
       {isgetLive ? (
         <Live />
       ) : (
-        <div className="Timer">{moment.utc(time * 1000).format("mm:ss")}</div>
+        <div className="Timer">
+          {time > 60 ? "60+" : moment.utc(time * 1000).format("ss")}
+        </div>
       )}
     </>
   );

@@ -15,11 +15,15 @@ import {
   clearNumbers,
 } from "../features/slices/pickerSlice";
 import { combineSlices } from "@reduxjs/toolkit";
+import { GameData, RootEventData } from "../features/slices/RacingGameSlice";
 interface DropProp {
   id: string;
   time: string;
   place: string;
   activeIndexValues?: number;
+  gameData?: GameData;
+  data: RootEventData;
+  isActiveGame: boolean;
   Headtext?: string;
 }
 const Drop: React.FC<DropProp> = ({
@@ -27,7 +31,9 @@ const Drop: React.FC<DropProp> = ({
   time,
   place,
   activeIndexValues,
-  Headtext,
+  gameData,
+  data,
+  isActiveGame = false,
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -66,115 +72,112 @@ const Drop: React.FC<DropProp> = ({
     setBankclick(null);
   };
 
-  const handleColorChange = (index: number) => {
-    setisActivedTableButton((prevActiveButtons) => {
-      const updatedButtons = new Set(prevActiveButtons);
-      if (updatedButtons.has(index)) {
-        updatedButtons.delete(index);
-      } else {
-        updatedButtons.add(index);
-      }
-      return updatedButtons;
-    });
-  };
-  useEffect(() => {
-    if (clickCount > 2) {
-      setVisible(true);
+const handleColorChange = (index: number) => {
+  setisActivedTableButton((prevActiveButtons) => {
+    const updatedButtons = new Set(prevActiveButtons);
+    if (updatedButtons.has(index)) {
+      updatedButtons.delete(index);
+    } else {
+      updatedButtons.add(index);
     }
-  }, [clickCount]);
-  const HandleBankClick = (index: number) => {
-    setBankclick(index);
-  };
-  const CombinationDispatch = (
-    selected: any,
-    multiplier: number,
-    toWin: number,
-    expiry: number,
-    stake: number,
-    gameId: number,
-    isCombo: boolean,
-    gameType: string | undefined
-  ) => {
-    for (let i = 0; i < repeatState.repeat; i++) {
-      dispatch(
-        addToBetSlip({
-          selected: selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
-          multiplier: multiplier,
-          toWin: toWin,
-          stake: toWin,
-          gameId: gameId,
-          isCombo: isCombo,
-          gameType: gameType,
-        })
-      );
-    }
-  };
-  function factorial(n: number) {
-    if (n === 0 || n === 1) {
-      return 1;
-    }
-    return n * factorial(n - 1);
+    return updatedButtons;
+  });
+};
+useEffect(() => {
+  if (clickCount > 2) {
+    setVisible(true);
   }
-  function combinations(
-    number: number,
-    combination: number,
-    multiplayer: number
-  ) {
-    if (combination === 3 && number <= 2) {
-      return 0;
-    }
-    const calculate =
-      factorial(number) /
-      (factorial(combination) * factorial(number - combination));
-    return calculate * multiplayer;
+}, [clickCount]);
+const HandleBankClick = (index: number) => {
+  setBankclick(index);
+};
+const CombinationDispatch = (
+  selected: any,
+  multiplier: number,
+  toWin: number,
+  expiry: number,
+  stake: number,
+  gameId: number,
+  isCombo: boolean,
+  gameType: string | undefined
+) => {
+  for (let i = 0; i < repeatState.repeat; i++) {
+    dispatch(
+      addToBetSlip({
+        selected: selected,
+        expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+        multiplier: multiplier,
+        toWin: toWin,
+        stake: toWin,
+        gameId: gameId,
+        isCombo: isCombo,
+        gameType: gameType,
+      })
+    );
   }
-  function trifectaCombinations(n: number) {
-    if (n < 3) {
-      return 0;
-    }
-    if (n === 3) {
-      return 1;
-    }
-    return factorial(n) / Math.abs(factorial(n - 3));
+};
+function factorial(n: number) {
+  if (n === 0 || n === 1) {
+    return 1;
   }
-  return (
-    <div className="DropContainer">
-      <div
-        className="container"
-        style={{
-          backgroundColor: isLive
-            ? "#a81005"
-            : isActive
-            ? "#37b34a"
-            : "transparent",
-        }}
-      >
-        <div className="timePlace">
-          <StartTimer text={time} onLive={handleLive} />
-          <IdandPlace Place={place} Id={id} />
-        </div>
-        <PlusMinus onClick={handleClick} isActive={isActive} />
+  return n * factorial(n - 1);
+}
+function combinations(
+  number: number,
+  combination: number,
+  multiplayer: number
+) {
+  if (combination === 3 && number <= 2) {
+    return 0;
+  }
+  const calculate =
+    factorial(number) /
+    (factorial(combination) * factorial(number - combination));
+  return calculate * multiplayer;
+}
+function trifectaCombinations(n: number) {
+  if (n < 3) {
+    return 0;
+  }
+  if (n === 3) {
+    return 1;
+  }
+  return factorial(n) / Math.abs(factorial(n - 3));
+}
+return (
+  <div className="DropContainer">
+    <div
+      className="container"
+      style={{
+        backgroundColor: isLive
+          ? "#a81005"
+          : isActive
+          ? "#37b34a"
+          : "transparent",
+      }}
+    >
+      <div className="timePlace">
+        <StartTimer text={time} onLive={handleLive} />
+        <IdandPlace Place={place} Id={id} />
       </div>
-      {isActive ? (
-        <div className="container2 flex justify-between">
-          <div className="" style={{ width: "71%" }}>
-            {activeIndexValues !== 1 ? (
-              <BasicTable
-                clickCount={handleClickCount}
-                isClear={ClearTheClick}
-                isActivatedtablebutton={isActivedtableButton}
-                handleColorChange={handleColorChange}
-                handleBankColorChange={HandleBankClick}
-                isActiveBank={BankClick}
-                HeadTexttoTable={Headtext}
-              />
-            ) : activeIndexValues === 1 ? (
-              <HeadToHead />
-            ) : (
-              ""
-            )}
-          </div>
+      <PlusMinus onClick={handleClick} isActive={isActive} />
+    </div>
+    {isActive ? (
+      <div className="container2">
+        {activeIndexValues === 0 ? (
+          <BasicTable
+            clickCount={handleClickCount}
+            isClear={ClearTheClick}
+            isActivatedtablebutton={isActivedtableButton}
+            handleColorChange={handleColorChange}
+            handleBankColorChange={HandleBankClick}
+            isActiveBank={BankClick}
+          />
+        ) : activeIndexValues === 1 ? (
+          <HeadToHead />
+        ) : (
+          ""
+        )}
 
           {clickCount === 1 || isActivedtableButton.size === 1 ? (
             <div className="flex-col Need text-lg mt-20 text-black">

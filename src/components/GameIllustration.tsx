@@ -43,22 +43,24 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   };
 
   const dropdownItems = [
+
     { icon: <SmartPlay />, text1: "KENO", text2: "", width: "w-8" },
     {
       icon: <DogWithVideo />,
       text1: "GREYHOUND RACING",
       text2: "PLATINUM HOUNDS",
+
       width: "w-12",
     },
     {
       icon: <Bicycle />,
-      text1: "TRACK RACING",
+      text1: "SingleSeaterMotorRacing",
       text2: "SLIP STREAM",
       width: "w-12",
     },
     {
       icon: <HorseJump />,
-      text1: "STEEPLE CHASE RACING",
+      text1: "SteepleChase",
       text2: "JUMPS",
       width: "w-12",
     },
@@ -66,6 +68,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     { icon: <Hockey />, text1: "Hockey", text2: "", width: "w-8" },
     { icon: <F1 />, text1: "F1", text2: "", width: "w-8" },
     {
+
       icon: <CarRacing />,
       text1: "MOTOR RACING",
       text2: "MAXCAR",
