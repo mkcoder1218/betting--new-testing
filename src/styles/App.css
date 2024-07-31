@@ -16,6 +16,7 @@
   width: 100%;
   color: rgb(111, 109, 109);
 }
+
 body{
   font-family: 'Roboto Condensed' !important;
 }
@@ -61,7 +62,11 @@ height: 100%;
   flex-direction: column;
  
 }
-
+.butto .button{
+min-width: 5rem !important;
+width: 5rem !important;
+border-radius: 0 !important;
+}
 .StartTime{
  display: flex;
  align-items: center;
@@ -117,6 +122,9 @@ width: 0% !important;
 .svgI{
   color: gray !important;
 }
+.svgI:hover{
+  fill: #02ad1c;
+}
 .notCombo{
   
  color: rgba(5, 8, 5, 0.808) !important;
@@ -170,6 +178,11 @@ width: 15px;
  color: rgb(0, 202, 37);
  gap: 1px;
 }
+.headCon svg{
+width: 10px;
+ color: rgb(0, 202, 37);
+
+}
 .tableBody{
       display: table-row-group;
       vertical-align: middle;
@@ -199,6 +212,7 @@ font-size: 15px !important;
   margin: 0 !important;
 padding: 0 !important;
 }
+
 .tableContent{
   display: flex;
   align-items: center;
@@ -337,9 +351,13 @@ color: rgba(255, 255, 255, 0.9);
   display: flex;
 
 }
+.headtohead{
+
+  padding-left: 5rem !important;
+  padding-right: 5rem !important;
+}
 .headtoheadbuttons{
   display: flex;
-  margin-top: 20%;
 }
 .lock{
   color: black !important;
@@ -391,4 +409,7 @@ padding: 5px !important;
   border-radius: 0 !important;
   width: 8rem !important;
   min-width: 5rem !important;
+}
+.vs{
+  font-size: 20px !important;
 }

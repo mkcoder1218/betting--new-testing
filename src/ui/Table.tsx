@@ -216,16 +216,16 @@ const BasicTable: React.FC<TableProp> = ({
           </TableRow>
         </TableHead>
         <TableBody className="tableBody">
-          {sortedArray.length > 0 &&
-            sortedByOdd.length > 0 &&
-            inited &&
-            sortedArray.map((row, index: number) => {
-              return (
-                <TableRow key={row.name} className="Tablerow">
-                  <TableCell align="right">{row.Draw}</TableCell>
-
-                  <TableCell>
-                    <div className="flex items-center w-full">
+       {data &&
+            data.eventDetail &&
+            data.eventDetail.Event &&
+            data.eventDetail.Event.Race &&
+            data.eventDetail.Event.Race.Entries.map((row, index: number) => {
+            return (
+              <TableRow key={row.Name} className="Tablerow">
+                <TableCell scope="row" className="name ">
+                  <div className="flex items-center w-full">
+                    {gameType === "GREYHOUND RACING" ? (
                       <Images
                         src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
                       />

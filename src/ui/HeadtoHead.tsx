@@ -10,6 +10,7 @@ import ButtonSizes from "./Win";
 import F from "./F";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { addToBetSlip } from "../features/slices/pickerSlice";
+import MiniHeadtoHead from "./MiniHeadtoHead";
 function createData(
   name: string,
   calories: number,
@@ -67,7 +68,7 @@ const HeadToHead: React.FC = () => {
   };
 
   return (
-    <div className="HeadtoHeadContainer">
+    <div className="HeadtoHeadContainer w-full">
       <TableContainer className="tableContainer">
         <Table
           sx={{
@@ -105,30 +106,49 @@ const HeadToHead: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className="headtoheadbuttons">
-        <div className="oddeven">
-          <ButtonSizes
-            text="ODD 1.2"
-            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
-            isHeadToHead={true}
-          />
-          <ButtonSizes
-            text="EVEN 1.2"
-            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
-            isHeadToHead={true}
-          />
-        </div>
-        <div className="highlow">
-          <ButtonSizes
-            text="LOW 1.2"
-            isHeadToHead={true}
-            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
-          />
-          <ButtonSizes
-            text="HIGH 1.2"
-            isHeadToHead={true}
-            onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
-          />
+      <div className="headtoheadbuttons w-full flex-col justify-center h-full">
+        {gameType !== "GREYHOUND RACING" &&
+        gameType !== "Jaguar" &&
+        gameType !== "HORSE RACING" ? (
+          <div className="w-full p-3">
+            <p className="text-center uppercase p-3">Head to Head</p>
+            <div className="w-full">
+              <MiniHeadtoHead />
+              <MiniHeadtoHead />
+              <MiniHeadtoHead />
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+        <div>
+          <p className="text-center mt-10 uppercase">The Winner Must Be An:</p>
+          <div className="flex-col w-full h-full justify-center">
+            <div className="oddeven flex justify-center">
+              <ButtonSizes
+                text="ODD 1.2"
+                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+                isHeadToHead={true}
+              />
+              <ButtonSizes
+                text="EVEN 1.2"
+                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+                isHeadToHead={true}
+              />
+            </div>
+            <div className="highlow flex justify-center ">
+              <ButtonSizes
+                text="LOW 1.2"
+                isHeadToHead={true}
+                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+              />
+              <ButtonSizes
+                text="HIGH 1.2"
+                isHeadToHead={true}
+                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
