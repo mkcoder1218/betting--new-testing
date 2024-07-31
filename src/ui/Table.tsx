@@ -216,19 +216,23 @@ const BasicTable: React.FC<TableProp> = ({
           </TableRow>
         </TableHead>
         <TableBody className="tableBody">
-       {data &&
+          {data &&
+            sortedByOdd &&
             data.eventDetail &&
             data.eventDetail.Event &&
             data.eventDetail.Event.Race &&
-            data.eventDetail.Event.Race.Entries.map((row, index: number) => {
-            return (
-              <TableRow key={row.Name} className="Tablerow">
-                <TableCell scope="row" className="name ">
-                  <div className="flex items-center w-full">
-                    {gameType === "GREYHOUND RACING" ? (
-                      <Images
-                        src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
-                      />
+            sortedArray.map((row, index: number) => {
+              return (
+                <TableRow key={row.Name} className="Tablerow">
+                  <TableCell scope="row" className="name ">
+                    <div className="flex items-center w-full">
+                      {gameType === "GREYHOUND RACING" ? (
+                        <Images
+                          src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
+                        />
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="name" align="left">
