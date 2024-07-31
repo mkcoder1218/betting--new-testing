@@ -92,7 +92,7 @@ function App() {
         new Date().getTime() - new Date(gameData.game?.startTime).getTime();
       const diffInMinutes = currentDiff / (1000 * 60);
 
-      if (diffInMinutes <= 5) {
+      if (diffInMinutes <= 10) {
         setRemainingTime(
           moment(gameData.game?.startTime).diff(moment(), "milliseconds")
         );

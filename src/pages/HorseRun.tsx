@@ -22,6 +22,7 @@ function HorseRun() {
   useEffect(() => {
     if (gameData && gameData.game) {
       let activeIndex: { index: number; millisecond: number }[] = [];
+
       for (let index in gameData.game) {
         if (
           moment(gameData.game[index].startTime).diff(moment(), "seconds") > 0
@@ -38,7 +39,7 @@ function HorseRun() {
       let sortedOne = activeIndex.sort((a, b) => {
         return a.millisecond < b.millisecond;
       });
-      setActiveindex(sortedOne[0].index);
+      if (sortedOne && sortedOne.length > 0) setActiveindex(sortedOne[0].index);
     }
   }, [gameData]);
   return (

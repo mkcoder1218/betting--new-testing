@@ -15,13 +15,18 @@ import {
   clearNumbers,
 } from "../features/slices/pickerSlice";
 import { combineSlices } from "@reduxjs/toolkit";
-import { GameData, RootEventData } from "../features/slices/RacingGameSlice";
+import {
+  Entry,
+  GameData,
+  RootEventData,
+} from "../features/slices/RacingGameSlice";
+import moment from "moment";
 interface DropProp {
   id: string;
   time: string;
   place: string;
   activeIndexValues?: number;
-  gameData?: GameData;
+  gameData: GameData;
   data: RootEventData;
   isActiveGame: boolean;
 }
@@ -41,304 +46,318 @@ const Drop: React.FC<DropProp> = ({
   const [isLive, setisLive] = useState(false);
   const gameState = useAppSelector((state) => state.game);
   const [visible, setVisible] = useState(false);
-const gameType = useAppSelector((state) => state.gameType.gameType);
-const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
+  const gameType = useAppSelector((state) => state.gameType.gameType);
+  const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
 
-const dispatch = useAppDispatch();
-const expiryOfGame = gameCreatedDate?.setMinutes(
-  gameCreatedDate.getMinutes() + 5
-);
-const repeatState = useAppSelector((state) => state.repeat);
-const [BankClick, setBankclick] = useState<number | null>();
-const [ClearTheClick, setClear] = useState(false);
-const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(
-  new Set()
-);
-const handleClick = () => {
-  setIsActive(!isActive);
-};
-const handleClickCount = (val: number) => {
-  setClickCount(val);
-  setClear(false);
-};
-const handleLive = (val: boolean) => {
-  setisLive(val);
-};
-const handleClear = () => {
-  setClear(true);
-  setVisible(false);
-  setisActivedTableButton(new Set());
-  setBankclick(null);
-};
+  const dispatch = useAppDispatch();
+  const expiryOfGame = gameCreatedDate?.setMinutes(
+    gameCreatedDate.getMinutes() + 5
+  );
+  const repeatState = useAppSelector((state) => state.repeat);
+  const [BankClick, setBankclick] = useState<number | null>();
+  const [ClearTheClick, setClear] = useState(false);
+  const [isActivedtableButton, setisActivedTableButton] = useState<Set<Entry>>(
+    new Set()
+  );
+  const [sortedArray, setSortedArray] = useState<Entry[]>([]);
+  const handleClick = () => {
+    setIsActive(!isActive);
+  };
+  const handleClickCount = (val: number) => {
+    setClickCount(val);
+    setClear(false);
+  };
+  const handleLive = (val: boolean) => {
+    setisLive(val);
+  };
+  const handleClear = () => {
+    setClear(true);
+    setVisible(false);
+    setisActivedTableButton(new Set());
+    setBankclick(null);
+  };
 
-const handleColorChange = (index: number) => {
-  setisActivedTableButton((prevActiveButtons) => {
-    const updatedButtons = new Set(prevActiveButtons);
-    if (updatedButtons.has(index)) {
-      updatedButtons.delete(index);
-    } else {
-      updatedButtons.add(index);
+  const handleColorChange = (index: number) => {
+    setisActivedTableButton((prevActiveButtons) => {
+      const updatedButtons = new Set(prevActiveButtons);
+      if (updatedButtons.has(index)) {
+        updatedButtons.delete(index);
+      } else {
+        updatedButtons.add(index);
+      }
+      return updatedButtons;
+    });
+  };
+  useEffect(() => {
+    if (clickCount > 2) {
+      setVisible(true);
     }
-    return updatedButtons;
-  });
-};
-useEffect(() => {
-  if (clickCount > 2) {
-    setVisible(true);
+  }, [clickCount]);
+  useEffect(() => {
+    if (data) {
+      const sorted: Entry[] = data.eventDetail.Event.Race.Entries.sort(
+        (a, b) => {
+          return a.WinOdds - b.WinOdds;
+        }
+      );
+      setSortedArray(sorted);
+    }
+  }, [data]);
+  const HandleBankClick = (index: number) => {
+    setBankclick(index);
+  };
+  const CombinationDispatch = (
+    selected: any,
+    multiplier: number,
+    toWin: number,
+    expiry: number,
+    stake: number,
+    gameId: number,
+    isCombo: boolean,
+    gameType: string | undefined
+  ) => {
+    for (let i = 0; i < repeatState.repeat; i++) {
+      dispatch(
+        addToBetSlip({
+          selected: selected,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          multiplier: multiplier,
+          toWin: toWin,
+          stake: toWin,
+          gameId: gameId,
+          isCombo: isCombo,
+          gameType: gameType,
+        })
+      );
+    }
+  };
+  function factorial(n: number) {
+    if (n === 0 || n === 1) {
+      return 1;
+    }
+    return n * factorial(n - 1);
   }
-}, [clickCount]);
-const HandleBankClick = (index: number) => {
-  setBankclick(index);
-};
-const CombinationDispatch = (
-  selected: any,
-  multiplier: number,
-  toWin: number,
-  expiry: number,
-  stake: number,
-  gameId: number,
-  isCombo: boolean,
-  gameType: string | undefined
-) => {
-  for (let i = 0; i < repeatState.repeat; i++) {
-    dispatch(
-      addToBetSlip({
-        selected: selected,
-        expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
-        multiplier: multiplier,
-        toWin: toWin,
-        stake: toWin,
-        gameId: gameId,
-        isCombo: isCombo,
-        gameType: gameType,
-      })
-    );
+  function combinations(
+    number: number,
+    combination: number,
+    multiplayer: number
+  ) {
+    if (combination === 3 && number <= 2) {
+      return 0;
+    }
+    const calculate =
+      factorial(number) /
+      (factorial(combination) * factorial(number - combination));
+    return calculate * multiplayer;
   }
-};
-function factorial(n: number) {
-  if (n === 0 || n === 1) {
-    return 1;
+  function trifectaCombinations(n: number) {
+    if (n < 3) {
+      return 0;
+    }
+    if (n === 3) {
+      return 1;
+    }
+    return factorial(n) / Math.abs(factorial(n - 3));
   }
-  return n * factorial(n - 1);
-}
-function combinations(
-  number: number,
-  combination: number,
-  multiplayer: number
-) {
-  if (combination === 3 && number <= 2) {
-    return 0;
-  }
-  const calculate =
-    factorial(number) /
-    (factorial(combination) * factorial(number - combination));
-  return calculate * multiplayer;
-}
-function trifectaCombinations(n: number) {
-  if (n < 3) {
-    return 0;
-  }
-  if (n === 3) {
-    return 1;
-  }
-  return factorial(n) / Math.abs(factorial(n - 3));
-}
-return (
-  <div className="DropContainer">
-    <div
-      className="container"
-      style={{
-        backgroundColor: isLive
-          ? "#a81005"
-          : isActive
-          ? "#37b34a"
-          : "transparent",
-      }}
-    >
-      <div className="timePlace">
-        <StartTimer text={time} onLive={handleLive} />
-        <IdandPlace Place={place} Id={id} />
+  return (
+    <div className="DropContainer">
+      <div
+        className="container"
+        style={{
+          backgroundColor:
+            moment(time).diff(moment(), "seconds") < 0
+              ? "#a81005"
+              : isActive
+              ? "#37b34a"
+              : "transparent",
+        }}
+      >
+        <div className="timePlace">
+          <StartTimer text={time} onLive={handleLive} />
+          <IdandPlace Place={place} Id={id} />
+        </div>
+        <PlusMinus onClick={handleClick} isActive={isActive} />
       </div>
-      <PlusMinus onClick={handleClick} isActive={isActive} />
-    </div>
-    {isActive ? (
-      <div className="container2">
-        {activeIndexValues === 0 ? (
-          <BasicTable
-            clickCount={handleClickCount}
-            isClear={ClearTheClick}
-            isActivatedtablebutton={isActivedtableButton}
-            handleColorChange={handleColorChange}
-            handleBankColorChange={HandleBankClick}
-            isActiveBank={BankClick}
-          />
-        ) : activeIndexValues === 1 ? (
-          <HeadToHead />
-        ) : (
-          ""
-        )}
-
-
-        <div
-          className={`${
-            clickCount > 1 && activeIndexValues === 0 ? "miniContainer" : ""
-          }`}
-        >
-          {clickCount === 1 || isActivedtableButton.size === 1 ? (
-            <div className="flex-col Need mt-14 -ml-20 text-lg text-black">
-              <Message text="Need a minimum of two selections to create a combo" />
-              <ButtonSizes
-                text="Clear"
-                isActive={false}
-                SvgIconComponent={DeleteOutlineOutlinedIcon}
-                onClick={() => {
-                  handleClear();
-                  setClickCount(0);
-                }}
-              />
-            </div>
-          ) : clickCount > 1 && activeIndexValues === 0 ? (
-            <div className="Need w-full waysbut">
-              <div className="waysShow mt-7 -ml-5 h-3/4 Need w-full gap-2">
-                <Ways
-                  text="QUINELLA"
-                  text2="2 any order"
-                  text3={`${combinations(clickCount, 2, 1)} Combinations`}
-                  onClick={() => {
-                    combineSlices();
-                    CombinationDispatch(
-                      "1st Two any order",
-                      1,
-                      10,
-                      10,
-                      10,
-                      4000,
-                      true,
-                      gameType
-                    );
-                  }}
-                  isvisible={true}
-                />
-
-                <Ways
-                  text="TRIO"
-                  text2="3 any order"
-                  text3={`${combinations(clickCount, 3, 1)} Combinations`}
-                  isvisible={visible}
-                  onClick={() => {
-                    combineSlices();
-                    CombinationDispatch(
-                      "1st Two any order",
-                      1,
-                      10,
-                      10,
-                      10,
-                      4000,
-                      true,
-                      gameType
-                    );
-                  }}
-                />
-
-                <Ways
-                  text="EXACTA"
-                  text2="2 in order"
-                  text3={`${combinations(clickCount, 2, 2)} Combinations`}
-                  isvisible={true}
-                  onClick={() => {
-                    combineSlices();
-                    CombinationDispatch(
-                      "1st Two any order",
-                      1,
-                      10,
-                      10,
-                      10,
-                      4000,
-                      true,
-                      gameType
-                    );
-                  }}
-                />
-
-                <Ways
-                  text="TRIFECTA"
-                  text2="3 in order"
-                  text3={`${trifectaCombinations(clickCount)} Combinations`}
-                  isvisible={visible}
-                  onClick={() => {
-                    combineSlices();
-                    CombinationDispatch(
-                      "1st Two any order",
-                      1,
-                      10,
-                      10,
-                      10,
-                      4000,
-                      true,
-                      gameType
-                    );
-                  }}
-                />
-
-                <Ways
-                  text="SWINGER"
-                  text2="2 in 3 any order"
-                  text3={`${combinations(clickCount, 2, 1)} Combinations`}
-                  isvisible={true}
-                  onClick={() => {
-                    combineSlices();
-                    CombinationDispatch(
-                      "1st Two any order",
-                      1,
-                      10,
-                      10,
-                      10,
-                      4000,
-                      true,
-                      gameType
-                    );
-                  }}
-                />
-              </div>
-              <ButtonSizes
-                text="Clear"
-                isActive={false}
-                SvgIconComponent={DeleteOutlineOutlinedIcon}
-                onClick={() => {
-                  handleClear();
-                  setClickCount(0);
-                }}
-              />
-            </div>
-          ) : activeIndexValues === 0 ? (
-            <>
-              {removeText ? (
-                <div className="flex-col Need text-lg text-black mt-14 -ml-20 items-start w-full">
-                  <Message text="Select to create combination bets" />
-                  <ButtonSizes
-                    text="Clear"
-                    isActive={false}
-                    SvgIconComponent={DeleteOutlineOutlinedIcon}
-                    onClick={() => {
-                      setRemovetext(false);
-                      handleClear();
-                    }}
-                  />
-                </div>
-              ) : (
-                ""
-              )}
-            </>
+      {isActive ? (
+        <div className="container2">
+          {activeIndexValues === 0 ? (
+            <BasicTable
+              clickCount={handleClickCount}
+              isClear={ClearTheClick}
+              isActivatedtablebutton={isActivedtableButton}
+              handleColorChange={handleColorChange}
+              handleBankColorChange={HandleBankClick}
+              isActiveBank={BankClick}
+              data={data}
+              gameData={gameData}
+              sortedByOdd={sortedArray}
+            />
+          ) : activeIndexValues === 1 ? (
+            <HeadToHead />
           ) : (
             ""
           )}
+
+          <div
+            className={`${
+              clickCount > 1 && activeIndexValues === 0 ? "miniContainer" : ""
+            }`}
+          >
+            {clickCount === 1 || isActivedtableButton.size === 1 ? (
+              <div className="flex-col Need mt-14 -ml-20 text-lg text-black">
+                <Message text="Need a minimum of two selections to create a combo" />
+                <ButtonSizes
+                  text="Clear"
+                  isActive={false}
+                  SvgIconComponent={DeleteOutlineOutlinedIcon}
+                  onClick={() => {
+                    handleClear();
+                    setClickCount(0);
+                  }}
+                />
+              </div>
+            ) : clickCount > 1 && activeIndexValues === 0 ? (
+              <div className="Need w-full waysbut">
+                <div className="waysShow mt-7 -ml-5 h-3/4 Need w-full gap-2">
+                  <Ways
+                    text="QUINELLA"
+                    text2="2 any order"
+                    text3={`${combinations(clickCount, 2, 1)} Combinations`}
+                    onClick={() => {
+                      combineSlices();
+                      CombinationDispatch(
+                        "1st Two any order",
+                        1,
+                        10,
+                        10,
+                        10,
+                        4000,
+                        true,
+                        gameType
+                      );
+                    }}
+                    isvisible={true}
+                  />
+
+                  <Ways
+                    text="TRIO"
+                    text2="3 any order"
+                    text3={`${combinations(clickCount, 3, 1)} Combinations`}
+                    isvisible={visible}
+                    onClick={() => {
+                      combineSlices();
+                      CombinationDispatch(
+                        "1st Two any order",
+                        1,
+                        10,
+                        10,
+                        10,
+                        4000,
+                        true,
+                        gameType
+                      );
+                    }}
+                  />
+
+                  <Ways
+                    text="EXACTA"
+                    text2="2 in order"
+                    text3={`${combinations(clickCount, 2, 2)} Combinations`}
+                    isvisible={true}
+                    onClick={() => {
+                      combineSlices();
+                      CombinationDispatch(
+                        "1st Two any order",
+                        1,
+                        10,
+                        10,
+                        10,
+                        4000,
+                        true,
+                        gameType
+                      );
+                    }}
+                  />
+
+                  <Ways
+                    text="TRIFECTA"
+                    text2="3 in order"
+                    text3={`${trifectaCombinations(clickCount)} Combinations`}
+                    isvisible={visible}
+                    onClick={() => {
+                      combineSlices();
+                      CombinationDispatch(
+                        "1st Two any order",
+                        1,
+                        10,
+                        10,
+                        10,
+                        4000,
+                        true,
+                        gameType
+                      );
+                    }}
+                  />
+
+                  <Ways
+                    text="SWINGER"
+                    text2="2 in 3 any order"
+                    text3={`${combinations(clickCount, 2, 1)} Combinations`}
+                    isvisible={true}
+                    onClick={() => {
+                      combineSlices();
+                      CombinationDispatch(
+                        "1st Two any order",
+                        1,
+                        10,
+                        10,
+                        10,
+                        4000,
+                        true,
+                        gameType
+                      );
+                    }}
+                  />
+                </div>
+                <ButtonSizes
+                  text="Clear"
+                  isActive={false}
+                  SvgIconComponent={DeleteOutlineOutlinedIcon}
+                  onClick={() => {
+                    handleClear();
+                    setClickCount(0);
+                  }}
+                />
+              </div>
+            ) : activeIndexValues === 0 ? (
+              <>
+                {removeText ? (
+                  <div className="flex-col Need text-lg text-black mt-14 -ml-20 items-start w-full">
+                    <Message text="Select to create combination bets" />
+                    <ButtonSizes
+                      text="Clear"
+                      isActive={false}
+                      SvgIconComponent={DeleteOutlineOutlinedIcon}
+                      onClick={() => {
+                        setRemovetext(false);
+                        handleClear();
+                      }}
+                    />
+                  </div>
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
-      </div>
-    ) : (
-      ""
-    )}
-  </div>
-);
+      ) : (
+        ""
+      )}
+    </div>
+  );
 };
 
 export default Drop;

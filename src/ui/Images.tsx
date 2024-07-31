@@ -10,7 +10,6 @@ function Images(Prop: Image) {
       style={{
         height: "50px",
         width: "50px",
-        marginLeft: "30px",
       }}
       width={50}
     />
