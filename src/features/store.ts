@@ -12,6 +12,7 @@ import repeatReducer from "./slices/betRepeat";
 import cashierReducer from "./slices/cashierData";
 import balanceReducer from "./slices/netBalance";
 import gameTypeSlice from './slices/gameType';
+import HeadReducer from './slices/HeadSlice'
 
 export const store = configureStore({
     reducer: {
@@ -27,7 +28,8 @@ export const store = configureStore({
         repeat: repeatReducer,
         cashier: cashierReducer,
         balance: balanceReducer,
-        gameType: gameTypeSlice
+        gameType: gameTypeSlice,
+        Head: HeadReducer,
     }
 })
 

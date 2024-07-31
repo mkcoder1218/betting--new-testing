@@ -10,11 +10,11 @@
 *{
   margin: 0;
   padding: 0;
-
+font-family: 'Roboto Condensed';
 }
 .App{
   width: 100%;
-  color: rgb(111, 109, 109);
+  color: rgb(145, 144, 144);
 }
 
 body{
@@ -23,13 +23,14 @@ body{
 .TopHead{
   text-transform: uppercase;
 padding: 0.5%;
-border: rgb(5, 217, 5) solid 1px;
+border: rgba(5, 166, 5, 0.604) solid 0.5px;
 cursor: pointer;
+  min-width: 5rem !important;
+  text-align: center;
 }
 .topHead{
   display: flex;
   padding: 10px;
-
 }
 .DropContainer .container{
   display: flex;
@@ -280,8 +281,7 @@ transition:all 0.5s;
 
 }
 .waysbut button{
-  margin-top: -30px !important;
-  margin-left: -30px !important;
+  margin-top:5px !important;
 }
 .Need button:hover::after{
   display: flex;
@@ -331,7 +331,7 @@ height: 100%;
 }
 .f{
   padding-right: 2rem !important ;
-  padding-left: 10rem !important ;
+  padding-left: 13rem !important ;
 }
 .F{
   background-color: rgb(255, 94, 0);

@@ -30,6 +30,8 @@ import Car from "./pages/Car";
 import Hockey from "./pages/Hokey";
 import { F1 } from "./components/svg/F1";
 import Formula1 from "./pages/Formula1";
+import Spin from "./pages/Spin";
+import TestComponent from "./utils/Tst";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
@@ -205,7 +207,7 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      <div className="border-gray-300 border-t-4 p-4 flex items-start justify-between">
+      <div className="border-gray-300 border-t-4 flex items-start justify-between">
         <div className="left" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "KENO" ? (
@@ -289,6 +291,8 @@ function App() {
             <Hockey />
           ) : WhichGameSelected === "F1" ? (
             <Formula1 />
+          ) : WhichGameSelected === "SPIN AND WIN" ? (
+            <Spin />
           ) : (
             ""
           )}

@@ -3,22 +3,24 @@ import React, { useState } from "react";
 import "../styles/App.css";
 import Drop from "../components/Drop";
 import Head from "../components/Head";
+
+import { useAppDispatch } from "../features/hooks";
+import { addHeadText } from "../features/slices/HeadSlice";
 function Bike() {
-  const texts = ["Main", "HEAD TO HEAD"];
+  const texts = ["Main", "HEAD TO HEAD", "ALT", "SUM"];
   const [selectedText, setSelectedText] = useState("");
+  const dispatch = useAppDispatch();
   const [activeIndexValue, setActiveindexVal] = useState(0);
-  const handleClickMenu = (text: string) => {
-    setSelectedText(text);
-  };
   const handleActiveIndex = (val: number) => {
+    const text = texts[val];
     setActiveindexVal(val);
+    dispatch(addHeadText(text));
   };
   return (
     <div className="App">
       <Head
         numberOfMenu={2}
         texts={texts}
-        onMenuClick={handleClickMenu}
         activeIndexprop={handleActiveIndex}
       />
       <Drop

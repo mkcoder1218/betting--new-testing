@@ -34,6 +34,7 @@ interface TableProp {
   isActiveBank?: number;
   handleColorChange: (index: number) => void;
   handleBankColorChange: (index: number) => void;
+  HeadTexttoTable?: string;
 }
 
 const rows = [
@@ -52,6 +53,7 @@ const BasicTable: React.FC<TableProp> = ({
   isActiveBank,
   handleColorChange,
   handleBankColorChange,
+  HeadTexttoTable,
 }) => {
   const [clickCounter, setClickCounter] = useState<number>(0);
   const [clickedindex, setClickedindex] = useState<number>(0);
@@ -63,6 +65,7 @@ const BasicTable: React.FC<TableProp> = ({
   const repeatState = useAppSelector((state) => state.repeat);
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
   const betSlip = useAppSelector((state) => state.picker.betSlip);
+  const HeadText = useAppSelector((state) => state.Head.Name);
   const currentDate = new Date().getTime();
   const [clickOrder, setClickOrder] = useState<number[]>([]);
   const [bankclickOrder, setbankClickOrder] = useState<number>();
@@ -72,7 +75,7 @@ const BasicTable: React.FC<TableProp> = ({
   );
   const handleClick = (index: number) => {
     setClickedindex(index);
-    console.log("clickedindex", clickedindex, "index", index);
+    console.log("Headtext", HeadText);
 
     setClickCounter((prev) => {
       const newValue = prev + 1;
@@ -154,37 +157,37 @@ const BasicTable: React.FC<TableProp> = ({
   };
 
   return (
-    <TableContainer className="tableContainer">
-      <Table
-        sx={{
-          minWidth: 400,
-          "& .css-d4m83a-MuiTable-root": {
-            width: "0%",
-          },
-        }}
-        aria-label="simple table"
-        className="table"
-      >
+    <TableContainer className="tableContainer p-5">
+      <Table aria-label="simple table" className="table">
         <TableHead className="TableHead">
           <TableRow>
             <TableCell></TableCell>
             <TableCell align="left"></TableCell>
             <TableCell align="center">Rating</TableCell>
             <TableCell align="center">Last5</TableCell>
-            <TableCell align="center">Win</TableCell>
-            <TableCell align="center">Place</TableCell>
-            <TableCell align="center" className="Combo">
-              Combo
+            <TableCell align="center">
+              {" "}
+              {HeadText === "ALT" ? "2nd" : "Win"}
             </TableCell>
-            <TableCell align="center">Bank</TableCell>
+            <TableCell align="center">
+              {" "}
+              {HeadText === "ALT" ? "3rd" : "Place"}
+            </TableCell>
+            <TableCell align="center" className="Combo">
+              {HeadText === "ALT" ? "Last 3" : "Combo"}
+            </TableCell>
+            <TableCell align="center">
+              {" "}
+              {HeadText === "ALT" ? "Last" : "Bank"}
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody className="tableBody">
           {rows.map((row, index: number) => {
             return (
-              <TableRow key={row.name} className="Tablerow">
-                <TableCell scope="row" className="name ">
-                  <div className="flex items-center w-full">
+              <TableRow key={row.name} className="Tablerow w-full">
+                <TableCell scope="row" className="">
+                  <div className="flex items-center p-1">
                     {gameType === "GREYHOUND RACING" ? (
                       <Images
                         src={`/Images/GreyhoundJackets/raceguimarkers0${
@@ -250,7 +253,7 @@ const BasicTable: React.FC<TableProp> = ({
                   {" "}
                   {
                     <ButtonSizes
-                      text={getButtonText(index)}
+                      text={HeadText === "ALT" ? "1.2" : getButtonText(index)}
                       isActive={
                         isActivatedtablebutton?.has(index * 4 + 2) || false
                       }
@@ -259,7 +262,7 @@ const BasicTable: React.FC<TableProp> = ({
                         handleColorChange(index * 4 + 2);
                       }}
                       numberofClickedbuttons={clickCounter}
-                      isCombo={true}
+                      isCombo={HeadText === "ALT" ? false : true}
                       isChangedForm={changedForm.includes(index) || false}
                     />
                   }
@@ -271,21 +274,35 @@ const BasicTable: React.FC<TableProp> = ({
                   {" "}
                   <ButtonSizes
                     text={
-                      bankclickOrder === index + 1
+                      HeadText === "ALT"
+                        ? "1.2"
+                        : bankclickOrder === index + 1
                         ? `${1 + "st"}`
                         : (index + 1).toString()
                     }
-                    isBankActive={isActiveBank === index || false}
+                    isBankActive={
+                      HeadText === "ALT"
+                        ? false
+                        : isActiveBank === index || false
+                    }
+                    isActive={
+                      HeadText === "ALT"
+                        ? isActivatedtablebutton?.has(index * 4 + 3) || false
+                        : false
+                    }
                     isDesabled={
-                      clickOrder.length > 0 && clickOrder.includes(index)
+                      (clickOrder.length > 0 && clickOrder.includes(index)) ||
+                      HeadText === "ALT"
                         ? false
                         : true
                     }
                     onClick={() => {
-                      handleBankClick(index + 1);
-                      handleBankColorChange(index);
+                      HeadText === "ALT"
+                        ? (handleClick(index), handleColorChange(index * 4 + 3))
+                        : (handleBankClick(index + 1),
+                          handleBankColorChange(index));
                     }}
-                    isCombo={true}
+                    isCombo={HeadText === "ALT" ? false : true}
                   />
                 </TableCell>
               </TableRow>

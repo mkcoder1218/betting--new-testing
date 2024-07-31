@@ -10,7 +10,9 @@ function MiniHeadtoHead() {
   return (
     <div className="flex w-full p-2 justify-center">
       <div className="flex gap-1 p-0 w-full justify-between">
-        <F />
+        <div className="w-full">
+          <F />
+        </div>
         <div className="flex-col headCon mr-7">
           <p className="text-xl">Name</p>
           <div className="flex-col item-center">
@@ -42,7 +44,9 @@ function MiniHeadtoHead() {
             <p className="-mt-2">2,3,4,6,7</p>
           </div>
         </div>
-        <F />
+        <div className="w-full">
+          <F />
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import Top from "../ui/Top";
 interface HeadProp {
   numberOfMenu: number;
   texts: string[];
-  onMenuClick: (text: string) => void;
+  onMenuClick?: () => void;
   activeIndexprop: (val: number) => void;
 }
 const Head: React.FC<HeadProp> = ({ numberOfMenu, texts, activeIndexprop }) => {
@@ -19,7 +19,9 @@ const Head: React.FC<HeadProp> = ({ numberOfMenu, texts, activeIndexprop }) => {
         <Top
           key={index}
           text={text || `Menu ${index + 1}`}
-          onClick={() => handleClick(index, text)}
+          onClick={() => {
+            handleClick(index, text);
+          }}
           isActive={activeIndex === index}
         />
       ))}

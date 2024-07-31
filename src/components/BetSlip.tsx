@@ -224,7 +224,7 @@ export default function BetSlip() {
 
   return (
     <div
-      style={{ flexBasis: "40%" }}
+      style={{ flexBasis: "26%" }}
       className="right relative ml-2 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400"
     >
       <PrinterDialog

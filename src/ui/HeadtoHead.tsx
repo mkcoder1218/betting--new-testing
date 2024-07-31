@@ -68,7 +68,15 @@ const HeadToHead: React.FC = () => {
   };
 
   return (
-    <div className="HeadtoHeadContainer w-full">
+    <div
+      className={`HeadtoHeadContainer ${
+        gameType !== "GREYHOUND RACING" &&
+        gameType !== "Jaguar" &&
+        gameType !== "HORSE RACING"
+          ? ""
+          : "w-full"
+      }`}
+    >
       <TableContainer className="tableContainer">
         <Table
           sx={{
