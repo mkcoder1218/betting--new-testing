@@ -8,7 +8,7 @@ interface plusminusProp {
 }
 const PlusMinus: React.FC<plusminusProp> = ({ isActive, onClick }) => {
   return (
-    <div className="plusminus">
+    <div className="plusminus" style={{ color: isActive ? "white" : "" }}>
       {isActive ? (
         <RemoveIcon onClick={onClick} />
       ) : (

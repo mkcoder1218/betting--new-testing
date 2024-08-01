@@ -16,7 +16,9 @@ const StartTimer: React.FC<TimerTextProp> = ({
   return (
     <div className="StartTime">
       {isActive && <Timer isLive={onLive} _time={text} />}
-      <p>{moment(text).format("hh:mm")}</p>
+      <p style={{ color: isActive ? "white" : "" }}>
+        {moment(text).format("hh:mm")}
+      </p>
     </div>
   );
 };

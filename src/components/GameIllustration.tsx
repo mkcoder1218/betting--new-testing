@@ -16,7 +16,8 @@ import { DogWithVideo } from "./svg/DogWithVideo";
 import { HorseWithSpin } from "./svg/HorseWithSpin";
 import { F1 } from "./svg/F1";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
-import { addGameType } from "../features/slices/betSlip";
+
+import { addGameType } from "../features/slices/gameType";
 import Hockey from "./svg/Hockey";
 
 interface gameSelection {
@@ -26,6 +27,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGame, setSelected] = useState(3);
   const [selectedGametext, setSelectedGame] = useState("");
+  const dispatch = useAppDispatch();
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -33,7 +35,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   const handleClickGame = (gameName: string) => {
     setSelectedGame(gameName);
     WhichGame(gameName);
-
+    dispatch(addGameType(gameName));
     console.log("gameNameofg:", gameName);
   };
 
@@ -43,11 +45,10 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   };
 
   const dropdownItems = [
-
     { icon: <SmartPlay />, text1: "KENO", text2: "", width: "w-8" },
     {
       icon: <DogWithVideo />,
-      text1: "GREYHOUND RACING",
+      text1: "PreRecRealDogs",
       text2: "PLATINUM HOUNDS",
 
       width: "w-12",
@@ -68,7 +69,6 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     { icon: <Hockey />, text1: "Hockey", text2: "", width: "w-8" },
     { icon: <F1 />, text1: "F1", text2: "", width: "w-8" },
     {
-
       icon: <CarRacing />,
       text1: "MOTOR RACING",
       text2: "MAXCAR",
@@ -83,7 +83,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
 
     {
       icon: <Garri />,
-      text1: "HARNESS RACING",
+      text1: "HarnessRacing",
       text2: "CHARGING CHARIOTS",
       width: "w-12",
     },

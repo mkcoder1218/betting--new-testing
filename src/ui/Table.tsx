@@ -92,7 +92,7 @@ const BasicTable: React.FC<TableProp> = ({
     }
   };
   useEffect(() => {
-    console.log("isActivatedad", isActivatedtablebutton);
+    console.log("gamesData", data);
   }, [isActivatedtablebutton]);
   useEffect(() => {
     console.log("isClear", isClear);
@@ -171,134 +171,160 @@ const BasicTable: React.FC<TableProp> = ({
           </TableRow>
         </TableHead>
         <TableBody className="tableBody">
-       {data &&
+          {data &&
             data.eventDetail &&
             data.eventDetail.Event &&
             data.eventDetail.Event.Race &&
             data.eventDetail.Event.Race.Entries.map((row, index: number) => {
-            return (
-              <TableRow key={row.name} className="Tablerow w-full">
-                <TableCell scope="row" className="">
-                  <div className="flex items-center p-1">
-                    {gameType === "GREYHOUND RACING" ? (
-                      <Images
-                        src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
-                      />
-                    ) : (
-                      ""
-                    )}
-                    <p className=""> {row.Draw}{row.Name}</p>
-                  </div>
-                </TableCell>
-                <TableCell align="right" className="tableContent f">
-                  {" "}
-                  <F />
-                </TableCell>
-                <TableCell align="right" className="tableContent rating">
-                  {" "}
-                  <BasicRating />
-                </TableCell>
-                <TableCell
-                  align="right"
-                  className="tableContent texts text-2xl"
-                >
-              {row.Form}
-                </TableCell>
-                <TableCell align="right" className="tableContent buttonsTable">
-                  <ButtonSizes
-                 text={row.WinOdds + ""}
-                    isActive={isActivatedtablebutton?.has(index * 4) || false}
-                    isLocked={true}
-                    onClick={() => {
-                      handleClick(index);
-                      handleColorChange(index * 4);
-                      handleDispatch("12.4", 1, 10, 12, 12, 6000);
-                    }}
-                    numberofClickedbuttons={clickCounter}
-                    isCombo={false}
-                  />
-                </TableCell>
-                <TableCell
-                  align="right"
-                  className={`tableContent buttonsTable`}
-                >
-                  <ButtonSizes
-                    text="12.4"
-                    isActive={
-                      isActivatedtablebutton?.has(index * 4 + 1) || false
-                    }
-                    onClick={() => {
-                      handleClick(index);
-                      handleColorChange(index * 4 + 1);
-                      handleDispatch("12.4", 1, 10, 12, 12, 6000);
-                    }}
-                    numberofClickedbuttons={clickCounter}
-                    isCombo={false}
-                  />
-                </TableCell>
-                <TableCell
-                  align="right"
-                  className={`tableContent buttonsTable`}
-                >
-                  {" "}
-                  {
-
+              return (
+                <TableRow key={row.Name} className="Tablerow">
+                  <TableCell scope="row" className="nam">
+                    <div
+                      className={`flex items-center ${
+                        row.Draw < 10 ? "gap-3" : "gap-1"
+                      }`}
+                      style={{ width: "200%" }}
+                    >
+                      <p className={`${row.Draw > 10 ? "-ml-1" : ""}`}>
+                        {row.Draw}
+                      </p>
+                      {
+                        <Images
+                          src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
+                        />
+                      }
+                      <div className="flex flex-row w-full">
+                        <p className="text-justify nameText">{row.Name}</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell align="right" className="tableContent f">
+                    {" "}
+                    <F />
+                  </TableCell>
+                  <TableCell align="right" className="tableContent rating">
+                    {" "}
+                    <BasicRating />
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent texts text-2xl"
+                  >
+                    {row.Form}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent buttonsTable"
+                  >
+                    <ButtonSizes
+                      text={row.WinOdds + ""}
+                      isActive={isActivatedtablebutton?.has(index * 4) || false}
+                      isLocked={true}
+                      onClick={() => {
+                        handleClick(index);
+                        handleColorChange(index * 4);
+                        handleDispatch(
+                          row.WinOdds.toString(),
+                          1,
+                          10,
+                          12,
+                          12,
+                          6000
+                        );
+                      }}
+                      numberofClickedbuttons={clickCounter}
+                      isCombo={false}
+                    />
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className={`tableContent buttonsTable`}
+                  >
                     <ButtonSizes
                       text={row.PlaceOdds + ""}
                       isActive={
                         isActivatedtablebutton?.has(index * 4 + 1) || false
                       }
                       onClick={() => {
+                        handleClick(index);
                         handleColorChange(index * 4 + 1);
-                        handleDispatch("12.4", 1, 10, 12, 12, 6000);
+                        handleDispatch(
+                          row.PlaceOdds.toString(),
+                          1,
+                          10,
+                          12,
+                          12,
+                          6000
+                        );
                       }}
                       numberofClickedbuttons={clickCounter}
-                      isCombo={HeadText === "ALT" ? false : true}
-                      isChangedForm={changedForm.includes(index) || false}
+                      isCombo={false}
                     />
-                  }
-                </TableCell>
-                <TableCell
-                  align="right"
-                  className="tableContent bank buttonsTable"
-                >
-                  {" "}
-                  <ButtonSizes
-                    text={
-                      HeadText === "ALT"
-                        ? "1.2"
-                        : bankclickOrder === index + 1
-                        ? `${1 + "st"}`
-                        : (index + 1).toString()
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className={`tableContent buttonsTable`}
+                  >
+                    {" "}
+                    {
+                      <ButtonSizes
+                        text={HeadText === "ALT" ? "1.2" : getButtonText(index)}
+                        isActive={
+                          isActivatedtablebutton?.has(index * 4 + 2) || false
+                        }
+                        onClick={() => {
+                          handleClick(index);
+                          handleColorChange(index * 4 + 2);
+                          handleDispatch("12.4", 1, 10, 12, 12, 6000);
+                        }}
+                        numberofClickedbuttons={clickCounter}
+                        isCombo={HeadText === "ALT" ? false : true}
+                        isChangedForm={changedForm.includes(index) || false}
+                      />
                     }
-                    isBankActive={
-                      HeadText === "ALT"
-                        ? false
-                        : isActiveBank === index || false
-                    }
-                    isActive={
-                      HeadText === "ALT"
-                        ? isActivatedtablebutton?.has(index * 4 + 3) || false
-                        : false
-                    }
-                    isDesabled={
-                      (clickOrder.length > 0 && clickOrder.includes(index)) ||
-                      HeadText === "ALT"
-                        ? false
-                        : true
-                    }
-                    onClick={() => {
-                      HeadText === "ALT"
-                        ? (handleClick(index), handleColorChange(index * 4 + 3))
-                        : (handleBankClick(index + 1),
-                          handleBankColorChange(index));
-                    }}
-                    isCombo={HeadText === "ALT" ? false : true}
-                  />
-                </TableCell>
-              </TableRow>
-            );
-          })}
+                  </TableCell>
+                  <TableCell
+                    align="right"
+                    className="tableContent bank buttonsTable"
+                  >
+                    {" "}
+                    <ButtonSizes
+                      text={
+                        HeadText === "ALT"
+                          ? "1.2"
+                          : bankclickOrder === index + 1
+                          ? `${1 + "st"}`
+                          : (index + 1).toString()
+                      }
+                      isBankActive={
+                        HeadText === "ALT"
+                          ? false
+                          : isActiveBank === index || false
+                      }
+                      isActive={
+                        HeadText === "ALT"
+                          ? isActivatedtablebutton?.has(index * 4 + 3) || false
+                          : false
+                      }
+                      isDesabled={
+                        (clickOrder.length > 0 && clickOrder.includes(index)) ||
+                        HeadText === "ALT"
+                          ? false
+                          : true
+                      }
+                      onClick={() => {
+                        HeadText === "ALT"
+                          ? (handleClick(index),
+                            handleColorChange(index * 4 + 3))
+                          : (handleBankClick(index + 1),
+                            handleBankColorChange(index));
+                      }}
+                      isCombo={HeadText === "ALT" ? false : true}
+                    />
+                  </TableCell>
+                </TableRow>
+              );
+            })}
         </TableBody>
       </Table>
     </TableContainer>

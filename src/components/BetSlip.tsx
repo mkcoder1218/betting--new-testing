@@ -168,9 +168,11 @@ export default function BetSlip() {
         stake: ticket.stake,
         maxWin: ticket.multiplier * ticket.stake,
         nums: ticket.selected,
-        gameId: gameState.game?.id,
+        gameId: ticket.gameId + "",
         oddId: oddState.odd?.id,
         isCombo: ticket.isCombo,
+        oddType: ticket.oddType ? ticket.oddType : "",
+        entry: ticket.entry ? ticket.entry : "",
       };
 
       newTicketToSend.push(ticketItem);
@@ -268,10 +270,9 @@ export default function BetSlip() {
           </div>
         )}
 
-        {gameState.game?.gamenumber &&
-          betState.betSlip.length > 0 &&
+        {betState.betSlip.length > 0 &&
           betState.betSlip.map((item, index) => {
-            console.log("itemsFF:", item.gameType);
+            console.log("itemsFF:", gameType);
             return (
               <>
                 {" "}

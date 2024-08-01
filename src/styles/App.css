@@ -11,6 +11,7 @@
   margin: 0;
   padding: 0;
 font-family: 'Roboto Condensed';
+
 }
 .App{
   width: 100%;
@@ -31,6 +32,17 @@ cursor: pointer;
 .topHead{
   display: flex;
   padding: 10px;
+}
+.DropContainer {
+  margin-top: -10px;
+font-family: Roboto !important;
+  
+  text-transform: uppercase;
+}
+.DropContainer p{
+  font-size: 20px;
+  color: rgb(121, 121, 121);
+font-weight: 100 !important;
 }
 .DropContainer .container{
   display: flex;
@@ -120,6 +132,9 @@ height: 30%;
 width: 0% !important;
 
 }
+.nameText{
+  font-size: 18px !important;
+}
 .svgI{
   color: gray !important;
 }
@@ -135,7 +150,7 @@ width: 0% !important;
    font-family: 'Roboto Condensed' !important;
 text-align: center !important;
 height: 5px !important;
-
+max-width: 40px;
 min-height: 30px !important;
 }
 .override{
@@ -160,15 +175,20 @@ height: 5px !important;
 }
 .TableHead th {
   border: none; 
-  font-size: 14px !important; 
+  font-size: 12px !important; 
   line-height: 1.2; 
   height: 50px;
    margin: 0 0 0 0 !important;
-   padding: 5px 1px !important;
-color: gray !important;
+   padding: 4px 1px !important;
+color: rgb(87, 87, 87) !important;
 text-transform: uppercase !important;
    display: table-cell;
 
+
+}
+.TableHead th:nth-child(7){
+   border-left: #02ad1c25 0.5px solid !important;
+   padding-left: 10px !important;
 
 }
 .Tablerow{
@@ -190,7 +210,7 @@ width: 10px;
     
 }
 .tableBody td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7) {
-  padding: 1px 3px; /* Minimal padding for body cells */
+  padding: 1px 0px; /* Minimal padding for body cells */
   border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
   line-height: 1;
  margin: 0 0 0 0 !important;
@@ -198,11 +218,29 @@ font-size: 15px !important;
   padding-top: 10px !important;
 }
 .tableBody td:nth-child(6) {
-  padding: 1px 0px; /* Minimal padding for body cells */
+  padding: 2px 10px; /* Minimal padding for body cells */
   border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
   line-height: 1;
  margin: 0 0 0 0 !important;
   padding-top: 10px !important;
+ 
+}
+.tableBody td:nth-child(5){
+padding-left: 5px !important;
+}
+.tableBody td:nth-child(4){
+  padding-left: 3px !important;
+}
+.tableBody td:nth-child(7){
+   border-left: #02ad1c25 0.5px solid !important;
+   padding-left:5px !important;
+
+}
+.buttonContaiener{
+  padding-left: 5px !important;
+}
+.buttonContaiener button p{
+  text-align: center !important;
 }
 .bank{
   padding: 0 !important;
@@ -232,7 +270,6 @@ padding: 0 !important;
   margin-top: 3%;
 }
 .miniContainer .button{
-  margin-top: 10px !important;
   margin-left: -20% !important;
   border: none;
   background-color: #fb827f;
@@ -253,6 +290,10 @@ align-items: center;
  text-align: start !important;
  border-radius: 0 !important;
  position: relative;
+}
+.Need button p{
+  color: white !important;
+
 }
 .Need svg{
   font-size: 25px !important;
@@ -281,12 +322,16 @@ transition:all 0.5s;
 
 }
 .waysbut button{
-  margin-top:5px !important;
+  margin-top:-12rem !important;
+  margin-left: -15px !important;
 }
 .Need button:hover::after{
   display: flex;
    box-shadow:inset 0 0 2px 3px rgba(17, 13, 13, 0.385);
 
+}
+.Message p{
+  color: black !important;
 }
 .WaysContainer::after{
   content: '';
@@ -322,10 +367,11 @@ height: 100%;
 }
 .buttonContaiener{
   position: relative;
+
 }
 .buttonContaiener .lock{
   position: absolute;
-  left: 80%;
+  left: 70%;
   bottom: 50%;
   color: rgb(120, 120, 1);
 }

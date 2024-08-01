@@ -6,6 +6,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import HeadToHead from "./HeadtoHead";
 interface ButtonProp {
   text: string;
+  text2?: string;
   SvgIconComponent?: React.ComponentType<SvgIconProps>;
   isDesabled?: boolean;
   onClick?: (val: number) => void;
@@ -19,6 +20,7 @@ interface ButtonProp {
 }
 const ButtonSizes: React.FC<ButtonProp> = ({
   text,
+  text2,
   isActive,
   SvgIconComponent,
   isDesabled,
@@ -45,13 +47,13 @@ const ButtonSizes: React.FC<ButtonProp> = ({
     }
   };
 
-  const { number, suffix } = splitText(text);
+  const { number, suffix } = text ? splitText(text) : {};
   const classNames = [
     text !== "Clear" && "button",
     isCombo ? "isCombo" : "notCombo",
     isHeadToHead && "headtohead",
     !isActive && !isCombo && "notCombo-color text-white",
-    isActive && "whiteColor override",
+    isActive && "text-white override",
   ]
     .filter(Boolean)
     .join(" ");
@@ -62,7 +64,6 @@ const ButtonSizes: React.FC<ButtonProp> = ({
         <Button
           sx={{
             borderColor: isBankActive ? "transparent" : "green",
-            padding: isCombo ? "8px -300px" : "",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -72,7 +73,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
                 : isBankActive
                 ? "	orange"
                 : "transparent",
-            color: isActive || isChangedForm || isBankActive ? "white" : "gray",
+            color: isActive || isBankActive ? "white" : "gray",
           }}
           disabled={isDesabled}
           variant="outlined"
@@ -89,16 +90,24 @@ const ButtonSizes: React.FC<ButtonProp> = ({
             >
               <p
                 className={`${suffix && !HeadToHead ? "text-xs" : ""}`}
-                style={{ padding: "0px" }}
+                style={{ padding: "0px", color: isActive ? "white" : "" }}
               >
                 {number}
               </p>
-              <p className="" style={{ fontSize: !isHeadToHead ? 8 : "" }}>
+              <p
+                className=""
+                style={{
+                  fontSize: !isHeadToHead ? 8 : "",
+                  color: isActive ? "white" : "",
+                }}
+              >
                 {suffix}
               </p>
             </div>
           ) : (
-            <p style={{ padding: "0px" }}>{text}</p>
+            <p style={{ padding: "0px", color: isActive ? "white" : "" }}>
+              {text}
+            </p>
           )}
         </Button>
       </div>

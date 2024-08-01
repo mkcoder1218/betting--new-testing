@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+
 import "../styles/App.css";
 import Drop from "../components/Drop";
 import Head from "../components/Head";
+
 import { useAppDispatch } from "../features/hooks";
 import { addHeadText } from "../features/slices/HeadSlice";
 import { useAppSelector } from "../features/hooks";
@@ -10,7 +12,7 @@ import moment from "moment";
 function HorseRun() {
   const texts = ["Main", "HEAD TO HEAD", "ALT", "SUM"];
   const dispatch = useAppDispatch();
-  const [ setSelectedText] = useState("");
+  const [selectedText, setSelectedText] = useState("");
   const [activeIndexValue, setActiveindexVal] = useState(0);
   const [activeIndex, setActiveindex] = useState(0);
   const handleClickMenu = (text: string) => {
@@ -55,8 +57,9 @@ function HorseRun() {
       {gameData &&
         gameData.game &&
         gameData.game.map((game, index) => {
-          const data: RootEventData = JSON.parse(game.gameData);
+          const data: RootEventData = game.gameData;
 
+          console.log("gameData:", data.Race.Name);
           return (
             <>
               <Drop
