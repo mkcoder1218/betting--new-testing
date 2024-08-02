@@ -86,7 +86,7 @@ export default function BetSlip() {
     const timer = setInterval(() => {
       for (let ticket of betState.betSlip) {
         if (currentDate > ticket.expiry) {
-          setExpired(true);
+          // setExpired(true);
           break;
         }
       }
@@ -256,7 +256,7 @@ export default function BetSlip() {
           </div>
         )}
 
-        {!betSlipState.loading && betSlipState.error && (
+        {/* {!betSlipState.loading && betSlipState.error && (
           <FormStatus type="error" content={betSlipState.error} />
         )}
         {!betSlipState.loading && betSlipState.message && statusVisible && (
@@ -268,7 +268,7 @@ export default function BetSlip() {
             <p className="ml-3">Expired Bets</p>
             <BsCheck2All className="mr-3" size={24} />
           </div>
-        )}
+        )} */}
 
         {betState.betSlip.length > 0 &&
           betState.betSlip.map((item, index) => {
@@ -280,9 +280,9 @@ export default function BetSlip() {
                   onClick={() => setSelected(index)}
                   style={{
                     backgroundColor: `${
-                      currentDate > betState.betSlip[0].expiry
-                        ? "#fc4242"
-                        : "#969696"
+                      // currentDate > betState.betSlip[0].expiry
+                      //   ? "#fc4242"
+                      "#969696"
                     }`,
                   }}
                   key={index}
@@ -309,7 +309,9 @@ export default function BetSlip() {
                       ) : (
                         ""
                       )}
-                      <p className="text-xs flex items-center">Win</p>
+                      <p className="text-xs flex items-center">
+                        {item.stakeInformation}
+                      </p>
                     </div>
                     <span
                       onClick={() => removeItemFromSlip(index)}
@@ -318,24 +320,33 @@ export default function BetSlip() {
                       X
                     </span>
                   </div>
-                  <p className="ml-8 mr-8 text-xs">
-                    {!item.selected.includes(-2) &&
-                    !item.selected.includes(-4) &&
-                    !item.selected.includes(-6) &&
-                    item.gameType === "KENO"
-                      ? item.selected.join(", ")
-                      : ""}{" "}
-                    {item.selected.includes(-2) && "HEADS"}{" "}
-                    {item.selected.includes(-4) && "EVENS"}{" "}
-                    {item.selected.includes(-6) && "TAILS"}{" "}
-                    <span
-                      className={`${
-                        !item.isCombo ? "bg-green-600" : "transparent"
-                      } p-1 text-white text-xs`}
-                    >
-                      {!item.isCombo ? item.multiplier : "[1-2]"}
-                    </span>
-                  </p>
+                  <div className="flex">
+                    <p className="flex text-sm gap-1 ml-3">
+                      <p>
+                        {item.draw}
+                        {!item.isCombo ? "." : ""}
+                      </p>
+                      {!item.selected.includes(-2) &&
+                      !item.selected.includes(-4) &&
+                      !item.selected.includes(-6) &&
+                      item.gameType === "KENO"
+                        ? item.selected.join(", ")
+                        : ""}{" "}
+                      {item.selected.includes(-2) && "HEADS"}{" "}
+                      {item.selected.includes(-4) && "EVENS"}{" "}
+                      {item.selected.includes(-6) && "TAILS"}
+                      {item.gameType !== "KENO" ? item.selected : ""}
+                      {!item.isCombo ? (
+                        <span
+                          className={`${"bg-green-700 border-2 border-green-400 h-3 mt-1 flex items-center justify-center"} p-1 text-white text-xs`}
+                        >
+                          {!item.isCombo ? item.multiplier : "[1-2]"}
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                    </p>
+                  </div>
                   <p className="ml-8 mr-8 text-xs">
                     {`${new Date(item.expiry).getFullYear()}/${
                       new Date(item.expiry).getMonth() + 1
@@ -343,22 +354,34 @@ export default function BetSlip() {
                     {new Date(item.expiry).toLocaleTimeString("en-US", {
                       hourCycle: "h24",
                     })}{" "}
-                    ID|{gameState.game?.gamenumber}
+                    ID|{item.gameId}
                   </p>
                   {item.isCombo ? (
-                    <div className="flex gap-2 ml-7">
-                      <p className="">[1-2]</p>
-                      <p className="bg-green-600">2.21 (min)</p>
-                      <p className="" style={{ fontSize: 15 }}>
+                    <div className="flex gap-1 items-center -mt-1 ml-7">
+                      <p className="" style={{ fontSize: 13 }}>
+                        [1-2]
+                      </p>
+                      <p
+                        className="bg-green-700 text-sm border-2 border-green-500 h-3 flex items-center justify-center"
+                        style={{ fontSize: 12 }}
+                      >
+                        2.21 (min)
+                      </p>
+                      <p className="" style={{ fontSize: 13 }}>
                         [3-4]
                       </p>
-                      <p className="bg-green-600">1(max)</p>
+                      <p
+                        className="bg-green-700 text-sm border-2 border-green-500 h-3 flex items-center justify-center"
+                        style={{ fontSize: 12 }}
+                      >
+                        1(max)
+                      </p>
                     </div>
                   ) : (
                     ""
                   )}
-                  {currentDate < betState.betSlip[0].expiry && (
-                    <>
+                  {
+                    /*currentDate < betState.betSlip[0].expiry &&*/ <>
                       <div
                         className={`ml-8 ${
                           stakeInput[index] > 1000 ||
@@ -425,127 +448,125 @@ export default function BetSlip() {
                           TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}
                         </p>
                       ) : (
-                        ""
+                        <p className="ml-8 mr-8 text-white text-xs text-right mt-1"></p>
                       )}
                     </>
+                  }
+                  {selected === index && (
+                    /*currentDate < betState.betSlip[index].expiry && */ <PriceButton
+                      index={index}
+                      changeIndividualStake={changeIndividualSlipStakeIncr}
+                    />
                   )}
-                  {selected === index &&
-                    currentDate < betState.betSlip[index].expiry && (
-                      <PriceButton
-                        index={index}
-                        changeIndividualStake={changeIndividualSlipStakeIncr}
-                      />
-                    )}
                 </div>
               </>
             );
           })}
 
-        {betState.betSlip.length > 0 &&
-          currentDate <= betState.betSlip[0].expiry && (
-            <>
-              <div className="btn-container-bet w-full p-1 flex gap-2 justify-stretch items-center">
-                <button
-                  style={{ backgroundColor: "#C9580F" }}
-                  onClick={() => updateStakeAll(10, "inc")}
-                  className="hover:opacity-75 transition-all flex-grow rounded-md flex p-2 text-center text-white"
-                >
-                  <sup className="text-sm self-start">Br.</sup>
-                  <span className="self-center mt-1">10</span>
-                </button>
-                <button
-                  style={{ backgroundColor: "#C93362" }}
-                  onClick={() => updateStakeAll(20, "inc")}
-                  className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
-                >
-                  <sup className="text-sm self-start">Br.</sup>
-                  <span className="self-center mt-1">20</span>
-                </button>
-                <button
-                  style={{ backgroundColor: "#8830AD" }}
-                  onClick={() => updateStakeAll(50, "inc")}
-                  className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
-                >
-                  <sup className="text-sm self-start">Br.</sup>
-                  <span className="self-center mt-1">50</span>
-                </button>
-                <button
-                  style={{ backgroundColor: "#5A95F0" }}
-                  onClick={() => updateStakeAll(100, "inc")}
-                  className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
-                >
-                  <sup className="text-sm self-start">Br.</sup>
-                  <span className="self-center mt-1">100</span>
-                </button>
-                <button
-                  style={{ backgroundColor: "#688A37" }}
-                  onClick={() => updateStakeAll(150, "inc")}
-                  className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
-                >
-                  <sup className="text-sm self-start">Br.</sup>
-                  <span className="self-center mt-1">150</span>
-                </button>
-              </div>
+        {betState.betSlip.length > 0 && (
+          /*currentDate <= betState.betSlip[0].expiry && */ <>
+            <div className="btn-container-bet w-full p-1 flex gap-2 justify-stretch items-center">
+              <button
+                style={{ backgroundColor: "#C9580F" }}
+                onClick={() => updateStakeAll(10, "inc")}
+                className="hover:opacity-75 transition-all flex-grow rounded-md flex p-2 text-center text-white"
+              >
+                <sup className="text-sm self-start">Br.</sup>
+                <span className="self-center mt-1">10</span>
+              </button>
+              <button
+                style={{ backgroundColor: "#C93362" }}
+                onClick={() => updateStakeAll(20, "inc")}
+                className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
+              >
+                <sup className="text-sm self-start">Br.</sup>
+                <span className="self-center mt-1">20</span>
+              </button>
+              <button
+                style={{ backgroundColor: "#8830AD" }}
+                onClick={() => updateStakeAll(50, "inc")}
+                className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
+              >
+                <sup className="text-sm self-start">Br.</sup>
+                <span className="self-center mt-1">50</span>
+              </button>
+              <button
+                style={{ backgroundColor: "#5A95F0" }}
+                onClick={() => updateStakeAll(100, "inc")}
+                className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
+              >
+                <sup className="text-sm self-start">Br.</sup>
+                <span className="self-center mt-1">100</span>
+              </button>
+              <button
+                style={{ backgroundColor: "#688A37" }}
+                onClick={() => updateStakeAll(150, "inc")}
+                className="hover:opacity-75 transition-all flex-grow p-2 rounded-md flex text-center text-white"
+              >
+                <sup className="text-sm self-start">Br.</sup>
+                <span className="self-center mt-1">150</span>
+              </button>
+            </div>
 
-              {betState.betSlip && betState.betSlip.length > 1 && (
-                <>
-                  <p className="text-left w-3/4 mr-4">STAKE</p>
-                  <div className="inc-dec w-3/4 mr-4 mt-1 mb-2 flex bg-white items-center justify-between flex-shrink-0">
-                    <FaMinus
-                      style={{ backgroundColor: "#C7C7C7" }}
-                      onClick={() => handleTotalStake(-10, "inc")}
-                      className="text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl"
+            {betState.betSlip && betState.betSlip.length > 1 && (
+              <>
+                <p className="text-left w-3/4 mr-4">STAKE</p>
+                <div className="inc-dec w-3/4 mr-4 mt-1 mb-2 flex bg-white items-center justify-between flex-shrink-0">
+                  <FaMinus
+                    style={{ backgroundColor: "#C7C7C7" }}
+                    onClick={() => handleTotalStake(-10, "inc")}
+                    className="text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl"
+                  />
+                  <div className="flex items-center">
+                    <input
+                      className="num input-picker text-gray-500 text-end border-none focus:border-none active:border-none"
+                      type="number"
+                      value={totalStake}
+                      onChange={(e) =>
+                        parseInt(e.target.value) > 9 &&
+                        handleTotalStake(parseInt(e.target.value), "add")
+                      }
                     />
-                    <div className="flex items-center">
-                      <input
-                        className="num input-picker text-gray-500 text-end border-none focus:border-none active:border-none"
-                        type="number"
-                        value={totalStake}
-                        onChange={(e) =>
-                          parseInt(e.target.value) > 9 &&
-                          handleTotalStake(parseInt(e.target.value), "add")
-                        }
-                      />
-                      <div className="mr-2">.00</div>
-                      <FaPlus
-                        style={{ backgroundColor: "#C7C7C7" }}
-                        onClick={() => handleTotalStake(10, "inc")}
-                        className="text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl"
-                      />
-                    </div>
+                    <div className="mr-2">.00</div>
+                    <FaPlus
+                      style={{ backgroundColor: "#C7C7C7" }}
+                      onClick={() => handleTotalStake(10, "inc")}
+                      className="text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl"
+                    />
                   </div>
-                </>
-              )}
+                </div>
+              </>
+            )}
 
-              <div className="amounts w-full p-1 text-black">
-                <div className="text-lg font-medium text-gray-500 mt-1 flex justify-between items-center">
-                  <p>TOTAL STAKE</p>
-                  <p>{betState.totalStake}.00 BR</p>
-                </div>
-                <div className="text-lg font-medium text-gray-500 mt-1 flex justify-between items-center">
-                  <p>TOTAL "TO WIN"</p>
-                  <p>{betState.totalToWin}.00 BR</p>
-                </div>
+            <div className="amounts w-full p-1 text-black">
+              <div className="text-lg font-medium text-gray-500 mt-1 flex justify-between items-center">
+                <p>TOTAL STAKE</p>
+                <p>{betState.totalStake}.00 BR</p>
               </div>
+              <div className="text-lg font-medium text-gray-500 mt-1 flex justify-between items-center">
+                <p>TOTAL "TO WIN"</p>
+                <p>{betState.totalToWin}.00 BR</p>
+              </div>
+            </div>
 
-              {errorBet !== "" && (
-                <div
-                  style={{ width: "98%", margin: "auto" }}
-                  className="p-1 text-center text-sm bg-red-700 text-white"
-                >
-                  {errorBet}
-                </div>
-              )}
+            {errorBet !== "" && (
+              <div
+                style={{ width: "98%", margin: "auto" }}
+                className="p-1 text-center text-sm bg-red-700 text-white"
+              >
+                {errorBet}
+              </div>
+            )}
 
-              {betSlipState.loading && <ProgressCircular />}
-            </>
-          )}
+            {betSlipState.loading && <ProgressCircular />}
+          </>
+        )}
 
         <div className="confirm-cancel mb-4 w-full gap-1 text-white mt-2 flex justify-between items-center">
           <button
             disabled={
-              betState.betSlip.length < 1 ||
-              currentDate > betState.betSlip[0].expiry
+              betState.betSlip.length < 1
+              /*currentDate > betState.betSlip[0].expiry*/
             }
             onClick={clearSlip}
             className=" disabled:bg-red-200 p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500"
@@ -554,14 +575,14 @@ export default function BetSlip() {
           </button>
           <button
             disabled={
-              betState.betSlip.length < 1 ||
-              currentDate > betState.betSlip[0].expiry
+              betState.betSlip.length < 1
+              /* currentDate > betState.betSlip[0].expiry*/
             }
             onClick={handleCreateTicket}
             className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${
-              currentDate < betState.betSlip[0]?.expiry
+              /*currentDate < betState.betSlip[0]?.expiry
                 ? "bg-green-500"
-                : "bg-green-200"
+                :*/ "bg-green-200"
             }`}
           >
             PLACE BET

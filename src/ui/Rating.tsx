@@ -6,9 +6,12 @@ import StarIcon from "@mui/icons-material/Star";
 
 interface Rating {
   isHeadToHead?: boolean;
+  rating?: number;
 }
 export default function BasicRating(Props: Rating) {
-  const [value, setValue] = React.useState<number | null>(2);
+  const [value, setValue] = React.useState<number | null>(
+    Props.rating ? Props.rating : 2
+  );
 
   return (
     <Box

@@ -59,7 +59,7 @@ function HorseRun() {
         gameData.game.map((game, index) => {
           const data: RootEventData = game.gameData;
 
-          console.log("gameData:", data.Race.Name);
+
           return (
             <>
               <Drop

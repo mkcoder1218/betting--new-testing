@@ -30,15 +30,26 @@ interface TableProp {
   handleBankColorChange: (index: number) => void;
   HeadTexttoTable?: string;
   data: RootEventData;
+  selectedCombos?: (val: number) => void;
 }
 
+interface DispatchParams {
+  selected: any;
+  multiplier: number;
+  toWin: number;
+  expiry?: number;
+  stake: number;
+  gameId: number;
+  draw?: number;
+  stakeInfo?: string;
+}
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
   isClear,
   isActivatedtablebutton,
   isActiveBank,
   handleColorChange,
-
+  selectedCombos,
   handleBankColorChange,
   HeadTexttoTable,
   data,
@@ -63,6 +74,7 @@ const BasicTable: React.FC<TableProp> = ({
   );
   const handleClick = (index: number) => {
     setClickedindex(index);
+    selectedCombos(index);
     console.log("Headtext", HeadText);
 
     setClickCounter((prev) => {
@@ -103,24 +115,19 @@ const BasicTable: React.FC<TableProp> = ({
       setchangedForm([]);
     }
   }, [isClear]);
-  const handleDispatch = (
-    selected: any,
-    multiplier: number,
-    toWin: number,
-    expiry: number,
-    stake: number,
-    gameId: number
-  ) => {
+  const handleDispatch = (params: DispatchParams) => {
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
         addToBetSlip({
-          selected: selected,
+          selected: params.selected,
           expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
-          multiplier: multiplier,
-          toWin: toWin,
-          stake: toWin,
-          gameId: gameId,
+          multiplier: params.multiplier,
+          toWin: params.toWin,
+          stake: params.toWin,
+          gameId: params.gameId,
           gameType: gameType,
+          draw: params.draw,
+          stakeInformation: params.stakeInfo,
         })
       );
     }
@@ -145,7 +152,7 @@ const BasicTable: React.FC<TableProp> = ({
   };
 
   return (
-    <TableContainer className="tableContainer p-5">
+    <TableContainer className="tableContainer">
       <Table aria-label="simple table" className="table">
         <TableHead className="TableHead">
           <TableRow>
@@ -176,6 +183,7 @@ const BasicTable: React.FC<TableProp> = ({
             data.eventDetail.Event &&
             data.eventDetail.Event.Race &&
             data.eventDetail.Event.Race.Entries.map((row, index: number) => {
+              const rating = (row.StarRating / 100) * 5;
               return (
                 <TableRow key={row.Name} className="Tablerow">
                   <TableCell scope="row" className="nam">
@@ -183,7 +191,7 @@ const BasicTable: React.FC<TableProp> = ({
                       className={`flex items-center ${
                         row.Draw < 10 ? "gap-3" : "gap-1"
                       }`}
-                      style={{ width: "200%" }}
+                      style={{ width: "190%" }}
                     >
                       <p className={`${row.Draw > 10 ? "-ml-1" : ""}`}>
                         {row.Draw}
@@ -200,11 +208,11 @@ const BasicTable: React.FC<TableProp> = ({
                   </TableCell>
                   <TableCell align="right" className="tableContent f">
                     {" "}
-                    <F />
+                    {row.Favorite ? <F favoritenumber={row.Favorite} /> : ""}
                   </TableCell>
                   <TableCell align="right" className="tableContent rating">
                     {" "}
-                    <BasicRating />
+                    <BasicRating rating={rating} />
                   </TableCell>
                   <TableCell
                     align="right"
@@ -223,14 +231,15 @@ const BasicTable: React.FC<TableProp> = ({
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4);
-                        handleDispatch(
-                          row.WinOdds.toString(),
-                          1,
-                          10,
-                          12,
-                          12,
-                          6000
-                        );
+                        handleDispatch({
+                          selected: row.Name,
+                          multiplier: row.WinOdds,
+                          toWin: 10,
+                          stake: 12,
+                          gameId: row.ID,
+                          draw: row.Draw,
+                          stakeInfo: "win",
+                        });
                       }}
                       numberofClickedbuttons={clickCounter}
                       isCombo={false}
@@ -248,14 +257,15 @@ const BasicTable: React.FC<TableProp> = ({
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4 + 1);
-                        handleDispatch(
-                          row.PlaceOdds.toString(),
-                          1,
-                          10,
-                          12,
-                          12,
-                          6000
-                        );
+                        handleDispatch({
+                          selected: row.Name,
+                          multiplier: row.PlaceOdds,
+                          toWin: 10,
+                          stake: 12,
+                          gameId: row.ID,
+                          draw: row.Draw,
+                          stakeInfo: "Place",
+                        });
                       }}
                       numberofClickedbuttons={clickCounter}
                       isCombo={false}
@@ -275,7 +285,6 @@ const BasicTable: React.FC<TableProp> = ({
                         onClick={() => {
                           handleClick(index);
                           handleColorChange(index * 4 + 2);
-                          handleDispatch("12.4", 1, 10, 12, 12, 6000);
                         }}
                         numberofClickedbuttons={clickCounter}
                         isCombo={HeadText === "ALT" ? false : true}

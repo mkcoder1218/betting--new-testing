@@ -14,6 +14,7 @@ export interface Ticket {
   entry?: Entry;
   selectedForm?: number;
   oddType?: string;
+  draw?: number
 }
 
 export interface PickerType {

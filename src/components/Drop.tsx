@@ -29,6 +29,18 @@ interface DropProp {
   data: RootEventData;
   isActiveGame: boolean;
 }
+interface DispatchParams {
+  selected: any;
+  min_multiplier: number;
+  max_multiplier: number;
+  toWin: number;
+  expiry?: number;
+  stake: number;
+  gameId: number;
+  draw?: number;
+  stakeInfo?: string;
+  isCombo?: boolean;
+}
 const Drop: React.FC<DropProp> = ({
   id,
   time,
@@ -48,7 +60,7 @@ const Drop: React.FC<DropProp> = ({
   const [visible, setVisible] = useState(false);
   const gameType = useAppSelector((state) => state.gameType.gameType);
   const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
-
+  const [selectCombo, setSelectCombo] = useState([]);
   const dispatch = useAppDispatch();
   const expiryOfGame = gameCreatedDate?.setMinutes(
     gameCreatedDate.getMinutes() + 5
@@ -75,8 +87,11 @@ const Drop: React.FC<DropProp> = ({
     setVisible(false);
     setisActivedTableButton(new Set());
     setBankclick(null);
+    setSelectCombo([]);
   };
-
+  const handleSelectCombo = (index: number) => {
+    setSelectCombo((prev) => [...prev, index]);
+  };
   const handleColorChange = (index: number) => {
     setisActivedTableButton((prevActiveButtons) => {
       const updatedButtons = new Set(prevActiveButtons);
@@ -110,27 +125,21 @@ const Drop: React.FC<DropProp> = ({
   const HandleBankClick = (index: number) => {
     setBankclick(index);
   };
-  const CombinationDispatch = (
-    selected: any,
-    multiplier: number,
-    toWin: number,
-    expiry: number,
-    stake: number,
-    gameId: number,
-    isCombo: boolean,
-    gameType: string | undefined
-  ) => {
+  const CombinationDispatch = (params: DispatchParams) => {
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
         addToBetSlip({
-          selected: selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
-          multiplier: multiplier,
-          toWin: toWin,
-          stake: toWin,
-          gameId: gameId,
-          isCombo: isCombo,
+          selected: params.selected,
+          expiry: expiryOfGame ? expiryOfGame : {},
+          min_multiplier: params.min_multiplier,
+          max_multiplier: params.max_multiplier,
+          toWin: params.toWin,
+          stake: params.toWin,
+          gameId: params.gameId,
           gameType: gameType,
+          draw: params.draw,
+          stakeInformation: params.stakeInfo,
+          isCombo: params.isCombo,
         })
       );
     }
@@ -186,6 +195,7 @@ const Drop: React.FC<DropProp> = ({
           <div className="" style={{ width: "75%" }}>
             {activeIndexValues !== 1 ? (
               <BasicTable
+                selectedCombos={handleSelectCombo}
                 clickCount={handleClickCount}
                 isClear={ClearTheClick}
                 isActivatedtablebutton={isActivedtableButton}
@@ -210,7 +220,7 @@ const Drop: React.FC<DropProp> = ({
             }`}
           >
             {clickCount === 1 || isActivedtableButton.size === 1 ? (
-              <div className="flex-col Need -ml-5 text-lg mt-20 text-black">
+              <div className="flex-col Need ml-1 text-md mt-16 text-black">
                 <Message text="Need a minimum of two selections to create a combo" />
                 <ButtonSizes
                   text="Clear"
@@ -223,25 +233,31 @@ const Drop: React.FC<DropProp> = ({
                 />
               </div>
             ) : clickCount > 1 && activeIndexValues === 0 ? (
-              <div className="Need waysbut w-full flex-col h-full items-center">
-                <div className="h-3/4 flex-col items-end justify-end">
-                  <div className="waysShow Need gap-2 mt-10 h-2/3">
+              <div className="Need waysbut w-full flex-col ml-3 h-full items-center">
+                <div className="h-1/3 flex-col items-end justify-end">
+                  <div className="waysShow Need gap-2 mt-6 h-2/3">
                     <Ways
                       text="QUINELLA"
                       text2="2 any order"
                       text3={`${combinations(clickCount, 2, 1)} Combinations`}
                       onClick={() => {
                         combineSlices();
-                        CombinationDispatch(
-                          "1st Two any order",
-                          1,
-                          10,
-                          10,
-                          10,
-                          4000,
-                          true,
-                          gameType
-                        );
+                        CombinationDispatch({
+                          selected: selectCombo.map((number, index) => {
+                            return `${index == 0 ? "[" : ""}${
+                              index === 0 ? "" : "-"
+                            }${number + 1}${
+                              index === selectCombo.length - 1 ? "]" : ""
+                            }`;
+                          }),
+                          min_multiplier: 12,
+                          max_multiplier: 1,
+                          toWin: 100,
+                          stake: 32,
+                          gameId: data.ID.toString(),
+                          stakeInfo: "2 any order",
+                          isCombo: true,
+                        });
                       }}
                       isvisible={true}
                     />
@@ -253,16 +269,15 @@ const Drop: React.FC<DropProp> = ({
                       isvisible={visible}
                       onClick={() => {
                         combineSlices();
-                        CombinationDispatch(
-                          "1st Two any order",
-                          1,
-                          10,
-                          10,
-                          10,
-                          4000,
-                          true,
-                          gameType
-                        );
+                        // CombinationDispatch({
+                        //   selected: row.Name,
+                        //   multiplier: row.WinOdds,
+                        //   toWin: 10,
+                        //   stake: 12,
+                        //   gameId: row.ID,
+                        //   draw: row.Draw,
+                        //   stakeInfo: "win",
+                        // });
                       }}
                     />
 
@@ -273,16 +288,16 @@ const Drop: React.FC<DropProp> = ({
                       isvisible={true}
                       onClick={() => {
                         combineSlices();
-                        CombinationDispatch(
-                          "1st Two any order",
-                          1,
-                          10,
-                          10,
-                          10,
-                          4000,
-                          true,
-                          gameType
-                        );
+                        // CombinationDispatch(
+                        //   "1st Two any order",
+                        //   1,
+                        //   10,
+                        //   10,
+                        //   10,
+                        //   4000,
+                        //   true,
+                        //   gameType
+                        // );
                       }}
                     />
 
@@ -293,16 +308,16 @@ const Drop: React.FC<DropProp> = ({
                       isvisible={visible}
                       onClick={() => {
                         combineSlices();
-                        CombinationDispatch(
-                          "1st Two any order",
-                          1,
-                          10,
-                          10,
-                          10,
-                          4000,
-                          true,
-                          gameType
-                        );
+                        // CombinationDispatch(
+                        //   "1st Two any order",
+                        //   1,
+                        //   10,
+                        //   10,
+                        //   10,
+                        //   4000,
+                        //   true,
+                        //   gameType
+                        // );
                       }}
                     />
 
@@ -313,16 +328,16 @@ const Drop: React.FC<DropProp> = ({
                       isvisible={true}
                       onClick={() => {
                         combineSlices();
-                        CombinationDispatch(
-                          "1st Two any order",
-                          1,
-                          10,
-                          10,
-                          10,
-                          4000,
-                          true,
-                          gameType
-                        );
+                        // CombinationDispatch(
+                        //   "1st Two any order",
+                        //   1,
+                        //   10,
+                        //   10,
+                        //   10,
+                        //   4000,
+                        //   true,
+                        //   gameType
+                        // );
                       }}
                     />
                   </div>
@@ -340,7 +355,7 @@ const Drop: React.FC<DropProp> = ({
             ) : activeIndexValues === 0 ? (
               <>
                 {removeText ? (
-                  <div className="flex-col Need text-lg text-black mt-20 w-full items-start">
+                  <div className="flex -ml-10 flex-col Need text-md text-black mt-16 w-full items-start">
                     <Message text="Select to create combination bets" />
                     <ButtonSizes
                       text="Clear"
