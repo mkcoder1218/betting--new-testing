@@ -204,7 +204,7 @@ const Drop: React.FC<DropProp> = ({
                 isActiveBank={BankClick}
                 HeadTexttoTable={Headtext}
                 data={data}
-                gameData={gameData}
+                gameDatalist={gameData}
                 sortedByOdd={sortedArray}
               />
             ) : activeIndexValues === 1 ? (

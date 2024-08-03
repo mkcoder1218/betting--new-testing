@@ -19,7 +19,7 @@ import { useAppDispatch, useAppSelector } from "../features/hooks";
 import expirySlice from "../features/slices/ticketExpiry";
 
 import Images from "./Images";
-import { RootEventData } from "../features/slices/RacingGameSlice";
+import { RootEventData, GameData } from "../features/slices/RacingGameSlice";
 
 interface TableProp {
   clickCount: (val: number) => void;
@@ -31,6 +31,7 @@ interface TableProp {
   HeadTexttoTable?: string;
   data: RootEventData;
   selectedCombos?: (val: number) => void;
+  gameDatalist?: GameData;
 }
 
 interface DispatchParams {
@@ -42,6 +43,8 @@ interface DispatchParams {
   gameId: number;
   draw?: number;
   stakeInfo?: string;
+  oddType?: string;
+  nameofplayer?: string;
 }
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
@@ -53,6 +56,7 @@ const BasicTable: React.FC<TableProp> = ({
   handleBankColorChange,
   HeadTexttoTable,
   data,
+  gameDatalist,
 }) => {
   const [clickCounter, setClickCounter] = useState<number>(0);
   const [clickedindex, setClickedindex] = useState<number>(0);
@@ -73,6 +77,7 @@ const BasicTable: React.FC<TableProp> = ({
     gameCreatedDate.getMinutes() + 5
   );
   const handleClick = (index: number) => {
+
     setClickedindex(index);
     selectedCombos(index);
     console.log("Headtext", HeadText);
@@ -128,6 +133,8 @@ const BasicTable: React.FC<TableProp> = ({
           gameType: gameType,
           draw: params.draw,
           stakeInformation: params.stakeInfo,
+          nameofPlayer: params.nameofplayer,
+          oddType: params.oddType,
         })
       );
     }
@@ -184,6 +191,7 @@ const BasicTable: React.FC<TableProp> = ({
             data.eventDetail.Event.Race &&
             data.eventDetail.Event.Race.Entries.map((row, index: number) => {
               const rating = (row.StarRating / 100) * 5;
+
               return (
                 <TableRow key={row.Name} className="Tablerow">
                   <TableCell scope="row" className="nam">
@@ -232,11 +240,12 @@ const BasicTable: React.FC<TableProp> = ({
                         handleClick(index);
                         handleColorChange(index * 4);
                         handleDispatch({
-                          selected: row.Name,
+                          nameofplayer: row.Name,
+                          selected: row.Draw,
                           multiplier: row.WinOdds,
                           toWin: 10,
                           stake: 12,
-                          gameId: row.ID,
+                          gameId: gameDatalist?.id,
                           draw: row.Draw,
                           stakeInfo: "win",
                         });

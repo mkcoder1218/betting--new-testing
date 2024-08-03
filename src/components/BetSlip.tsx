@@ -161,18 +161,20 @@ export default function BetSlip() {
     refreshBetSlipNumber();
 
     let newTicketToSend = [];
-
+    const otherGameData: any = [];
     for (let ticket of betState.betSlip) {
+      otherGameData.push(ticket.selected);
       let ticketItem = {
         toWin: ticket.toWin,
         stake: ticket.stake,
         maxWin: ticket.multiplier * ticket.stake,
-        nums: ticket.selected,
+        nums: gameType === "KENO" ? ticket.selected : otherGameData,
         gameId: ticket.gameId + "",
         oddId: oddState.odd?.id,
         isCombo: ticket.isCombo,
         oddType: ticket.oddType ? ticket.oddType : "",
-        entry: ticket.entry ? ticket.entry : "",
+        entry: otherGameData ? otherGameData : "",
+        nameOfplayer: ticket.nameofPlayer,
       };
 
       newTicketToSend.push(ticketItem);
@@ -326,16 +328,17 @@ export default function BetSlip() {
                         {item.draw}
                         {!item.isCombo ? "." : ""}
                       </p>
-                      {!item.selected.includes(-2) &&
-                      !item.selected.includes(-4) &&
-                      !item.selected.includes(-6) &&
-                      item.gameType === "KENO"
-                        ? item.selected.join(", ")
-                        : ""}{" "}
-                      {item.selected.includes(-2) && "HEADS"}{" "}
-                      {item.selected.includes(-4) && "EVENS"}{" "}
-                      {item.selected.includes(-6) && "TAILS"}
-                      {item.gameType !== "KENO" ? item.selected : ""}
+                      {gameType === "KENO"
+                        ? (!item.selected.includes(-2) &&
+                            !item.selected.includes(-4) &&
+                            !item.selected.includes(-6) &&
+                            item.selected.join(", ") &&
+                            item.selected.includes(-2) &&
+                            "HEADS",
+                          item.selected.includes(-4) && "EVENS",
+                          item.selected.includes(-6) && "TAILS")
+                        : item.nameofPlayer}
+
                       {!item.isCombo ? (
                         <span
                           className={`${"bg-green-700 border-2 border-green-400 h-3 mt-1 flex items-center justify-center"} p-1 text-white text-xs`}

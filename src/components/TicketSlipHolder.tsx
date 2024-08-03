@@ -51,9 +51,9 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
       }
     }
 
-    if (currentDate > ticketExpiry) {
-      return;
-    }
+    // if (currentDate > ticketExpiry) {
+    //   return;
+    // }
 
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(

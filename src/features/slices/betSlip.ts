@@ -18,7 +18,7 @@ interface BetSlipResponse<T> {
 export interface Ticket {
   id: string;
   ticketno: string;
-  nums: number[];
+  nums: string;
   redeem: null | any;
   stake: string;
   ticketExpiry: string;
@@ -145,7 +145,9 @@ export const createBetSlipAndTicket =
           const printResponse = await axios.post(
             "http://localhost:5000/printTicket",
             betSlipResponse.data
+
           );
+
         } catch (err) {
           console.log("print failed");
         }
