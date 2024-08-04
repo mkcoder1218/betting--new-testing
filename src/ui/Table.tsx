@@ -267,13 +267,14 @@ const BasicTable: React.FC<TableProp> = ({
                         handleClick(index);
                         handleColorChange(index * 4 + 1);
                         handleDispatch({
-                          selected: row.Name,
+                          nameofplayer: row.Name,
+                          selected: row.Draw,
                           multiplier: row.PlaceOdds,
                           toWin: 10,
                           stake: 12,
-                          gameId: row.ID,
+                          gameId: gameDatalist?.id,
                           draw: row.Draw,
-                          stakeInfo: "Place",
+                          stakeInfo: "win",
                         });
                       }}
                       numberofClickedbuttons={clickCounter}
