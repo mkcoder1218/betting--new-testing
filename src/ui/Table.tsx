@@ -51,6 +51,7 @@ const BasicTable: React.FC<TableProp> = ({
   gameData,
   sortedByOdd,
 }) => {
+  const gametype = useAppSelector((state) => state.gameType);
   const [clickCounter, setClickCounter] = useState<number>(0);
   const [clickedindex, setClickedindex] = useState<number>(0);
   const [Addst, setAddst] = useState<number[]>([]);
@@ -125,7 +126,6 @@ const BasicTable: React.FC<TableProp> = ({
     stake: number,
     gameId: string,
     entry: Entry,
-    gameType: string,
     oddtype: string
   ) => {
     console.log(
@@ -185,8 +185,25 @@ const BasicTable: React.FC<TableProp> = ({
   };
 
   useEffect(() => {
-    console.log("BETSLIP_UPDATE", betSlip);
-  }, [betSlip]);
+    console.log("GameType", gameType);
+  }, [gameType]);
+
+  const silkGenerator = (row: Entry, gameType: string, index: number) => {
+    switch (gameType) {
+      case "HarnessRacing":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "PreRecRealDogs":
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
+      case "horseRun":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      default:
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+    }
+  };
 
   return (
     <TableContainer className="tableContainer">
@@ -226,13 +243,7 @@ const BasicTable: React.FC<TableProp> = ({
                 <TableRow key={row.Name} className="Tablerow">
                   <TableCell scope="row" className="name ">
                     <div className="flex items-center w-full">
-                      {gameType === "GREYHOUND RACING" ? (
-                        <Images
-                          src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
-                        />
-                      ) : (
-                        ""
-                      )}
+                      <Images src={silkGenerator(row, gameType + "", index)} />
                     </div>
                   </TableCell>
                   <TableCell className="name" align="left">

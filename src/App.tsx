@@ -65,6 +65,8 @@ function App() {
     if (WhichGameSelected === "KENO") {
       dispatch(addGameType(WhichGameSelected));
     } else {
+      if (WhichGameSelected.length > 0)
+        dispatch(addGameType(WhichGameSelected));
       dispatch(
         getLastRacingGames(
           "9c6d610d-33e9-4847-80ab-5e179833591e",
@@ -194,6 +196,7 @@ function App() {
   }, []);
 
   const handleIconSelect = (val: string) => {
+    console.log("whichgameselected", WhichGameSelected);
     setWhichgameSelected(val);
   };
 
@@ -282,11 +285,11 @@ function App() {
               </div>
             </>
           ) : WhichGameSelected === "PreRecRealDogs" ? (
-            <DogWithVideo />
+            <HorseRun />
           ) : WhichGameSelected === "SingleSeaterMotorRacing" ? (
             <Bike />
           ) : WhichGameSelected === "HARNESS RACING" ? (
-            <Gari />
+            <HorseRun />
           ) : WhichGameSelected === "HarnessRacing" ? (
             <HorseRun />
           ) : WhichGameSelected === "STEEPLE CHASE RACING" ? (
