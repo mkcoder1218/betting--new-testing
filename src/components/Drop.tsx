@@ -41,6 +41,7 @@ interface DispatchParams {
   draw?: number;
   stakeInfo?: string;
   isCombo?: boolean;
+  isPastGame?: boolean;
 }
 const Drop: React.FC<DropProp> = ({
   id,
@@ -51,6 +52,7 @@ const Drop: React.FC<DropProp> = ({
   gameData,
   data,
   isActiveGame = false,
+  isPastGame = false,
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -191,7 +193,7 @@ const Drop: React.FC<DropProp> = ({
       <div
         className="container"
         style={{
-          backgroundColor: isLive
+          backgroundColor: isPastGame
             ? "#a81005"
             : isActive
             ? "#37b34a"

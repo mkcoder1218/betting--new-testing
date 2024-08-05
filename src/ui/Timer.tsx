@@ -29,7 +29,7 @@ const Timer: React.FC<Time> = ({ isLive, _time, isgameActive }) => {
       {isgetLive ? (
         <Live />
       ) : (
-        <div className="Timer">{moment.utc(time * 1000).format("mm:ss")}</div>
+        <div className="Timer">{moment(time * 1000).format("mm:ss")}</div>
       )}
     </>
   );

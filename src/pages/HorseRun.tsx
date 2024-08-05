@@ -16,7 +16,9 @@ function HorseRun() {
   const [activeIndexValue, setActiveindexVal] = useState(0);
   const [activeIndex, setActiveindex] = useState(0);
   const [ActiveGame, setIsActivegame] = useState(false);
-  const [_interval, _setInterval] = useState(0);
+  const [_D_interval, _D_setInterval] = useState(0);
+  const [pastIndex, setpastIndex] = useState<number | null>(null);
+  const [liveIndex, setLiveIndex] = useState(false);
   const handleClickMenu = (text: string) => {
     setSelectedText(text);
   };
@@ -48,20 +50,22 @@ function HorseRun() {
         return a.millisecond < b.millisecond;
       });
       setActiveindex(sortedOne[0].index);
-      setInterval(moment(sortedOne[0].millisecond));
+
+      _D_setInterval(sortedOne[0].millisecond);
+      setpastIndex(sortedOne[0].index - 1);
     }
-  }, [gameData, _interval]);
+  }, [gameData, _D_interval]);
 
   useEffect(() => {
     const __interval = () => {
-      _setInterval(0);
-      console.log("intervalCalled:", _interval);
+      _D_setInterval(0);
+      console.log("intervalCalled:", _D_interval * 1000);
     };
-    if (_interval < 0) {
-      const intervalId = setInterval(__interval, _interval + 200);
-      return () => clearInterval(intervalId);
+    let timer: NodeJS.Timeout | null = null;
+    if (_D_interval !== 0) {
+      setInterval(__interval, _D_interval * 1000);
     }
-  }, [_interval]);
+  }, [_D_interval]);
   return (
     <div className="App">
       <Head
@@ -84,6 +88,7 @@ function HorseRun() {
                 gameData={game}
                 data={data}
                 isActiveGame={index === activeIndex}
+                isPastGame={index === pastIndex}
               />
             </>
           );
