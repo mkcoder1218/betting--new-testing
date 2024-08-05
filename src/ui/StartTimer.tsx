@@ -7,15 +7,19 @@ interface TimerTextProp {
   text: string;
   onLive: (val: boolean) => void;
   isActive: boolean;
+  isgameActive: boolean;
 }
 const StartTimer: React.FC<TimerTextProp> = ({
   text,
   onLive,
   isActive = false,
+  isgameActive,
 }) => {
   return (
     <div className="StartTime">
-      {isActive && <Timer isLive={onLive} _time={text} />}
+      {isgameActive && (
+        <Timer isLive={onLive} _time={text} isgameActive={isgameActive} />
+      )}
       <p style={{ color: isActive ? "white" : "" }}>
         {moment(text).format("hh:mm")}
       </p>

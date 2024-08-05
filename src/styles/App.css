@@ -40,7 +40,7 @@ font-family: Roboto !important;
   text-transform: uppercase;
 }
 .DropContainer p{
-  font-size: 20px;
+  font-size: 17px;
   color: rgb(121, 121, 121);
 font-weight: 100 !important;
 }
@@ -50,7 +50,7 @@ font-weight: 100 !important;
   align-items: center;
   font-size: 16px;
   border: rgba(215, 213, 213, 0.308) solid 1px;
-max-height: 7vh;
+max-height: 6vh;
 margin-top: 10px;
 max-width: 120%;
 width: 100%;
@@ -116,22 +116,11 @@ bottom: 65%;
 width: 100%;
 height: 30%;
 }
-.table-container {
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  margin: 20px 0;
-  padding: 0; 
 
-}
 .css-jhd7ab-MuiTable-root{
   width: 0%;
 }
-.table{
-  border-collapse: collapse;
-  border-spacing:0;
-width: 0% !important;
 
-}
 .nameText{
   font-size: 18px !important;
 }
@@ -141,96 +130,26 @@ width: 0% !important;
 .svgI:hover{
   fill: #02ad1c;
 }
-.notCombo{
-  
- color: rgba(5, 8, 5, 0.808) !important;
- border-radius: 10% !important;
- font-size: 19px !important;
- border-color: rgba(6, 231, 6, 0.637) !important;
-   font-family: 'Roboto Condensed' !important;
-text-align: center !important;
-height: 5px !important;
-max-width: 40px;
-min-height: 30px !important;
-}
+
 .override{
   background-color: #02ad1c !important;
 }
-.notCombo-color{
-background-color: rgba(255, 255, 0, 0.574) !important;
-}
+
 .whiteColor{
   color: white !important;
 }
-.isCombo{
-min-width: 40px !important;
-border-radius: 10% !important;
-min-height: 30px !important;
-font-size: 17px !important;
-height: 3px !important;
 
-}
 .css-177gid-MuiTableCell-root{
   text-align: center;
 }
-.TableHead th {
-  border: none; 
-  font-size: 12px !important; 
-  line-height: 1.2; 
-  height: 50px;
-   margin: 0 0 0 0 !important;
-   padding: 4px 1px !important;
-color: rgb(87, 87, 87) !important;
-text-transform: uppercase !important;
-   display: table-cell;
 
 
-}
-.TableHead th:nth-child(7){
-   border-left: #02ad1c25 0.5px solid !important;
-   padding-left: 10px !important;
-
-}
-.Tablerow{
-  width: 10px;
-}
-.tableBody svg{
-width: 15px;
- color: rgb(0, 202, 37);
- gap: 1px;
-}
 .headCon svg{
 width: 10px;
  color: rgb(0, 202, 37);
 
 }
-.tableBody{
-      display: table-row-group;
-      vertical-align: middle;
-    
-}
-.tableBody td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7) {
-  padding: 0.3px 0px; /* Minimal padding for body cells */
-  border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
-  line-height: 1;
- margin: 0 0 0 0 !important;
-font-size: 15px !important;
-  padding-top: 10px !important;
-}
-.tableBody td:nth-child(6) {
-  padding: 1px 5px; /* Minimal padding for body cells */
-  border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
-  line-height: 1;
- margin: 0 0 0 0 !important;
-  padding-top: 10px !important;
- 
-}
 
-.tableBody td:nth-child(7){
-   border-left: #02ad1c25 0.5px solid !important;
-
-
-}
 .buttonContaiener{
   padding-left: 5px !important;
 }
@@ -247,25 +166,18 @@ font-size: 15px !important;
 padding: 0 !important;
 }
 
-.tableContent{
-  display: flex;
-  align-items: center;
- 
-  
-}
+
 
 .container2{
   display: flex;
 
 }
-.buttonsTable{
-  font-size: 12px !important;
-}
+
 .miniContainer{
   margin-top: 3%;
 }
 .miniContainer .button{
-  margin-left: -20% !important;
+  margin-left: -4% !important;
   border: none;
   background-color: #fb827f;
   color: white;
@@ -321,7 +233,7 @@ transition:all 0.5s;
 
 }
 .waysbut button{
-  margin-top:-12rem !important;
+
   margin-left: -5px !important;
 }
 .Need button:hover::after{
@@ -366,7 +278,6 @@ height: 100%;
 }
 .buttonContaiener{
   position: relative;
-
 }
 .buttonContaiener .lock{
   position: absolute;
@@ -396,6 +307,7 @@ color: rgba(255, 255, 255, 0.9);
   display: flex;
 
 }
+
 .headtohead{
 
   padding-left: 5rem !important;
@@ -428,13 +340,12 @@ color: rgba(255, 255, 255, 0.9);
 width: fit-content;
 width: 38%;
 display: flex;
-position: relative;
+position: relative !important;
 
 }
 .miniContainer .buttonContaiener{
 position: absolute;
-top: 100%;
-left: 4%;
+margin-top: 2%;
 }
 .borderLine{
   content: '';
@@ -443,13 +354,7 @@ left: 4%;
   height: 2px;
   margin-left: 10px;
 }
-.tableBody td:nth-child(1){
-  padding-right: 3rem !important ;
-  font-size: 17px !important;
-  color: gray !important;
-text-transform: capitalize !important;
-padding: 5px !important;
-}
+
 .headtohead{
   border-radius: 0 !important;
   width: 8rem !important;

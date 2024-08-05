@@ -9,7 +9,7 @@ function Images(Prop: Image) {
     <img
       className={`${!Prop.isHeadtoHead ? "pr-14" : "h-8"}`}
       src={Prop.src}
-      style={{ width: !Prop.isHeadtoHead ? "26%" : "20%" }}
+      style={{ width: !Prop.isHeadtoHead ? "29%" : "20%" }}
     />
   );
 }

@@ -155,8 +155,12 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                       <td scope="row" className="px-3 py-2">
                         {item.ticketNumber}
                       </td>
-                      <td className="px-3 py-2">Keno</td>
-                      <td className="px-3 py-2">{item.Game.gamenumber}</td>
+                      <td className="px-3 py-2">{item.Game.gameType}</td>
+                      <td className="px-3 py-2">
+                        {item.Game.gamenumber == 0
+                          ? JSON.parse(item.Game.gameData).Number
+                          : item.Game.gamenumber}
+                      </td>
                       <td scope="row" className="px-3 py-2">
                         {/* {((!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
@@ -164,20 +168,25 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                     {((!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
                       !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win < 1) && "Lost"} */}
-                        {!item.nums.includes(-2) &&
+                        {item.Game.gameType === "KENO" &&
+                          !item.nums.includes(-2) &&
                           !item.nums.includes(-4) &&
                           !item.nums.includes(-6) &&
                           "Win"}
+                        {item.Game.gameType !== "KENO" && item.oddType}
                         {(item.nums.includes(-2) ||
                           item.nums.includes(-4) ||
                           item.nums.includes(-6)) &&
                           "Heads and Tails"}
                       </td>
                       <td className="px-3 py-2">
-                        {!item.nums.includes(-2) &&
+                        {item.nums.length > 0
+                          ? JSON.parse(item.nums + "").join(", ")
+                          : ""}
+                        {(!item.nums.includes(-2) &&
                           !item.nums.includes(-4) &&
-                          !item.nums.includes(-6) &&
-                          item.nums?.join(", ")}
+                          !item.nums.includes(-6)) ||
+                          item.nums.join(", ")}
                         {item.nums.includes(-2) && "Heads"}
                         {item.nums.includes(-4) && "Evens"}
                         {item.nums.includes(-6) && "Tails"}

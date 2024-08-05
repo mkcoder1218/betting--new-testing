@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Last5 from "./Last5";
 import BasicRating from "./Rating";
 import ButtonSizes from "./Win";
+import '../styles/Table.css'
 import {
   Ticket,
   addToBetSlip,
@@ -45,6 +46,8 @@ interface DispatchParams {
   stakeInfo?: string;
   oddType?: string;
   nameofplayer?: string;
+  entry?: any;
+  
 }
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
@@ -57,7 +60,9 @@ const BasicTable: React.FC<TableProp> = ({
   HeadTexttoTable,
   data,
   gameDatalist,
+
 }) => {
+  const gametype = useAppSelector((state) => state.gameType);
   const [clickCounter, setClickCounter] = useState<number>(0);
   const [clickedindex, setClickedindex] = useState<number>(0);
   const [Addst, setAddst] = useState<number[]>([]);
@@ -120,8 +125,15 @@ const BasicTable: React.FC<TableProp> = ({
       setchangedForm([]);
     }
   }, [isClear]);
-  const handleDispatch = (params: DispatchParams) => {
-    for (let i = 0; i < repeatState.repeat; i++) {
+  const handleDispatch = (
+   params:DispatchParams
+  ) => {
+    console.log(
+      "BETSLIP_UPDATE_REQUESTED",
+      checkIsSelected(params.entry, params.oddType),
+      params.oddType
+    );
+    if (!checkIsSelected(params.entry, params.oddType)) {
       dispatch(
         addToBetSlip({
           selected: params.selected,
@@ -155,6 +167,53 @@ const BasicTable: React.FC<TableProp> = ({
         return "3rd";
       default:
         return `${index + 1}`;
+    }
+  };
+  const checkIsSelected = (row: Entry, type: string) => {
+    const index = betSlip.findIndex((value) => {
+      if (value.entry === row && value.oddType === type) return true;
+    });
+
+    if (index > -1) return true;
+    return false;
+  };
+
+  useEffect(() => {
+    console.log("GameType", gameType);
+  }, [gameType]);
+
+  const silkGenerator = (row: Entry, gameType: string, index: number) => {
+    switch (gameType) {
+      case "HarnessRacing":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "PreRecRealDogs":
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
+      case "horseRun":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "CycleRacing":
+        return `https://games2.playbetman.com/Content/Images/CyclistHelmets/silk_${
+          index + 1
+        }.png`;
+      case "SteepleChase":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "SpeedSkating":
+        return `https://games2.playbetman.com/Content/Images/SpeedSkatingFlags/Flag_0${
+          index + 1
+        }.png`;
+      case "SingleSeaterMotorRacing":
+        return `https://games2.playbetman.com/Content/Images/SingleSeaterMotorRacing/Helmet_${row.SilkNumber}.png`;
+      case "MotorRacing":
+        return `https://games2.playbetman.com/Content/Images/SingleSeaterMotorRacing/Helmet_${row.SilkNumber}.png`;
+      case "DashingDerby":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "PlatinumHounds":
+         return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+           index + 1
+         }.png`;
+      default:
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
     }
   };
 
@@ -205,9 +264,7 @@ const BasicTable: React.FC<TableProp> = ({
                         {row.Draw}
                       </p>
                       {
-                        <Images
-                          src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`}
-                        />
+                        <Images src={silkGenerator(row, gameType + "", index)} />
                       }
                       <div className="flex flex-row w-full">
                         <p className="text-justify nameText">{row.Name}</p>
@@ -299,6 +356,7 @@ const BasicTable: React.FC<TableProp> = ({
                         numberofClickedbuttons={clickCounter}
                         isCombo={HeadText === "ALT" ? false : true}
                         isChangedForm={changedForm.includes(index) || false}
+                        isLocked={true}
                       />
                     }
                   </TableCell>

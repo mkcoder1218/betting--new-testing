@@ -1,10 +1,14 @@
 import React from "react";
+import { RootResultInterface } from "../config/types";
+import Images from "./Images";
+import moment from "moment";
 
 interface ResultsProp {
   Icon: React.ComponentType;
   isSmall: boolean;
+  gameData: RootResultInterface;
 }
-const Result: React.FC<ResultsProp> = ({ Icon, isSmall }) => {
+const Result: React.FC<ResultsProp> = ({ Icon, isSmall, gameData }) => {
   return (
     <div
       className="w-full bg-black text-white text-lg"
@@ -19,10 +23,12 @@ const Result: React.FC<ResultsProp> = ({ Icon, isSmall }) => {
             Place
           </p>
           <div className="flex w-full gap-1" style={{ fontSize: "16px" }}>
-            <p>24/21/2024</p>
-            <p>23:23:31</p>
+            <p>
+              {moment(gameData.AdjustedStartTime).format("DD/MM/YYYY hh:mm:ss")}
+            </p>
+
             <p className="flex-1" style={{ fontSize: "20px" }}>
-              ID 2121
+              ID {gameData.EventNumber}
             </p>
           </div>
         </div>
@@ -32,7 +38,7 @@ const Result: React.FC<ResultsProp> = ({ Icon, isSmall }) => {
         <p>Results</p>
       </div>
       <div
-        className="bg-gray-500 h-28 flex justify-center mt-14 ml-10"
+        className="bg-gray-500 h-28 flex justify-center mt-14 ml-10 w-full"
         style={{ width: "95%" }}
       >
         <div className="border-l-2 flex justify-between w-1/3">
@@ -46,8 +52,14 @@ const Result: React.FC<ResultsProp> = ({ Icon, isSmall }) => {
             className="flex flex-col m-auto items-center w-full"
             style={{ padding: "auto" }}
           >
-            <div className="">icon</div>
-            <div className="">Name</div>
+            <div className="">
+              <Images
+                src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[0].SilkNumber}.png`}
+              />
+            </div>
+            <div className="">
+              {gameData.Race.Entries[0].Draw} {gameData.Race.Entries[0].Name}
+            </div>
           </div>
         </div>
         <div className="border-l-2 w-1/3">
@@ -56,14 +68,20 @@ const Result: React.FC<ResultsProp> = ({ Icon, isSmall }) => {
             className="bg-green-600 text-white w-5 h-7 text-center rounded-br-full rounded-tr-lg pr-1 flex items-end justify-end"
             style={{ fontSize: 12 }}
           >
-            <p>1</p>
+            <p>2</p>
           </div>
           <div
             className="flex flex-col m-auto items-center w-full"
             style={{ padding: "auto" }}
           >
-            <div className="">icon</div>
-            <div className="">Name</div>
+            <div className="">
+              <Images
+                src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[1].SilkNumber}.png`}
+              />
+            </div>
+            <div className="">
+              {gameData.Race.Entries[1].Draw} {gameData.Race.Entries[1].Name}
+            </div>
           </div>
         </div>
         <div className="border-l-2 w-1/3">
@@ -72,14 +90,27 @@ const Result: React.FC<ResultsProp> = ({ Icon, isSmall }) => {
             className="bg-green-600 text-white w-5 h-7 text-center rounded-br-full rounded-tr-lg pr-1 flex items-end justify-end"
             style={{ fontSize: 12 }}
           >
-            <p>1</p>
+            <p>3</p>
           </div>
           <div
             className="flex flex-col m-auto items-center w-full"
             style={{ padding: "auto" }}
           >
-            <div className="">icon</div>
-            <div className="">Name</div>
+            <div
+              className=""
+              style={{
+                justifyContent: "center",
+                textAlign: "center",
+                alignItems: "center",
+              }}
+            >
+              <Images
+                src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[2].SilkNumber}.png`}
+              />
+            </div>
+            <div className="">
+              {gameData.Race.Entries[2].Draw} {gameData.Race.Entries[2].Name}
+            </div>
           </div>
         </div>
       </div>

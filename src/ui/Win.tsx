@@ -73,7 +73,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
                 : isBankActive
                 ? "	orange"
                 : "transparent",
-            color: isActive || isBankActive ? "white" : "gray",
+            color: isActive || isBankActive || isChangedForm ? "white" : "gray",
           }}
           disabled={isDesabled}
           variant="outlined"
@@ -90,7 +90,10 @@ const ButtonSizes: React.FC<ButtonProp> = ({
             >
               <p
                 className={`${suffix && !HeadToHead ? "text-xs" : ""}`}
-                style={{ padding: "0px", color: isActive ? "white" : "" }}
+                style={{
+                  padding: "0px",
+                  color: isActive || isChangedForm ? "white" : "",
+                }}
               >
                 {number}
               </p>
@@ -98,7 +101,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
                 className=""
                 style={{
                   fontSize: !isHeadToHead ? 8 : "",
-                  color: isActive ? "white" : "",
+                  color: isActive || isChangedForm ? "white" : "",
                 }}
               >
                 {suffix}

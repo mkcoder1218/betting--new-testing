@@ -37,6 +37,8 @@ interface GameData {
   actualRTP: number | null;
   createdAt: string; // Use Date if you prefer date objects
   updatedAt: string; // Use Date if you prefer date objects
+  gameData: string;
+  gameType: string;
 }
 
 interface Response {

@@ -13,13 +13,12 @@ const initalState: gameTypeState = {
 };
 
 const gameTypeSlice = createSlice({
-  name: "gameType",
+  name: "gameType/manager",
   initialState: initalState,
   reducers: {
     addGameType: (state, action: PayloadAction<string>) => {
-      if (state.gameType) {
-        state.gameType = action.payload;
-      }
+      console.log("PAYLOAD_CALLED", action.payload);
+      state.gameType = action.payload;
     },
   },
 });

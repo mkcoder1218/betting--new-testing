@@ -16,6 +16,7 @@ import {
 } from "../features/slices/pickerSlice";
 import { combineSlices } from "@reduxjs/toolkit";
 import { GameData, RootEventData } from "../features/slices/RacingGameSlice";
+import moment from "moment";
 type Entry = {
   WinOdds: number;
 };
@@ -58,6 +59,7 @@ const Drop: React.FC<DropProp> = ({
   const [isLive, setisLive] = useState(false);
   const gameState = useAppSelector((state) => state.game);
   const [visible, setVisible] = useState(false);
+  const [init, setInited] = useState(false);
   const gameType = useAppSelector((state) => state.gameType.gameType);
   const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
   const [selectCombo, setSelectCombo] = useState([]);
@@ -68,12 +70,14 @@ const Drop: React.FC<DropProp> = ({
   const repeatState = useAppSelector((state) => state.repeat);
   const [BankClick, setBankclick] = useState<number | null>();
   const [ClearTheClick, setClear] = useState(false);
+  const [activeGameForIcon, setActiveGame] = useState(false);
   const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(
     new Set()
   );
   const [sortedArray, setSortedArray] = useState<Entry[]>([]);
   const handleClick = () => {
     setIsActive(!isActive);
+    setActiveGame(false);
   };
   const handleClickCount = (val: number) => {
     setClickCount(val);
@@ -125,6 +129,16 @@ const Drop: React.FC<DropProp> = ({
   const HandleBankClick = (index: number) => {
     setBankclick(index);
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!init) {
+        setInited(true);
+        setActiveGame(isActiveGame);
+      }
+    }, 1000);
+  }, [isActiveGame]);
+
   const CombinationDispatch = (params: DispatchParams) => {
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
@@ -185,15 +199,24 @@ const Drop: React.FC<DropProp> = ({
         }}
       >
         <div className="timePlace">
-          <StartTimer text={time} onLive={handleLive} isActive={isActive} />
+          <StartTimer
+            text={time}
+            onLive={handleLive}
+            isgameActive={isActiveGame}
+            isActive={isActive}
+          />
           <IdandPlace Place={place} Id={id} isActive={isActive} />
         </div>
-        <PlusMinus onClick={handleClick} isActive={isActive} />
+        <PlusMinus
+          onClick={handleClick}
+          isActive={isActive}
+          isActiveGame={activeGameForIcon}
+        />
       </div>
-      {isActive ? (
+      {isActive || activeGameForIcon ? (
         <div className="container2 flex justify-between">
           <div className="" style={{ width: "75%" }}>
-            {activeIndexValues !== 1 ? (
+            {activeIndexValues !== 1 || isActiveGame ? (
               <BasicTable
                 selectedCombos={handleSelectCombo}
                 clickCount={handleClickCount}
@@ -234,8 +257,8 @@ const Drop: React.FC<DropProp> = ({
               </div>
             ) : clickCount > 1 && activeIndexValues === 0 ? (
               <div className="Need waysbut w-full flex-col ml-3 h-full items-center">
-                <div className="h-1/3 flex-col items-end justify-end">
-                  <div className="waysShow Need gap-2 mt-6 h-2/3">
+                <div className="h-full flex-col items-end  justify-end">
+                  <div className="waysShow Need gap-2 mt-6 h-fit">
                     <Ways
                       text="QUINELLA"
                       text2="2 any order"
@@ -341,15 +364,17 @@ const Drop: React.FC<DropProp> = ({
                       }}
                     />
                   </div>
-                  <ButtonSizes
-                    text="Clear"
-                    isActive={false}
-                    SvgIconComponent={DeleteOutlineOutlinedIcon}
-                    onClick={() => {
-                      handleClear();
-                      setClickCount(0);
-                    }}
-                  />
+                  <div className="clearbutton">
+                    <ButtonSizes
+                      text="Clear"
+                      isActive={false}
+                      SvgIconComponent={DeleteOutlineOutlinedIcon}
+                      onClick={() => {
+                        handleClear();
+                        setClickCount(0);
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             ) : activeIndexValues === 0 ? (

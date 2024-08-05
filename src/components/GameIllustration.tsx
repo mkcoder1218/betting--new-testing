@@ -55,7 +55,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     },
     {
       icon: <Bicycle />,
-      text1: "SingleSeaterMotorRacing",
+      text1: "CycleRacing",
       text2: "SLIP STREAM",
       width: "w-12",
     },
@@ -66,17 +66,17 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-12",
     },
     { icon: <CircleDraw />, text1: "SPIN AND WIN", text2: "", width: "w-8" },
-    { icon: <Hockey />, text1: "Hockey", text2: "", width: "w-8" },
-    { icon: <F1 />, text1: "F1", text2: "", width: "w-8" },
+    { icon: <Hockey />, text1: "SpeedSkating", text2: "", width: "w-8" },
+    { icon: <F1 />, text1: "SingleSeaterMotorRacing", text2: "", width: "w-8" },
     {
       icon: <CarRacing />,
-      text1: "MOTOR RACING",
+      text1: "MotorRacing",
       text2: "MAXCAR",
       width: "w-14",
     },
     {
       icon: <DashingDerby />,
-      text1: "HORSE RACING",
+      text1: "DashingDerby",
       text2: "DASHING DERBY",
       width: "w-10",
     },
@@ -89,7 +89,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     },
     {
       icon: <Jaguar />,
-      text1: "Jaguar",
+      text1: "PlatinumHounds",
       text2: "CHARGING CHARIOTS",
       width: "w-12",
     },
@@ -102,7 +102,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
           ? dropdownItems.map((item: any, index: number) => {
               return (
                 <button
-                  className="text-gray-500 hover:text-green-500 "
+                  className="text-gray-500 hover:text-green-500 focus:text-green-500"
                   onClick={() => handleClickGame(item.text1)}
                 >
                   {item.icon}

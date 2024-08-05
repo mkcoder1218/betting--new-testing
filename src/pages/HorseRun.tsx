@@ -15,6 +15,8 @@ function HorseRun() {
   const [selectedText, setSelectedText] = useState("");
   const [activeIndexValue, setActiveindexVal] = useState(0);
   const [activeIndex, setActiveindex] = useState(0);
+  const [ActiveGame, setIsActivegame] = useState(false);
+  const [_interval, _setInterval] = useState(0);
   const handleClickMenu = (text: string) => {
     setSelectedText(text);
   };
@@ -25,6 +27,7 @@ function HorseRun() {
     setActiveindexVal(val);
     dispatch(addHeadText(text));
   };
+
   useEffect(() => {
     if (gameData && gameData.game) {
       let activeIndex: { index: number; millisecond: number }[] = [];
@@ -45,8 +48,20 @@ function HorseRun() {
         return a.millisecond < b.millisecond;
       });
       setActiveindex(sortedOne[0].index);
+      setInterval(moment(sortedOne[0].millisecond));
     }
-  }, [gameData]);
+  }, [gameData, _interval]);
+
+  useEffect(() => {
+    const __interval = () => {
+      _setInterval(0);
+      console.log("intervalCalled:", _interval);
+    };
+    if (_interval < 0) {
+      const intervalId = setInterval(__interval, _interval + 200);
+      return () => clearInterval(intervalId);
+    }
+  }, [_interval]);
   return (
     <div className="App">
       <Head
@@ -57,9 +72,7 @@ function HorseRun() {
       {gameData &&
         gameData.game &&
         gameData.game.map((game, index) => {
-          
           const data: RootEventData = game.gameData;
-console.log("gameDataTable:", data);
 
           return (
             <>

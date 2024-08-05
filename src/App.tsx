@@ -67,6 +67,8 @@ function App() {
     if (WhichGameSelected === "KENO") {
       dispatch(addGameType(WhichGameSelected));
     } else {
+      if (WhichGameSelected.length > 0)
+        dispatch(addGameType(WhichGameSelected));
       dispatch(
         getLastRacingGames(
           "9c6d610d-33e9-4847-80ab-5e179833591e",
@@ -196,6 +198,7 @@ function App() {
   }, []);
 
   const handleIconSelect = (val: string) => {
+    console.log("whichgameselected", WhichGameSelected);
     setWhichgameSelected(val);
   };
 
@@ -284,23 +287,23 @@ function App() {
               </div>
             </>
           ) : WhichGameSelected === "PreRecRealDogs" ? (
-            <DogWithVideo />
-          ) : WhichGameSelected === "SingleSeaterMotorRacing" ? (
-            <Bike />
-          ) : WhichGameSelected === "HARNESS RACING" ? (
-            <Gari />
+            <HorseRun />
+          ) : WhichGameSelected === "CycleRacing" ? (
+            <HorseRun />
+          ) : WhichGameSelected === "DashingDerby" ? (
+            <HorseRun />
           ) : WhichGameSelected === "HarnessRacing" ? (
             <HorseRun />
-          ) : WhichGameSelected === "STEEPLE CHASE RACING" ? (
-            <HorseJumping />
-          ) : WhichGameSelected === "Jaguar" ? (
-            <DogWithOutVideo />
-          ) : WhichGameSelected === "MOTOR RACING" ? (
-            <Car />
-          ) : WhichGameSelected === "Hockey" ? (
-            <Hockey />
-          ) : WhichGameSelected === "F1" ? (
-            <Formula1 />
+          ) : WhichGameSelected === "SteepleChase" ? (
+            <HorseRun />
+          ) : WhichGameSelected === "PlatinumHounds" ? (
+            <HorseRun />
+          ) : WhichGameSelected === "MotorRacing" ? (
+            <HorseRun />
+          ) : WhichGameSelected === "SpeedSkating" ? (
+            <HorseRun />
+          ) : WhichGameSelected === "SingleSeaterMotorRacing" ? (
+            <HorseRun />
           ) : WhichGameSelected === "SPIN AND WIN" ? (
             <Spin />
           ) : (

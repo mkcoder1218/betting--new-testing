@@ -41,6 +41,8 @@ import { SmartPlay } from "./svg/SmartPlay";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Result from "../ui/Result";
 import { Jaguar } from "./svg/Jaguar";
+import { GameData } from "../features/slices/RacingGameSlice";
+import { RootResultInterface } from "../config/types";
 
 interface CashierOptionsProps {
   open: boolean;
@@ -106,7 +108,7 @@ export default function CashierOptions({
   const [valueParent, setParent] = React.useState(0);
   const [gameNumber, setGameNumber] = React.useState();
   const [resultVisible, toggleResult] = React.useState(false);
-  const [gameResult, setGameResult] = React.useState<string[]>();
+  const [gameResult, setGameResult] = React.useState<GameData>();
   const gameResults = useAppSelector((state) => {
     return state.summary.eventResult;
   });
@@ -471,7 +473,7 @@ export default function CashierOptions({
                         {summaryData.data !== null &&
                           summaryData.data.length > 0 && (
                             <div className="summary-content w-full mt-4">
-                              <table className="w-full table table-fixed">
+                              <table className="w-full table-fixed">
                                 <thead className="border-2 border-slate-300 bg-white">
                                   <tr className="text-sm p-2 table-row">
                                     <th className="border p-2 border-slate-400">
@@ -611,7 +613,7 @@ export default function CashierOptions({
                         )}
                         {!ticketList.loading && ticketList.data.length > 0 && (
                           <div className="summary-content  max-h-80  overflow-scroll w-full mt-4">
-                            <table className="w-full table table-fixed">
+                            <table className="w-full  table-fixed">
                               <thead className="border-2">
                                 <tr className="text-sm text-left p-4 table-row">
                                   <th className="p-2">Retail User</th>
@@ -672,14 +674,21 @@ export default function CashierOptions({
                       </CustomTabPanel>
                     </div>
                   </CustomTabPanel>
-
-                  {/* <CustomTabPanel value={valueParent} index={1}>
+                  <CustomTabPanel value={valueParent} index={1}>
                     {resultVisible && gameResults && gameResult && (
                       <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
                         <div className="result-header flex justify-between">
                           <div className="flex mt-5">
                             <SmartPlay />
-                            <p className="ml-2">2024/06/30 04:10:32 ID 8129</p>
+                            <p className="ml-2">
+                              {moment(gameResult.startTime).format(
+                                "DD/MM/YYYY hh:mm:ss"
+                              )}{" "}
+                              ID{" "}
+                              {gameResult.gameType === "KENO"
+                                ? gameResult.gamenumber
+                                : JSON.parse(gameResult.gameData).Number}
+                            </p>
                           </div>
                           <div>
                             <button
@@ -697,13 +706,13 @@ export default function CashierOptions({
                           </div>
                           <div className="w-2/3 mr-20 mt-4">
                             <div className="mb-3">
-                              <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4">
-                                {gameResult &&
+                              <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4 w-full">
+                                {gameResult.gameType === "KENO" &&
+                                  gameResult &&
                                   gameResult
                                     .slice()
                                     .sort((a, b) => parseInt(a) - parseInt(b))
                                     .map((_) => {
-                                     
                                       return (
                                         <button
                                           style={{
@@ -718,6 +727,17 @@ export default function CashierOptions({
                                     })}
                               </div>
                             </div>
+                            {gameResult.gameType !== "KENO" && (
+                              <Result
+                                Icon={Jaguar}
+                                isSmall={true}
+                                gameData={
+                                  JSON.parse(
+                                    gameResult.result
+                                  ) as RootResultInterface
+                                }
+                              />
+                            )}
                           </div>
                         </div>
                       </div>
@@ -819,7 +839,7 @@ export default function CashierOptions({
                             gameResults &&
                             gameResults.length > 0 && (
                               <div className="summary-content w-full mt-4">
-                                <table className="w-full table table-fixed">
+                                <table className="w-full  table-fixed">
                                   <thead className="border-2 border-slate-300 bg-white">
                                     <tr className="text-sm p-2 table-row">
                                       <th className="border p-2 border-slate-400">
@@ -859,7 +879,7 @@ export default function CashierOptions({
                                                 <FaEye
                                                   onClick={() => {
                                                     toggleResult(true);
-                                                    setGameResult(item.result);
+                                                    setGameResult(item);
                                                   }}
                                                   className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
                                                   size={40}
@@ -891,7 +911,7 @@ export default function CashierOptions({
                                               </span>
                                             </td>
                                             <td className="border border-slate-400 p-2">
-                                              KENO
+                                              {item.gameType}
                                             </td>
                                             <td className="border border-slate-400 p-2">
                                               {from
@@ -904,7 +924,10 @@ export default function CashierOptions({
                                                 .toLocaleDateString()}
                                             </td>
                                             <td className="border border-slate-400 p-2">
-                                              {item.gamenumber}
+                                              {item.gamenumber === 0
+                                                ? JSON.parse(item.gameData)
+                                                    .Number
+                                                : item.gamenumber}
                                             </td>
 
                                             <td className="border border-slate-400 p-2">
@@ -919,7 +942,6 @@ export default function CashierOptions({
                                 </table>
                               </div>
                             )}
-                          <Result Icon={Jaguar} />
                         </CustomTabPanel>
                         <CustomTabPanel value={value} index={1}>
                           <div className="cashier-box">
@@ -975,10 +997,13 @@ export default function CashierOptions({
                             )}
                           {!ticketList.loading &&
                             ticketList.data.length > 0 && (
-                              <div className="summary-content  max-h-80  overflow-scroll w-full mt-4">
-                                <table className="w-full table table-fixed">
+                              <div
+                                className="summary-content  max-h-80  overflow-scroll w-full mt-4"
+                                style={{ width: "100%", display: "block" }}
+                              >
+                                <table className="w-full  table-fixed w-full">
                                   <thead className="border-2">
-                                    <tr className="text-sm text-left p-4 table-row">
+                                    <tr className="text-sm text-left p-4 table-row flex">
                                       <th className="p-2">Retail User</th>
                                       <th className="p-2">Date</th>
                                       <th className="p-2">Stake</th>
@@ -986,7 +1011,7 @@ export default function CashierOptions({
                                       <th className="p-2"></th>
                                     </tr>
                                   </thead>
-                                  <tbody>
+                                  <tbody className="flex">
                                     {ticketList.data.map((item) => {
                                       return (
                                         <tr
@@ -1039,8 +1064,7 @@ export default function CashierOptions({
                         </CustomTabPanel>
                       </div>
                     )}
-                  </CustomTabPanel> */}
-                  <Result Icon={Jaguar} isSmall={true} />
+                  </CustomTabPanel>
                 </div>
               </Box>
             </Box>

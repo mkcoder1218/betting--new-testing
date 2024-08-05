@@ -133,25 +133,16 @@ export const recallTickets =
   };
 
 export const printSelectedTickets = async (req: any) => {
-  try {
-    const printSelectedResponse = await axiosInstance.post(
-      "ticket/printSelected",
-      req
-    );
+    try {
+        const printSelectedResponse = await axiosInstance.post("ticket/printEvent", req);
 
-    if (
-      printSelectedResponse.status === 200 ||
-      printSelectedResponse.status === 201
-    ) {
-      const printSelectedData = await axios.post(
-        "http://localhost:5000/printTicket",
-        { ...printSelectedResponse.data.data, isCopy: true }
-      );
+        if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
+            const printSelectedData = await axios.post("http://localhost:5000/printEvent", printSelectedResponse.data.data)
+        }
+    } catch (err) {
+        console.log(err);
     }
-  } catch (err) {
-    console.log(err);
-  }
-};
+}
 
 export const isPrinterUp = async () => {
   try {
