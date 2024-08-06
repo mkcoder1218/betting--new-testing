@@ -77,6 +77,7 @@ const Drop: React.FC<DropProp> = ({
     new Set()
   );
   const [sortedArray, setSortedArray] = useState<Entry[]>([]);
+  const betslips = useAppSelector((state) => state.betSlip);
   const handleClick = () => {
     setIsActive(!isActive);
     setActiveGame(false);

@@ -9,7 +9,7 @@ import Paper from "@mui/material/Paper";
 import Last5 from "./Last5";
 import BasicRating from "./Rating";
 import ButtonSizes from "./Win";
-import '../styles/Table.css'
+import "../styles/Table.css";
 import {
   Ticket,
   addToBetSlip,
@@ -21,6 +21,8 @@ import expirySlice from "../features/slices/ticketExpiry";
 
 import Images from "./Images";
 import { RootEventData, GameData } from "../features/slices/RacingGameSlice";
+import { Entry } from "../config/types";
+import moment from "moment";
 
 interface TableProp {
   clickCount: (val: number) => void;
@@ -44,10 +46,9 @@ interface DispatchParams {
   gameId: number;
   draw?: number;
   stakeInfo?: string;
-  oddType?: string;
+  oddType: string;
   nameofplayer?: string;
-  entry?: any;
-  
+  entry?: Entry;
 }
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
@@ -60,7 +61,6 @@ const BasicTable: React.FC<TableProp> = ({
   HeadTexttoTable,
   data,
   gameDatalist,
-
 }) => {
   const gametype = useAppSelector((state) => state.gameType);
   const [clickCounter, setClickCounter] = useState<number>(0);
@@ -82,7 +82,6 @@ const BasicTable: React.FC<TableProp> = ({
     gameCreatedDate.getMinutes() + 5
   );
   const handleClick = (index: number) => {
-
     setClickedindex(index);
     selectedCombos(index);
     console.log("Headtext", HeadText);
@@ -125,15 +124,9 @@ const BasicTable: React.FC<TableProp> = ({
       setchangedForm([]);
     }
   }, [isClear]);
-  const handleDispatch = (
-   params:DispatchParams
-  ) => {
-    console.log(
-      "BETSLIP_UPDATE_REQUESTED",
-      checkIsSelected(params.entry, params.oddType),
-      params.oddType
-    );
-    if (!checkIsSelected(params.entry, params.oddType)) {
+  const handleDispatch = (params: DispatchParams) => {
+    console.log("BETSLIP_UPDATE_REQUESTED", params);
+    if (params.entry && !checkIsSelected(params.entry, params.oddType)) {
       dispatch(
         addToBetSlip({
           selected: params.selected,
@@ -144,7 +137,8 @@ const BasicTable: React.FC<TableProp> = ({
           gameId: params.gameId,
           gameType: gameType,
           draw: params.draw,
-          stakeInformation: params.stakeInfo,
+          entry: params.entry,
+          // stakeInformation: params.entry,
           nameofPlayer: params.nameofplayer,
           oddType: params.oddType,
         })
@@ -209,9 +203,9 @@ const BasicTable: React.FC<TableProp> = ({
       case "DashingDerby":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "PlatinumHounds":
-         return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
-           index + 1
-         }.png`;
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
       default:
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
     }
@@ -264,7 +258,9 @@ const BasicTable: React.FC<TableProp> = ({
                         {row.Draw}
                       </p>
                       {
-                        <Images src={silkGenerator(row, gameType + "", index)} />
+                        <Images
+                          src={silkGenerator(row, gameType + "", index)}
+                        />
                       }
                       <div className="flex flex-row w-full">
                         <p className="text-justify nameText">{row.Name}</p>
@@ -292,7 +288,12 @@ const BasicTable: React.FC<TableProp> = ({
                     <ButtonSizes
                       text={row.WinOdds + ""}
                       isActive={isActivatedtablebutton?.has(index * 4) || false}
-                      isLocked={true}
+                      isLocked={
+                        moment(gameDatalist?.startTime).diff(
+                          moment(),
+                          "seconds"
+                        ) < 0
+                      }
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4);
@@ -300,11 +301,12 @@ const BasicTable: React.FC<TableProp> = ({
                           nameofplayer: row.Name,
                           selected: row.Draw,
                           multiplier: row.WinOdds,
-                          toWin: 10,
-                          stake: 12,
+                          toWin: 100,
+                          stake: 10,
                           gameId: gameDatalist?.id,
                           draw: row.Draw,
-                          stakeInfo: "win",
+                          oddType: "WIN",
+                          entry: row,
                         });
                       }}
                       numberofClickedbuttons={clickCounter}
@@ -320,6 +322,12 @@ const BasicTable: React.FC<TableProp> = ({
                       isActive={
                         isActivatedtablebutton?.has(index * 4 + 1) || false
                       }
+                      isLocked={
+                        moment(gameDatalist?.startTime).diff(
+                          moment(),
+                          "seconds"
+                        ) < 0
+                      }
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4 + 1);
@@ -331,7 +339,8 @@ const BasicTable: React.FC<TableProp> = ({
                           stake: 12,
                           gameId: gameDatalist?.id,
                           draw: row.Draw,
-                          stakeInfo: "win",
+                          stakeInfo: "PLACE",
+                          entry: row,
                         });
                       }}
                       numberofClickedbuttons={clickCounter}
@@ -353,10 +362,15 @@ const BasicTable: React.FC<TableProp> = ({
                           handleClick(index);
                           handleColorChange(index * 4 + 2);
                         }}
+                        isLocked={
+                          moment(gameDatalist?.startTime).diff(
+                            moment(),
+                            "seconds"
+                          ) < 0
+                        }
                         numberofClickedbuttons={clickCounter}
                         isCombo={HeadText === "ALT" ? false : true}
                         isChangedForm={changedForm.includes(index) || false}
-                        isLocked={true}
                       />
                     }
                   </TableCell>

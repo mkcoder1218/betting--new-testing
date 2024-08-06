@@ -163,18 +163,20 @@ export default function BetSlip() {
     let newTicketToSend = [];
     const otherGameData: any = [];
     for (let ticket of betState.betSlip) {
+      console.log("TicketData", ticket);
       otherGameData.push(ticket.selected);
       let ticketItem = {
         toWin: ticket.toWin,
         stake: ticket.stake,
         maxWin: ticket.multiplier * ticket.stake,
-        nums: gameType === "KENO" ? ticket.selected : otherGameData,
+        nums: gameType === "KENO" ? ticket.selected : [ticket.selected],
         gameId: ticket.gameId + "",
         oddId: oddState.odd?.id,
         isCombo: ticket.isCombo,
         oddType: ticket.oddType ? ticket.oddType : "",
-        entry: otherGameData ? otherGameData : "",
+        entry: ticket.entry,
         nameOfplayer: ticket.nameofPlayer,
+        gameType: ticket.gameType,
       };
 
       newTicketToSend.push(ticketItem);

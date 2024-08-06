@@ -286,28 +286,10 @@ function App() {
                 </div>
               </div>
             </>
-          ) : WhichGameSelected === "PreRecRealDogs" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "CycleRacing" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "DashingDerby" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "HarnessRacing" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "SteepleChase" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "PlatinumHounds" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "MotorRacing" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "SpeedSkating" ? (
-            <HorseRun />
-          ) : WhichGameSelected === "SingleSeaterMotorRacing" ? (
-            <HorseRun />
           ) : WhichGameSelected === "SPIN AND WIN" ? (
             <Spin />
           ) : (
-            ""
+            <HorseRun />
           )}
         </div>
         <BetSlip />

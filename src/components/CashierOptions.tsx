@@ -900,7 +900,7 @@ export default function CashierOptions({
                                                           : "",
                                                       gameTime: item.startTime,
                                                       eventId: item.gamenumber,
-                                                      Game: "Keno",
+                                                      Game: item.gameType,
                                                       formattedTime: "",
                                                       date: moment(),
                                                     })

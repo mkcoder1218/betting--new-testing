@@ -20,12 +20,9 @@ interface ButtonProp {
 }
 const ButtonSizes: React.FC<ButtonProp> = ({
   text,
-  text2,
   isActive,
   SvgIconComponent,
-  isDesabled,
   onClick,
-  numberofClickedbuttons,
   isLocked,
   isCombo,
   isBankActive,
@@ -75,7 +72,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
                 : "transparent",
             color: isActive || isBankActive || isChangedForm ? "white" : "gray",
           }}
-          disabled={isDesabled}
+          disabled={isLocked}
           variant="outlined"
           size="small"
           className={`${classNames}`}

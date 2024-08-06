@@ -14,8 +14,8 @@ export interface Ticket {
   entry?: Entry;
   selectedForm?: number;
   oddType?: string;
-  draw?: number,
-  nameofPlayer?: string
+  draw?: number;
+  nameofPlayer?: string;
 }
 
 export interface PickerType {
@@ -51,8 +51,25 @@ const pickerSlice = createSlice({
       state.selected = [];
     },
     addToBetSlip: (state, action: PayloadAction<Ticket>) => {
-      console.log("BETSLIP_UPDATE_ADD", action.payload);
-      state.betSlip = [...state.betSlip, action.payload];
+      const _index = state.betSlip.findIndex((betslip) => {
+        if (
+          betslip.oddType === action.payload.oddType &&
+          betslip.gameId === action.payload.gameId &&
+          betslip.entry?.Form === action.payload.entry?.Form
+        ) {
+          return true;
+        }
+        return false;
+      });
+      console.log("BETSLIP_UPDATE_ADD", action.payload, _index);
+
+      if (_index > -1) {
+        state.betSlip = state.betSlip.filter((item, index) => {
+          return _index !== index;
+        });
+      } else {
+        state.betSlip = [...state.betSlip, action.payload];
+      }
       const totals = calculateTotals(state.betSlip);
 
       state.totalStake = totals.totalStake;
