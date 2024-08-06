@@ -377,7 +377,7 @@ z-index: 100;
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-gap: 15px;
+gap: 10px;
 transition: all 0.5s;
 animation: svg 0.2s forwards;
 }
@@ -407,7 +407,7 @@ justify-content: space-between;
 
 }
 .firstrow_circle svg{
- margin: 2px;
+ margin: 1px;
 }
 
 

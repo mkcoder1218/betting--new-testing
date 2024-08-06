@@ -286,7 +286,7 @@ function App() {
                 </div>
               </div>
             </>
-          ) : WhichGameSelected === "SPIN AND WIN" ? (
+          ) : WhichGameSelected === "SpinAndWin" ? (
             <Spin />
           ) : (
             <HorseRun />

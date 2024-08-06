@@ -9,6 +9,7 @@ import { addHeadText } from "../features/slices/HeadSlice";
 import { useAppSelector } from "../features/hooks";
 import { RootEventData } from "../features/slices/RacingGameSlice";
 import moment from "moment";
+import CircularUnderLoad from "../components/svg/Loader";
 function HorseRun() {
   const texts = ["Main", "HEAD TO HEAD", "ALT", "SUM"];
   const dispatch = useAppDispatch();
@@ -73,10 +74,14 @@ function HorseRun() {
         texts={texts}
         activeIndexprop={handleActiveIndex}
       />
-      {gameData &&
+      {gameData && gameData.loading ? (
+        <div className="w-full h-fit mt-10 flex justify-center">
+          <CircularUnderLoad />
+        </div>
+      ) : (
         gameData.game &&
         gameData.game.map((game, index) => {
-          const data: RootEventData = JSON.parse(game.gameData);
+          const data: RootEventData = game.gameData;
 
           return (
             <>
@@ -92,7 +97,9 @@ function HorseRun() {
               />
             </>
           );
-        })}
+        })
+      )}
+      {}
     </div>
   );
 }

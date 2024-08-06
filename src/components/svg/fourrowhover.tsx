@@ -20,7 +20,7 @@ function fourrowhover(Prop: Rows) {
       <div className="secondrow_circle">{generatecircle(Prop.row2)}</div>
       <div
         className={`thirdrow_circle ${
-          Prop.i === 0 ? "-ml-4 flex flex-col gap-5" : ""
+          Prop.i === 0 ? "-ml-1 flex flex-col gap-5" : ""
         }`}
       >
         {generatecircle(Prop.row3)}

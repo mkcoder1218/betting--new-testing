@@ -31,6 +31,8 @@ import { DashingDerby } from "./svg/DashingDerby";
 import { Bicycle } from "./svg/Bicycle";
 import { HorseJump } from "./svg/HorseJump";
 import { DogWithVideo } from "./svg/DogWithVideo";
+import { CircleDraw } from "./svg/CircleDraw";
+import Hockey from "./svg/Hockey";
 
 export default function BetSlip() {
   const dispatch = useAppDispatch();
@@ -292,27 +294,33 @@ export default function BetSlip() {
                   key={index}
                   className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}
                 >
-                  <div className="ml-8 flex justify-between items-center">
-                    <div className="flex items-center -ml-3">
-                      {item.gameType === "KENO" ? (
-                        <SmartPlay isSmall={true} />
-                      ) : item.gameType === "HARNESS RACING" ? (
-                        <Garri isSmall={true} />
-                      ) : item.gameType === "MOTOR RACING" ? (
-                        <CarRacing isSmall={true} />
-                      ) : item.gameType === "GREYHOUND RACING" ? (
-                        <Jaguar isSmall={true} />
-                      ) : item.gameType === "HORSE RACING" ? (
-                        <DashingDerby isSmall={true} />
-                      ) : item.gameType === "TRACK RACING" ? (
-                        <Bicycle isSmall={true} />
-                      ) : item.gameType === "STEEPLE CHASE RACING" ? (
-                        <HorseJump isSmall={true} />
-                      ) : item.gameType === "GREYHOUND RACING" ? (
-                        <DogWithVideo isSmall={true} />
-                      ) : (
-                        ""
-                      )}
+                  <div className="ml-2 flex justify-between items-center">
+                    <div className="flex gap-1 items-center -ml-2">
+                      <div className="">
+                        {item.gameType === "KENO" ? (
+                          <SmartPlay isSmall={true} />
+                        ) : item.gameType === "HarnessRacing" ? (
+                          <Garri isSmall={true} />
+                        ) : item.gameType === "MotorRacing" ? (
+                          <CarRacing isSmall={true} />
+                        ) : item.gameType === "PlatinumHounds" ? (
+                          <Jaguar isSmall={true} />
+                        ) : item.gameType === "DashingDerby" ? (
+                          <DashingDerby isSmall={true} />
+                        ) : item.gameType === "CycleRacing" ? (
+                          <Bicycle isSmall={true} />
+                        ) : item.gameType === "SteepleChase" ? (
+                          <HorseJump isSmall={true} />
+                        ) : item.gameType === "PreRecRealDogs" ? (
+                          <DogWithVideo isSmall={true} />
+                        ) : gameType === "SpinAndWin" ? (
+                          <CircleDraw />
+                        ) : gameType === "SpeedSkating" ? (
+                          <Hockey />
+                        ) : (
+                          ""
+                        )}
+                      </div>
                       <p className="text-xs flex items-center">
                         {item.stakeInformation}
                       </p>
@@ -328,7 +336,11 @@ export default function BetSlip() {
                     <p className="flex text-sm gap-1 ml-3">
                       <p>
                         {item.draw}
-                        {!item.isCombo ? "." : ""}
+                        {!item.isCombo &&
+                        gameType != "KENO" &&
+                        gameType != "SpinAndWin"
+                          ? "."
+                          : ""}
                       </p>
                       {gameType === "KENO"
                         ? (!item.selected.includes(-2) &&
@@ -339,7 +351,9 @@ export default function BetSlip() {
                             "HEADS",
                           item.selected.includes(-4) && "EVENS",
                           item.selected.includes(-6) && "TAILS")
-                        : item.nameofPlayer}
+                        : gameType === "SpinAndWin"
+                        ? item.selected.join("/")
+                        : item.nameofPlayer || item.selected}
 
                       {!item.isCombo ? (
                         <span

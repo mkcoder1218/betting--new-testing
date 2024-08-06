@@ -65,7 +65,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       text2: "JUMPS",
       width: "w-12",
     },
-    { icon: <CircleDraw />, text1: "SPIN AND WIN", text2: "", width: "w-8" },
+    { icon: <CircleDraw />, text1: "SpinAndWin", text2: "", width: "w-1" },
     { icon: <Hockey />, text1: "SpeedSkating", text2: "", width: "w-8" },
     { icon: <F1 />, text1: "SingleSeaterMotorRacing", text2: "", width: "w-8" },
     {
