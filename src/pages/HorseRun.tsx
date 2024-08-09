@@ -60,7 +60,6 @@ function HorseRun() {
   useEffect(() => {
     const __interval = () => {
       _D_setInterval(0);
-      console.log("intervalCalled:", _D_interval * 1000);
     };
     let timer: NodeJS.Timeout | null = null;
     if (_D_interval !== 0) {
@@ -79,6 +78,7 @@ function HorseRun() {
           <CircularUnderLoad />
         </div>
       ) : (
+        gameData &&
         gameData.game &&
         gameData.game.map((game, index) => {
           const data: RootEventData = game.gameData;
@@ -86,7 +86,7 @@ function HorseRun() {
           return (
             <>
               <Drop
-                place={`${data.Race.Name} ${data.Race.Distance}`}
+                place={`${data.Race?.Name} ${data.Race?.Distance}`}
                 id={data.Number + ""}
                 time={game.startTime}
                 activeIndexValues={activeIndexValue}

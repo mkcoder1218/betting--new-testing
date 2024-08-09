@@ -75,7 +75,7 @@ margin-bottom: -13px;
 font-size: 15px;
   margin-top: 1.5%;
   margin-left: 3.5%;
-  border: white solid 1px;
+
  
 
 }
@@ -108,7 +108,7 @@ align-items: center;
 
 .numbers p:nth-child(1),
 .numbers p:nth-child(2) {
-    border-bottom: 2px solid rgb(255, 255, 255);
+    border-bottom: 1px solid rgb(255, 255, 255);
 }
 .small_container{
   border: rgba(188, 188, 188, 0.489) solid 1px;
@@ -131,14 +131,16 @@ height: 33.8%;
   text-align: center;
   font-weight: 600;
   font-size: 17px;
-  position: fixed;
-  margin-top: 13px;
   cursor: pointer;
   text-transform: lowercase;
 }
+.bigFont{
+  font-size: 27.5px !important;
+}
+
 .small_container .small_mini_container:nth-child(1),
 .small_container .small_mini_container:nth-child(2){
- border-bottom: 2px solid rgba(255, 255, 255, 0.177) ;
+ border-bottom: 1px solid rgba(255, 255, 255, 0.177) ;
 }
 .secmini_container,.thrmini_container,.forthmini_container{
   display: flex;
@@ -348,16 +350,38 @@ cursor: pointer;
   position: absolute;
   top: 10%;
 }
+
 .hovergreen{
 background-color: rgba(1, 153, 29, 0.535);
 
         }
+        .dash::after{
+  content: '';
+  width: 23px;
+  position: absolute;
+  top: 22%;
+  left: 1%;
+  border-radius: 50%;
+  height: 23px;
+  border:dashed white 2px;
+}
+.dash2::after{
+  content: '';
+  width: 23px;
+  position: absolute;
+  top: 60%;
+  left: -5px;
+  border-radius: 50%;
+  height: 23px;
+  border:dashed white 2px;
+}
 .circleIcon svg{
  color: rgb(1, 159, 1);
-  border:dashed white 3px;
+  
   border-radius: 50%;
   font-size: 20px;
   position:relative;
+  box-shadow: 1px 1px 10px 10px rgba(0, 0, 0, 0.114);
 }
 
 .childmini svg{
@@ -412,7 +436,7 @@ justify-content: space-between;
 
 
 .svg_container svg{
-  font-size: 25px;
+  font-size: 23px;
   position: relative;
 
 }

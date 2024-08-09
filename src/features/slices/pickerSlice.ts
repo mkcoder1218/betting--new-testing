@@ -1,5 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Entry } from "./RacingGameSlice";
+import betSlip from "./betSlip";
 
 export interface Ticket {
   selected: number[];
@@ -45,7 +46,7 @@ const pickerSlice = createSlice({
     },
     addRandomNumbers: (state, action: PayloadAction<number[]>) => {
       state.selected = action.payload;
-      console.log(action.payload);
+
     },
     clearNumbers: (state) => {
       state.selected = [];
@@ -55,13 +56,14 @@ const pickerSlice = createSlice({
         if (
           betslip.oddType === action.payload.oddType &&
           betslip.gameId === action.payload.gameId &&
-          betslip.entry?.Form === action.payload.entry?.Form
+          betslip.entry?.Form === action.payload.entry?.Form &&
+          betslip.selected === action.payload.selected
         ) {
           return true;
         }
         return false;
       });
-      console.log("BETSLIP_UPDATE_ADD", action.payload, _index);
+
 
       if (_index > -1) {
         state.betSlip = state.betSlip.filter((item, index) => {

@@ -4,12 +4,14 @@ interface gameTypeState {
   loading: boolean;
   error: boolean;
   gameType?: string;
+  isClearCircle?: boolean;
 }
 
 const initalState: gameTypeState = {
   loading: false,
   error: false,
   gameType: "KENO",
+  isClearCircle: false,
 };
 
 const gameTypeSlice = createSlice({
@@ -17,12 +19,15 @@ const gameTypeSlice = createSlice({
   initialState: initalState,
   reducers: {
     addGameType: (state, action: PayloadAction<string>) => {
-      console.log("PAYLOAD_CALLED", action.payload);
+
       state.gameType = action.payload;
+    },
+    setIsClearCircle: (state, action: PayloadAction<boolean>) => {
+      state.isClearCircle = action.payload;
     },
   },
 });
 
-export const { addGameType } = gameTypeSlice.actions;
+export const { addGameType, setIsClearCircle } = gameTypeSlice.actions;
 
 export default gameTypeSlice.reducer;

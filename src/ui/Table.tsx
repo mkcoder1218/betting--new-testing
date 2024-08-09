@@ -37,7 +37,7 @@ interface TableProp {
   gameDatalist?: GameData;
 }
 
-interface DispatchParams {
+export interface DispatchParams {
   selected: any;
   multiplier: number;
   toWin: number;
@@ -46,7 +46,7 @@ interface DispatchParams {
   gameId: number;
   draw?: number;
   stakeInfo?: string;
-  oddType: string;
+  oddType?: string;
   nameofplayer?: string;
   entry?: Entry;
 }
@@ -84,7 +84,6 @@ const BasicTable: React.FC<TableProp> = ({
   const handleClick = (index: number) => {
     setClickedindex(index);
     selectedCombos(index);
-    console.log("Headtext", HeadText);
 
     setClickCounter((prev) => {
       const newValue = prev + 1;
@@ -112,11 +111,8 @@ const BasicTable: React.FC<TableProp> = ({
       setbankClickOrder(index);
     }
   };
+
   useEffect(() => {
-    console.log("gamesData", data);
-  }, [isActivatedtablebutton]);
-  useEffect(() => {
-    console.log("isClear", isClear);
     if (isClear) {
       setClickCounter(0);
       setClickOrder([]);
@@ -125,7 +121,6 @@ const BasicTable: React.FC<TableProp> = ({
     }
   }, [isClear]);
   const handleDispatch = (params: DispatchParams) => {
-    console.log("BETSLIP_UPDATE_REQUESTED", params);
     if (params.entry && !checkIsSelected(params.entry, params.oddType)) {
       dispatch(
         addToBetSlip({
@@ -138,7 +133,7 @@ const BasicTable: React.FC<TableProp> = ({
           gameType: gameType,
           draw: params.draw,
           entry: params.entry,
-          // stakeInformation: params.entry,
+          stakeInformation: params.stakeInfo,
           nameofPlayer: params.nameofplayer,
           oddType: params.oddType,
         })
@@ -171,10 +166,6 @@ const BasicTable: React.FC<TableProp> = ({
     if (index > -1) return true;
     return false;
   };
-
-  useEffect(() => {
-    console.log("GameType", gameType);
-  }, [gameType]);
 
   const silkGenerator = (row: Entry, gameType: string, index: number) => {
     switch (gameType) {
@@ -306,6 +297,7 @@ const BasicTable: React.FC<TableProp> = ({
                           gameId: gameDatalist?.id,
                           draw: row.Draw,
                           oddType: "WIN",
+                          stakeInfo: "Win",
                           entry: row,
                         });
                       }}
@@ -341,6 +333,7 @@ const BasicTable: React.FC<TableProp> = ({
                           draw: row.Draw,
                           stakeInfo: "PLACE",
                           entry: row,
+                          oddType:'Place'
                         });
                       }}
                       numberofClickedbuttons={clickCounter}

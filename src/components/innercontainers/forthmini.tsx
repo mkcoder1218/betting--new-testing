@@ -28,7 +28,8 @@ function forthmini(prop: FirstMiniProp) {
     stake: number,
     Multiplier: number,
     selected: string,
-    stakeInfo: string
+    stakeInfo: string,
+    oddType:string
   ) => {
     setCircleState((prevState) => ({
       ...prevState,
@@ -41,6 +42,7 @@ function forthmini(prop: FirstMiniProp) {
         multiplier: Multiplier,
         gameId: prop.gameId,
         stake: stake,
+        oddType:oddType
       })
     );
   };
@@ -57,7 +59,8 @@ function forthmini(prop: FirstMiniProp) {
               10,
               10,
               "32/15/19/4/21/2",
-              "Selector(color)"
+              "Selector(color)",
+              "Selector(color)1"
             );
           }}
         >
@@ -73,7 +76,8 @@ function forthmini(prop: FirstMiniProp) {
               10,
               10,
               " 25/17/34/6/27/13",
-              "Selector(color)"
+              "Selector(color)",
+              "Selector(color)2"
             );
           }}
         >
@@ -89,7 +93,8 @@ function forthmini(prop: FirstMiniProp) {
               10,
               10,
               "36/11/30/8/23/10",
-              "Selector(color)"
+              "Selector(color)",
+              "Selector(color)3"
             );
           }}
         >
@@ -105,7 +110,8 @@ function forthmini(prop: FirstMiniProp) {
               10,
               10,
               "5/24/16/33/1/20",
-              "Selector(color)"
+              "Selector(color)",
+              "Selector(color)4"
             );
           }}
         >
@@ -121,7 +127,8 @@ function forthmini(prop: FirstMiniProp) {
               10,
               10,
               "14/31/9/22/18/29",
-              "Selector(color)"
+              "Selector(color)",
+              "Selector(color)5"
             );
           }}
         >
@@ -137,7 +144,8 @@ function forthmini(prop: FirstMiniProp) {
               10,
               10,
               "7/28/12/35/3/26",
-              "Selector(color)"
+              "Selector(color)",
+              "Selector(color)6"
             );
           }}
         >

@@ -65,7 +65,7 @@ export const getLastGame = (shopId: string | undefined) => async (dispatch: (arg
             dispatch(addGame({ loading: false, error: gameResponse.message, message: null, game: null }))
         }
 
-        console.log(gameResponse);
+
     } catch (err: AxiosError | any) {
         dispatch(addGame({ message: "", error: err?.response?.data ? err.response.data.error : "Something went wrong", loading: false, game: null }))
     }

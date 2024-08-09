@@ -36,7 +36,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     setSelectedGame(gameName);
     WhichGame(gameName);
     dispatch(addGameType(gameName));
-    console.log("gameNameofg:", gameName);
+
   };
 
   const toggleSelected = (item: number) => {
