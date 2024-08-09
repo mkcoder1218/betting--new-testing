@@ -81,7 +81,7 @@ function HorseRun() {
         gameData &&
         gameData.game &&
         gameData.game.map((game, index) => {
-          const data: RootEventData = game.gameData;
+          const data: RootEventData = JSON.parse(game.gameData);
 
           return (
             <>

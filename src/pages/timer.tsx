@@ -1,11 +1,16 @@
 import React from "react";
 import GenerateOption from "../utils/GenerateOption";
-function Timer() {
+import moment from "moment";
+
+interface props {
+  time: string;
+}
+const Timer: React.FC<props> = ({ time }) => {
   return (
     <div className="timecontainer">
       <div className="Nextdraw">
         <p>Next Draw</p>
-        <p>00:00</p>
+        <p>{time}</p>
       </div>
       <div className="Repeat">
         <p>Repeat</p>
@@ -17,6 +22,6 @@ function Timer() {
       </div>
     </div>
   );
-}
+};
 
 export default Timer;

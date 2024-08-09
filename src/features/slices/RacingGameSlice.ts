@@ -274,6 +274,7 @@ const racingGameSlice = createSlice({
       state.error = action.payload.error;
       state.message = action.payload.message;
       state.game = action.payload.game;
+      state.gameType = action.payload.gameType;
     },
   },
 });
@@ -329,8 +330,6 @@ export const getLastRacingGames =
           })
         );
       }
-
-
     } catch (err: AxiosError | any) {
       dispatch(
         addRacingGame({

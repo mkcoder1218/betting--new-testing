@@ -84,6 +84,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         gameId: prop.gameId,
         stake: stake,
         oddType: oddType,
+        gameType: "SpinAndWin",
       })
     );
   };

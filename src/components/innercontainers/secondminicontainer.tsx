@@ -49,7 +49,9 @@ function Secondminicontainer(prop: FirstMiniProp) {
     }
   }, [isCircle]);
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
-
+  function range(start: number, end: number): number[] {
+    return Array.from({ length: end - start + 1 }, (_, i) => i + start);
+  }
   const handleCircleClick = (
     area: keyof CircleState,
     Props: DispatchParams
@@ -73,6 +75,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
         toWin: Props.toWin,
         expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
         oddType: Props.oddType,
+        gameType: "SpinAndWin",
       })
     );
   };
@@ -86,7 +89,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
           }`}
           onClick={() => {
             handleCircleClick("first12", {
-              selected: [-1],
+              selected: range(1, 12),
               stakeInfo: "Dozens",
               multiplier: 10,
               gameId: prop.gameId,
@@ -108,7 +111,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
           }`}
           onClick={() => {
             handleCircleClick("second12", {
-              selected: [-3],
+              selected: range(13, 24),
               stakeInfo: "Dozens",
               multiplier: 10,
               gameId: prop.gameId,
@@ -128,7 +131,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
           }`}
           onClick={() => {
             handleCircleClick("third12", {
-              selected: [-5],
+              selected: range(25, 36),
               stakeInfo: "Dozens",
               multiplier: 10,
               gameId: prop.gameId,

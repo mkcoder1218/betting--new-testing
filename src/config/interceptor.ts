@@ -13,7 +13,6 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config: any) => {
-    console.log("CALLLED", userData);
     if (userData?.token && config.url !== LOGIN_URL) {
       const token = userData?.token;
       config.headers.Authorization = `Bearer ${token}`;

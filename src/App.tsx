@@ -80,26 +80,21 @@ function App() {
       );
     }
   }, [WhichGameSelected]);
-  function calculateRemainingTime() {
-    const lastUpdatedTime = gameData.game?.startTime
-      ? new Date(gameData.game.startTime).getTime()
-      : new Date().getTime();
-    const targetTime = lastUpdatedTime;
-    const currentTime = new Date().getTime();
-    const difference = targetTime - currentTime;
 
-    return difference > 0 ? difference : 0;
-  }
   useEffect(() => {
-    console.log("GamesFiltered", gameData.gameType);
-    if (gameData && gameData.gameType === "SmartPlayKeno" && update) {
-      console.log("GamesFiltered", gameData.game?.length);
+    if (
+      gameData &&
+      gameData.gameType === "SmartPlayKeno" &&
+      gameData.game &&
+      update
+    ) {
+      console.log("GamesFiltered", gameData);
       const gamesFiltered = gameData.game
         ?.filter((gamedata) => {
           return moment(gamedata.startTime).diff(moment(), "seconds") > 0;
         })
         .sort((a, b) => {
-          return moment(a.startTime).diff(moment(b.startTime), "seconds") < 0;
+          return moment(a.startTime).valueOf() - moment(b.startTime).valueOf();
         });
       console.log("GamesFiltered", gamesFiltered);
 
@@ -130,7 +125,6 @@ function App() {
           setRemainingTime(
             moment(game.startTime).diff(moment(), "milliseconds")
           );
-          // setUpdate(false);
           dispatch(getLastBetSlip());
         }
       }
@@ -140,7 +134,6 @@ function App() {
         if (lastCheck <= 10) {
           setLastCheck(lastCheck + 1);
         } else {
-          // setUpdate(true);
           // dispatch(getLastGame(user.user?.Cashier.shopId));
         }
       }, 1000);
@@ -150,8 +143,8 @@ function App() {
   }, [game, update]);
 
   useEffect(() => {
-    if (remainingTime <= 0) {
-      setUpdate(true);
+    if (remainingTime < 0 && !update) {
+      if (game) setUpdate(true);
       // dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
