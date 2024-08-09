@@ -5,20 +5,20 @@ import Thirdminicontainer from '../components/innercontainers/thirdminicontainer
 import Forthmini from '../components/innercontainers/forthmini';
 import Fifthmini from '../components/innercontainers/fifthmini';
 import Fourrowhover from '../components/svg/fourrowhover';
-function Container() {
-    
+
+interface containerProp {
+  gameid?: any;
+}
+function Container(prop: containerProp) {
   return (
-    <div className='container'>
-       
-          <Firstminicontainer/>
-        <Secondminicontainer/>
-        <Thirdminicontainer/>
-          <Forthmini/>
+    <div className="container">
+      <Firstminicontainer gameId={prop.gameid} />
+      <Secondminicontainer />
+      <Thirdminicontainer />
+      <Forthmini />
       <Fifthmini />
-   
-      
     </div>
-  )
+  );
 }
 
 export default Container

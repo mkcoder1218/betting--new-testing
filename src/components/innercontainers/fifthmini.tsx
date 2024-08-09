@@ -3,7 +3,10 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import GenerateOption from "../../utils/GenerateOption";
 
-function Fifthmini() {
+interface FirstMiniProp {
+  gameId?: any;
+}
+function Fifthmini(prop: FirstMiniProp) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [hoverdclass, sethoverdclass] = useState("hovergreen");
 
@@ -57,7 +60,7 @@ function Fifthmini() {
           style={{ height: "30%" }}
           ref={scrollContainerRef}
         >
-          {GenerateOption("span", 0, 37, hoverdclass, sethoverdclass)}
+          {GenerateOption("span", 0, 37, hoverdclass, sethoverdclass,prop.gameId)}
         </div>
         <div className="icons">
           <ChevronLeftIcon onClick={scrollLeft} />

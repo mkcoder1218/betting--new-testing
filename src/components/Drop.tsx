@@ -380,25 +380,6 @@ const Drop: React.FC<DropProp> = ({
                   </div>
                 </div>
               </div>
-            ) : activeIndexValues === 0 ? (
-              <>
-                {removeText ? (
-                  <div className="flex -ml-10 flex-col Need text-md text-black mt-16 w-full items-start">
-                    <Message text="Select to create combination bets" />
-                    <ButtonSizes
-                      text="Clear"
-                      isActive={false}
-                      SvgIconComponent={DeleteOutlineOutlinedIcon}
-                      onClick={() => {
-                        setRemovetext(false);
-                        handleClear();
-                      }}
-                    />
-                  </div>
-                ) : (
-                  ""
-                )}
-              </>
             ) : (
               ""
             )}

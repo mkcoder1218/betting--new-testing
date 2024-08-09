@@ -46,7 +46,7 @@ const pickerSlice = createSlice({
     },
     addRandomNumbers: (state, action: PayloadAction<number[]>) => {
       state.selected = action.payload;
-      console.log(action.payload);
+
     },
     clearNumbers: (state) => {
       state.selected = [];
@@ -63,7 +63,7 @@ const pickerSlice = createSlice({
         }
         return false;
       });
-      console.log("BETSLIP_UPDATE_ADD", action.payload, _index);
+
 
       if (_index > -1) {
         state.betSlip = state.betSlip.filter((item, index) => {

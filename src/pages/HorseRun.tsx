@@ -9,6 +9,7 @@ import { addHeadText } from "../features/slices/HeadSlice";
 import { useAppSelector } from "../features/hooks";
 import { RootEventData } from "../features/slices/RacingGameSlice";
 import moment from "moment";
+import CircularUnderLoad from "../components/svg/Loader";
 function HorseRun() {
   const texts = ["Main", "HEAD TO HEAD", "ALT", "SUM"];
   const dispatch = useAppDispatch();
@@ -59,7 +60,6 @@ function HorseRun() {
   useEffect(() => {
     const __interval = () => {
       _D_setInterval(0);
-      console.log("intervalCalled:", _D_interval * 1000);
     };
     let timer: NodeJS.Timeout | null = null;
     if (_D_interval !== 0) {
@@ -73,15 +73,20 @@ function HorseRun() {
         texts={texts}
         activeIndexprop={handleActiveIndex}
       />
-      {gameData &&
+      {gameData && gameData.loading ? (
+        <div className="w-full h-fit mt-10 flex justify-center">
+          <CircularUnderLoad />
+        </div>
+      ) : (
+        gameData &&
         gameData.game &&
         gameData.game.map((game, index) => {
-          const data: RootEventData = JSON.parse(game.gameData);
+          const data: RootEventData = game.gameData;
 
           return (
             <>
               <Drop
-                place={`${data.Race.Name} ${data.Race.Distance}`}
+                place={`${data.Race?.Name} ${data.Race?.Distance}`}
                 id={data.Number + ""}
                 time={game.startTime}
                 activeIndexValues={activeIndexValue}
@@ -92,7 +97,9 @@ function HorseRun() {
               />
             </>
           );
-        })}
+        })
+      )}
+      {}
     </div>
   );
 }

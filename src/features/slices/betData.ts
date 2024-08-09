@@ -124,7 +124,7 @@ export const getTicketsToCancel =
         );
       }
     } catch (err: AxiosError | any) {
-      console.log(err.response.data.error);
+
       dispatch(
         addBetData({
           message: "",
@@ -149,7 +149,7 @@ export const getTicketsToRedeem =
     dispatch(
       addBetData({ loading: true, error: null, message: null, data: null })
     );
-    console.log("TOREDEEM", betslip);
+
     try {
       const ticketsToCancel: BetSlipResponse = (
         await axiosInstance.get(`ticket/betslip/byNumber/toRedeem/${betslip}`)
@@ -278,7 +278,7 @@ export const redeemTicket =
         await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
       ).data;
 
-      console.log(redeemTicketResposne.message);
+
 
       if (redeemTicketResposne.message === "Ticket redeemed successfully") {
         try {

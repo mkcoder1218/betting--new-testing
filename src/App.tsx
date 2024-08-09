@@ -67,7 +67,6 @@ function App() {
     dispatch(addRepeat({ repeat: parseInt(event.target.value) }));
   }
   useEffect(() => {
-    console.log("whichGame", WhichGameSelected);
     if (WhichGameSelected === "KENO") {
       dispatch(addGameType(WhichGameSelected));
     } else {
@@ -151,7 +150,6 @@ function App() {
   }, [game, update]);
 
   useEffect(() => {
-    console.log("this is remaining time", remainingTime);
     if (remainingTime <= 0) {
       setUpdate(true);
       // dispatch(getLastGame(user.user?.Cashier.shopId));
@@ -227,7 +225,6 @@ function App() {
   }, []);
 
   const handleIconSelect = (val: string) => {
-    console.log("whichgameselected", WhichGameSelected);
     setWhichgameSelected(val);
   };
 
@@ -321,7 +318,7 @@ function App() {
                 </div>
               </div>
             </>
-          ) : WhichGameSelected === "SPIN AND WIN" ? (
+          ) : WhichGameSelected === "SpinAndWin" ? (
             <Spin />
           ) : (
             <HorseRun />

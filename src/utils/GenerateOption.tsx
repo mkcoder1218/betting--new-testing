@@ -1,9 +1,14 @@
 import React from "react";
 import generatehover from "./generatehover";
 import Circle from "../components/svg/circle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Fourrowhover from "../components/svg/fourrowhover";
 import Fourrow from "../components/svg/Fourrow";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { addToBetSlip } from "../features/slices/pickerSlice";
+import { Market, GameData } from "../features/slices/RacingGameSlice";
+import { setIsClearCircle } from "../features/slices/gameType";
+import { DispatchParams } from "../ui/Table";
 
 type ElementTag = keyof JSX.IntrinsicElements;
 
@@ -64,9 +69,23 @@ const GenerateOption = (
   start: number,
   number: number,
   hoveredClass: string,
+  gameId?: any,
   sethoverdclass: (className: string) => void
 ): JSX.Element[] => {
   const result = [];
+  const [hoverCircles, setHoverCircles] = useState<boolean[]>(
+    Array.from({ length: number - start + 1 }, () => false)
+  );
+  const [circles, setCircles] = useState<boolean[]>(
+    Array.from({ length: number - start + 1 }, () => false)
+  );
+  const dispatch = useAppDispatch();
+  const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
+
+  useEffect(() => {
+    if (IsCircle) setCircles([]); // Run once when IsCircle changes
+  }, [IsCircle, setCircles]);
+
   let className;
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const CollactionNumbersMap = new Map<number, number>(
@@ -75,23 +94,45 @@ const GenerateOption = (
       value,
     ])
   );
+
   const handlefindindex = (index: number) => {
     const keyForValue = Array.from(CollactionNumbersMap.entries()).find(
       ([, value]) => value === index
     )?.[0];
 
-    console.log("key val: ", CollactionNumbersMap.get(keyForValue));
     return keyForValue;
   };
-
+  const handleClickofNumber = (
+    i: number,
+    stake: number[],
+    Multiplier: number,
+    selected: string,
+    stakeInfo: string,
+    oddType?: string
+  ) => {
+    const number1 = handlefindindex(i);
+    const number2 = handlefindindex(i + 1);
+    const number3 = handlefindindex(i + 2);
+    const number4 = handlefindindex(i - 1);
+    const number5 = handlefindindex(i - 2);
+    dispatch(setIsClearCircle(false));
+    dispatch(
+      addToBetSlip({
+        selected: [number1, number2, number3, number4, number5],
+        stakeInformation: stakeInfo,
+        multiplier: Multiplier,
+        gameId: gameId,
+        stake: stake,
+        oddType: oddType,
+      })
+    );
+  };
   for (let i = 0; i < number; i++) {
     const handleMouseEnterbottom = (index: number) => {
       setHoverIndex(index);
-      console.log("index: ", index, "hoverIndex: ", hoverIndex);
     };
 
     const handleMouseLeavebottom = () => {
-      console.log("Mouse left");
       setHoverIndex(null);
     };
     if (i == 0) {
@@ -130,8 +171,20 @@ const GenerateOption = (
             handleMouseEnterbottom(i);
           },
           onMouseLeave: handleMouseLeavebottom,
+          onClick: () => {
+            handleClickofNumber(i, 10, 10, "1st 12", "Neighbors", "Neighbors");
+          },
         },
-        i.toString()
+        i.toString(),
+        circles[i - start] && <Circle />,
+        hoverCircles[i - start] && (
+          <Fourrowhover
+            row1={i > 3 ? 3 : i == 1 ? 2 : 1}
+            row2={2}
+            row3={i >= 34 ? 0 : 3}
+            i={i}
+          />
+        )
       )
     );
   }
@@ -141,13 +194,18 @@ const GenerateOption = (
 export const GenerateOption2 = (
   element: ElementTag,
   start: number,
-  number: number
+  number: number,
+  gameId?: any
 ): JSX.Element[] => {
   const result = [];
-
+  const dispatch = useAppDispatch();
+  const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
   const [circles, setCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
+  useEffect(() => {
+    if (IsCircle) setCircles([]); // Run once when IsCircle changes
+  }, [IsCircle, setCircles]);
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
@@ -158,10 +216,23 @@ export const GenerateOption2 = (
     const isFirstrow = specialNumbers.firstRownumbers.includes(i);
     const issecondrow = specialNumbers.secRownumbers.includes(i);
     const isThirdrow = specialNumbers.therdRownumbers.includes(i);
-    const handleclick = (index: number) => {
+
+    const handleclick = (index: number, i: number, param: DispatchParams) => {
       const newCircles = [...circles];
       newCircles[index] = !newCircles[index];
       setCircles(newCircles);
+      dispatch(setIsClearCircle(false));
+      dispatch(
+        addToBetSlip({
+          selected: [i],
+          stakeInformation: "Win",
+          multiplier: 10,
+          gameId: gameId,
+          stake: 10,
+          toWin: 10,
+          oddType: "Win",
+        })
+      );
     };
     const handleMouseEnter = (index: number) => {
       const newHoverCircles = Array(number - start + 1).fill(false);
@@ -224,12 +295,12 @@ export const GenerateOption2 = (
           element,
           {
             className: combinedClass,
-            onClick: () => handleclick(i - start),
+            onClick: () => handleclick(i - start, i),
             onMouseEnter: () => handleMouseEnter(i - start),
             onMouseLeave: handleMouseLeave,
           },
           i.toString(),
-          circles[i - start] && <Circle />,
+          circles[i - start] && <Circle margin={true} />,
           hoverCircles[i - start] && (
             <Fourrowhover
               row1={i > 3 ? 3 : i == 1 ? 2 : 1}

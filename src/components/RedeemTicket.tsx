@@ -48,7 +48,6 @@ export default function RedeemTicket({
   const myInputRef = useRef<HTMLInputElement>(null);
 
   const handleInput = (input: number | null, action: string) => {
-    console.log("toredeeminput", input);
     if (
       action === "add" &&
       input !== null &&
@@ -72,7 +71,6 @@ export default function RedeemTicket({
   };
 
   const handleEnter = (input: any) => {
-    console.log("toredeem", input);
     if (betslip === "") {
       return;
     }
@@ -121,7 +119,7 @@ export default function RedeemTicket({
     <div>
       <Modal
         onTransitionEnter={() => {
-          console.log("onTransitionEnter");
+
           myInputRef.current?.focus();
         }}
         open={open}

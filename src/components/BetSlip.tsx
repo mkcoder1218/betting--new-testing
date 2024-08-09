@@ -13,6 +13,7 @@ import {
   createBetSlipAndTicket,
   getLastBetSlip,
 } from "../features/slices/betSlip";
+import "../styles/icon.css";
 import ProgressCircular from "./ProgressCircular";
 import FormStatus from "./FormStatus";
 import { FaPlus } from "react-icons/fa";
@@ -31,6 +32,9 @@ import { DashingDerby } from "./svg/DashingDerby";
 import { Bicycle } from "./svg/Bicycle";
 import { HorseJump } from "./svg/HorseJump";
 import { DogWithVideo } from "./svg/DogWithVideo";
+import { CircleDraw } from "./svg/CircleDraw";
+import Hockey from "./svg/Hockey";
+import { addGameType, setIsClearCircle } from "../features/slices/gameType";
 
 export default function BetSlip() {
   const dispatch = useAppDispatch();
@@ -126,12 +130,14 @@ export default function BetSlip() {
   const clearSlip = () => {
     dispatch(clearBetSlip());
     dispatch(clearNumbers());
+    dispatch(setIsClearCircle(true));
     setBetError("");
   };
 
   const handleCreateTicket = async () => {
     setBetError("");
-    console.log("bet_state_handle_create_ticket", betState.betSlip);
+    dispatch(setIsClearCircle(true));
+
     const getBiggest = betState.betSlip.filter(
       (item) => item.stake > 1000 || item.stake * item.multiplier <= 50000
     );
@@ -163,13 +169,15 @@ export default function BetSlip() {
     let newTicketToSend = [];
     const otherGameData: any = [];
     for (let ticket of betState.betSlip) {
-      console.log("TicketData", ticket);
       otherGameData.push(ticket.selected);
       let ticketItem = {
         toWin: ticket.toWin,
         stake: ticket.stake,
         maxWin: ticket.multiplier * ticket.stake,
-        nums: gameType === "KENO" ? ticket.selected : [ticket.selected],
+        nums:
+          gameType === "KENO" || gameType === "SpinAndWin"
+            ? ticket.selected
+            : [ticket.selected],
         gameId: ticket.gameId + "",
         oddId: oddState.odd?.id,
         isCombo: ticket.isCombo,
@@ -178,7 +186,7 @@ export default function BetSlip() {
         nameOfplayer: ticket.nameofPlayer,
         gameType: ticket.gameType,
       };
-
+      console.log("ticketItem:", ticketItem);
       newTicketToSend.push(ticketItem);
     }
 
@@ -276,7 +284,6 @@ export default function BetSlip() {
 
         {betState.betSlip.length > 0 &&
           betState.betSlip.map((item, index) => {
-            console.log("itemsFF:", gameType);
             return (
               <>
                 {" "}
@@ -288,32 +295,39 @@ export default function BetSlip() {
                         ? "#fc4242"
                         : "#969696"
                     }`,
+                    width: "98%",
                   }}
                   key={index}
-                  className={`selected-nums-con w-full m-1 mt-0 p-1 text-white font-bold`}
+                  className={`selected-nums-con -ml-1 -mt-1 text-white font-bold`}
                 >
-                  <div className="ml-8 flex justify-between items-center">
-                    <div className="flex items-center -ml-3">
-                      {item.gameType === "KENO" ? (
-                        <SmartPlay isSmall={true} />
-                      ) : item.gameType === "HARNESS RACING" ? (
-                        <Garri isSmall={true} />
-                      ) : item.gameType === "MOTOR RACING" ? (
-                        <CarRacing isSmall={true} />
-                      ) : item.gameType === "GREYHOUND RACING" ? (
-                        <Jaguar isSmall={true} />
-                      ) : item.gameType === "HORSE RACING" ? (
-                        <DashingDerby isSmall={true} />
-                      ) : item.gameType === "TRACK RACING" ? (
-                        <Bicycle isSmall={true} />
-                      ) : item.gameType === "STEEPLE CHASE RACING" ? (
-                        <HorseJump isSmall={true} />
-                      ) : item.gameType === "GREYHOUND RACING" ? (
-                        <DogWithVideo isSmall={true} />
-                      ) : (
-                        ""
-                      )}
-                      <p className="text-xs flex items-center">
+                  <div className="ml-2 flex justify-between items-center">
+                    <div className="flex gap-1 items-center -mt-4">
+                      <div className="icon-container">
+                        {item.gameType === "KENO" ? (
+                          <SmartPlay isSmall={true} />
+                        ) : item.gameType === "HarnessRacing" ? (
+                          <Garri isSmall={true} />
+                        ) : item.gameType === "MotorRacing" ? (
+                          <CarRacing isSmall={true} />
+                        ) : item.gameType === "PlatinumHounds" ? (
+                          <Jaguar isSmall={true} />
+                        ) : item.gameType === "DashingDerby" ? (
+                          <DashingDerby isSmall={true} />
+                        ) : item.gameType === "CycleRacing" ? (
+                          <Bicycle isSmall={true} />
+                        ) : item.gameType === "SteepleChase" ? (
+                          <HorseJump isSmall={true} />
+                        ) : item.gameType === "PreRecRealDogs" ? (
+                          <DogWithVideo isSmall={true} />
+                        ) : gameType === "SpinAndWin" ? (
+                          <CircleDraw />
+                        ) : gameType === "SpeedSkating" ? (
+                          <Hockey />
+                        ) : (
+                          ""
+                        )}
+                      </div>
+                      <p className="text-xs flex items-center -mb-5">
                         {item.stakeInformation}
                       </p>
                     </div>
@@ -325,10 +339,17 @@ export default function BetSlip() {
                     </span>
                   </div>
                   <div className="flex">
-                    <p className="flex text-sm gap-1 ml-3">
+                    <p
+                      className="flex gap-1 ml-7 "
+                      style={{ paddingTop: "-20px", fontSize: 13 }}
+                    >
                       <p>
                         {item.draw}
-                        {!item.isCombo ? "." : ""}
+                        {!item.isCombo &&
+                        gameType != "KENO" &&
+                        gameType != "SpinAndWin"
+                          ? "."
+                          : ""}
                       </p>
                       {gameType === "KENO"
                         ? (!item.selected.includes(-2) &&
@@ -339,8 +360,41 @@ export default function BetSlip() {
                             "HEADS",
                           item.selected.includes(-4) && "EVENS",
                           item.selected.includes(-6) && "TAILS")
+                        : gameType === "SpinAndWin"
+                        ? item.selected.includes(-1)
+                          ? "1st 12"
+                          : item.selected.includes(-3)
+                          ? "2nd 12"
+                          : item.selected.includes(-5)
+                          ? "3rd 12"
+                          : item.selected.length > 0 &&
+                            item.oddType === "Selector(color)" &&
+                            Array.isArray(item.selected)
+                          ? item.selected.join("/")
+                          : item.oddType === "Column"
+                          ? "2 to 1"
+                          : item.oddType === "Dozens1"
+                          ? "1st 12"
+                          : item.oddType === "Dozens2"
+                          ? "2nd 12"
+                          : item.oddType === "Dozens3"
+                          ? "3rd 12"
+                          : item.oddType === "High/low1"
+                          ? "1-18"
+                          : item.oddType === "High/low2"
+                          ? "19-36"
+                          : item.oddType === "Even/odd1"
+                          ? "Even"
+                          : item.oddType === "Even/odd2"
+                          ? "Odd"
+                          : item.oddType === "Color1"
+                          ? "Red"
+                          : item.oddType === "Color2"
+                          ? "Black"
+                          : item.selected.length === 0 || item.oddType === "Win"
+                          ? item.selected
+                          : ""
                         : item.nameofPlayer}
-
                       {!item.isCombo ? (
                         <span
                           className={`${"bg-green-700 border-2 border-green-400 h-3 mt-1 flex items-center justify-center"} p-1 text-white text-xs`}
@@ -585,9 +639,7 @@ export default function BetSlip() {
             }
             onClick={handleCreateTicket}
             className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${
-              /*currentDate < betState.betSlip[0]?.expiry
-                ? "bg-green-500"
-                :*/ "bg-green-200"
+              betState.betSlip.length > 0 ? "bg-green-500" : "bg-green-200"
             }`}
           >
             PLACE BET

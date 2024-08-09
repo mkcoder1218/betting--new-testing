@@ -4,12 +4,10 @@ const TestComponent = () => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const handleMouseEnter = (index: number) => {
-    console.log("Mouse entered on index:", index);
     setHoverIndex(index);
   };
 
   const handleMouseLeave = () => {
-    console.log("Mouse left");
     setHoverIndex(null);
   };
 

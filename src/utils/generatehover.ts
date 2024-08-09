@@ -7,7 +7,7 @@ const generatehover = (selector: string) => {
         const htmlelemnt = element as HTMLElement
         
         htmlelemnt.classList.add('greenhover')
-        console.log('how many',elements.length)
+
     });
 };
 export const disablehover = (selector: string) => {

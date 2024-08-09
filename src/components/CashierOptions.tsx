@@ -181,7 +181,7 @@ export default function CashierOptions({
 
   React.useEffect(() => {
     getTicketList();
-    console.log(cashierName);
+
   }, [cashierName]);
   React.useEffect(() => {
     if (cashierState && cashierState.data) {
@@ -236,9 +236,7 @@ export default function CashierOptions({
 
     printSelectedTickets(payload);
   };
-  React.useEffect(() => {
-    console.log("USERDATA", userData.user);
-  }, [userData]);
+ 
 
   const exportToExcel = (data: CashierData[] | null) => {
     if (!data) {

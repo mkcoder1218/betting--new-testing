@@ -330,7 +330,7 @@ export const getLastRacingGames =
         );
       }
 
-      console.log(gameResponse);
+
     } catch (err: AxiosError | any) {
       dispatch(
         addRacingGame({
