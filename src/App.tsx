@@ -82,6 +82,15 @@ function App() {
   }, [WhichGameSelected]);
 
   useEffect(() => {
+    dispatch(
+      getLastRacingGames(
+        "9c6d610d-33e9-4847-80ab-5e179833591e",
+        "SmartPlayKeno"
+      )
+    );
+  }, []);
+
+  useEffect(() => {
     if (
       gameData &&
       gameData.gameType === "SmartPlayKeno" &&
