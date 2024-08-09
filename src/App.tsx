@@ -36,6 +36,7 @@ import {
 } from "./features/slices/RacingGameSlice";
 import Spin from "./pages/Spin";
 import TestComponent from "./utils/Tst";
+import { useAxiosInterceptors } from "./config/interceptor";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
@@ -58,7 +59,7 @@ function App() {
   const [game, setGame] = useState<GameData>();
   const [remainingTime, setRemainingTime] = useState(0);
   const [update, setUpdate] = useState(true);
-
+  useAxiosInterceptors();
   const handlePrintDialogClose = () => {
     setPrinterDialog(false);
   };
@@ -176,7 +177,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
-    dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno"));
+    // dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno"));
     //for stake
     // if (remainingTime === 0) {
     //   dispatch(getLastGame(user.user?.Cashier.shopId));
@@ -251,7 +252,7 @@ function App() {
       <div className="border-gray-300 border-t-4 flex items-start justify-between">
         <div className="left" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
-          {WhichGameSelected === "KENO" ? (
+          {WhichGameSelected === "SmartPlayKeno" ? (
             <>
               {" "}
               <div className="next-draw flex mt-4 ml-7">

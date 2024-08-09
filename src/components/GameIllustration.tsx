@@ -36,7 +36,6 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     setSelectedGame(gameName);
     WhichGame(gameName);
     dispatch(addGameType(gameName));
-
   };
 
   const toggleSelected = (item: number) => {
@@ -45,7 +44,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   };
 
   const dropdownItems = [
-    { icon: <SmartPlay />, text1: "KENO", text2: "", width: "w-8" },
+    { icon: <SmartPlay />, text1: "SmartPlayKeno", text2: "", width: "w-8" },
     {
       icon: <DogWithVideo />,
       text1: "PreRecRealDogs",
