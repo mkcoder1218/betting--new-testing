@@ -10,7 +10,6 @@ const NumberPicker: React.FC = () => {
 
     const toggleNumber = (number: number) => {
       // if (currentDate > ticketExpiry) return;
-
       dispatch(addPickedNumbers(number));
     };
 

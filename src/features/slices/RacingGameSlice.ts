@@ -262,7 +262,7 @@ const initialState: RacingGameState = {
   loading: false,
   error: null,
   message: null,
-  gameType: "MotorRacing",
+  gameType: "SmartPlayKeno",
 };
 
 const racingGameSlice = createSlice({

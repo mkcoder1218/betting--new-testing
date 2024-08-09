@@ -85,8 +85,9 @@ export default function BetSlip() {
   useEffect(() => {
     const timer = setInterval(() => {
       for (let ticket of betState.betSlip) {
+        console.log("TIMER_UPDATE", currentDate > ticket.expiry);
         if (currentDate > ticket.expiry) {
-          // setExpired(true);
+          setExpired(true);
           break;
         }
       }
@@ -94,14 +95,13 @@ export default function BetSlip() {
 
     if (expired) {
       setExpired(false);
-
       setTimeout(() => {
         clearSlip();
         setBetError("");
-      }, 3000);
+      }, 2000);
     }
     return () => clearInterval(timer);
-  });
+  }, []);
 
   const toggleStatus = (val: boolean) => {
     setStatusVisible(val);
@@ -144,7 +144,7 @@ export default function BetSlip() {
         return;
       }
     }
-    if (betState.totalToWin > 50000) {
+    if (betState.totalToWin > 900000) {
       setBetError(
         "The stake on one or more of your bets is not within the allowed betting limits"
       );
@@ -284,9 +284,9 @@ export default function BetSlip() {
                   onClick={() => setSelected(index)}
                   style={{
                     backgroundColor: `${
-                      // currentDate > betState.betSlip[0].expiry
-                      //   ? "#fc4242"
-                      "#969696"
+                      currentDate > betState.betSlip[0].expiry
+                        ? "#fc4242"
+                        : "#969696"
                     }`,
                   }}
                   key={index}

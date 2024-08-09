@@ -30,14 +30,17 @@ import Car from "./pages/Car";
 import Hockey from "./pages/Hokey";
 
 import Formula1 from "./pages/Formula1";
-import { getLastRacingGames } from "./features/slices/RacingGameSlice";
+import {
+  GameData,
+  getLastRacingGames,
+} from "./features/slices/RacingGameSlice";
 import Spin from "./pages/Spin";
 import TestComponent from "./utils/Tst";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const oddData = useAppSelector((state) => state.odd);
-  const gameData = useAppSelector((state) => state.game);
+  // const gameData = useAppSelector((state) => state.game);
   const [printerDialog, setPrinterDialog] = useState(false);
   const [WhichGameSelected, setWhichgameSelected] = useState("KENO");
   const ticketExpiry = useAppSelector((state) => state.expiry);
@@ -48,12 +51,13 @@ function App() {
   const [lastCheck, setLastCheck] = useState(0);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const gameData = useAppSelector((state) => state.racingGame);
   const handleRedeemOpen = () => setRedeemStatus(true);
   const handleRedeemClose = () => setRedeemStatus(false);
   const handleCancelRedeem = (val: string) => setCancelRedeem(val);
-
+  const [game, setGame] = useState<GameData>();
   const [remainingTime, setRemainingTime] = useState(0);
+  const [update, setUpdate] = useState(true);
 
   const handlePrintDialogClose = () => {
     setPrinterDialog(false);
@@ -87,46 +91,70 @@ function App() {
 
     return difference > 0 ? difference : 0;
   }
-
   useEffect(() => {
-    const lastUpdatedTime = gameData.game?.startTime
-      ? new Date(gameData.game.startTime).getTime()
-      : new Date().getTime();
-    dispatch(addExpiry({ expiry: lastUpdatedTime }));
+    console.log("GamesFiltered", gameData.gameType);
+    if (gameData && gameData.gameType === "SmartPlayKeno" && update) {
+      console.log("GamesFiltered", gameData.game?.length);
+      const gamesFiltered = gameData.game
+        ?.filter((gamedata) => {
+          return moment(gamedata.startTime).diff(moment(), "seconds") > 0;
+        })
+        .sort((a, b) => {
+          return moment(a.startTime).diff(moment(b.startTime), "seconds") < 0;
+        });
+      console.log("GamesFiltered", gamesFiltered);
 
-    if (gameData.game) {
-      const currentDiff =
-        new Date().getTime() - new Date(gameData.game?.startTime).getTime();
-      const diffInMinutes = currentDiff / (1000 * 60);
-
-      if (diffInMinutes <= 10) {
-        setRemainingTime(
-          moment(gameData.game?.startTime).diff(moment(), "milliseconds")
+      if (gamesFiltered && gamesFiltered.length > 0) {
+        setGame(gamesFiltered[0]);
+        setUpdate(false);
+      } else {
+        dispatch(
+          getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
         );
-        dispatch(getLastBetSlip());
       }
     }
+  }, [gameData, update]);
 
-    const timer = setInterval(() => {
-      setRemainingTime(
-        moment(gameData.game?.startTime).diff(moment(), "milliseconds")
-      );
-      if (lastCheck <= 10) {
-        setLastCheck(lastCheck + 1);
-      } else {
-        dispatch(getLastGame(user.user?.Cashier.shopId));
-      }
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [gameData]);
   useEffect(() => {
-    console.log("remaining time", remainingTime);
-  }, [remainingTime]);
+    if (game) {
+      const lastUpdatedTime = game
+        ? new Date(game.startTime).getTime()
+        : new Date().getTime();
+      dispatch(addExpiry({ expiry: lastUpdatedTime }));
+
+      if (game && update) {
+        const currentDiff =
+          new Date().getTime() - new Date(game.startTime).getTime();
+        const diffInMinutes = currentDiff / (1000 * 60);
+
+        if (diffInMinutes <= 10) {
+          setRemainingTime(
+            moment(game.startTime).diff(moment(), "milliseconds")
+          );
+          // setUpdate(false);
+          dispatch(getLastBetSlip());
+        }
+      }
+
+      const timer = setInterval(() => {
+        setRemainingTime(moment(game.startTime).diff(moment(), "milliseconds"));
+        if (lastCheck <= 10) {
+          setLastCheck(lastCheck + 1);
+        } else {
+          // setUpdate(true);
+          // dispatch(getLastGame(user.user?.Cashier.shopId));
+        }
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [game, update]);
+
   useEffect(() => {
     console.log("this is remaining time", remainingTime);
     if (remainingTime <= 0) {
-      dispatch(getLastGame(user.user?.Cashier.shopId));
+      setUpdate(true);
+      // dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
 
@@ -148,10 +176,11 @@ function App() {
 
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
-
-    if (remainingTime === 0) {
-      dispatch(getLastGame(user.user?.Cashier.shopId));
-    }
+    dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno"));
+    //for stake
+    // if (remainingTime === 0) {
+    //   dispatch(getLastGame(user.user?.Cashier.shopId));
+    // }
   }, []);
 
   const checkStatus = async () => {
@@ -227,7 +256,7 @@ function App() {
             <>
               {" "}
               <div className="next-draw flex mt-4 ml-7">
-                {gameData.game && remainingTime > 0 ? (
+                {game && remainingTime > 0 ? (
                   <div className="bg-red-500 font-bold p-2 text-sm text-white flex items-center">
                     NEXT DRAW{" "}
                     <span className="text-amber-300 font-bold ml-4">
@@ -271,7 +300,13 @@ function App() {
                   className="flex flex-col gap-4 items-start mt-2"
                   style={{ flexBasis: "38%" }}
                 >
-                  <TicketSlipHolder gameType={WhichGameSelected} />
+                  {game && (
+                    <TicketSlipHolder
+                      gameType={"SmartPlayKeno"}
+                      gameData={game}
+                      update={update}
+                    />
+                  )}
                   <div
                     className="speech left mt-20"
                     style={{

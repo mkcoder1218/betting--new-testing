@@ -9,12 +9,20 @@ import {
 import React, { useEffect, useState } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
 import { defaultStake } from "../config/constants";
+import { GameData } from "../features/slices/RacingGameSlice";
+import moment from "moment";
 // import { writeToPrinter } from "./SlipPrinter";
 interface TicketHolderProp {
   gameType: string;
+  gameData: GameData;
+  update: boolean;
 }
 
-const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
+const TicketSlipHolder: React.FC<TicketHolderProp> = ({
+  gameType,
+  gameData,
+  update,
+}) => {
   const pickedNumbers = useAppSelector((state) => state.picker.selected);
   const betSlip = useAppSelector((state) => state.picker.betSlip);
   const betState = useAppSelector((state) => state.betSlip);
@@ -38,6 +46,10 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
     setOdds([]);
   };
 
+  useEffect(() => {
+    if (update) clearList();
+  }, [update]);
+
   const addToSlip = ({
     selected,
     multiplier,
@@ -59,11 +71,11 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
       dispatch(
         addToBetSlip({
           selected: selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          expiry: new Date(gameData.startTime).getTime(),
           multiplier,
           toWin,
           stake,
-          gameId,
+          gameId: gameData.id,
           gameType,
         })
       );

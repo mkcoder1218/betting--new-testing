@@ -707,10 +707,10 @@ export default function CashierOptions({
                           <div className="w-2/3 mr-20 mt-4">
                             <div className="mb-3">
                               <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4 w-full">
-                                {gameResult.gameType === "KENO" &&
+                                {gameResult.gameType === "SmartPlayKeno" &&
                                   gameResult &&
-                                  gameResult
-                                    .slice()
+                                  JSON.parse(gameResult.result)
+                                    .MarketResults[0].WinningSelections.slice()
                                     .sort((a, b) => parseInt(a) - parseInt(b))
                                     .map((_) => {
                                       return (
@@ -727,7 +727,7 @@ export default function CashierOptions({
                                     })}
                               </div>
                             </div>
-                            {gameResult.gameType !== "KENO" && (
+                            {gameResult.gameType !== "SmartPlayKeno" && (
                               <Result
                                 Icon={Jaguar}
                                 isSmall={true}
