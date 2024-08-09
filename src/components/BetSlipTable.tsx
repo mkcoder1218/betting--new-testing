@@ -272,8 +272,8 @@ const BetSlipTable = ({ type, data }: ActionType) => {
               <div className="mb-3">
                 <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4">
                   {gameResult &&
-                    gameResult
-                      .slice()
+                    JSON.parse(gameResult)
+                      .MarketResults[0].WinningSelections.slice()
                       .sort((a, b) => parseInt(a) - parseInt(b))
                       .map((_, index) => {
                         // const number = index + 1;
