@@ -155,9 +155,11 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
     <div className="mid-row flex items-center content-center mt-2 gap-3 w-full">
       <div
         style={{ backgroundColor: "#008000" }}
-        className="p-2 flex-2 text-sm rounded-sm flex font-bold items-center gap-3 text-white"
+        className="p-2 flex-2 text-sm rounded-sm flex font-bold items-center gap-3 max-h-8 text-white"
       >
-        QUICK PICK{" "}
+        <div className="flex gap-1 font-lg">
+          <p className="text-lg">QUICK</p> <p className="text-lg">PICK</p>
+        </div>
         <span className="text-black rounded-sm bg-gray-400">
           <select onChange={handleSelectChange}>
             {["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
@@ -181,10 +183,10 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
           backgroundColor: `${!heads ? "#BC4307" : "#008000"}`,
         }}
         onClick={() => addHeads(!heads)}
-        className={` head-tail cursor-pointer flex-1 transition-all font-bold p-2 text-sm rounded-sm text-white`}
+        className={`head-tail cursor-pointer transition-all flex font-bold p-1 max-h-8 text-md rounded-sm text-white`}
       >
         HEADS
-        <span className="text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
+        <span className="text-black head-tail-sub text-lg flex items-center border border-green-500 font-bold p-1 pl-6 pr-6 ml-24 bg-amber-200 rounded-sm">
           2
         </span>
       </div>
@@ -193,10 +195,10 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
           backgroundColor: evens ? "#257832" : "#f87171",
         }}
         onClick={() => addEvens(!evens)}
-        className={`head-tail cursor-pointer transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}
+        className={`head-tail cursor-pointer transition-all flex font-bold p-1 max-h-8 text-md rounded-sm text-white`}
       >
         EVENS
-        <span className="text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
+        <span className="text-black head-tail-sub text-lg text-center flex items-center border border-green-500 font-bold p-0.5 pl-6 pr-6 ml-24 bg-amber-200 rounded-sm">
           4
         </span>
       </div>
@@ -205,10 +207,10 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
           backgroundColor: `${!tails ? "#D75D1A" : "#008000"}`,
         }}
         onClick={() => addTails(!tails)}
-        className={`cursor-pointer head-tail transition-all flex-1 font-bold p-2 text-sm rounded-sm text-white`}
+        className={`head-tail cursor-pointer transition-all flex font-bold p-1 max-h-8 text-md rounded-sm text-white`}
       >
         TAILS
-        <span className="text-black head-tail-sub text-md font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
+        <span className="text-black head-tail-sub text-lg text-center flex items-center border border-green-500 font-bold p-0.5 pl-6 pr-6 ml-24 bg-amber-200 rounded-sm">
           2
         </span>
       </div>

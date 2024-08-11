@@ -25,7 +25,7 @@ interface gameSelection {
 }
 const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedGame, setSelected] = useState(3);
+  const [selectedGame, setSelected] = useState(0);
   const [selectedGametext, setSelectedGame] = useState("");
   const [isActive, setActive] = useState(0);
   const dispatch = useAppDispatch();
@@ -33,10 +33,11 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     setIsOpen(!isOpen);
   };
 
-  const handleClickGame = (gameName: string) => {
+  const handleClickGame = (gameName: string, index: number) => {
     setSelectedGame(gameName);
     WhichGame(gameName);
     dispatch(addGameType(gameName));
+    setSelected(index);
   };
 
   const toggleSelected = (item: number) => {
@@ -111,7 +112,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                     isActive === index ? "text-green-600" : ""
                   }`}
                   onClick={() => {
-                    handleClickGame(item.text1);
+                    handleClickGame(item.text1, index);
                     handleClick(index);
                   }}
                 >
@@ -129,7 +130,11 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
               className="text-green-600"
               size={36}
             />
-            <div className="flex ml-2 items-center">
+            <div
+              className={`flex ml-2 ${
+                selectedGame === 4 ? "gap-4" : ""
+              } items-center`}
+            >
               <button
                 className={`text-green-500 hover:text-green-300 transition-all ${dropdownItems[selectedGame].width}`}
               >
