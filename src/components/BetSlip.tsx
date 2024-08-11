@@ -599,7 +599,7 @@ export default function BetSlip() {
               </div>
               <div className="text-lg font-medium text-gray-500 mt-1 flex justify-between items-center">
                 <p>TOTAL "TO WIN"</p>
-                <p>{betState.totalToWin}.00 BR</p>
+                <p>{Math.floor(betState.totalToWin)}.00 BR</p>
               </div>
             </div>
 
