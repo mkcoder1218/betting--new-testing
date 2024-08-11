@@ -23,7 +23,7 @@ const Timer: React.FC<Time> = ({ isLive, _time, isgameActive }) => {
       isLive(true);
     }
     return () => clearInterval(timerId);
-  }, [time, isLive, isgetLive]);
+  }, [time, _time]);
   return (
     <>
       {isgetLive ? (
