@@ -172,7 +172,7 @@ export default function BetSlip() {
     for (let ticket of betState.betSlip) {
       otherGameData.push(ticket.selected);
       let ticketItem = {
-        toWin: ticket.toWin,
+        toWin: Math.floor(ticket.toWin),
         stake: ticket.stake,
         maxWin: ticket.multiplier * ticket.stake,
         nums:
