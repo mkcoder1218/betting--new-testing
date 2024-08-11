@@ -3,8 +3,8 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
 interface plusminusProp {
-  isActiveGame: boolean;
-  isActive: boolean;
+  isActiveGame?: boolean;
+  isActive?: boolean;
   onClick?: () => void;
 }
 const PlusMinus: React.FC<plusminusProp> = ({

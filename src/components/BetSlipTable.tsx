@@ -168,12 +168,12 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                     {((!item.nums.includes(-2) &&
                       !item.nums.includes(-4) &&
                       !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win < 1) && "Lost"} */}
-                        {item.Game.gameType === "KENO" &&
+                        {item.Game.gameType === "SmartPlayKeno" &&
                           !item.nums.includes(-2) &&
                           !item.nums.includes(-4) &&
                           !item.nums.includes(-6) &&
                           "Win"}
-                        {item.Game.gameType !== "KENO" && item.oddType}
+                        {item.Game.gameType !== "SmartPlayKeno" && item.oddType}
                         {(item.nums.includes(-2) ||
                           item.nums.includes(-4) ||
                           item.nums.includes(-6)) &&

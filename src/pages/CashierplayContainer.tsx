@@ -8,15 +8,25 @@ import Fourrowhover from "../components/svg/fourrowhover";
 
 interface containerProp {
   gameid?: any;
+  gameNumber?: any;
 }
 function Container(prop: containerProp) {
   return (
     <div className="container">
-      <Firstminicontainer gameId={prop.gameid} />
-      <Secondminicontainer gameId={prop.gameid} />
-      <Thirdminicontainer gameId={prop.gameid} />
-      <Forthmini gameId={prop.gameid} />
-      <Fifthmini gameId={prop.gameid} />
+      <Firstminicontainer
+        gameId={prop.gameid}
+        gameNumber={prop.gameNumber[0]}
+      />
+      <Secondminicontainer
+        gameId={prop.gameid}
+        gameNumber={prop.gameNumber[0]}
+      />
+      <Thirdminicontainer
+        gameId={prop.gameid}
+        gameNumber={prop.gameNumber[0]}
+      />
+      <Forthmini gameId={prop.gameid} gameNumber={prop.gameNumber[0]} />
+      <Fifthmini gameId={prop.gameid} gameNumber={prop.gameNumber[0]} />
     </div>
   );
 }

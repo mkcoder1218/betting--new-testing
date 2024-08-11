@@ -93,6 +93,7 @@ function HorseRun() {
                 data={data}
                 isActiveGame={index === activeIndex}
                 isPastGame={index === pastIndex}
+                gameNumber={data.Number}
               />
             </>
           );

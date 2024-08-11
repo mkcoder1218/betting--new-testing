@@ -13,8 +13,10 @@ import CircularUnderLoad from "../components/svg/Loader";
 import moment from "moment";
 import { addExpiry } from "../features/slices/ticketExpiry";
 import { getLastBetSlip } from "../features/slices/betSlip";
+import { RootEventData } from "../features/slices/RacingGameSlice";
 function Spin() {
   const [gameid, setgameId] = useState<RootEventData | null>(null);
+
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const gameData = useAppSelector((state) => state.racingGame);
@@ -105,6 +107,11 @@ function Spin() {
       // dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
+  const data = gameData.game?.map((game) => {
+    const data2: RootEventData = game.gameData;
+
+    return data2.Number;
+  });
 
   return (
     <div className="App">
@@ -116,7 +123,7 @@ function Spin() {
             <CircularUnderLoad />
           </div>
         ) : (
-          game && <Container gameid={game.id} />
+          game && <Container gameid={game.id} gameNumber={data} />
         )}
       </div>
     </div>

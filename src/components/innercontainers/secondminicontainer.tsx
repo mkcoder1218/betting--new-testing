@@ -6,6 +6,7 @@ import { addToBetSlip } from "../../features/slices/pickerSlice";
 import { setIsClearCircle } from "../../features/slices/gameType";
 import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
+import { OddNUMBERMap } from "../../utils/odd";
 type CircleState = {
   first12: boolean;
   second12: boolean;
@@ -14,6 +15,7 @@ type CircleState = {
 
 interface FirstMiniProp {
   gameId?: any;
+  gameNumber?: any;
 }
 function Secondminicontainer(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
@@ -76,6 +78,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
         expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
         oddType: Props.oddType,
         gameType: "SpinAndWin",
+        gameNumber:prop.gameNumber
       })
     );
   };
@@ -91,11 +94,12 @@ function Secondminicontainer(prop: FirstMiniProp) {
             handleCircleClick("first12", {
               selected: range(1, 12),
               stakeInfo: "Dozens",
-              multiplier: 10,
+              multiplier: OddNUMBERMap.Dozens,
               gameId: prop.gameId,
               stake: 10,
               toWin: 10,
               oddType: "Dozens1",
+              gameNumber:prop.gameNumber
             });
           }}
           onMouseOver={() => generatehover(".number-row1")}
@@ -113,11 +117,12 @@ function Secondminicontainer(prop: FirstMiniProp) {
             handleCircleClick("second12", {
               selected: range(13, 24),
               stakeInfo: "Dozens",
-              multiplier: 10,
+              multiplier: OddNUMBERMap.Dozens,
               gameId: prop.gameId,
               stake: 10,
               toWin: 10,
               oddType: "Dozens2",
+              gameNumber: prop.gameNumber,
             });
           }}
           onMouseOver={() => generatehover(".number-row2")}
@@ -133,11 +138,12 @@ function Secondminicontainer(prop: FirstMiniProp) {
             handleCircleClick("third12", {
               selected: range(25, 36),
               stakeInfo: "Dozens",
-              multiplier: 10,
+              multiplier: OddNUMBERMap.Dozens,
               gameId: prop.gameId,
               stake: 10,
               toWin: 10,
               oddType: "Dozens3",
+              gameNumber: prop.gameNumber,
             });
           }}
           onMouseOver={() => generatehover(".number-row3")}

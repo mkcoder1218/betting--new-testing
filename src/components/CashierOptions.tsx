@@ -683,7 +683,7 @@ export default function CashierOptions({
                                 "DD/MM/YYYY hh:mm:ss"
                               )}{" "}
                               ID{" "}
-                              {gameResult.gameType === "KENO"
+                              {gameResult.gameType === "SmartPlayKeno"
                                 ? gameResult.gamenumber
                                 : JSON.parse(gameResult.gameData).Number}
                             </p>

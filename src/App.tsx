@@ -37,13 +37,14 @@ import {
 import Spin from "./pages/Spin";
 import TestComponent from "./utils/Tst";
 import { useAxiosInterceptors } from "./config/interceptor";
+import CircularUnderLoad from "./components/svg/Loader";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const oddData = useAppSelector((state) => state.odd);
   // const gameData = useAppSelector((state) => state.game);
   const [printerDialog, setPrinterDialog] = useState(false);
-  const [WhichGameSelected, setWhichgameSelected] = useState("KENO");
+  const [WhichGameSelected, setWhichgameSelected] = useState("SmartPlayKeno");
   const ticketExpiry = useAppSelector((state) => state.expiry);
   const ticketPicker = useAppSelector((state) => state.picker);
   const [open, setOpen] = useState(false);
@@ -249,7 +250,7 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      <div className="border-gray-300 border-t-4 flex items-start justify-between">
+      <div className="flex items-start justify-between overflow-y-scroll">
         <div className="left" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "SmartPlayKeno" ? (
@@ -289,37 +290,45 @@ function App() {
                   </span>
                 </div>
               </div>
-              <div className="picker-container flex justify-stretch items-start ml-7">
-                <div className="picker-left basis-full">
-                  <TicketSelector gameType={WhichGameSelected} />
-                  <div className="number-picker mt-4 w-full">
-                    <NumberPicker />
-                  </div>
+              {gameData && gameData.loading ? (
+                <div className="w-full h-fit mt-10 flex justify-center">
+                  <CircularUnderLoad />
                 </div>
-                <div
-                  className="flex flex-col gap-4 items-start mt-2"
-                  style={{ flexBasis: "38%" }}
-                >
-                  {game && (
-                    <TicketSlipHolder
-                      gameType={"SmartPlayKeno"}
-                      gameData={game}
-                      update={update}
-                    />
-                  )}
+              ) : (
+                <div className="picker-container flex justify-stretch items-start ml-7">
+                  <div className="picker-left basis-full">
+                    <TicketSelector gameType={WhichGameSelected} />
+                    <div className="number-picker mt-4 w-full">
+                      <NumberPicker />
+                    </div>
+                  </div>
                   <div
-                    className="speech left mt-20"
-                    style={{
-                      visibility:
-                        ticketPicker.selected.length < 1 ? "visible" : "hidden",
-                    }}
+                    className="flex flex-col gap-4 items-start mt-2"
+                    style={{ flexBasis: "38%" }}
                   >
-                    Pick 1 to 10 numbers from 80. Pick numbers which you think
-                    randomly will be selected. The more you pick the more you
-                    could win.
+                    {game && (
+                      <TicketSlipHolder
+                        gameType={"SmartPlayKeno"}
+                        gameData={game}
+                        update={update}
+                      />
+                    )}
+                    <div
+                      className="speech left mt-20"
+                      style={{
+                        visibility:
+                          ticketPicker.selected.length < 1
+                            ? "visible"
+                            : "hidden",
+                      }}
+                    >
+                      Pick 1 to 10 numbers from 80. Pick numbers which you think
+                      randomly will be selected. The more you pick the more you
+                      could win.
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </>
           ) : WhichGameSelected === "SpinAndWin" ? (
             <Spin />

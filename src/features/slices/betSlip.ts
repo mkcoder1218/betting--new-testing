@@ -64,7 +64,7 @@ const initialState: BetSlipState<BetSlip | BetSlipData> = {
   message: null,
   data: {
     betSlipNumber: '',
-    gameType: 'KENO'
+    gameType: 'SmartPlayKeno'
   },
 };
 

@@ -6,7 +6,7 @@ function Hockey() {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 47.53 51.97"
       data-svg-id="SpeedSkatingSVG"
-      className="icon w-10 text-gray-500 hover:text-green-700"
+      className="icon w-7 text-gray-500 hover:text-green-700"
       style={{ color: "gray" }}
       src="/Images/SpeedSkatingIcon.svg"
     >

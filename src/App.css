@@ -24,11 +24,17 @@
 }
 
 .balls{
-  transition: background-color 0.3s;
+  transition: all 0.1s;
 }
-
+.containerBetslip{
+  box-shadow: 1px 5px 13px 5px rgba(177, 176, 176, 0.271);
+}
 .balls:hover{
   background-color: #a6c99f !important;
+  transform: scale(1.1);
+}
+.clearAdd:hover{
+box-shadow: inset 1px 1px 3px 3px rgba(0, 0, 0, 0.091);
 }
 
 .head-tail{
@@ -37,4 +43,14 @@
 
 .head-tail:hover .head-tail-sub{
   background-color: #008000;
+}
+.header-container{
+  box-shadow: rgba(216, 215, 215, 0.77) 1px 1px 10px 6px;
+  border: white 1px solid;
+}
+.addtobetButton{
+  box-shadow: 1px 1px 1px 3px rgba(207, 207, 207, 0.557) ;
+}
+.addtobetButton:hover{
+    box-shadow:inset 1px 1px 5px 5px rgba(7, 7, 7, 0.117);
 }

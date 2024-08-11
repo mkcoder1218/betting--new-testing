@@ -9,6 +9,7 @@ import { addToBetSlip } from "../features/slices/pickerSlice";
 import { Market, GameData } from "../features/slices/RacingGameSlice";
 import { setIsClearCircle } from "../features/slices/gameType";
 import { DispatchParams } from "../ui/Table";
+import { OddNUMBERMap } from "./odd";
 
 type ElementTag = keyof JSX.IntrinsicElements;
 
@@ -70,6 +71,7 @@ const GenerateOption = (
   number: number,
   hoveredClass: string,
   gameId?: any,
+  currentgameNumber?: any,
   sethoverdclass: (className: string) => void
 ): JSX.Element[] => {
   const result = [];
@@ -120,10 +122,12 @@ const GenerateOption = (
       addToBetSlip({
         selected: [number1, number2, number3, number4, number5],
         stakeInformation: stakeInfo,
-        multiplier: Multiplier,
+        multiplier: OddNUMBERMap.Nei,
         gameId: gameId,
         stake: stake,
         oddType: oddType,
+        gameType: "Neighbors",
+        gameNumber: currentgameNumber,
       })
     );
   };
@@ -172,7 +176,7 @@ const GenerateOption = (
           },
           onMouseLeave: handleMouseLeavebottom,
           onClick: () => {
-            handleClickofNumber(i, 10, 10, "1st 12", "Neighbors", "Neighbors");
+            handleClickofNumber(i, OddNUMBERMap.Nei, 10, "1st 12", "Neighbors");
           },
         },
         i.toString(),
@@ -195,7 +199,8 @@ export const GenerateOption2 = (
   element: ElementTag,
   start: number,
   number: number,
-  gameId?: any
+  gameId?: any,
+  gameNumber?: any
 ): JSX.Element[] => {
   const result = [];
   const dispatch = useAppDispatch();
@@ -226,11 +231,12 @@ export const GenerateOption2 = (
         addToBetSlip({
           selected: [i],
           stakeInformation: "Win",
-          multiplier: 10,
+          multiplier: OddNUMBERMap.Win,
           gameId: gameId,
           stake: 10,
           toWin: 10,
           oddType: "Win",
+          gameNumber: gameNumber,
         })
       );
     };

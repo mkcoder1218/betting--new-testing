@@ -17,6 +17,7 @@ export interface Ticket {
   oddType?: string;
   draw?: number;
   nameofPlayer?: string;
+  gameNumber?: number
 }
 
 export interface PickerType {

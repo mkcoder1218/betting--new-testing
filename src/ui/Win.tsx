@@ -29,6 +29,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
   isHeadToHead,
   isChangedForm,
 }) => {
+
   const splitText = (text: string) => {
     const match =
       text && isHeadToHead
@@ -38,6 +39,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
       if (match) {
         return { number: match[1], suffix: match[2] };
       }
+
       return { number: text, suffix: "" };
     } else {
       return text;
@@ -70,7 +72,8 @@ const ButtonSizes: React.FC<ButtonProp> = ({
                 : isBankActive
                 ? "	orange"
                 : "transparent",
-            color: isActive || isBankActive || isChangedForm ? "white" : "gray",
+            color:
+              isActive || isBankActive || isChangedForm ? "white" : "black",
           }}
           disabled={isLocked}
           variant="outlined"
@@ -88,8 +91,9 @@ const ButtonSizes: React.FC<ButtonProp> = ({
               <p
                 className={`${suffix && !HeadToHead ? "text-xs" : ""}`}
                 style={{
+                  fontSize: isChangedForm ? 15 : "",
                   padding: "0px",
-                  color: isActive || isChangedForm ? "white" : "",
+                  color: isActive || isChangedForm ? "white" : "gray",
                 }}
               >
                 {number}
@@ -97,15 +101,17 @@ const ButtonSizes: React.FC<ButtonProp> = ({
               <p
                 className=""
                 style={{
-                  fontSize: !isHeadToHead ? 8 : "",
-                  color: isActive || isChangedForm ? "white" : "",
+                  fontSize: !isHeadToHead ? 5 : "",
+                  color: isActive || isChangedForm ? "white" : "gray",
                 }}
               >
                 {suffix}
               </p>
             </div>
           ) : (
-            <p style={{ padding: "0px", color: isActive ? "white" : "" }}>
+            <p
+              style={{ padding: "0px", color: isActive ? "white" : "#292727" }}
+            >
               {text}
             </p>
           )}

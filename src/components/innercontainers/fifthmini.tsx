@@ -5,6 +5,7 @@ import GenerateOption from "../../utils/GenerateOption";
 
 interface FirstMiniProp {
   gameId?: any;
+  gameNumber?: any;
 }
 function Fifthmini(prop: FirstMiniProp) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -60,7 +61,15 @@ function Fifthmini(prop: FirstMiniProp) {
           style={{ height: "30%" }}
           ref={scrollContainerRef}
         >
-          {GenerateOption("span", 0, 37, hoverdclass, sethoverdclass,prop.gameId)}
+          {GenerateOption(
+            "span",
+            0,
+            37,
+            hoverdclass,
+            sethoverdclass,
+            prop.gameNumber,
+            prop.gameId
+          )}
         </div>
         <div className="icons">
           <ChevronLeftIcon onClick={scrollLeft} />

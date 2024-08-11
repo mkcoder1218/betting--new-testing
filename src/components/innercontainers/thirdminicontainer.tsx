@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { addToBetSlip } from "../../features/slices/pickerSlice";
 import { MapRedAndBlack } from "../../utils/redblackMap";
 import { setIsClearCircle } from "../../features/slices/gameType";
+import { OddNUMBERMap } from "../../utils/odd";
 type CircleState = {
   first12: boolean;
   second12: boolean;
@@ -15,6 +16,7 @@ type CircleState = {
 };
 interface FirstMiniProp {
   gameId?: any;
+  gameNumber?: any;
 }
 function Thirdminicontainer(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
@@ -85,6 +87,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         stake: stake,
         oddType: oddType,
         gameType: "SpinAndWin",
+        gameNumber: prop.gameNumber,
       })
     );
   };
@@ -114,7 +117,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             handleCircleClick(
               "first12",
               10,
-              10,
+              OddNUMBERMap.HL,
               range(1, 18),
               "High/low",
               "High/low1"
@@ -133,7 +136,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             handleCircleClick(
               "second12",
               10,
-              10,
+              OddNUMBERMap.OE,
               evens,
               "Even/odd",
               "Even/odd1"
@@ -147,10 +150,11 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             handleCircleClick(
               "third12",
               10,
-              10,
+              OddNUMBERMap.COLOR,
               MapRedAndBlack.Red,
               "Color",
-              "Color1"
+              "Color1",
+              
             );
           }}
           className="Red relative"
@@ -162,7 +166,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             handleCircleClick(
               "forth",
               10,
-              10,
+              OddNUMBERMap.COLOR,
               MapRedAndBlack.Black,
               "Color",
               "Color2"
@@ -187,7 +191,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             handleCircleClick(
               "sixth",
               10,
-              10,
+              OddNUMBERMap.HL,
               range(19, 36),
               "High/low",
               "High/low2"

@@ -29,6 +29,7 @@ interface DropProp {
   gameData?: GameData;
   data: RootEventData;
   isActiveGame: boolean;
+  gameNumber?: number;
 }
 interface DispatchParams {
   selected: any;
@@ -42,6 +43,7 @@ interface DispatchParams {
   stakeInfo?: string;
   isCombo?: boolean;
   isPastGame?: boolean;
+  gameNumber?: number;
 }
 const Drop: React.FC<DropProp> = ({
   id,
@@ -53,6 +55,7 @@ const Drop: React.FC<DropProp> = ({
   data,
   isActiveGame = false,
   isPastGame = false,
+  gameNumber,
 }) => {
   const [isActive, setIsActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -157,6 +160,7 @@ const Drop: React.FC<DropProp> = ({
           draw: params.draw,
           stakeInformation: params.stakeInfo,
           isCombo: params.isCombo,
+          gameNumber: params.gameNumber,
         })
       );
     }
@@ -232,6 +236,7 @@ const Drop: React.FC<DropProp> = ({
                 data={data}
                 gameDatalist={gameData}
                 sortedByOdd={sortedArray}
+                gameNumber={data.Number}
               />
             ) : activeIndexValues === 1 ? (
               <HeadToHead />

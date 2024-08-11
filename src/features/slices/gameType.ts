@@ -10,7 +10,7 @@ interface gameTypeState {
 const initalState: gameTypeState = {
   loading: false,
   error: false,
-  gameType: "KENO",
+  gameType: "SmartPlayKeno",
   isClearCircle: false,
 };
 

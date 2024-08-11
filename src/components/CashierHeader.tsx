@@ -40,31 +40,48 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
     }
 
     return (
-        <div className='header-container bg-white shadow-md shadow-gray-400 items-start pl-4 pr-4 flex justify-between'>
-            <div className='text-md pt-2 text-green-600 text-nowrap font-bold'>
-                Retail Logo
-            </div>
-            <div className='flex gap-4 justify-center w-full p-2 pb-0'>
-                <button style={{ backgroundColor: "#37B34A" }} onClick={handleOpen} className='p-2 text-white rounded-md'>
-                    Cashier Options
-                </button>
-                <button onClick={() => openCancelRedeem("cancel")} className='my-cancel-btn p-2 flex items-center gap-1 text-white rounded-md'>
-                    <span className='pl-2'>Cancel</span>
-                    <TiCancel size={20} />
-                </button>
-                <button onClick={() => openCancelRedeem("redeem")} className='p-2 flex items-center gap-1 bg-green-600 text-white rounded-md'>
-                    <span className='pl-2'>Redeem</span>
-                    <TfiMoney size={18} />
-                </button>
-            </div>
-            <div className='flex items-end flex-col gap-0 justify-end'>
-                <p className='text-xs mt-2'>{date.toLocaleDateString()} {date.toLocaleTimeString()}</p>
-                <div className='w-80 mb-2 flex justify-end items-center'>
-                    <p>{userData.user?.username}</p>
-                    <a onClick={logout} className='ml-4 text-green-600 rounded-md hover:bg-red-500 cursor-pointer' href="#">Logout</a>
-                </div>
-
-            </div>
+      <div className="header-container bg-white items-start pl-4 pr-4 flex justify-between">
+        <div className="text-xl font-thin font-sans pt-1 text-green-500 text-nowrap -mt-2 ">
+          Retail Logo
         </div>
-    )
+        <div className="flex gap-4 justify-center w-full p-2 pb-0">
+          <button
+            style={{ backgroundColor: "#37B34A" }}
+            onClick={handleOpen}
+            className="p-2 min-w-32 max-h-8 flex justify-center items-center text-white rounded-md"
+          >
+            Cashier Options
+          </button>
+          <button
+            onClick={() => openCancelRedeem("cancel")}
+            className="my-cancel-btn min-w-32 max-h-8 justify-center p-2 flex items-center gap-1 text-white rounded-md"
+          >
+            <span className="pl-2">Cancel</span>
+            <TiCancel size={20} />
+          </button>
+          <button
+            onClick={() => openCancelRedeem("redeem")}
+            className="min-w-32 max-h-12 flex justify-center items-center gap-1 bg-green-600 text-white rounded-md"
+          >
+            <span className="pl-2">Redeem</span>
+            <TfiMoney size={18} />
+          </button>
+        </div>
+        <div className="flex items-end flex-col gap-0 justify-end">
+          <p className="text-xs mt-2">
+            {date.toLocaleDateString()} {date.toLocaleTimeString()}
+          </p>
+          <div className="w-80 mb-2 flex justify-end items-center">
+            <p>{userData.user?.username}</p>
+            <a
+              onClick={logout}
+              className="ml-4 text-green-600 rounded-md hover:bg-red-500 cursor-pointer"
+              href="#"
+            >
+              Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    );
 }

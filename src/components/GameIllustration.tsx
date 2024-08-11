@@ -27,6 +27,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGame, setSelected] = useState(3);
   const [selectedGametext, setSelectedGame] = useState("");
+  const [isActive, setActive] = useState(0);
   const dispatch = useAppDispatch();
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -93,16 +94,26 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-12",
     },
   ];
-
+  const handleClick = (index: number) => {
+    setActive(index);
+  };
   return (
-    <div className="flex justify-between" style={{ width: "100%" }}>
-      <div className="buttons flex gap-2 items-center" style={{ width: "70%" }}>
+    <div
+      className="flex ml-3 mb-4 pt-1 justify-between"
+      style={{ width: "100%" }}
+    >
+      <div className="buttons flex gap-2 items-center" style={{ width: "75%" }}>
         {dropdownItems
           ? dropdownItems.map((item: any, index: number) => {
               return (
                 <button
-                  className="text-gray-500 hover:text-green-500 focus:text-green-500"
-                  onClick={() => handleClickGame(item.text1)}
+                  className={`text-gray-500 hover:text-green-500 ${
+                    isActive === index ? "text-green-600" : ""
+                  }`}
+                  onClick={() => {
+                    handleClickGame(item.text1);
+                    handleClick(index);
+                  }}
                 >
                   {item.icon}
                 </button>
@@ -110,7 +121,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
             })
           : ""}
       </div>
-      <div className="drop-down w-56 flex">
+      <div className="drop-down w-1/2 ml-5 flex ">
         <div className="w-full items-center relative inline-block text-left">
           <div className="flex items-center cursor-pointer">
             <BsFillGrid3X3GapFill
@@ -131,7 +142,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
           </div>
 
           {isOpen && (
-            <div className="absolute p-4 left-0 mt-2 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-y-auto h-48 z-10 custom-scrollbar">
+            <div className="absolute p-4 left-0 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-y-auto h-48 z-10 custom-scrollbar">
               <div className="py-1">
                 {dropdownItems.map((item, index) => (
                   <div
@@ -154,10 +165,10 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
             </div>
           )}
         </div>
-        <div className="cursor-pointer">
+        <div className="cursor-pointer -ml-14">
           <IoMdHelpCircle
-            size={34}
-            className="text-gray-400 hover:text-gray-600 transition-all"
+            size={31}
+            className="text-gray-600 hover:text-gray-600 transition-all"
           />
         </div>
       </div>

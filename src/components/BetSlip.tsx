@@ -132,6 +132,7 @@ export default function BetSlip() {
     dispatch(clearNumbers());
     dispatch(setIsClearCircle(true));
     setBetError("");
+    console.log("gametype,", gameType);
   };
 
   const handleCreateTicket = async () => {
@@ -175,7 +176,7 @@ export default function BetSlip() {
         stake: ticket.stake,
         maxWin: ticket.multiplier * ticket.stake,
         nums:
-          gameType === "KENO" || gameType === "SpinAndWin"
+          gameType === "SmartPlayKeno" || gameType === "SpinAndWin"
             ? ticket.selected
             : [ticket.selected],
         gameId: ticket.gameId + "",
@@ -185,8 +186,9 @@ export default function BetSlip() {
         entry: ticket.entry,
         nameOfplayer: ticket.nameofPlayer,
         gameType: ticket.gameType,
+        gameNumber: ticket.gameNumber,
       };
-      console.log("ticketItem:", ticketItem);
+
       newTicketToSend.push(ticketItem);
     }
 
@@ -238,15 +240,15 @@ export default function BetSlip() {
 
   return (
     <div
-      style={{ flexBasis: "26%" }}
-      className="right relative ml-2 flex items-center flex-col drop-shadow-md shadow-md shadow-gray-400"
+      style={{ flexBasis: "25%" }}
+      className="right containerBetslip relative ml-2 flex items-center justify-center flex-col drop-shadow-md"
     >
       <PrinterDialog
         open={printerDialog}
         handleClose={handleClose}
         logout={logout}
       />
-      <div className="text-l text-green-600 font-bold flex items-center justify-center text-center">
+      <div className="font-thin text-green-600 font-bold flex items-center justify-center text-center">
         Betslip
       </div>
 
@@ -255,20 +257,18 @@ export default function BetSlip() {
           <div className="left cursor-pointer bg-green-500 pr-3 pl-4 text-xs text-white rounded-sm">
             SINGLE
           </div>
-          <div className="left cursor-pointer bg-white pr-3 pl-4 text-xs text-black rounded-sm">
+          <div className="left cursor-pointer bg-white pr-3 pl-4 text-xs text-gray-500 rounded-sm">
             MULTIPLES
           </div>
         </div>
         {/* <Tickets Icon={CarRacing} isSmall={true} /> */}
         {betState.betSlip.length < 1 && (
-          <div
-            className={`text-center mt-4 mb-4 text-gray-400 font-bold text-md`}
-          >
+          <div className={`text-center mt-2 mb-2 text-gray-400 text-md`}>
             Add more bets
           </div>
         )}
 
-        {/* {!betSlipState.loading && betSlipState.error && (
+        {!betSlipState.loading && betSlipState.error && (
           <FormStatus type="error" content={betSlipState.error} />
         )}
         {!betSlipState.loading && betSlipState.message && statusVisible && (
@@ -280,247 +280,242 @@ export default function BetSlip() {
             <p className="ml-3">Expired Bets</p>
             <BsCheck2All className="mr-3" size={24} />
           </div>
-        )} */}
+        )}
 
-        {betState.betSlip.length > 0 &&
-          betState.betSlip.map((item, index) => {
-            return (
-              <>
-                {" "}
-                <div
-                  onClick={() => setSelected(index)}
-                  style={{
-                    backgroundColor: `${
-                      currentDate > betState.betSlip[0].expiry
-                        ? "#fc4242"
-                        : "#969696"
-                    }`,
-                    width: "98%",
-                  }}
-                  key={index}
-                  className={`selected-nums-con -ml-1 -mt-1 text-white font-bold`}
-                >
-                  <div className="ml-2 flex justify-between items-center">
-                    <div className="flex gap-1 items-center -mt-4">
-                      <div className="icon-container">
-                        {item.gameType === "KENO" ? (
-                          <SmartPlay isSmall={true} />
-                        ) : item.gameType === "HarnessRacing" ? (
-                          <Garri isSmall={true} />
-                        ) : item.gameType === "MotorRacing" ? (
-                          <CarRacing isSmall={true} />
-                        ) : item.gameType === "PlatinumHounds" ? (
-                          <Jaguar isSmall={true} />
-                        ) : item.gameType === "DashingDerby" ? (
-                          <DashingDerby isSmall={true} />
-                        ) : item.gameType === "CycleRacing" ? (
-                          <Bicycle isSmall={true} />
-                        ) : item.gameType === "SteepleChase" ? (
-                          <HorseJump isSmall={true} />
-                        ) : item.gameType === "PreRecRealDogs" ? (
-                          <DogWithVideo isSmall={true} />
-                        ) : gameType === "SpinAndWin" ? (
-                          <CircleDraw />
-                        ) : gameType === "SpeedSkating" ? (
-                          <Hockey />
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <p className="text-xs flex items-center -mb-5">
-                        {item.stakeInformation}
-                      </p>
-                    </div>
-                    <span
-                      onClick={() => removeItemFromSlip(index)}
-                      className="h-4 flex items-center justify-center w-4 border text-xl text-black border-none font-bold cursor-pointer"
-                    >
-                      X
-                    </span>
-                  </div>
-                  <div className="flex">
-                    <p
-                      className="flex gap-1 ml-7 "
-                      style={{ paddingTop: "-20px", fontSize: 13 }}
-                    >
-                      <p>
-                        {item.draw}
-                        {!item.isCombo &&
-                        gameType != "KENO" &&
-                        gameType != "SpinAndWin"
-                          ? "."
-                          : ""}
-                      </p>
-                      {gameType === "KENO"
-                        ? (!item.selected.includes(-2) &&
-                            !item.selected.includes(-4) &&
-                            !item.selected.includes(-6) &&
-                            item.selected.join(", ") &&
-                            item.selected.includes(-2) &&
-                            "HEADS",
-                          item.selected.includes(-4) && "EVENS",
-                          item.selected.includes(-6) && "TAILS")
-                        : gameType === "SpinAndWin"
-                        ? item.selected.includes(-1)
-                          ? "1st 12"
-                          : item.selected.includes(-3)
-                          ? "2nd 12"
-                          : item.selected.includes(-5)
-                          ? "3rd 12"
-                          : item.selected.length > 0 &&
-                            item.oddType === "Selector(color)" &&
-                            Array.isArray(item.selected)
-                          ? item.selected.join("/")
-                          : item.oddType === "Column"
-                          ? "2 to 1"
-                          : item.oddType === "Dozens1"
-                          ? "1st 12"
-                          : item.oddType === "Dozens2"
-                          ? "2nd 12"
-                          : item.oddType === "Dozens3"
-                          ? "3rd 12"
-                          : item.oddType === "High/low1"
-                          ? "1-18"
-                          : item.oddType === "High/low2"
-                          ? "19-36"
-                          : item.oddType === "Even/odd1"
-                          ? "Even"
-                          : item.oddType === "Even/odd2"
-                          ? "Odd"
-                          : item.oddType === "Color1"
-                          ? "Red"
-                          : item.oddType === "Color2"
-                          ? "Black"
-                          : item.selected.length === 0 || item.oddType === "Win"
-                          ? item.selected
-                          : ""
-                        : item.nameofPlayer}
-                      {!item.isCombo ? (
-                        <span
-                          className={`${"bg-green-700 border-2 border-green-400 h-3 mt-1 flex items-center justify-center"} p-1 text-white text-xs`}
-                        >
-                          {!item.isCombo ? item.multiplier : "[1-2]"}
-                        </span>
+        {betState.betSlip.map((item, index) => {
+          return (
+            <>
+              {" "}
+              <div
+                onClick={() => setSelected(index)}
+                style={{
+                  backgroundColor: `${
+                    currentDate > betState.betSlip[0].expiry
+                      ? "#fc4242"
+                      : "#969696"
+                  }`,
+                  width: "95%",
+                  borderRadius: "3px",
+                }}
+                key={index}
+                className={`selected-nums-con -ml-3 mt-1 text-white font-bold`}
+              >
+                <div className="ml-2 flex justify-between items-center">
+                  <div className="flex gap-1 items-center -mt-4">
+                    <div className="icon-container">
+                      {item.gameType === "SmartPlayKeno" ? (
+                        <SmartPlay isSmall={true} />
+                      ) : item.gameType === "HarnessRacing" ? (
+                        <Garri isSmall={true} />
+                      ) : item.gameType === "MotorRacing" ? (
+                        <CarRacing isSmall={true} />
+                      ) : item.gameType === "PlatinumHounds" ? (
+                        <Jaguar isSmall={true} />
+                      ) : item.gameType === "DashingDerby" ? (
+                        <DashingDerby isSmall={true} />
+                      ) : item.gameType === "CycleRacing" ? (
+                        <Bicycle isSmall={true} />
+                      ) : item.gameType === "SteepleChase" ? (
+                        <HorseJump isSmall={true} />
+                      ) : item.gameType === "PreRecRealDogs" ? (
+                        <DogWithVideo isSmall={true} />
+                      ) : gameType === "SpinAndWin" ? (
+                        <CircleDraw />
+                      ) : gameType === "SpeedSkating" ? (
+                        <Hockey />
                       ) : (
                         ""
                       )}
+                    </div>
+                    <p className="text-xs flex items-center -mb-5">
+                      {item.stakeInformation}
                     </p>
                   </div>
-                  <p className="ml-8 mr-8 text-xs">
-                    {`${new Date(item.expiry).getFullYear()}/${
-                      new Date(item.expiry).getMonth() + 1
-                    }/${new Date(item.expiry).getDate()}`}{" "}
-                    {new Date(item.expiry).toLocaleTimeString("en-US", {
-                      hourCycle: "h24",
-                    })}{" "}
-                    ID|{item.gameId}
+                  <span
+                    onClick={() => removeItemFromSlip(index)}
+                    className="h-2 flex items-center justify-center w-4 border text-md text-gray-700 border-none font-bold cursor-pointer"
+                  >
+                    X
+                  </span>
+                </div>
+                <div className="flex">
+                  <p
+                    className="flex gap-1 ml-7 "
+                    style={{ paddingTop: "-20px", fontSize: 13 }}
+                  >
+                    <p>
+                      {item.draw}
+                      {!item.isCombo &&
+                      gameType != "SmartPlayKeno" &&
+                      gameType != "SpinAndWin"
+                        ? "."
+                        : ""}
+                    </p>
+                    {item.gameType === "SmartPlayKeno"
+                      ? item.selected.join(", ")
+                      : gameType === "SpinAndWin" &&
+                        item.selected.length > 0 &&
+                        item.stakeInformation === "Selector(color)"
+                      ? item.selected.join("/")
+                      : item.oddType === "Column"
+                      ? "2 to 1"
+                      : item.oddType === "Dozens1"
+                      ? "1st 12"
+                      : item.oddType === "Dozens2"
+                      ? "2nd 12"
+                      : item.oddType === "Dozens3"
+                      ? "3rd 12"
+                      : item.oddType === "High/low1"
+                      ? "1-18"
+                      : item.oddType === "High/low2"
+                      ? "19-36"
+                      : item.oddType === "Even/odd1"
+                      ? "Even"
+                      : item.oddType === "Even/odd2"
+                      ? "Odd"
+                      : item.oddType === "Color1"
+                      ? "Red"
+                      : item.oddType === "Color2"
+                      ? "Black"
+                      : item.stakeInformation === "Neighbors"
+                      ? item.selected.join("/")
+                      : item.selected.length === 0 || item.oddType === "Win"
+                      ? item.selected
+                      : item.nameofPlayer}
+                    {!item.isCombo ? (
+                      <span
+                        className={`${"bg-green-700 border-2 border-green-400 h-3 mt-1 flex items-center justify-center"} p-1 text-white text-xs`}
+                      >
+                        {!item.isCombo ? item.multiplier : "[1-2]"}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </p>
-                  {item.isCombo ? (
-                    <div className="flex gap-1 items-center -mt-1 ml-7">
-                      <p className="" style={{ fontSize: 13 }}>
-                        [1-2]
-                      </p>
-                      <p
-                        className="bg-green-700 text-sm border-2 border-green-500 h-3 flex items-center justify-center"
-                        style={{ fontSize: 12 }}
-                      >
-                        2.21 (min)
-                      </p>
-                      <p className="" style={{ fontSize: 13 }}>
-                        [3-4]
-                      </p>
-                      <p
-                        className="bg-green-700 text-sm border-2 border-green-500 h-3 flex items-center justify-center"
-                        style={{ fontSize: 12 }}
-                      >
-                        1(max)
-                      </p>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  {
-                    /*currentDate < betState.betSlip[0].expiry &&*/ <>
+                </div>
+                <p className="ml-8 mr-8 text-xs">
+                  {`${new Date(item.expiry).getFullYear()}/${
+                    new Date(item.expiry).getMonth() + 1
+                  }/${new Date(item.expiry).getDate()}`}{" "}
+                  {new Date(item.expiry).toLocaleTimeString("en-US", {
+                    hourCycle: "h24",
+                  })}{" "}
+                  ID|{item.gameNumber}
+                </p>
+                {item.isCombo ? (
+                  <div className="flex gap-1 items-center -mt-1 ml-7">
+                    <p className="" style={{ fontSize: 13 }}>
+                      [1-2]
+                    </p>
+                    <p
+                      className="bg-green-700 text-sm border-2 border-green-500 h-3 flex items-center justify-center"
+                      style={{ fontSize: 12 }}
+                    >
+                      2.21 (min)
+                    </p>
+                    <p className="" style={{ fontSize: 13 }}>
+                      [3-4]
+                    </p>
+                    <p
+                      className="bg-green-700 text-sm border-2 border-green-500 h-3 flex items-center justify-center"
+                      style={{ fontSize: 12 }}
+                    >
+                      1(max)
+                    </p>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {
+                  /*currentDate < betState.betSlip[0].expiry &&*/ <>
+                    <div
+                      className={`ml-8 ${
+                        stakeInput[index] > 1000 ||
+                        item.stake * item.multiplier > 50000
+                          ? "bg-red-600 text-white"
+                          : "bg-white"
+                      } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
+                    >
                       <div
-                        className={`ml-8 ${
-                          stakeInput[index] > 1000 ||
-                          item.stake * item.multiplier > 50000
-                            ? "bg-red-600 text-white"
-                            : "bg-white"
-                        } mr-8 inc-dec mt-1 flex items-center justify-between flex-shrink-0`}
+                        className="hover:bg-gray-400 h-6 flex items-center justify-center w-6"
+                        style={{ backgroundColor: "#C7C7C7" }}
                       >
                         <FaMinus
-                          style={{ backgroundColor: "#C7C7C7" }}
                           onClick={() =>
                             changeIndividualSlipStake(
                               index,
                               item.stake >= 20 ? item.stake - 10 : 10
                             )
                           }
-                          className="text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center dec font-bold rounded-sm flex items-center text-3xl"
+                          className="text-white cursor-pointer transition-all h-4 w-4 justify-center dec font-bold rounded-sm flex items-center text-sm"
                         />
-                        <div className="flex items-center">
-                          <input
-                            className={`num input-picker ${
-                              (stakeInput[index] > 1000 ||
-                                item.stake * item.multiplier > 50000) &&
-                              "bg-red-600 text-white"
-                            } text-gray-500 text-end border-none focus:border-none active:border-none`}
-                            value={stakeInput[index]}
-                            defaultValue={10}
-                            onChange={(e) =>
-                              parseInt(e.target.value) <= 5000 &&
-                              parseInt(e.target.value) >= 1 &&
-                              changeItemStake(parseInt(e.target.value), index)
-                            }
-                            type="number"
-                            style={{
-                              border: "none",
-                            }}
-                            max={5000}
-                            min={1}
-                            required
-                          />
-                          <div
-                            className={`mr-2 ${
-                              stakeInput[index] > 1000 ||
-                              item.stake * item.multiplier > 50000
-                                ? "text-white"
-                                : "text-gray-500"
-                            }`}
-                          >
-                            .00
-                          </div>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          className={`num input-picker ${
+                            (stakeInput[index] > 1000 ||
+                              item.stake * item.multiplier > 50000) &&
+                            "bg-red-600 text-white"
+                          } text-gray-500 text-end border-none focus:border-none active:border-none`}
+                          value={stakeInput[index]}
+                          defaultValue={10}
+                          onChange={(e) =>
+                            parseInt(e.target.value) <= 5000 &&
+                            parseInt(e.target.value) >= 1 &&
+                            changeItemStake(parseInt(e.target.value), index)
+                          }
+                          type="number"
+                          style={{
+                            border: "none",
+                          }}
+                          max={5000}
+                          min={1}
+                          required
+                        />
+                        <div
+                          className={`mr-2 ${
+                            stakeInput[index] > 1000 ||
+                            item.stake * item.multiplier > 50000
+                              ? "text-white"
+                              : "text-gray-500"
+                          }`}
+                        >
+                          .00
+                        </div>
+                        <div
+                          className="hover:bg-gray-400 h-6 flex items-center justify-center w-6"
+                          style={{ backgroundColor: "#C7C7C7" }}
+                        >
                           <FaPlus
-                            style={{ backgroundColor: "#C7C7C7" }}
                             onClick={() =>
                               changeIndividualSlipStake(index, item.stake + 10)
                             }
-                            className="text-white hover:bg-gray-400 cursor-pointer transition-all h-6 w-6 justify-center inc font-bold rounded-sm flex items-center text-4xl"
+                            className="text-white cursor-pointer transition-all h-4 w-4 justify-center inc font-bold rounded-sm flex items-center text-sm roun"
                           />
                         </div>
                       </div>
-                      {!item.isCombo ? (
-                        <p
-                          className={`ml-8 mr-8 text-white text-xs text-right mt-1`}
-                        >
-                          TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}
-                        </p>
-                      ) : (
-                        <p className="ml-8 mr-8 text-white text-xs text-right mt-1"></p>
-                      )}
-                    </>
-                  }
-                  {selected === index && (
-                    /*currentDate < betState.betSlip[index].expiry && */ <PriceButton
-                      index={index}
-                      changeIndividualStake={changeIndividualSlipStakeIncr}
-                    />
-                  )}
-                </div>
-              </>
-            );
-          })}
+                    </div>
+                    {!item.isCombo ? (
+                      <p
+                        className={`ml-8 mr-8 text-white text-xs text-right mt-1`}
+                      >
+                        TO WIN Br. {(item.stake * item.multiplier).toFixed(2)}
+                      </p>
+                    ) : (
+                      <p className="ml-8 mr-8 text-white text-xs text-right mt-1"></p>
+                    )}
+                  </>
+                }
+                {selected === index && (
+                  /*currentDate < betState.betSlip[index].expiry && */ <PriceButton
+                    index={index}
+                    changeIndividualStake={changeIndividualSlipStakeIncr}
+                  />
+                )}
+              </div>
+            </>
+          );
+        })}
 
         {betState.betSlip.length > 0 && (
           /*currentDate <= betState.betSlip[0].expiry && */ <>
@@ -628,7 +623,7 @@ export default function BetSlip() {
               /*currentDate > betState.betSlip[0].expiry*/
             }
             onClick={clearSlip}
-            className=" disabled:bg-red-200 p-3 flex-grow hover:opacity-75 transition-opacity bg-red-500"
+            className=" disabled:bg-red-200 p-4 flex-grow hover:opacity-75 transition-opacity bg-red-500"
           >
             CLEAR
           </button>
@@ -638,11 +633,16 @@ export default function BetSlip() {
               /* currentDate > betState.betSlip[0].expiry*/
             }
             onClick={handleCreateTicket}
-            className={` disabled:bg-green-300 p-3 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${
+            className={` disabled:bg-green-300 p-3 flex items-center justify-center gap-2 flex-grow hover:opacity-75 transition-opacity basis-2/3 ${
               betState.betSlip.length > 0 ? "bg-green-500" : "bg-green-200"
             }`}
           >
-            PLACE BET
+            <p>PLACE BET</p>
+            <p className="bg-green-300 p-1">
+              {betState.betSlip.length > 0
+                ? "BR " + betState.totalStake + ".00"
+                : 0}
+            </p>
           </button>
         </div>
         {balance.data &&

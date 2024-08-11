@@ -10,7 +10,7 @@ export const DashingDerby = (props: SmartPlayProp) => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 49.5 36.1"
     data-svg-id="DashingDerbySVG"
-    height={props.isSmall ? 18 : 28}
+    height={props.isSmall ? 18 : 22}
   >
     <g>
       <g>

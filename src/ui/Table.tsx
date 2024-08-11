@@ -49,6 +49,7 @@ export interface DispatchParams {
   oddType?: string;
   nameofplayer?: string;
   entry?: Entry;
+  gameNumber?: number;
 }
 const BasicTable: React.FC<TableProp> = ({
   clickCount,
@@ -136,6 +137,7 @@ const BasicTable: React.FC<TableProp> = ({
           stakeInformation: params.stakeInfo,
           nameofPlayer: params.nameofplayer,
           oddType: params.oddType,
+          gameNumber: params.gameNumber,
         })
       );
     }
@@ -299,6 +301,7 @@ const BasicTable: React.FC<TableProp> = ({
                           oddType: "WIN",
                           stakeInfo: "Win",
                           entry: row,
+                          gameNumber: data.Number,
                         });
                       }}
                       numberofClickedbuttons={clickCounter}
@@ -333,7 +336,8 @@ const BasicTable: React.FC<TableProp> = ({
                           draw: row.Draw,
                           stakeInfo: "PLACE",
                           entry: row,
-                          oddType:'Place'
+                          oddType: "Place",
+                          gameNumber: data.Number,
                         });
                       }}
                       numberofClickedbuttons={clickCounter}
