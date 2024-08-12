@@ -284,7 +284,7 @@ const Drop: React.FC<DropProp> = ({
                           min_multiplier: 12,
                           max_multiplier: 1,
                           toWin: 100,
-                          stake: 32,
+                          stake: 10,
                           gameId: data.ID.toString(),
                           stakeInfo: "2 any order",
                           isCombo: true,

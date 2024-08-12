@@ -331,7 +331,7 @@ const BasicTable: React.FC<TableProp> = ({
                           selected: row.Draw,
                           multiplier: row.PlaceOdds,
                           toWin: 10,
-                          stake: 12,
+                          stake: 10,
                           gameId: gameDatalist?.id,
                           draw: row.Draw,
                           stakeInfo: "PLACE",

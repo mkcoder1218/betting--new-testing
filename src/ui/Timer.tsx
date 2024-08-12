@@ -1,32 +1,51 @@
 import React, { useState, useEffect } from "react";
-import moment, { Moment } from "moment";
+import moment from "moment";
 import Live from "./Live";
+
 interface Time {
-  isLive: (val: boolean) => void;
+  isLive: boolean;
   _time: string;
-  isgameActive?: boolean;
+  isgameActive: boolean;
+  isPastGame: boolean;
 }
-const Timer: React.FC<Time> = ({ isLive, _time, isgameActive }) => {
-  const initialTime = 0.5 * 60; // Initial time set to 3 seconds
+
+const Timer: React.FC<Time> = ({ _time }) => {
+  const initialTime = 0.5 * 60; // Initial time set to 30 seconds
   const [time, setTime] = useState<number>(
     moment(_time).diff(moment(), "seconds")
   ); // State to track the countdown
-  const [isgetLive, setisLive] = useState(false);
-  const [currentGame, setCurrentGame] = useState(false);
+  const [isLive, setIsLive] = useState(false);
+
   useEffect(() => {
+    // Update the countdown every second
     const timerId = setInterval(() => {
-      setTime((prevTime) => (prevTime === 0 ? initialTime : prevTime - 1));
+      setTime((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(timerId);
+          return 0;
+        }
+        return prevTime - 1;
+      });
     }, 1000);
 
-    if (moment(_time).diff(moment(), "seconds") < 0) {
-      setisLive(true);
-      isLive(true);
-    }
-    return () => clearInterval(timerId);
-  }, [time, _time]);
+    // Check if the event is live
+    const checkTime = () => {
+      if (moment(_time).diff(moment(), "seconds") < 0) {
+        setIsLive(true);
+      }
+    };
+
+    const checkLiveInterval = setInterval(checkTime, 1000);
+
+    return () => {
+      clearInterval(timerId);
+      clearInterval(checkLiveInterval);
+    };
+  }, [_time]);
+
   return (
     <>
-      {isgetLive ? (
+      {isLive ? (
         <Live />
       ) : (
         <div className="Timer">{moment(time * 1000).format("mm:ss")}</div>

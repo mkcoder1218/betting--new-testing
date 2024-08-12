@@ -10,6 +10,7 @@ import { useAppSelector } from "../features/hooks";
 import { RootEventData } from "../features/slices/RacingGameSlice";
 import moment from "moment";
 import CircularUnderLoad from "../components/svg/Loader";
+import { setIsLive } from "../features/slices/gameType";
 function HorseRun() {
   const texts = ["Main", "HEAD TO HEAD", "ALT", "SUM"];
   const dispatch = useAppDispatch();
@@ -42,7 +43,7 @@ function HorseRun() {
             index: parseInt(index),
             millisecond: moment(gameData.game[index].startTime).diff(
               moment(),
-              "seconds"
+              "milliseconds"
             ),
           });
         }
@@ -54,6 +55,9 @@ function HorseRun() {
 
       _D_setInterval(sortedOne[0].millisecond);
       setpastIndex(sortedOne[0].index - 1);
+      if (pastIndex) {
+        dispatch(setIsLive(true));
+      }
     }
   }, [gameData, _D_interval]);
 

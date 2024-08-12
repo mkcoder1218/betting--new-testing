@@ -174,7 +174,7 @@ export default function BetSlip() {
       let ticketItem = {
         toWin: Math.floor(ticket.toWin),
         stake: ticket.stake,
-        maxWin: ticket.multiplier * ticket.stake,
+        maxWin: Math.floor(ticket.multiplier * ticket.stake),
         nums:
           gameType === "SmartPlayKeno" || gameType === "SpinAndWin"
             ? ticket.selected
@@ -346,8 +346,8 @@ export default function BetSlip() {
                     <p>
                       {item.draw}
                       {!item.isCombo &&
-                      gameType != "SmartPlayKeno" &&
-                      gameType != "SpinAndWin"
+                      item.gameType != "SmartPlayKeno" &&
+                      item.gameType != "SpinAndWin"
                         ? "."
                         : ""}
                     </p>
