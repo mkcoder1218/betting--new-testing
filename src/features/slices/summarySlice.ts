@@ -222,7 +222,7 @@ export const printSummaryToBackend = async (data: any) => {
 
     if (printResponse.status === 200 || printResponse.status === 201) {
       const callPrinterWithData = await axios.post(
-        "http://0.0.0.0:6000/printSummary",
+        "http://0.0.0.0:5002/printSummary",
         printResponse.data.data
       );
     }
@@ -234,7 +234,7 @@ export const printSummaryToBackend = async (data: any) => {
 export const printResultToBackend = async (data: any) => {
   try {
     const callPrinterWithData = await axios.post(
-      "http://0.0.0.0:6000/PrintResult",
+      "http://0.0.0.0:5002/PrintResult",
       data
     );
   } catch (err) {

@@ -143,7 +143,7 @@ export const createBetSlipAndTicket =
 
         try {
           const printResponse = await axios.post(
-            "http://0.0.0.0:6000/printTicket",
+            "http://0.0.0.0:5002/printTicket",
             betSlipResponse.data
 
           );
