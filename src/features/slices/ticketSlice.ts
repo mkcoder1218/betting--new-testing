@@ -137,7 +137,7 @@ export const printSelectedTickets = async (req: any) => {
         const printSelectedResponse = await axiosInstance.post("ticket/printEvent", req);
 
         if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
-          const printSelectedData = await axios.post("http://192.168.42.231:5002/printEvent", printSelectedResponse.data.data)
+          const printSelectedData = await axios.post("http://127.0.0.1:5002/printEvent", printSelectedResponse.data.data)
         }
     } catch (err) {
         console.log(err);
@@ -146,7 +146,7 @@ export const printSelectedTickets = async (req: any) => {
 
 export const isPrinterUp = async () => {
   try {
-    const printerStatus = await axios.get("http://192.168.42.231:5002/check");
+    const printerStatus = await axios.get("http://127.0.0.1:5002/check");
 
     if (printerStatus.status === 200) {
       return true;
