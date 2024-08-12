@@ -7,11 +7,17 @@ import Head from "../components/Head";
 import { useAppDispatch } from "../features/hooks";
 import { addHeadText } from "../features/slices/HeadSlice";
 import { useAppSelector } from "../features/hooks";
-import { RootEventData } from "../features/slices/RacingGameSlice";
+import {
+  getLastRacingGames,
+  RootEventData,
+} from "../features/slices/RacingGameSlice";
 import moment from "moment";
 import CircularUnderLoad from "../components/svg/Loader";
 import { setIsLive } from "../features/slices/gameType";
-function HorseRun() {
+interface prop {
+  gameType: string;
+}
+function HorseRun({ gameType }: prop) {
   const texts = ["Main", "HEAD TO HEAD", "ALT", "SUM"];
   const dispatch = useAppDispatch();
   const [selectedText, setSelectedText] = useState("");
@@ -51,12 +57,18 @@ function HorseRun() {
       let sortedOne = activeIndex.sort((a, b) => {
         return a.millisecond < b.millisecond;
       });
-      setActiveindex(sortedOne[0].index);
+      if (sortedOne.length > 0) {
+        setActiveindex(sortedOne[0].index);
 
-      _D_setInterval(sortedOne[0].millisecond);
-      setpastIndex(sortedOne[0].index - 1);
-      if (pastIndex) {
-        dispatch(setIsLive(true));
+        _D_setInterval(sortedOne[0].millisecond);
+        setpastIndex(sortedOne[0].index - 1);
+        if (pastIndex) {
+          dispatch(setIsLive(true));
+        }
+      } else {
+        dispatch(
+          getLastRacingGames("9c6d610d-33e9-4847-80ab-5e179833591e", gameType)
+        );
       }
     }
   }, [gameData, _D_interval]);

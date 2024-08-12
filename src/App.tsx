@@ -333,7 +333,7 @@ function App() {
           ) : WhichGameSelected === "SpinAndWin" ? (
             <Spin />
           ) : (
-            <HorseRun />
+            <HorseRun gameType={WhichGameSelected} />
           )}
         </div>
         <BetSlip />
