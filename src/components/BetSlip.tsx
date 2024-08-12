@@ -290,9 +290,7 @@ export default function BetSlip() {
                 onClick={() => setSelected(index)}
                 style={{
                   backgroundColor: `${
-                    currentDate > betState.betSlip[0].expiry
-                      ? "#fc4242"
-                      : "#969696"
+                    currentDate > item.expiry ? "#fc4242" : "#969696"
                   }`,
                   width: "95%",
                   borderRadius: "3px",
