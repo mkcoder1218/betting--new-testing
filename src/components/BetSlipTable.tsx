@@ -158,7 +158,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                       <td className="px-3 py-2">{item.Game.gameType}</td>
                       <td className="px-3 py-2">
                         {item.Game.gamenumber == 0
-                          ? JSON.parse(item.Game.gameData).Number
+                          ? item.Game.gameData.Number
                           : item.Game.gamenumber}
                       </td>
                       <td scope="row" className="px-3 py-2">
@@ -180,9 +180,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                           "Heads and Tails"}
                       </td>
                       <td className="px-3 py-2">
-                        {item.nums.length > 0
-                          ? JSON.parse(item.nums + "").join(", ")
-                          : ""}
+                        {item.nums.length > 0 ? item.nums.join(", ") : ""}
                         {(!item.nums.includes(-2) &&
                           !item.nums.includes(-4) &&
                           !item.nums.includes(-6)) ||
@@ -272,8 +270,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
               <div className="mb-3">
                 <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4">
                   {gameResult &&
-                    JSON.parse(gameResult)
-                      .MarketResults[0].WinningSelections.slice()
+                    gameResult.MarketResults[0].WinningSelections.slice()
                       .sort((a, b) => parseInt(a) - parseInt(b))
                       .map((_, index) => {
                         // const number = index + 1;

@@ -181,7 +181,6 @@ export default function CashierOptions({
 
   React.useEffect(() => {
     getTicketList();
-
   }, [cashierName]);
   React.useEffect(() => {
     if (cashierState && cashierState.data) {
@@ -236,7 +235,6 @@ export default function CashierOptions({
 
     printSelectedTickets(payload);
   };
- 
 
   const exportToExcel = (data: CashierData[] | null) => {
     if (!data) {
@@ -707,8 +705,7 @@ export default function CashierOptions({
                               <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4 w-full">
                                 {gameResult.gameType === "SmartPlayKeno" &&
                                   gameResult &&
-                                  JSON.parse(gameResult.result)
-                                    .MarketResults[0].WinningSelections.slice()
+                                  gameResult.result.MarketResults[0].WinningSelections.slice()
                                     .sort((a, b) => parseInt(a) - parseInt(b))
                                     .map((_) => {
                                       return (
@@ -729,11 +726,7 @@ export default function CashierOptions({
                               <Result
                                 Icon={Jaguar}
                                 isSmall={true}
-                                gameData={
-                                  JSON.parse(
-                                    gameResult.result
-                                  ) as RootResultInterface
-                                }
+                                gameData={gameResult.result}
                               />
                             )}
                           </div>
