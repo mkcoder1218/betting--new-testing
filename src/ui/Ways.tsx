@@ -15,11 +15,14 @@ const Ways: React.FC<waysProp> = ({
 }) => {
   return (
     <div
-      className="w-full h-full flex-col gap-0 wen"
+      className="h-full p-0 gap-0 wen"
       onClick={onClick}
-      style={{ visibility: isvisible && isvisible ? "visible" : "hidden" }}
+      style={{
+        visibility: isvisible && isvisible ? "visible" : "hidden",
+        width: "95%",
+      }}
     >
-      <div className="WaysContainer flex-col items-center h-full pt-1">
+      <div className="WaysContainer w-full flex-col items-center h-full pt-1">
         <p style={{ textTransform: "uppercase" }}>{text}</p>
         <p>{text2}</p>
         <p>{text3}</p>

@@ -221,8 +221,8 @@ const Drop: React.FC<DropProp> = ({
         />
       </div>
       {isActive || activeGameForIcon ? (
-        <div className="container2 flex justify-between">
-          <div className="" style={{ width: "75%" }}>
+        <div className="container2 flex pb-3 gap-2 w-full">
+          <div className="">
             {activeIndexValues !== 1 || isActiveGame ? (
               <BasicTable
                 selectedCombos={handleSelectCombo}
@@ -264,9 +264,9 @@ const Drop: React.FC<DropProp> = ({
                 />
               </div>
             ) : clickCount > 1 && activeIndexValues === 0 ? (
-              <div className="Need waysbut w-full flex-col ml-3 h-full items-center">
-                <div className="h-full flex-col items-end  justify-end">
-                  <div className="waysShow Need gap-2 mt-6 h-fit">
+              <div className="Need waysbut w-full flex items-center justify-center flex-col h-full">
+                <div className="h-full w-full mt-7 flex-col">
+                  <div className="waysShow Need gap-2 w-full">
                     <Ways
                       text="QUINELLA"
                       text2="2 any order"
@@ -372,7 +372,7 @@ const Drop: React.FC<DropProp> = ({
                       }}
                     />
                   </div>
-                  <div className="clearbutton">
+                  <div className="clearbutton ">
                     <ButtonSizes
                       text="Clear"
                       isActive={false}

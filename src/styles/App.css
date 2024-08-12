@@ -158,13 +158,13 @@ width: 10px;
   text-align: center !important;
 }
 .bank{
-  padding: 0 !important;
-  padding-top: 9px !important;
+  padding: 0px !important;
+  padding-top: 10px !important;
 }
 .rating .Rating{
   font-size: 17px !important;
   margin: 0 !important;
-padding: 0 !important;
+padding:5px !important;
 }
 
 
@@ -216,8 +216,9 @@ align-items: center;
   background-color: #02ad1c;
  cursor: pointer;
 position: relative;
-max-height: 80px;
+max-height: 65px;
 z-index: 1;
+
 transition:background-color 0.5s;
 }
 .Need button::after{

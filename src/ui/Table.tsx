@@ -205,7 +205,7 @@ const BasicTable: React.FC<TableProp> = ({
   };
 
   return (
-    <TableContainer className="tableContainer">
+    <TableContainer className="tableContainer ">
       <Table aria-label="simple table" className="table">
         <TableHead className="TableHead">
           <TableRow>
@@ -248,7 +248,10 @@ const BasicTable: React.FC<TableProp> = ({
                       style={{ width: "190%" }}
                     >
                       <p className={`${row.Draw > 10 ? "-ml-1" : ""}`}>
-                        {row.Draw}
+                        {gameType !== "PlatinumHounds" &&
+                        gameType !== "PreRecRealDogs"
+                          ? row.Draw
+                          : ""}
                       </p>
                       {
                         <Images
