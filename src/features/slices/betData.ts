@@ -216,7 +216,7 @@ export const cancelTicket =
       if (cancelTicketResponse.message === "Bet cancelled successfully") {
         try {
           const printCancelRes = await axios.post(
-            "http://192.168.43.244:5002/printCancel",
+            "http://127.0.0.1:5002/printCancel",
             cancelTicketResponse.data
           );
         } catch (err) {
@@ -283,7 +283,7 @@ export const redeemTicket =
       if (redeemTicketResposne.message === "Ticket redeemed successfully") {
         try {
           await axios.post(
-            "http://192.168.43.244:5002/printRedeem",
+            "http://127.0.0.1:5002/printRedeem",
             redeemTicketResposne.data
           );
         } catch (err) {
