@@ -127,6 +127,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         stake: defaultStake,
         expiry: ticketExpiry,
         gameId: gameState.game?.gamenumber,
+        oddType: "Win",
       });
     }
   };
