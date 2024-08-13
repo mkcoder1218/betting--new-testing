@@ -80,6 +80,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
           gameId: gameData.id,
           gameType,
           stakeInformation: stakeInformation,
+          oddType: "Win",
         })
       );
     }
