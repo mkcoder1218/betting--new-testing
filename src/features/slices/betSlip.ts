@@ -153,6 +153,27 @@ export const createBetSlipAndTicket =
                 case "SpinAndWin":
                   ticket.game = "Spin And Win";
                   break;
+                case "Dashing Derby":
+                  ticket.game = "Horse Racing";
+                  break;
+                case "MotorRacing":
+                  ticket.game = "MotorRacing";
+                  break;
+                case "PlatinumHounds":
+                  ticket.game = "GrayHound Racing";
+                  break;
+                case "CycleRacing":
+                  ticket.game = "Track Racing";
+                  break;
+                case "PreRecRealDogs":
+                  ticket.game = "Spin And Win";
+                  break;
+                case "SingleSeaterMotorRacing":
+                  ticket.game = "SS MOTOR RACING";
+                  break;
+                case "SteepleChase":
+                  ticket.game = "SteepleChaseRacing";
+                  break;
                 default:
                   ticket.game = "KENO";
               }
