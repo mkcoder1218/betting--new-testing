@@ -176,7 +176,8 @@ export default function BetSlip() {
         stake: ticket.stake,
         maxWin: Math.floor(ticket.multiplier * ticket.stake),
         nums:
-          gameType === "SmartPlayKeno" || gameType === "SpinAndWin"
+          ticket.gameType === "SmartPlayKeno" ||
+          ticket.gameType === "SpinAndWin"
             ? ticket.selected
             : [ticket.selected],
         gameId: ticket.gameId + "",
