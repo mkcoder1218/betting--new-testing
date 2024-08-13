@@ -727,6 +727,7 @@ export default function CashierOptions({
                                 Icon={Jaguar}
                                 isSmall={true}
                                 gameData={gameResult.result}
+                                gameType={gameResult.gameType}
                               />
                             )}
                           </div>

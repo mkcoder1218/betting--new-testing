@@ -2,13 +2,54 @@ import React from "react";
 import { RootResultInterface } from "../config/types";
 import Images from "./Images";
 import moment from "moment";
+import { Entry } from "../features/slices/RacingGameSlice";
 
 interface ResultsProp {
   Icon: React.ComponentType;
   isSmall: boolean;
   gameData: RootResultInterface;
+  gameType: string;
 }
-const Result: React.FC<ResultsProp> = ({ Icon, isSmall, gameData }) => {
+const Result: React.FC<ResultsProp> = ({
+  Icon,
+  isSmall,
+  gameData,
+  gameType,
+}) => {
+  const silkGenerator = (row: Entry, gameType: string, index: number) => {
+    switch (gameType) {
+      case "HarnessRacing":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "PreRecRealDogs":
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
+      case "horseRun":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "CycleRacing":
+        return `https://games2.playbetman.com/Content/Images/CyclistHelmets/silk_${
+          index + 1
+        }.png`;
+      case "SteepleChase":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "SpeedSkating":
+        return `https://games2.playbetman.com/Content/Images/SpeedSkatingFlags/Flag_0${
+          index + 1
+        }.png`;
+      case "SingleSeaterMotorRacing":
+        return `https://games2.playbetman.com/Content/Images/SingleSeaterMotorRacing/Helmet_${row.SilkNumber}.png`;
+      case "MotorRacing":
+        return `https://games2.playbetman.com/Content/Images/SingleSeaterMotorRacing/Helmet_${row.SilkNumber}.png`;
+      case "DashingDerby":
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+      case "PlatinumHounds":
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
+      default:
+        return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
+    }
+  };
   return (
     <div
       className="w-full bg-black text-white text-lg"
@@ -54,6 +95,11 @@ const Result: React.FC<ResultsProp> = ({ Icon, isSmall, gameData }) => {
           >
             <div className="">
               <Images
+                src={silkGenerator(
+                  gameData.Race.Entries[0],
+                  gameType + "",
+                  parseInt(gameData.Race.Entries[0].Form)
+                )}
                 src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[0].SilkNumber}.png`}
               />
             </div>
