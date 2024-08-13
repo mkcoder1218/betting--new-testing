@@ -146,16 +146,40 @@ export const createBetSlipAndTicket =
           if (betSlipResponse.data) {
             let updateTicket: TicketInterface = betSlipResponse.data;
             updateTicket.tickets.map((ticket) => {
-              switch (ticket.game.split(" ")[0]) {
+              const gameParts = ticket.game.split(" "); // Split the string into parts
+              const firstPart = gameParts[0];
+              switch (firstPart) {
                 case "SpeedSkating":
-                  ticket.game = "Speed Skating";
+                  gameParts[0] = "Speed Skating";
                   break;
                 case "SpinAndWin":
-                  ticket.game = "Spin And Win";
+                  gameParts[0] = "Spin And Win";
+                  break;
+                case "Dashing Derby":
+                  gameParts[0] = "Horse Racing";
+                  break;
+                case "MotorRacing":
+                  gameParts[0] = "MotorRacing";
+                  break;
+                case "PlatinumHounds":
+                  gameParts[0] = "GrayHound Racing";
+                  break;
+                case "CycleRacing":
+                  gameParts[0] = "Track Racing";
+                  break;
+                case "PreRecRealDogs":
+                  gameParts[0] = "GREYHOUND RACING";
+                  break;
+                case "SingleSeaterMotorRacing":
+                  gameParts[0] = "SS MOTOR RACING";
+                  break;
+                case "SteepleChase":
+                  gameParts[0] = "SteepleChaseRacing";
                   break;
                 default:
-                  ticket.game = "KENO";
+                  gameParts[0] = "KENO";
               }
+              ticket.game = gameParts.join(" ");
             });
             const printResponse = await axios.post(
               "http://127.0.0.1:5002/printTicket",
