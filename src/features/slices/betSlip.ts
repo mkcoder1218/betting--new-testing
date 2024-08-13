@@ -2,11 +2,11 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
 import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
-
+import { TicketInterface } from "../../utils/ticket.interface";
 
 interface BetSlipData {
   betSlipNumber: string;
-  gameType?: string
+  gameType?: string;
 }
 
 interface BetSlipResponse<T> {
@@ -63,8 +63,8 @@ const initialState: BetSlipState<BetSlip | BetSlipData> = {
   error: null,
   message: null,
   data: {
-    betSlipNumber: '',
-    gameType: 'SmartPlayKeno'
+    betSlipNumber: "",
+    gameType: "SmartPlayKeno",
   },
 };
 
@@ -78,7 +78,7 @@ const betSlipSlice = createSlice({
     ) => {
       state.data = action.payload.data;
     },
-  
+
     addTicketAndBetSlip: (
       state,
       action: PayloadAction<BetSlipState<BetSlip>>
@@ -91,7 +91,8 @@ const betSlipSlice = createSlice({
   },
 });
 
-export const { addBetSlipNumber, addTicketAndBetSlip, addGameType } = betSlipSlice.actions;
+export const { addBetSlipNumber, addTicketAndBetSlip, addGameType } =
+  betSlipSlice.actions;
 
 export default betSlipSlice.reducer;
 
@@ -142,12 +143,25 @@ export const createBetSlipAndTicket =
         }, 500);
 
         try {
-          const printResponse = await axios.post(
-            "http://127.0.0.1:5002/printTicket",
-            betSlipResponse.data
-
-          );
-
+          if (betSlipResponse.data) {
+            let updateTicket: TicketInterface = betSlipResponse.data;
+            updateTicket.tickets.map((ticket) => {
+              switch (ticket.game.split(" ")[0]) {
+                case "SpeedSkating":
+                  ticket.game = "Speed Skating";
+                  break;
+                case "SpinAndWin":
+                  ticket.game = "Spin And Win";
+                  break;
+                default:
+                  ticket.game = "KENO";
+              }
+            });
+            const printResponse = await axios.post(
+              "http://127.0.0.1:5002/printTicket",
+              updateTicket
+            );
+          }
         } catch (err) {
           console.log("print failed");
         }
