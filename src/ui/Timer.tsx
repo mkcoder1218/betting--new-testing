@@ -30,7 +30,7 @@ const Timer: React.FC<Time> = ({ _time }) => {
 
     // Check if the event is live
     const checkTime = () => {
-      if (moment(_time).diff(moment(), "seconds") < 2) {
+      if (moment(_time).diff(moment(), "seconds") < 5) {
         setIsLive(true);
       }
     };

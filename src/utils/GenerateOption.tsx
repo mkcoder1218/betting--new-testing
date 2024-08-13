@@ -237,6 +237,7 @@ export const GenerateOption2 = (
           toWin: 10,
           oddType: "Win",
           gameNumber: gameNumber,
+          gameType: "SpinAndWin",
         })
       );
     };

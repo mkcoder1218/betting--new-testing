@@ -344,8 +344,8 @@ export default function BetSlip() {
                     <p>
                       {item.draw}
                       {!item.isCombo &&
-                      item.gameType != "SmartPlayKeno" &&
-                      item.gameType != "SpinAndWin"
+                      item.gameType !== "SmartPlayKeno" &&
+                      item.gameType !== "SpinAndWin"
                         ? "."
                         : ""}
                     </p>

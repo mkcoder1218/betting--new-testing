@@ -138,10 +138,9 @@ const Drop: React.FC<DropProp> = ({
 
   useEffect(() => {
     setTimeout(() => {
-      if (!init) {
-        setInited(true);
+    
         setActiveGame(isActiveGame);
-      }
+      
     }, 1000);
   }, [isActiveGame]);
 

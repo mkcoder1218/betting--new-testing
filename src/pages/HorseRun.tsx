@@ -61,6 +61,7 @@ function HorseRun({ gameType }: prop) {
         setActiveindex(sortedOne[0].index);
 
         _D_setInterval(sortedOne[0].millisecond);
+
         setpastIndex(sortedOne[0].index - 1);
         if (pastIndex) {
           dispatch(setIsLive(true));
