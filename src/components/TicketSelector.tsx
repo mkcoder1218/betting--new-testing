@@ -55,6 +55,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         stake,
         gameId,
         gameType,
+        oddType: "Win",
       })
     );
   };
@@ -79,6 +80,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         stake: defaultStake,
         expiry: ticketExpiry,
         gameId: gameState.game?.gamenumber,
+        oddType: "Heads",
       });
     }
   };
@@ -103,6 +105,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         stake: defaultStake,
         expiry: ticketExpiry,
         gameId: gameState.game?.gamenumber,
+        oddType: "Evens",
       });
     }
   };
@@ -127,7 +130,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         stake: defaultStake,
         expiry: ticketExpiry,
         gameId: gameState.game?.gamenumber,
-        oddType: "Win",
+        oddType: "Tails",
       });
     }
   };
