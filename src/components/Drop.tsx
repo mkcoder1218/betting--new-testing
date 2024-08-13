@@ -137,11 +137,7 @@ const Drop: React.FC<DropProp> = ({
   };
 
   useEffect(() => {
-    setTimeout(() => {
-    
-        setActiveGame(isActiveGame);
-      
-    }, 1000);
+    setActiveGame(isActiveGame);
   }, [isActiveGame]);
 
   const CombinationDispatch = (params: DispatchParams) => {
