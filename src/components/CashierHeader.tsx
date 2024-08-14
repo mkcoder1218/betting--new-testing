@@ -44,39 +44,68 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
         <div className="text-xl font-thin font-sans pt-1 text-green-500 text-nowrap -mt-2 ">
           Retail Logo
         </div>
-        <div className="flex gap-4 justify-center w-full p-2 pb-0">
+        <div className="flex gap-2 justify-center w-full p-2 pb-0">
           <button
-            style={{ backgroundColor: "#37B34A" }}
+            style={{ backgroundColor: "#37B34A", borderRadius: "3px" }}
             onClick={handleOpen}
-            className="p-2 min-w-32 max-h-8 flex justify-center items-center text-white rounded-md"
+            className="p-2 min-w-28 max-h-8 flex justify-center font-light items-center text-white rounded-sm"
           >
             Cashier Options
           </button>
           <button
             onClick={() => openCancelRedeem("cancel")}
-            className="my-cancel-btn min-w-32 max-h-8 justify-center p-2 flex items-center gap-1 text-white rounded-md"
+            style={{ borderRadius: "3px" }}
+            className="my-cancel-btn min-w-28 max-h-8 justify-center flex items-center gap-1 text-white rounded-sm"
           >
             <span className="pl-2">Cancel</span>
             <TiCancel size={20} />
           </button>
           <button
             onClick={() => openCancelRedeem("redeem")}
-            className="min-w-32 max-h-12 flex justify-center items-center gap-1 bg-green-600 text-white rounded-md"
+            style={{ borderRadius: "3px", backgroundColor: "#5cb85c" }}
+            className="min-w-28 max-h-12 flex justify-center items-center gap-1 text-white rounded-sm"
           >
             <span className="pl-2">Redeem</span>
-            <TfiMoney size={18} />
+            <TfiMoney
+              size={15}
+              className="font-bold"
+              style={{ fontWeight: 400 }}
+            />
           </button>
         </div>
         <div className="flex items-end flex-col gap-0 justify-end">
-          <p className="text-xs mt-2">
+          <p
+            className="text-xs font-thin mt-2"
+            style={{
+              fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+            }}
+          >
             {date.toLocaleDateString()} {date.toLocaleTimeString()}
           </p>
-          <div className="w-80 mb-2 flex justify-end items-center">
-            <p>{userData.user?.username}</p>
+          <div className="w-80 mb-2 flex justify-end font-thin font-custom items-center">
+            <p
+              className=" text-sm"
+              style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              }}
+            >
+              {userData.user?.username}
+            </p>
+            <p
+              className="text-sm"
+              style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              }}
+            >
+              ({userData.user?.username})
+            </p>
             <a
               onClick={logout}
               className="ml-4 text-green-600 rounded-md hover:bg-red-500 cursor-pointer"
               href="#"
+              style={{
+                fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+              }}
             >
               Logout
             </a>

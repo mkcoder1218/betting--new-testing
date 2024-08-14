@@ -57,7 +57,7 @@ body{
 }
 .container{
   background-color: rgb(28, 64, 28);
-  width:100%;
+  width:99%;
   height: 100%;
   margin-top: 0.5%;
        font-size: 20px;
@@ -155,6 +155,7 @@ height: 10%;
   margin-left: 1%;
   overflow-x: auto;
   scroll-behavior: smooth;
+  margin-top: 1.8%;
 }
 
 .childmini{
@@ -191,34 +192,14 @@ font-weight: 800;
 .childmini3 p:nth-child(5){
   border-right: 2px solid rgba(255, 255, 255, 0.197);
 }
-.min{
-     content: '';
-            position: absolute;
-            top: 92%;
-            left: 6.8%;
-            right: 0;
-            width: 5px;
-            height: 10px; /* Adjust the height of the shadow */
-            box-shadow:   -100px 0 12px 40px rgb(2, 79, 37);
-            z-index: 300;
-}
-.mini_numbers::after{
-   content: '';
-            position: absolute;
-            top: 92%;
-            left: 110%;
-            right: 0;
-            z-index: 400;
-            width: 5px;
-            height: 10px; /* Adjust the height of the shadow */
-            box-shadow:   -100px 0 12px 40px rgb(0, 70, 31);
-}
+
 .mini_numbers{
   display: flex;
   scrollbar-width: none;
   scroll-behavior: smooth;
   overflow-x: auto;
   scrollbar-width: none;
+  position: relative;
   -ms-overflow-style: none;
    box-shadow: 
         -10px 0 30px -100px rgb(45, 102, 45), /* Left shadow */
@@ -278,29 +259,49 @@ cursor: pointer;
 .icons{
 display: flex;
 position: absolute;
-bottom: 8%;
+
 width: fit-content;
 justify-content: space-between;
 z-index: 400;
+ 
 }
 .icons svg{
   cursor: pointer;
   position: relative;
   margin-left: -10px;
+
 }
 .icons svg:nth-child(1){
    margin-right:10px ;
-  font-size: 20px;
+  font-size: 24px;
   position: absolute;
+  top: -5px;
 left:0rem;
 z-index: 400;
+  box-shadow: -10px 1px 5px 23px rgb(28, 64, 28);
+  background-color: rgb(28, 64, 28);
 }
 .icons svg:nth-child(2){
   margin-right:10px ;
-  font-size: 20px;
+  font-size: 24px;
   position: absolute;
-left:73rem;
+  top: -29px;
+
+left:64.4rem;
 z-index: 400;
+box-shadow: -6px 1px 15px 1px rgb(28, 64, 28);
+  background-color: rgb(28, 64, 28);
+  height:70px;
+ 
+}
+@media screen and (max-width:1280px) {
+  .parent-container{
+    height: 43vw;
+  }
+  .icons svg:nth-child(2){
+    position: absolute;
+    left:57.15rem;
+  }
 }
 .redhover{
        position: relative;

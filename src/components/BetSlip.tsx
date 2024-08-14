@@ -240,16 +240,13 @@ export default function BetSlip() {
   };
 
   return (
-    <div
-      style={{ flexBasis: "25%" }}
-      className="right containerBetslip relative ml-2 flex items-center justify-center flex-col drop-shadow-md"
-    >
+    <div className="w-28p right containerBetslip relative ml-2 max-lg:w-1/4 flex items-center justify-center flex-col drop-shadow-md">
       <PrinterDialog
         open={printerDialog}
         handleClose={handleClose}
         logout={logout}
       />
-      <div className="font-thin text-green-600 font-bold flex items-center justify-center text-center">
+      <div className="font-thin text-green-600 mt-3 flex items-center justify-center text-center">
         Betslip
       </div>
 

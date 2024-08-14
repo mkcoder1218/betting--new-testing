@@ -178,7 +178,14 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         </p>
         <p
           onClick={() => {
-            handleCircleClick("fifth", 10, 10, odds, "Even/odd", "Even/odd2");
+            handleCircleClick(
+              "fifth",
+              10,
+              OddNUMBERMap.oE,
+              odds,
+              "Even/odd",
+              "Even/odd2"
+            );
           }}
           className={`relative ${
             background.fifth && !isCircle ? "greenClick" : ""

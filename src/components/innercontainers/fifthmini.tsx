@@ -53,8 +53,8 @@ function Fifthmini(prop: FirstMiniProp) {
   };
 
   return (
-    <div className="fifthmini_container h-1/3 w-full overflow-hidden">
-      <div className="child_mini flex flex-col w-full gap-5 h-full items-start justify-center">
+    <div className="fifthmini_container h-1/3 w-99p overflow-hidden">
+      <div className="child_mini flex flex-col w-full overflow-hidden gap-5 h-full items-start justify-center">
         <p className="text-xl">Neighbors</p>
         <div
           className="mini_numbers overflow-x-scroll w-full mb-4"

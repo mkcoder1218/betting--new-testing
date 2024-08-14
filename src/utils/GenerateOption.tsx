@@ -204,122 +204,125 @@ export const GenerateOption2 = (
 ): JSX.Element[] => {
   const result = [];
   const dispatch = useAppDispatch();
-  const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
-  const [circles, setCircles] = useState<boolean[]>(
-    Array.from({ length: number - start + 1 }, () => false)
-  );
-  useEffect(() => {
-    if (IsCircle) setCircles([]); // Run once when IsCircle changes
-  }, [IsCircle, setCircles]);
-  const [hoverCircles, setHoverCircles] = useState<boolean[]>(
-    Array.from({ length: number - start + 1 }, () => false)
-  );
-  for (let i = number; i >= start; i--) {
-    var className = "";
-    var containerclassName = "";
-    var specialclassName = "";
-    const isFirstrow = specialNumbers.firstRownumbers.includes(i);
-    const issecondrow = specialNumbers.secRownumbers.includes(i);
-    const isThirdrow = specialNumbers.therdRownumbers.includes(i);
-
-    const handleclick = (index: number, i: number, param: DispatchParams) => {
-      const newCircles = [...circles];
-      newCircles[index] = !newCircles[index];
-      setCircles(newCircles);
-      dispatch(setIsClearCircle(false));
-      dispatch(
-        addToBetSlip({
-          selected: [i],
-          stakeInformation: "Win",
-          multiplier: OddNUMBERMap.Win,
-          gameId: gameId,
-          stake: 10,
-          toWin: 10,
-          oddType: "Win",
-          gameNumber: gameNumber,
-          gameType: "SpinAndWin",
-        })
-      );
-    };
-    const handleMouseEnter = (index: number) => {
-      const newHoverCircles = Array(number - start + 1).fill(false);
-      if (i) {
-        newHoverCircles[index] = true;
-        setHoverCircles(newHoverCircles);
-      }
-    };
-    const handleMouseLeave = () => {
-      setHoverCircles(Array(number - start + 1).fill(false));
-    };
-    if (i <= 10) {
-      className =
-        i % 2 === 0
-          ? "black blackhover h-full relative"
-          : "Red relative redhover";
-    } else if (i >= 11 && i <= 19) {
-      className =
-        i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
-    } else if (i >= 20 && i <= 28) {
-      className =
-        i % 2 === 0 ? "black blackhover relative" : "Red relative redhover";
-    } else if (i >= 29 && i <= 36) {
-      className =
-        i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
-    }
-
-    const isorange = specialNumbers.orangespecial.includes(i);
-    const isblue = specialNumbers.bluespecial.includes(i);
-    const isrose = specialNumbers.rosespecial.includes(i);
-    const isgreen = specialNumbers.greenspecial.includes(i);
-    const isyellow = specialNumbers.yellowspecial.includes(i);
-    const iswhite = specialNumbers.whitespecial.includes(i);
-    containerclassName = isFirstrow
-      ? "first-row h-1/3 relative"
-      : issecondrow
-      ? "second-row h-1/3 relative"
-      : isThirdrow
-      ? "third-row h-1/3 relative"
-      : "";
-
-    specialclassName = isorange
-      ? "orangenumber relative"
-      : isblue
-      ? "bluenumber relative"
-      : isrose
-      ? "rosenumber relative"
-      : isgreen
-      ? "greennumber relative"
-      : isyellow
-      ? "yellownumber relative"
-      : iswhite
-      ? "whitenumber relative"
-      : "";
-
-    const combinedClass = `${specialclassName} ${className}`;
-    result.push(
-      <div className={containerclassName}>
-        {React.createElement(
-          element,
-          {
-            className: combinedClass,
-            onClick: () => handleclick(i - start, i),
-            onMouseEnter: () => handleMouseEnter(i - start),
-            onMouseLeave: handleMouseLeave,
-          },
-          i.toString(),
-          circles[i - start] && <Circle margin={true} />,
-          hoverCircles[i - start] && (
-            <Fourrowhover
-              row1={i > 3 ? 3 : i == 1 ? 2 : 1}
-              row2={2}
-              row3={i >= 34 ? 0 : 3}
-              i={i}
-            />
-          )
-        )}
-      </div>
+    const betSlip = useAppSelector((state) => state.picker.betSlip);
+    const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
+    const [circles, setCircles] = useState<boolean[]>(
+      Array.from({ length: number - start + 1 }, () => false)
     );
-  }
+    const [isExist, setisExist] = useState(false);
+    useEffect(() => {
+      if (IsCircle) setCircles([]); // Run once when IsCircle changes
+    }, [IsCircle, setCircles]);
+    const [hoverCircles, setHoverCircles] = useState<boolean[]>(
+      Array.from({ length: number - start + 1 }, () => false)
+    );
+    for (let i = number; i >= start; i--) {
+      var className = "";
+      var containerclassName = "";
+      var specialclassName = "";
+      const isFirstrow = specialNumbers.firstRownumbers.includes(i);
+      const issecondrow = specialNumbers.secRownumbers.includes(i);
+      const isThirdrow = specialNumbers.therdRownumbers.includes(i);
+
+      const handleclick = (index: number, i: number, param: DispatchParams) => {
+        const newCircles = [...circles];
+        newCircles[index] = !newCircles[index];
+        setCircles(newCircles);
+        dispatch(setIsClearCircle(false));
+
+        dispatch(
+          addToBetSlip({
+            selected: [i],
+            stakeInformation: "Win",
+            multiplier: OddNUMBERMap.Win,
+            gameId: gameId,
+            stake: 10,
+            toWin: 10,
+            oddType: "Win",
+            gameNumber: gameNumber,
+            gameType: "SpinAndWin",
+          })
+        );
+      };
+      const handleMouseEnter = (index: number) => {
+        const newHoverCircles = Array(number - start + 1).fill(false);
+        if (i) {
+          newHoverCircles[index] = true;
+          setHoverCircles(newHoverCircles);
+        }
+      };
+      const handleMouseLeave = () => {
+        setHoverCircles(Array(number - start + 1).fill(false));
+      };
+      if (i <= 10) {
+        className =
+          i % 2 === 0
+            ? "black blackhover h-full relative"
+            : "Red relative redhover";
+      } else if (i >= 11 && i <= 19) {
+        className =
+          i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
+      } else if (i >= 20 && i <= 28) {
+        className =
+          i % 2 === 0 ? "black blackhover relative" : "Red relative redhover";
+      } else if (i >= 29 && i <= 36) {
+        className =
+          i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
+      }
+
+      const isorange = specialNumbers.orangespecial.includes(i);
+      const isblue = specialNumbers.bluespecial.includes(i);
+      const isrose = specialNumbers.rosespecial.includes(i);
+      const isgreen = specialNumbers.greenspecial.includes(i);
+      const isyellow = specialNumbers.yellowspecial.includes(i);
+      const iswhite = specialNumbers.whitespecial.includes(i);
+      containerclassName = isFirstrow
+        ? "first-row h-1/3 relative"
+        : issecondrow
+        ? "second-row h-1/3 relative"
+        : isThirdrow
+        ? "third-row h-1/3 relative"
+        : "";
+
+      specialclassName = isorange
+        ? "orangenumber relative"
+        : isblue
+        ? "bluenumber relative"
+        : isrose
+        ? "rosenumber relative"
+        : isgreen
+        ? "greennumber relative"
+        : isyellow
+        ? "yellownumber relative"
+        : iswhite
+        ? "whitenumber relative"
+        : "";
+
+      const combinedClass = `${specialclassName} ${className}`;
+      result.push(
+        <div className={containerclassName}>
+          {React.createElement(
+            element,
+            {
+              className: combinedClass,
+              onClick: () => handleclick(i - start, i),
+              onMouseEnter: () => handleMouseEnter(i - start),
+              onMouseLeave: handleMouseLeave,
+            },
+            i.toString(),
+            circles[i - start] && <Circle margin={true} />,
+            hoverCircles[i - start] && (
+              <Fourrowhover
+                row1={i > 3 ? 3 : i == 1 ? 2 : 1}
+                row2={2}
+                row3={i >= 34 ? 0 : 3}
+                i={i}
+              />
+            )
+          )}
+        </div>
+      );
+    }
 
   return result;
 };

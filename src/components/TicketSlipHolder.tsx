@@ -132,7 +132,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
       <button
         // disabled={!gameState.game || odds.length < 1}
         onClick={clearList}
-        className="flex items-center gap-3 bg-rose-400 text-white p-1 pl-3 pr-3 disabled:bg-red-300 ml-8 clearAdd"
+        className="flex items-center gap-1 bg-rose-400 text-white p-1 pl-3 pr-3 disabled:bg-red-300 ml-5 mb-4 clearAdd"
       >
         CLEAR{" "}
         <span>
@@ -156,18 +156,18 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
                 stakeInformation: "Win",
               })
             }
-            className="p-1 addtobetButton pl-3 pr-3 ml-8 text-white text-lg mt-2"
+            className="p-1 addtobetButton pl-3 pr-3 text-white text-lg mt-2"
           >
             ADD TO BETSLIP
           </button>
 
-          <div className="slip-container w-72 mt-3 flex flex-col flex-shrink-0">
+          <div className="slip-container w-64 md:w-68 max-lg:-ml-16 -ml-10 md:-ml-14 mt-3 flex flex-col">
             <div
               className={`slip-head ${
                 isAddbutton
                   ? "bg-green-500 text-white"
                   : "border text-green-600 border-t-green-700"
-              } flex justify-between text-start font-bold text-lg  p-1`}
+              } flex justify-between text-start font-bold text-lg `}
             >
               HIGHEST PAYOUT {Math.max(...odds.map((item) => item.multiplier))}{" "}
               FROM {pickedNumbers.length}
