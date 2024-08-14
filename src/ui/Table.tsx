@@ -126,7 +126,7 @@ const BasicTable: React.FC<TableProp> = ({
       dispatch(
         addToBetSlip({
           selected: params.selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          expiry: params.expiry,
           multiplier: params.multiplier,
           toWin: params.toWin,
           stake: params.toWin,
@@ -305,6 +305,7 @@ const BasicTable: React.FC<TableProp> = ({
                           stakeInfo: "Win",
                           entry: row,
                           gameNumber: data.Number,
+                          expiry: new Date(gameDatalist?.startTime).getTime(),
                         });
                       }}
                       numberofClickedbuttons={clickCounter}
@@ -341,6 +342,7 @@ const BasicTable: React.FC<TableProp> = ({
                           entry: row,
                           oddType: "Place",
                           gameNumber: data.Number,
+                          expiry: new Date(gameDatalist?.startTime).getTime(),
                         });
                       }}
                       numberofClickedbuttons={clickCounter}

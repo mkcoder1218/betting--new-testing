@@ -35,6 +35,7 @@ import { DogWithVideo } from "./svg/DogWithVideo";
 import { CircleDraw } from "./svg/CircleDraw";
 import Hockey from "./svg/Hockey";
 import { addGameType, setIsClearCircle } from "../features/slices/gameType";
+import moment from "moment";
 
 export default function BetSlip() {
   const dispatch = useAppDispatch();
@@ -88,11 +89,14 @@ export default function BetSlip() {
   // Check every second for the expiry of the current game and clear from betslip if it did. And try to fetch the last game every 5 seconds if no game exists currently
   useEffect(() => {
     const timer = setInterval(() => {
+      let hasAllBetsExpired = true;
       for (let ticket of betState.betSlip) {
         console.log("TIMER_UPDATE", currentDate > ticket.expiry);
-        if (currentDate > ticket.expiry) {
+        if (ticket.expiry - new Date().getTime() > 0) {
+          hasAllBetsExpired = false;
+        }
+        if (hasAllBetsExpired) {
           setExpired(true);
-          break;
         }
       }
     }, 1000);
@@ -142,6 +146,14 @@ export default function BetSlip() {
     const getBiggest = betState.betSlip.filter(
       (item) => item.stake > 1000 || item.stake * item.multiplier <= 50000
     );
+    const findExpired = betState.betSlip.findIndex((ticket) => {
+      return ticket.expiry - new Date().getTime() < 0;
+    });
+    if (findExpired > -1) {
+      setBetError("One or More Bets Expired");
+      return;
+    }
+
     if (getBiggest.length > 0) {
       const biggetsFirst = getBiggest[0].stake;
       if (biggetsFirst > 1000) {

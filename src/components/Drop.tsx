@@ -145,7 +145,7 @@ const Drop: React.FC<DropProp> = ({
       dispatch(
         addToBetSlip({
           selected: params.selected,
-          expiry: expiryOfGame ? expiryOfGame : {},
+          expiry: params.expiry,
           min_multiplier: params.min_multiplier,
           max_multiplier: params.max_multiplier,
           toWin: params.toWin,
@@ -283,6 +283,7 @@ const Drop: React.FC<DropProp> = ({
                           gameId: data.ID.toString(),
                           stakeInfo: "2 any order",
                           isCombo: true,
+                          expiry: new Date(gameData?.startTime).getTime(),
                         });
                       }}
                       isvisible={true}
