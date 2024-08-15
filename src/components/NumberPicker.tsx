@@ -14,50 +14,48 @@ const NumberPicker: React.FC = () => {
     };
 
     return (
-        <div className="mr-10 basis-5/6">
-            <div className="mb-3">
-                <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4 border-b fade-border">
-                    {[...Array(40)].map((_, index) => {
-                        const number = index + 1;
-                        const isSelected = pickedNumbers.includes(number);
-                        return (
-                            <button
-                                style={{
-                                    backgroundColor: `${isSelected ? '#008000' : '#c2410c'
-                                        }`
-                                }}
-                                key={number}
-                                className={`balls rounded-full w-10 h-10 text-white`}
-                                onClick={() => toggleNumber(number)}
-                            >
-                                {number}
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
-            <div className="">
-                <div className="grid gap-x-8 gap-y-2 grid-cols-10">
-                    {[...Array(40)].map((_, index) => {
-                        const number = index + 41;
-                        const isSelected = pickedNumbers.includes(number);
-                        return (
-                            <button
-                                style={{
-                                    backgroundColor: `${isSelected ? '#008000' : '#ea580c'
-                                        }`
-                                }}
-                                key={number}
-                                className={`balls rounded-full w-10 h-10 text-white`}
-                                onClick={() => toggleNumber(number)}
-                            >
-                                {number}
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
+      <div className="mr-10">
+        <div className="mb-2 flex">
+          <div className="grid gap-x-4 md:gap-y-1 gap-y-2 md:gap-x-8 grid-cols-10 border-b fade-border">
+            {[...Array(40)].map((_, index) => {
+              const number = index + 1;
+              const isSelected = pickedNumbers.includes(number);
+              return (
+                <button
+                  style={{
+                    backgroundColor: `${isSelected ? "#008000" : "#c2410c"}`,
+                  }}
+                  key={number}
+                  className={`balls rounded-full w-10 h-10 text-white`}
+                  onClick={() => toggleNumber(number)}
+                >
+                  {number}
+                </button>
+              );
+            })}
+          </div>
         </div>
+        <div className="flex">
+          <div className="grid gap-x-4 md:gap-x-8 md:gap-y-1 gap-y-2 grid-cols-10">
+            {[...Array(40)].map((_, index) => {
+              const number = index + 41;
+              const isSelected = pickedNumbers.includes(number);
+              return (
+                <button
+                  style={{
+                    backgroundColor: `${isSelected ? "#008000" : "#ea580c"}`,
+                  }}
+                  key={number}
+                  className={`balls rounded-full w-10 h-10 text-white`}
+                  onClick={() => toggleNumber(number)}
+                >
+                  {number}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
     );
 };
 

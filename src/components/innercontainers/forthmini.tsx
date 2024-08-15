@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
 import { addToBetSlip } from "../../features/slices/pickerSlice";
-import { useAppDispatch } from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { OddNUMBERMap } from "../../utils/odd";
 interface FirstMiniProp {
   gameId?: any;
@@ -15,8 +15,18 @@ type CircleState = {
   fifth: boolean;
   sixth: boolean;
 };
-function forthmini(prop: FirstMiniProp) {
+function Forthmini(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+
+  const checkIsSelected = (oddType: string) => {
+    const index = betSlip.findIndex((value) => {
+      if (value.oddType === oddType) return true;
+    });
+
+    if (index > -1) return true;
+    return false;
+  };
   const [circleState, setCircleState] = useState<CircleState>({
     first12: false,
     second12: false,
@@ -37,17 +47,20 @@ function forthmini(prop: FirstMiniProp) {
       ...prevState,
       [area]: !prevState[area],
     }));
-    dispatch(
-      addToBetSlip({
-        selected: selected,
-        stakeInformation: stakeInfo,
-        multiplier: Multiplier,
-        gameId: prop.gameId,
-        stake: stake,
-        oddType: oddType,
-        gameNumber: prop.gameNumber,
-      })
-    );
+
+    if (!checkIsSelected(oddType)) {
+      dispatch(
+        addToBetSlip({
+          selected: selected,
+          stakeInformation: stakeInfo,
+          multiplier: Multiplier,
+          gameId: prop.gameId,
+          stake: stake,
+          oddType: oddType,
+          gameNumber: prop.gameNumber,
+        })
+      );
+    }
   };
   return (
     <div className="forthmini_container">
@@ -159,4 +172,4 @@ function forthmini(prop: FirstMiniProp) {
   );
 }
 
-export default forthmini;
+export default Forthmini;

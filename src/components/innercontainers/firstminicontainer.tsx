@@ -36,7 +36,16 @@ function Firstminicontainer(prop: FirstMiniProp) {
     setisZero(!iszero);
   };
   const isCircle = useAppSelector((state) => state.gameType.isClearCircle);
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
 
+  const checkIsSelected = (selected: number[]) => {
+    const index = betSlip.findIndex((value) => {
+      if (value.selected === selected) return true;
+    });
+
+    if (index > -1) return true;
+    return false;
+  };
   useEffect(() => {
     if (isCircle) {
       setbackground({
@@ -69,18 +78,20 @@ function Firstminicontainer(prop: FirstMiniProp) {
       ...prevState,
       [area]: !prevState[area],
     }));
-    dispatch(
-      addToBetSlip({
-        selected: selected,
-        stakeInformation: stakeInfo,
-        multiplier: Multiplier,
-        gameId: prop.gameId,
-        stake: stake,
-        oddType: oddType,
-        gameType: "SpinAndWin",
-        gameNumber: prop.gameNumber,
-      })
-    );
+    if (!checkIsSelected(selected)) {
+      dispatch(
+        addToBetSlip({
+          selected: selected,
+          stakeInformation: stakeInfo,
+          multiplier: Multiplier,
+          gameId: prop.gameId,
+          stake: stake,
+          oddType: oddType,
+          gameType: "SpinAndWin",
+          gameNumber: prop.gameNumber,
+        })
+      );
+    }
   };
   const dispatch = useAppDispatch();
   return (
@@ -91,18 +102,20 @@ function Firstminicontainer(prop: FirstMiniProp) {
           onMouseEnter={handleIsZero}
           onMouseLeave={handleIsZero}
           onClick={() => {
-            dispatch(
-              addToBetSlip({
-                selected: [0],
-                multiplier: OddNUMBERMap.Win,
-                oddType: "Win",
-                stakeInformation: "Win",
-                stake: 10,
-                gameId: prop.gameId,
-                gameType: "SpinAndWin",
-                gameNumber: prop.gameNumber,
-              })
-            );
+            if (!checkIsSelected([0])) {
+              dispatch(
+                addToBetSlip({
+                  selected: [0],
+                  multiplier: OddNUMBERMap.Win,
+                  oddType: "Win",
+                  stakeInformation: "Win",
+                  stake: 10,
+                  gameId: prop.gameId,
+                  gameType: "SpinAndWin",
+                  gameNumber: prop.gameNumber,
+                })
+              );
+            }
           }}
         >
           <p>0</p>

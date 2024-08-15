@@ -13,10 +13,11 @@
   color: #fff;
   font-weight: 600;
   background: #696969;
-
-  padding: 20px;
-  width: 80%;
+margin-left: -20% !important;
+  padding: 23px;
+width: 100%;
 }
+
 
 .speech::after {
   display: block;
@@ -43,19 +44,31 @@
   left: -15px;
   top: calc(50% - 15px);
 }
+body{
+  overflow: auto;
+}
+body::-webkit-scrollbar {
+  width: 15px;
 
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: green transparent;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #85da92;
+  border-radius: 3px;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 15px;
+
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: green;
-  border-radius: 10px;
+  background-color: #85da92;
+  border-radius: 3px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

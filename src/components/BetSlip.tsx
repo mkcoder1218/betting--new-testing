@@ -252,16 +252,13 @@ export default function BetSlip() {
   };
 
   return (
-    <div
-      style={{ flexBasis: "25%" }}
-      className="right containerBetslip relative ml-2 flex items-center justify-center flex-col drop-shadow-md"
-    >
+    <div className="w-28p right containerBetslip  relative ml-2 max-lg:w-1/4 flex items-center justify-center flex-col drop-shadow-md">
       <PrinterDialog
         open={printerDialog}
         handleClose={handleClose}
         logout={logout}
       />
-      <div className="font-thin text-green-600 font-bold flex items-center justify-center text-center">
+      <div className="font-thin text-green-600 mt-3 flex items-center justify-center text-center">
         Betslip
       </div>
 
@@ -309,7 +306,7 @@ export default function BetSlip() {
                   borderRadius: "3px",
                 }}
                 key={index}
-                className={`selected-nums-con -ml-3 mt-1 text-white font-bold`}
+                className={`selected-nums-con overflow-y-auto -ml-3 mt-1 text-white font-bold`}
               >
                 <div className="ml-2 flex justify-between items-center">
                   <div className="flex gap-1 items-center -mt-4">
@@ -339,7 +336,9 @@ export default function BetSlip() {
                       )}
                     </div>
                     <p className="text-xs flex items-center -mb-5">
-                      {item.stakeInformation}
+                      {item.stakeInformation?.split(" ")[0] === "Neighbors"
+                        ? item.stakeInformation.split(" ")[0]
+                        : item.stakeInformation}
                     </p>
                   </div>
                   <span
@@ -358,7 +357,9 @@ export default function BetSlip() {
                       {item.draw}
                       {!item.isCombo &&
                       item.gameType !== "SmartPlayKeno" &&
-                      item.gameType !== "SpinAndWin"
+                      item.gameType !== "SpinAndWin" &&
+                      item.stakeInformation?.split(" ")[0] !== "Neighbors" &&
+                      item.stakeInformation !== "Selector(color)"
                         ? "."
                         : ""}
                     </p>
@@ -388,7 +389,7 @@ export default function BetSlip() {
                       ? "Red"
                       : item.oddType === "Color2"
                       ? "Black"
-                      : item.stakeInformation === "Neighbors"
+                      : item.stakeInformation?.split(" ")[0] === "Neighbors"
                       ? item.selected.join("/")
                       : item.selected.length === 0 || item.oddType === "Win"
                       ? item.selected

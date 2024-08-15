@@ -233,7 +233,7 @@ function App() {
   };
 
   return (
-    <div className="bg-white">
+    <div className="bg-white ">
       <PrinterDialog
         open={printerDialog}
         handleClose={handlePrintDialogClose}
@@ -250,29 +250,58 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      <div className="flex items-start justify-between overflow-y-scroll">
-        <div className="left" style={{ width: "80%" }}>
+      <div
+        className="flex items-start justify-between h-screen custom-scrollbar overflow-y-auto"
+        style={{ scrollBehavior: "smooth" }}
+      >
+        <div className="left flex flex-col" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "SmartPlayKeno" ? (
             <>
               {" "}
-              <div className="next-draw flex mt-4 ml-7">
+              <div className="next-draw flex mt-4  ml-7">
                 {game && remainingTime > 0 ? (
-                  <div className="bg-red-500 font-bold p-2 text-sm text-white flex items-center">
+                  <div
+                    className=" font-bold text-md p-1 h-fit flex items-center"
+                    style={{
+                      backgroundColor: "#f00",
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      color: "white",
+                      opacity: 1,
+                    }}
+                  >
                     NEXT DRAW{" "}
-                    <span className="text-amber-300 font-bold ml-4">
+                    <span className=" font-bold ml-2" style={{ color: "#ff0" }}>
                       {formatTime(minutes, seconds)}
                     </span>
                   </div>
                 ) : (
-                  <div className="bg-red-500 p-2 text-sm text-white flex font-bold items-center">
+                  <div
+                    className="bg-red-500 text-sm flex font-bold items-center"
+                    style={{
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      color: "white",
+                      opacity: 1,
+                    }}
+                  >
                     NEXT DRAW{" "}
-                    <span className="font-bold text-amber-300 ml-4">
+                    <span className="font-bold text-amber-500 ml-4">
                       {"00"}:{"00"}
                     </span>
                   </div>
                 )}
-                <div className="bg-green-600 p-2 text-sm text-white font-bold">
+                <div
+                  className="text-md p-1 h-fit font-bold"
+                  style={{
+                    borderTopRightRadius: 4,
+                    borderBottomRightRadius: 4,
+                    color: "white",
+                    opacity: 1,
+                    backgroundColor: "rgba(22 163 74 )",
+                  }}
+                >
                   REPEAT{" "}
                   <span className="text-black rounded-md bg-gray-400">
                     <select onChange={handleRepeat}>
@@ -314,7 +343,7 @@ function App() {
                       />
                     )}
                     <div
-                      className="speech left mt-20"
+                      className="w-4/5 speech left mt-20 max-lg:w-full"
                       style={{
                         visibility:
                           ticketPicker.selected.length < 1

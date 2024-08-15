@@ -177,7 +177,7 @@ export const createBetSlipAndTicket =
                   gameParts[0] = "SteepleChaseRacing";
                   break;
                 default:
-                  gameParts[0] = "KENO";
+                  gameParts[0] = "Keno";
               }
               ticket.game = gameParts.join(" ");
             });
