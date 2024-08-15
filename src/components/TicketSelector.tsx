@@ -41,6 +41,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
     stake,
     gameId,
     gameType,
+    expiry,
   }: Ticket) => {
     if (currentDate > ticketExpiry) {
       return;
@@ -49,7 +50,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
     dispatch(
       addToBetSlip({
         selected: selected,
-        expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+        expiry: expiry,
         multiplier,
         toWin,
         stake,

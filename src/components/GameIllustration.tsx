@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "../features/hooks";
 
 import { addGameType } from "../features/slices/gameType";
 import Hockey from "./svg/Hockey";
+import DogVideo from "./svg/DogVideo";
 
 interface gameSelection {
   WhichGame: (val: string) => boolean;
@@ -56,11 +57,11 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-8",
     },
     {
-      icon: <DogWithVideo />,
+      icon: <DogVideo />,
       text1: "PreRecRealDogs",
       text2: "PLATINUM HOUNDS",
       text3: "greyHOund Racing",
-      width: "w-12",
+      width: "w-8",
     },
     {
       icon: <Bicycle />,
@@ -199,7 +200,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                     }}
                     key={index}
                     className={`flex items-center -ml-5 pl-7 ${
-                      isSelectedindex === index
+                      isSelectedindex === index || selectedGame === index
                         ? "bg-green-500 w-full text-white"
                         : "hover:bg-gray-100"
                     }  cursor-pointer p-2`}
@@ -207,7 +208,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                     <div className="flex-shrink-0 flex items-center justify-center w-12">
                       <button
                         className={`text-gray-500 ${
-                          isSelectedindex === index
+                          isSelectedindex === index || selectedGame === index
                             ? " text-white"
                             : "hover:bg-gray-100"
                         } hover:text-green-300`}
@@ -217,7 +218,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                     </div>
                     <div
                       className={`ml-2 text-green-600 ${
-                        isSelectedindex === index
+                        isSelectedindex === index || isActive === index
                           ? " text-white"
                           : "hover:bg-gray-100"
                       } hover:text-green-300 transition-all`}

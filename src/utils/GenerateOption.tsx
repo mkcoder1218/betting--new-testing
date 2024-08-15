@@ -63,7 +63,6 @@ const CollactionNumbers = {
   34: 3,
   35: 26,
   36: 0,
-  37: undefined,
 };
 const GenerateOption = (
   element: ElementTag,
@@ -74,6 +73,8 @@ const GenerateOption = (
   currentgameNumber?: any,
   sethoverdclass: (className: string) => void
 ): JSX.Element[] => {
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+
   const result = [];
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
@@ -96,12 +97,22 @@ const GenerateOption = (
       value,
     ])
   );
+  const checkIsSelected = (stakeInfo: string) => {
+    const index = betSlip.findIndex((value) => {
+      if (value.stakeInformation === stakeInfo) return true;
+    });
 
+    if (index > -1) return true;
+    return false;
+  };
   const handlefindindex = (index: number) => {
     const keyForValue = Array.from(CollactionNumbersMap.entries()).find(
       ([, value]) => value === index
     )?.[0];
-
+    if (keyForValue === 0) {
+      const lastIndex = Array.from(CollactionNumbersMap.values()).length - 1;
+      return lastIndex;
+    }
     return keyForValue;
   };
   const handleClickofNumber = (
@@ -110,35 +121,37 @@ const GenerateOption = (
     Multiplier: number,
     selected: string,
     stakeInfo: string,
-    oddType?: string
+    oddType: string
   ) => {
-    const number1 = handlefindindex(i);
-    const number2 = handlefindindex(i + 1);
-    const number3 = handlefindindex(i + 2);
-    const number4 = handlefindindex(i - 1);
-    const number5 = handlefindindex(i - 2);
+    const number1 = CollactionNumbersMap.get(handlefindindex(i));
+    const number2 = CollactionNumbersMap.get(handlefindindex(i) + 1);
+    const number3 = CollactionNumbersMap.get(handlefindindex(i) + 2);
+    const number4 = CollactionNumbersMap.get(handlefindindex(i) - 1);
+    const number5 = CollactionNumbersMap.get(handlefindindex(i) - 2);
+    const selectedArray = [number1, number2, number3, number4, number5];
     dispatch(setIsClearCircle(false));
-    dispatch(
-      addToBetSlip({
-        selected: [number1, number2, number3, number4, number5],
-        stakeInformation: stakeInfo,
-        multiplier: OddNUMBERMap.Nei,
-        gameId: gameId,
-        stake: stake,
-        oddType: oddType,
-        gameType: "Neighbors",
-        gameNumber: currentgameNumber,
-      })
-    );
+    if (!checkIsSelected(stakeInfo))
+      dispatch(
+        addToBetSlip({
+          selected: selectedArray,
+          stakeInformation: stakeInfo,
+          multiplier: OddNUMBERMap.Nei,
+          gameId: gameId,
+          stake: 10,
+          oddType: oddType,
+          gameType: "Neighbors",
+          gameNumber: currentgameNumber,
+        })
+      );
+  };
+  const handleMouseEnterbottom = (index: number) => {
+    setHoverIndex(index);
+  };
+
+  const handleMouseLeavebottom = () => {
+    setHoverIndex(null);
   };
   for (let i = 0; i < number; i++) {
-    const handleMouseEnterbottom = (index: number) => {
-      setHoverIndex(index);
-    };
-
-    const handleMouseLeavebottom = () => {
-      setHoverIndex(null);
-    };
     if (i == 0) {
       className = "green";
     }
@@ -176,7 +189,14 @@ const GenerateOption = (
           },
           onMouseLeave: handleMouseLeavebottom,
           onClick: () => {
-            handleClickofNumber(i, OddNUMBERMap.Nei, 10, "1st 12", "Neighbors");
+            handleClickofNumber(
+              hoverIndex,
+              OddNUMBERMap.Nei,
+              10,
+              `Neighbors`,
+              `Neighbors of ${hoverIndex}`,
+              "Neighbors"
+            );
           },
         },
         i.toString(),
@@ -204,32 +224,40 @@ export const GenerateOption2 = (
 ): JSX.Element[] => {
   const result = [];
   const dispatch = useAppDispatch();
-    const betSlip = useAppSelector((state) => state.picker.betSlip);
-    const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
-    const [circles, setCircles] = useState<boolean[]>(
-      Array.from({ length: number - start + 1 }, () => false)
-    );
-    const [isExist, setisExist] = useState(false);
-    useEffect(() => {
-      if (IsCircle) setCircles([]); // Run once when IsCircle changes
-    }, [IsCircle, setCircles]);
-    const [hoverCircles, setHoverCircles] = useState<boolean[]>(
-      Array.from({ length: number - start + 1 }, () => false)
-    );
-    for (let i = number; i >= start; i--) {
-      var className = "";
-      var containerclassName = "";
-      var specialclassName = "";
-      const isFirstrow = specialNumbers.firstRownumbers.includes(i);
-      const issecondrow = specialNumbers.secRownumbers.includes(i);
-      const isThirdrow = specialNumbers.therdRownumbers.includes(i);
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+  const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
+  const [circles, setCircles] = useState<boolean[]>(
+    Array.from({ length: number - start + 1 }, () => false)
+  );
+  const [isExist, setisExist] = useState(false);
+  useEffect(() => {
+    if (IsCircle) setCircles([]); // Run once when IsCircle changes
+  }, [IsCircle, setCircles]);
+  const [hoverCircles, setHoverCircles] = useState<boolean[]>(
+    Array.from({ length: number - start + 1 }, () => false)
+  );
+  const checkIsSelected = (selected: number) => {
+    const index = betSlip.findIndex((value) => {
+      if (value.selected.includes(selected)) return true;
+    });
 
-      const handleclick = (index: number, i: number, param: DispatchParams) => {
-        const newCircles = [...circles];
-        newCircles[index] = !newCircles[index];
-        setCircles(newCircles);
-        dispatch(setIsClearCircle(false));
+    if (index > -1) return true;
+    return false;
+  };
+  for (let i = number; i >= start; i--) {
+    var className = "";
+    var containerclassName = "";
+    var specialclassName = "";
+    const isFirstrow = specialNumbers.firstRownumbers.includes(i);
+    const issecondrow = specialNumbers.secRownumbers.includes(i);
+    const isThirdrow = specialNumbers.therdRownumbers.includes(i);
 
+    const handleclick = (index: number, i: number) => {
+      const newCircles = [...circles];
+      newCircles[index] = !newCircles[index];
+      setCircles(newCircles);
+      dispatch(setIsClearCircle(false));
+      if (!checkIsSelected(i)) {
         dispatch(
           addToBetSlip({
             selected: [i],
@@ -243,86 +271,87 @@ export const GenerateOption2 = (
             gameType: "SpinAndWin",
           })
         );
-      };
-      const handleMouseEnter = (index: number) => {
-        const newHoverCircles = Array(number - start + 1).fill(false);
-        if (i) {
-          newHoverCircles[index] = true;
-          setHoverCircles(newHoverCircles);
-        }
-      };
-      const handleMouseLeave = () => {
-        setHoverCircles(Array(number - start + 1).fill(false));
-      };
-      if (i <= 10) {
-        className =
-          i % 2 === 0
-            ? "black blackhover h-full relative"
-            : "Red relative redhover";
-      } else if (i >= 11 && i <= 19) {
-        className =
-          i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
-      } else if (i >= 20 && i <= 28) {
-        className =
-          i % 2 === 0 ? "black blackhover relative" : "Red relative redhover";
-      } else if (i >= 29 && i <= 36) {
-        className =
-          i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
       }
-
-      const isorange = specialNumbers.orangespecial.includes(i);
-      const isblue = specialNumbers.bluespecial.includes(i);
-      const isrose = specialNumbers.rosespecial.includes(i);
-      const isgreen = specialNumbers.greenspecial.includes(i);
-      const isyellow = specialNumbers.yellowspecial.includes(i);
-      const iswhite = specialNumbers.whitespecial.includes(i);
-      containerclassName = isFirstrow
-        ? "first-row h-1/3 relative"
-        : issecondrow
-        ? "second-row h-1/3 relative"
-        : isThirdrow
-        ? "third-row h-1/3 relative"
-        : "";
-
-      specialclassName = isorange
-        ? "orangenumber relative"
-        : isblue
-        ? "bluenumber relative"
-        : isrose
-        ? "rosenumber relative"
-        : isgreen
-        ? "greennumber relative"
-        : isyellow
-        ? "yellownumber relative"
-        : iswhite
-        ? "whitenumber relative"
-        : "";
-
-      const combinedClass = `${specialclassName} ${className}`;
-      result.push(
-        <div className={containerclassName}>
-          {React.createElement(
-            element,
-            {
-              className: combinedClass,
-              onClick: () => handleclick(i - start, i),
-              onMouseEnter: () => handleMouseEnter(i - start),
-              onMouseLeave: handleMouseLeave,
-            },
-            i.toString(),
-            circles[i - start] && <Circle margin={true} />,
-            hoverCircles[i - start] && (
-              <Fourrowhover
-                row1={i > 3 ? 3 : i == 1 ? 2 : 1}
-                row2={2}
-                row3={i >= 34 ? 0 : 3}
-                i={i}
-              />
-            )
-          )}
-        </div>
-      );
+    };
+    const handleMouseEnter = (index: number) => {
+      const newHoverCircles = Array(number - start + 1).fill(false);
+      if (i) {
+        newHoverCircles[index] = true;
+        setHoverCircles(newHoverCircles);
+      }
+    };
+    const handleMouseLeave = () => {
+      setHoverCircles(Array(number - start + 1).fill(false));
+    };
+    if (i <= 10) {
+      className =
+        i % 2 === 0
+          ? "black blackhover h-full relative"
+          : "Red relative redhover";
+    } else if (i >= 11 && i <= 19) {
+      className =
+        i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
+    } else if (i >= 20 && i <= 28) {
+      className =
+        i % 2 === 0 ? "black blackhover relative" : "Red relative redhover";
+    } else if (i >= 29 && i <= 36) {
+      className =
+        i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
     }
+
+    const isorange = specialNumbers.orangespecial.includes(i);
+    const isblue = specialNumbers.bluespecial.includes(i);
+    const isrose = specialNumbers.rosespecial.includes(i);
+    const isgreen = specialNumbers.greenspecial.includes(i);
+    const isyellow = specialNumbers.yellowspecial.includes(i);
+    const iswhite = specialNumbers.whitespecial.includes(i);
+    containerclassName = isFirstrow
+      ? "first-row h-1/3 relative"
+      : issecondrow
+      ? "second-row h-1/3 relative"
+      : isThirdrow
+      ? "third-row h-1/3 relative"
+      : "";
+
+    specialclassName = isorange
+      ? "orangenumber relative"
+      : isblue
+      ? "bluenumber relative"
+      : isrose
+      ? "rosenumber relative"
+      : isgreen
+      ? "greennumber relative"
+      : isyellow
+      ? "yellownumber relative"
+      : iswhite
+      ? "whitenumber relative"
+      : "";
+
+    const combinedClass = `${specialclassName} ${className}`;
+    result.push(
+      <div className={containerclassName}>
+        {React.createElement(
+          element,
+          {
+            className: combinedClass,
+            onClick: () => handleclick(i - start, i),
+            onMouseEnter: () => handleMouseEnter(i - start),
+            onMouseLeave: handleMouseLeave,
+          },
+          i.toString(),
+          circles[i - start] && <Circle margin={true} />,
+          hoverCircles[i - start] && (
+            <Fourrowhover
+              row1={i > 3 ? 3 : i == 1 ? 2 : 1}
+              row2={2}
+              row3={i >= 34 ? 0 : 3}
+              i={i}
+            />
+          )
+        )}
+      </div>
+    );
+  }
 
   return result;
 };

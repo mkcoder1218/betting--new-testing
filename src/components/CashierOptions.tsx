@@ -683,7 +683,7 @@ export default function CashierOptions({
                               ID{" "}
                               {gameResult.gameType === "SmartPlayKeno"
                                 ? gameResult.gamenumber
-                                : JSON.parse(gameResult.gameData).Number}
+                                : gameResult.gameData.Number}
                             </p>
                           </div>
                           <div>
@@ -727,6 +727,7 @@ export default function CashierOptions({
                                 Icon={Jaguar}
                                 isSmall={true}
                                 gameData={gameResult.result}
+                                gameType={gameResult.gameType}
                               />
                             )}
                           </div>
@@ -916,8 +917,7 @@ export default function CashierOptions({
                                             </td>
                                             <td className="border border-slate-400 p-2">
                                               {item.gamenumber === 0
-                                                ? JSON.parse(item.gameData)
-                                                    .Number
+                                                ? item.gameData.Number
                                                 : item.gamenumber}
                                             </td>
 

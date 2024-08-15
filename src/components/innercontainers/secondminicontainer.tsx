@@ -7,6 +7,7 @@ import { setIsClearCircle } from "../../features/slices/gameType";
 import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
 import { OddNUMBERMap } from "../../utils/odd";
+import CheckSelection from "../../utils/CheckSelection";
 type CircleState = {
   first12: boolean;
   second12: boolean;
@@ -54,6 +55,15 @@ function Secondminicontainer(prop: FirstMiniProp) {
   function range(start: number, end: number): number[] {
     return Array.from({ length: end - start + 1 }, (_, i) => i + start);
   }
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+  const checkIsSelected = (oddType: string) => {
+    const index = betSlip.findIndex((value) => {
+      if (value.oddType === oddType) return true;
+    });
+
+    if (index > -1) return true;
+    return false;
+  };
   const handleCircleClick = (
     area: keyof CircleState,
     Props: DispatchParams
@@ -67,20 +77,22 @@ function Secondminicontainer(prop: FirstMiniProp) {
       ...prevState,
       [area]: !prevState[area],
     }));
-    dispatch(
-      addToBetSlip({
-        selected: Props.selected,
-        stakeInformation: Props.stakeInfo,
-        multiplier: Props.multiplier,
-        gameId: prop.gameId,
-        stake: Props.stake,
-        toWin: Props.toWin,
-        expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
-        oddType: Props.oddType,
-        gameType: "SpinAndWin",
-        gameNumber:prop.gameNumber
-      })
-    );
+    if (!checkIsSelected(Props.oddType)) {
+      dispatch(
+        addToBetSlip({
+          selected: Props.selected,
+          stakeInformation: Props.stakeInfo,
+          multiplier: Props.multiplier,
+          gameId: prop.gameId,
+          stake: Props.stake,
+          toWin: Props.toWin,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          oddType: Props.oddType,
+          gameType: "SpinAndWin",
+          gameNumber: prop.gameNumber,
+        })
+      );
+    }
   };
 
   return (
@@ -99,7 +111,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
               stake: 10,
               toWin: 10,
               oddType: "Dozens1",
-              gameNumber:prop.gameNumber
+              gameNumber: prop.gameNumber,
             });
           }}
           onMouseOver={() => generatehover(".number-row1")}

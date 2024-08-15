@@ -35,6 +35,7 @@ import { DogWithVideo } from "./svg/DogWithVideo";
 import { CircleDraw } from "./svg/CircleDraw";
 import Hockey from "./svg/Hockey";
 import { addGameType, setIsClearCircle } from "../features/slices/gameType";
+import moment from "moment";
 
 export default function BetSlip() {
   const dispatch = useAppDispatch();
@@ -88,11 +89,14 @@ export default function BetSlip() {
   // Check every second for the expiry of the current game and clear from betslip if it did. And try to fetch the last game every 5 seconds if no game exists currently
   useEffect(() => {
     const timer = setInterval(() => {
+      let hasAllBetsExpired = true;
       for (let ticket of betState.betSlip) {
         console.log("TIMER_UPDATE", currentDate > ticket.expiry);
-        if (currentDate > ticket.expiry) {
+        if (ticket.expiry - new Date().getTime() > 0) {
+          hasAllBetsExpired = false;
+        }
+        if (hasAllBetsExpired) {
           setExpired(true);
-          break;
         }
       }
     }, 1000);
@@ -142,6 +146,14 @@ export default function BetSlip() {
     const getBiggest = betState.betSlip.filter(
       (item) => item.stake > 1000 || item.stake * item.multiplier <= 50000
     );
+    const findExpired = betState.betSlip.findIndex((ticket) => {
+      return ticket.expiry - new Date().getTime() < 0;
+    });
+    if (findExpired > -1) {
+      setBetError("One or More Bets Expired");
+      return;
+    }
+
     if (getBiggest.length > 0) {
       const biggetsFirst = getBiggest[0].stake;
       if (biggetsFirst > 1000) {
@@ -240,7 +252,7 @@ export default function BetSlip() {
   };
 
   return (
-    <div className="w-28p right containerBetslip relative ml-2 max-lg:w-1/4 flex items-center justify-center flex-col drop-shadow-md">
+    <div className="w-28p right containerBetslip  relative ml-2 max-lg:w-1/4 flex items-center justify-center flex-col drop-shadow-md">
       <PrinterDialog
         open={printerDialog}
         handleClose={handleClose}
@@ -294,7 +306,7 @@ export default function BetSlip() {
                   borderRadius: "3px",
                 }}
                 key={index}
-                className={`selected-nums-con -ml-3 mt-1 text-white font-bold`}
+                className={`selected-nums-con overflow-y-auto -ml-3 mt-1 text-white font-bold`}
               >
                 <div className="ml-2 flex justify-between items-center">
                   <div className="flex gap-1 items-center -mt-4">
@@ -324,7 +336,9 @@ export default function BetSlip() {
                       )}
                     </div>
                     <p className="text-xs flex items-center -mb-5">
-                      {item.stakeInformation}
+                      {item.stakeInformation?.split(" ")[0] === "Neighbors"
+                        ? item.stakeInformation.split(" ")[0]
+                        : item.stakeInformation}
                     </p>
                   </div>
                   <span
@@ -343,7 +357,9 @@ export default function BetSlip() {
                       {item.draw}
                       {!item.isCombo &&
                       item.gameType !== "SmartPlayKeno" &&
-                      item.gameType !== "SpinAndWin"
+                      item.gameType !== "SpinAndWin" &&
+                      item.stakeInformation?.split(" ")[0] !== "Neighbors" &&
+                      item.stakeInformation !== "Selector(color)"
                         ? "."
                         : ""}
                     </p>
@@ -373,7 +389,7 @@ export default function BetSlip() {
                       ? "Red"
                       : item.oddType === "Color2"
                       ? "Black"
-                      : item.stakeInformation === "Neighbors"
+                      : item.stakeInformation?.split(" ")[0] === "Neighbors"
                       ? item.selected.join("/")
                       : item.selected.length === 0 || item.oddType === "Win"
                       ? item.selected
