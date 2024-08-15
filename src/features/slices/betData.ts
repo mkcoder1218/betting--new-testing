@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
 import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
+import { GameData } from "./RacingGameSlice";
 
 interface Game {
   gamenumber: number;
@@ -28,7 +29,7 @@ interface Ticket {
   betSlipId: string;
   createdAt: string;
   updatedAt: string;
-  Game: Game;
+  Game: GameData;
 }
 
 export interface BetSlip {
@@ -124,7 +125,6 @@ export const getTicketsToCancel =
         );
       }
     } catch (err: AxiosError | any) {
-
       dispatch(
         addBetData({
           message: "",
@@ -277,8 +277,6 @@ export const redeemTicket =
       const redeemTicketResposne = (
         await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
       ).data;
-
-
 
       if (redeemTicketResposne.message === "Ticket redeemed successfully") {
         try {

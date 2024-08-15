@@ -11,6 +11,9 @@ import { printSelectedTickets } from "../features/slices/ticketSlice";
 import { Ticket } from "../features/slices/betSlip";
 import { SmartPlay } from "./svg/SmartPlay";
 import { IoChevronBackOutline } from "react-icons/io5";
+import Result from "../ui/Result";
+import { Jaguar } from "./svg/Jaguar";
+import { GameData } from "../features/slices/RacingGameSlice";
 
 interface ActionType {
   type: string;
@@ -24,10 +27,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
   const userData = useAppSelector((state) => state.user);
   const gameNumber = data.Tickets?.map((items) => items.Game.gamenumber);
   const totalStake = data.Tickets?.reduce((a, b) => a + parseInt(b?.stake), 0);
-  const gameResult: string[] =
-    data.Tickets && data.Tickets?.length > 0
-      ? data.Tickets[0]?.Game.result
-      : [];
+  const [gameResult, setGameResult] = useState<GameData>();
   const [resultVisible, toggleResult] = useState(false);
 
   const printSelected = (item: Ticket) => {
@@ -141,7 +141,10 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                       {type === "redeem" && (
                         <td scope="row" className="px-1 flex gap-4 py-2">
                           <FaEye
-                            onClick={() => toggleResult(true)}
+                            onClick={() => {
+                              toggleResult(true);
+                              setGameResult(item.Game);
+                            }}
                             className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
                             size={40}
                           />
@@ -266,11 +269,20 @@ const BetSlipTable = ({ type, data }: ActionType) => {
             <div className="w-full mr-20 mt-10 flex items-center justify-center">
               RESULTS
             </div>
-            <div className="w-2/3 mr-20 mt-4">
+            <div className="w-2/3 mr-20">
               <div className="mb-3">
+                {gameResult && gameResult.gameType !== "SmartPlayKeno" && (
+                  <Result
+                    Icon={Jaguar}
+                    isSmall={true}
+                    gameData={gameResult.result}
+                    gameType={gameResult.gameType}
+                  />
+                )}
                 <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4">
                   {gameResult &&
-                    gameResult.MarketResults[0].WinningSelections.slice()
+                    gameResult.gameType === "SmartPlayKeno" &&
+                    gameResult.result.MarketResults[0].WinningSelections.slice()
                       .sort((a, b) => parseInt(a) - parseInt(b))
                       .map((_, index) => {
                         // const number = index + 1;
