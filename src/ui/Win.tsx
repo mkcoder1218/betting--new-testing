@@ -28,8 +28,8 @@ const ButtonSizes: React.FC<ButtonProp> = ({
   isBankActive,
   isHeadToHead,
   isChangedForm,
+  isDesabled,
 }) => {
-
   const splitText = (text: string) => {
     const match =
       text && isHeadToHead
@@ -51,7 +51,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
     text !== "Clear" && "button",
     isCombo ? "isCombo" : "notCombo",
     isHeadToHead && "headtohead",
-    !isActive && !isCombo && "notCombo-color text-white",
+    !isActive && !isCombo && !isLocked && "notCombo-color text-white",
     isActive && "text-white override",
   ]
     .filter(Boolean)
@@ -75,7 +75,7 @@ const ButtonSizes: React.FC<ButtonProp> = ({
             color:
               isActive || isBankActive || isChangedForm ? "white" : "black",
           }}
-          disabled={isLocked}
+          disabled={isLocked || isDesabled}
           variant="outlined"
           size="small"
           className={`${classNames}`}

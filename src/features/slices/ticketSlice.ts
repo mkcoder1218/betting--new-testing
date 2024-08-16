@@ -43,7 +43,8 @@ export interface Ticket {
   updatedAt: string;
   Game: Game;
   BetSlip: BetSlip;
-  gameType?: string
+  gameType?: string;
+
 }
 
 interface TicketResponse {
@@ -133,14 +134,20 @@ export const recallTickets =
   };
 
 export const printSelectedTickets = async (req: any) => {
-    try {
-        const printSelectedResponse = await axiosInstance.post("ticket/printEvent", req);
+  try {
+    console.log("req:", req);
+    const printSelectedResponse = await axiosInstance.post("ticket/printSelected", req);
+    const combinedData = {
+      ...printSelectedResponse.data.data,        // Spread the properties of printSelectedResponse.data.data
+      isCopy: printSelectedResponse.config.data  // Add the isCopy property from config.data
+    };
+    if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
 
-        if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
-          const printSelectedData = await axios.post("http://127.0.0.1:5002/printEvent", printSelectedResponse.data.data)
+      const printSelectedData = await axios.post("http://127.0.0.1:5002/printTicket", combinedData)
         }
+
     } catch (err) {
-        console.log(err);
+    console.log('errorslist', err);
     }
 }
 

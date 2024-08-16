@@ -231,8 +231,9 @@ export default function CashierOptions({
       betslipId: item.betSlipId,
       shopId: userData.user?.Cashier.shopId,
       cashierCreateId: userData.user?.Cashier.id,
+      isCopy: true,
     };
-
+    console.log("payload:", payload);
     printSelectedTickets(payload);
   };
 
@@ -646,8 +647,8 @@ export default function CashierOptions({
                                       <td className="border border-l-slate-400 p-2">
                                         {parseFloat(item.stake).toFixed(2)} Br
                                       </td>
-                                      <td className="border border-l-slate-400 p-2">
-                                        {`Single, Keno-${item.Game.gamenumber}`}
+                                      <td className="border border-l-slate-400 pl-5 p-2">
+                                        {`${item.gameType}-${item.Game.gameData.Number}`}
                                       </td>
                                       <td
                                         onClick={() => printSelected(item)}
@@ -672,10 +673,10 @@ export default function CashierOptions({
                   </CustomTabPanel>
                   <CustomTabPanel value={valueParent} index={1}>
                     {resultVisible && gameResults && gameResult && (
-                      <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
+                      <div className="right-flex pl-3 pr-3 w-full flex-grow ml-2">
                         <div className="result-header flex justify-between">
-                          <div className="flex mt-5">
-                            <SmartPlay />
+                          <div className="flex w-full">
+                            {/* <SmartPlay />
                             <p className="ml-2">
                               {moment(gameResult.startTime).format(
                                 "DD/MM/YYYY hh:mm:ss"
@@ -684,7 +685,15 @@ export default function CashierOptions({
                               {gameResult.gameType === "SmartPlayKeno"
                                 ? gameResult.gamenumber
                                 : gameResult.gameData.Number}
-                            </p>
+                            </p> */}
+                            {gameResult.gameType !== "SmartPlayKeno" && (
+                              <Result
+                                Icon={Jaguar}
+                                isSmall={true}
+                                gameData={gameResult.result}
+                                gameType={gameResult.gameType}
+                              />
+                            )}
                           </div>
                           <div>
                             <button
@@ -697,9 +706,6 @@ export default function CashierOptions({
                         </div>
 
                         <div className="results-content flex items-center flex-col w-full">
-                          <div className="w-full mr-20 mt-10 flex items-center justify-center">
-                            RESULTS
-                          </div>
                           <div className="w-2/3 mr-20 mt-4">
                             <div className="mb-3">
                               <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4 w-full">
@@ -722,14 +728,6 @@ export default function CashierOptions({
                                     })}
                               </div>
                             </div>
-                            {gameResult.gameType !== "SmartPlayKeno" && (
-                              <Result
-                                Icon={Jaguar}
-                                isSmall={true}
-                                gameData={gameResult.result}
-                                gameType={gameResult.gameType}
-                              />
-                            )}
                           </div>
                         </div>
                       </div>

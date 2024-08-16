@@ -400,8 +400,7 @@ const BasicTable: React.FC<TableProp> = ({
                           : false
                       }
                       isDesabled={
-                        (clickOrder.length > 0 && clickOrder.includes(index)) ||
-                        HeadText === "ALT"
+                        clickOrder.length > 0 && clickOrder.includes(index)
                           ? false
                           : true
                       }

@@ -5,11 +5,12 @@ interface Image {
   isHeadtoHead?: boolean;
 }
 function Images(Prop: Image) {
+
   return (
     <img
       className={`${!Prop.isHeadtoHead ? "pr-14" : "h-8"}`}
       src={Prop.src}
-      style={{ width: !Prop.isHeadtoHead ? "32%" : "20%" }}
+      style={{ width: !Prop.isHeadtoHead ? "32%" : "100%" }}
     />
   );
 }

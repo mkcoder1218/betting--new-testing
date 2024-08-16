@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { RootResultInterface } from "../config/types";
 import Images from "./Images";
 import moment from "moment";
 import { Entry } from "../features/slices/RacingGameSlice";
+import ImagesResult from "./ImageForResult";
+import ResultLists from "./ResultLists";
 
 interface ResultsProp {
   Icon: React.ComponentType;
@@ -27,9 +29,7 @@ const Result: React.FC<ResultsProp> = ({
       case "horseRun":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "CycleRacing":
-        return `https://games2.playbetman.com/Content/Images/CyclistHelmets/silk_${
-          index + 1
-        }.png`;
+        return `https://games2.playbetman.com/Content/Images/CyclistHelmets/silk_${index}.png`;
       case "SteepleChase":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "SpeedSkating":
@@ -50,18 +50,16 @@ const Result: React.FC<ResultsProp> = ({
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
     }
   };
+
   return (
-    <div
-      className="w-full bg-black text-white text-lg"
-      style={{ height: "50vw" }}
-    >
+    <div className="w-full text-gray-400 text-lg" style={{ height: "30vw" }}>
       <div className="flex w-full items-center p-5 uppercase gap-4">
         <div className="">
           <Icon isSmall={isSmall} />
         </div>
         <div className="flex-col w-full">
           <p className="" style={{ fontSize: "25px" }}>
-            Place
+            {gameData.Race.Name}
           </p>
           <div className="flex w-full gap-1" style={{ fontSize: "16px" }}>
             <p>
@@ -75,93 +73,70 @@ const Result: React.FC<ResultsProp> = ({
         </div>
       </div>
       <div className="borderLine"></div>
-      <div className="flex w-full justify-center mt-4 uppercase -mb-10">
-        <p>Results</p>
+      <div className="w-full flex items-center p-4 justify-center">
+        <p>{"Results".toUpperCase()}</p>
       </div>
-      <div
-        className="bg-gray-500 h-28 flex justify-center mt-14 ml-10 w-full"
-        style={{ width: "95%" }}
-      >
-        <div className="border-l-2 flex justify-between w-1/3">
-          <div
-            className="bg-green-600 text-white w-5 h-7 text-center rounded-br-full rounded-tr-lg pr-1 flex items-end justify-end"
-            style={{ fontSize: 12 }}
-          >
-            <p>1</p>
-          </div>
-          <div
-            className="flex flex-col m-auto items-center w-full"
-            style={{ padding: "auto" }}
-          >
-            <div className="">
-              <Images
-                src={silkGenerator(
-                  gameData.Race.Entries[0],
-                  gameType + "",
-                  parseInt(gameData.Race.Entries[0].Form)
-                )}
-                src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[0].SilkNumber}.png`}
-              />
-            </div>
-            <div className="">
+      <div className="h-28 flex justify-center ml-5 w-full">
+        <div
+          className="flex flex-col m-auto items-center w-full"
+          style={{ padding: "auto" }}
+        >
+          <div className="w-full flex flex-col items-center justify-center">
+            <ImagesResult
+              src={silkGenerator(
+                gameData.Race.Entries[0],
+                gameType + "",
+                gameData.Race.Entries[0].Draw
+              )}
+            />
+
+            <div className="text-sm -ml-10">
               {gameData.Race.Entries[0].Draw} {gameData.Race.Entries[0].Name}
             </div>
           </div>
-        </div>
-        <div className="border-l-2 w-1/3">
-          {" "}
-          <div
-            className="bg-green-600 text-white w-5 h-7 text-center rounded-br-full rounded-tr-lg pr-1 flex items-end justify-end"
-            style={{ fontSize: 12 }}
-          >
-            <p>2</p>
-          </div>
-          <div
-            className="flex flex-col m-auto items-center w-full"
-            style={{ padding: "auto" }}
-          >
-            <div className="">
-              <Images
-                src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[1].SilkNumber}.png`}
-              />
-            </div>
-            <div className="">
+        </div>{" "}
+        <div
+          className="flex flex-col m-auto items-center w-full"
+          style={{ padding: "auto" }}
+        >
+          <div className="w-full flex flex-col items-center justify-center">
+            <ImagesResult
+              src={silkGenerator(
+                gameData.Race.Entries[1],
+                gameType + "",
+                gameData.Race.Entries[1].Draw
+              )}
+            />
+
+            <div className="text-sm -ml-10">
               {gameData.Race.Entries[1].Draw} {gameData.Race.Entries[1].Name}
             </div>
           </div>
-        </div>
-        <div className="border-l-2 w-1/3">
-          {" "}
-          <div
-            className="bg-green-600 text-white w-5 h-7 text-center rounded-br-full rounded-tr-lg pr-1 flex items-end justify-end"
-            style={{ fontSize: 12 }}
-          >
-            <p>3</p>
-          </div>
-          <div
-            className="flex flex-col m-auto items-center w-full"
-            style={{ padding: "auto" }}
-          >
-            <div
-              className=""
-              style={{
-                justifyContent: "center",
-                textAlign: "center",
-                alignItems: "center",
-              }}
-            >
-              <Images
-                src={`https://games2.playbetman.com/Content/Images/HorseSilks/silk_${gameData.Race.Entries[2].SilkNumber}.png`}
-              />
-            </div>
-            <div className="">
+        </div>{" "}
+        <div
+          className="flex m-auto justify-center items-center w-full"
+          style={{ padding: "auto" }}
+        >
+          <div className="w-full flex flex-col items-center justify-center h-full">
+            <ImagesResult
+              src={silkGenerator(
+                gameData.Race.Entries[2],
+                gameType + "",
+                gameData.Race.Entries[2].Draw
+              )}
+            />
+
+            <div className="text-sm -ml-10">
               {gameData.Race.Entries[2].Draw} {gameData.Race.Entries[2].Name}
             </div>
           </div>
         </div>
       </div>
+      <div className="w-full">
+        <ResultLists />
+      </div>
       <div className="w-full flex justify-center text-sm mt-1">
-        <p>Number Of Particepants:</p>
+        <p>Number Of Particepants:{gameData.Race.Name.length}</p>
       </div>
     </div>
   );
