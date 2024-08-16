@@ -14,6 +14,15 @@ import { IoChevronBackOutline } from "react-icons/io5";
 import Result from "../ui/Result";
 import { Jaguar } from "./svg/Jaguar";
 import { GameData } from "../features/slices/RacingGameSlice";
+import { Garri } from "./svg/Garri";
+import { DogWithVideo } from "./svg/DogWithVideo";
+import HorseRun from "../pages/HorseRun";
+import { Bicycle } from "./svg/Bicycle";
+import { HorseJump } from "./svg/HorseJump";
+import Hockey from "./svg/Hockey";
+import { F1 } from "./svg/F1";
+import { CarRacing } from "./svg/CarRacing";
+import { DashingDerby } from "./svg/DashingDerby";
 
 interface ActionType {
   type: string;
@@ -29,7 +38,9 @@ const BetSlipTable = ({ type, data }: ActionType) => {
   const totalStake = data.Tickets?.reduce((a, b) => a + parseInt(b?.stake), 0);
   const [gameResult, setGameResult] = useState<GameData>();
   const [resultVisible, toggleResult] = useState(false);
-
+  const gameResults = useAppSelector((state) => {
+    return state.summary.eventResult;
+  });
   const printSelected = (item: Ticket) => {
     const payload = {
       betslipId: item.betSlipId,
@@ -49,7 +60,32 @@ const BetSlipTable = ({ type, data }: ActionType) => {
       )
     );
   };
-
+  const gameTypeSelector = (gameType: string) => {
+    switch (gameType) {
+      case "HarnessRacing":
+        return Garri;
+      case "PreRecRealDogs":
+        return DogWithVideo;
+      case "horseRun":
+        return HorseRun;
+      case "CycleRacing":
+        return Bicycle;
+      case "SteepleChase":
+        return HorseJump;
+      case "SpeedSkating":
+        return Hockey;
+      case "SingleSeaterMotorRacing":
+        return F1;
+      case "MotorRacing":
+        return CarRacing;
+      case "DashingDerby":
+        return DashingDerby;
+      case "PlatinumHounds":
+        return Jaguar;
+      default:
+        return;
+    }
+  };
   const handleRedeem = () => {
     dispatch(
       redeemTicket(userData.user?.Cashier.id, parseInt(data?.betSlipNumber))
@@ -249,16 +285,41 @@ const BetSlipTable = ({ type, data }: ActionType) => {
         </div>
       )}
       {resultVisible && (
-        <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
-          <div className="result-header flex justify-between">
-            <div className="flex mt-5">
-              <SmartPlay />
-              <p className="ml-2">2024/06/30 04:10:32 ID 8129</p>
-            </div>
+        <div className="right-flex pl-3 pr-3 w-full flex-grow ml-2">
+          <div className="result-header flex text-gray-500 justify-between">
+            {gameResult.gameType === "SmartPlayKeno" && (
+              <div className="w-full">
+                <div className="flex w-full gap-3">
+                  <SmartPlay />
+                  <p className="mb-5">
+                    {moment(gameResult.startTime).format("YYYY/MM/DD hh:mm:ss")}{" "}
+                    ID{" "}
+                    {gameResult.gameType === "SmartPlayKeno"
+                      ? gameResult.gamenumber
+                      : gameResult.gamenumber}
+                  </p>
+                </div>
+                <div className="borderLine"></div>
+                <div className="w-full p-3 text-xl flex justify-center">
+                  <p>{"Results".toUpperCase()}</p>
+                </div>
+              </div>
+            )}
+
+            {gameResult.gameType !== "SmartPlayKeno" && (
+              <Result
+                Icon={gameTypeSelector(gameResult.gameType)}
+                isSmall={true}
+                gameData={gameResult.result}
+                gameType={gameResult.gameType}
+              />
+            )}
+
             <div>
               <button
                 onClick={() => toggleResult(false)}
-                className="flex p-2 border-2 border-gray-400 hover:bg-slate-200 transition-all items-center rounded-md"
+                className="flex w-36 p-1 justify-center border-gray-400 hover:bg-slate-200 transition-all items-center rounded-md"
+                style={{ border: "1px solid #cfcfcf" }}
               >
                 <IoChevronBackOutline size={24} /> Back To List
               </button>
@@ -266,30 +327,18 @@ const BetSlipTable = ({ type, data }: ActionType) => {
           </div>
 
           <div className="results-content flex items-center flex-col w-full">
-            <div className="w-full mr-20 mt-10 flex items-center justify-center">
-              RESULTS
-            </div>
-            <div className="w-2/3 mr-20">
+            <div className="w-2/3 mr-20 mt-4">
               <div className="mb-3">
-                {gameResult && gameResult.gameType !== "SmartPlayKeno" && (
-                  <Result
-                    Icon={Jaguar}
-                    isSmall={true}
-                    gameData={gameResult.result}
-                    gameType={gameResult.gameType}
-                  />
-                )}
-                <div className="grid gap-x-8 gap-y-2 grid-cols-10 pb-4">
-                  {gameResult &&
-                    gameResult.gameType === "SmartPlayKeno" &&
+                <div className="grid gap-x-24 gap-y-1 grid-cols-10 -ml-14 pb-4 w-full">
+                  {gameResult.gameType === "SmartPlayKeno" &&
+                    gameResult &&
                     gameResult.result.MarketResults[0].WinningSelections.slice()
                       .sort((a, b) => parseInt(a) - parseInt(b))
-                      .map((_, index) => {
-                        // const number = index + 1;
+                      .map((_) => {
                         return (
                           <button
                             style={{
-                              backgroundColor: "#c2410c",
+                              backgroundColor: "#bc4307",
                             }}
                             key={_}
                             className={`balls rounded-full w-10 h-10 text-white`}

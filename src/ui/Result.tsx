@@ -52,28 +52,31 @@ const Result: React.FC<ResultsProp> = ({
   };
 
   return (
-    <div className="w-full text-gray-400 text-lg" style={{ height: "30vw" }}>
-      <div className="flex w-full items-center p-5 uppercase gap-4">
+    <div
+      className="w-full text-lg"
+      style={{ height: "30vw", color: "#8c8c8c" }}
+    >
+      <div className="flex w-full items-center p-1 uppercase gap-4">
         <div className="">
           <Icon isSmall={isSmall} />
         </div>
         <div className="flex-col w-full">
-          <p className="" style={{ fontSize: "25px" }}>
-            {gameData.Race.Name}
+          <p className="-mb-2" style={{ fontSize: "22px" }}>
+            {gameData.Race.Name + " " + gameData.Race.Distance}
           </p>
-          <div className="flex w-full gap-1" style={{ fontSize: "16px" }}>
+          <div className="flex w-full gap-2 " style={{ fontSize: "14px" }}>
             <p>
               {moment(gameData.AdjustedStartTime).format("DD/MM/YYYY hh:mm:ss")}
             </p>
 
-            <p className="flex-1" style={{ fontSize: "20px" }}>
+            <p className="flex-1" style={{ fontSize: "15px" }}>
               ID {gameData.EventNumber}
             </p>
           </div>
         </div>
       </div>
       <div className="borderLine"></div>
-      <div className="w-full flex items-center p-4 justify-center">
+      <div className="w-full flex items-center p-2 text-xl justify-center">
         <p>{"Results".toUpperCase()}</p>
       </div>
       <div className="h-28 flex justify-center ml-5 w-full">
@@ -133,7 +136,26 @@ const Result: React.FC<ResultsProp> = ({
         </div>
       </div>
       <div className="w-full">
-        <ResultLists />
+        <ResultLists
+          Name={"Last"}
+          value={gameData.MarketResults[0].WinningSelections[0]}
+        />
+        <ResultLists
+          Name={"Last 3"}
+          value={gameData.MarketResults[1].WinningSelections[0]}
+        />
+        <ResultLists
+          Name={"Head to Head"}
+          value={gameData.MarketResults[2].WinningSelections[0]}
+        />
+        <ResultLists
+          Name={"Head to Head"}
+          value={gameData.MarketResults[3].WinningSelections[0]}
+        />
+        <ResultLists
+          Name={"Head to Head"}
+          value={gameData.MarketResults[4].WinningSelections[0]}
+        />
       </div>
       <div className="w-full flex justify-center text-sm mt-1">
         <p>Number Of Particepants:{gameData.Race.Name.length}</p>

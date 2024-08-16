@@ -1,10 +1,13 @@
 import React from "react";
-
-function ResultLists() {
+interface textsProp {
+  Name?: string;
+  value?: any;
+}
+function ResultLists(prop: textsProp) {
   return (
-    <div className="flex w-full p-2 tablesofresult gap-x-96">
-      <div className="">Last</div>
-      <div className="">5</div>
+    <div className="flex w-full p-1 tablesofresult">
+      <div className="w-3/4">{prop.Name}</div>
+      <div className="w-1/2 flex justify-start">{prop.value}</div>
     </div>
   );
 }

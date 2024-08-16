@@ -351,11 +351,11 @@ position: absolute;
 margin-top: 2%;
 }
 .tablesofresult{
-  border-top: 1px solid rgba(128, 128, 128, 0.396);
+  border-top: 1px solid rgba(128, 128, 128, 0.217);
 }
 .borderLine{
   content: '';
-  background-color: rgba(122, 122, 122, 0.318);
+  background-color: rgba(122, 122, 122, 0.144);
   width: 95%;
   height: 1px;
   margin-left: 10px;
