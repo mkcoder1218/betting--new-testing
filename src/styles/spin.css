@@ -157,7 +157,9 @@ height: 10%;
   scroll-behavior: smooth;
   margin-top: 1.8%;
 }
-
+.forthmini_container svg{
+ margin-top: 5%;
+}
 .childmini{
   display: flex;
   margin-left: -48px;

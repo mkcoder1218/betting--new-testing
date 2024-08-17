@@ -3,6 +3,7 @@ import generatehover, { disablehover } from "../../utils/generatehover";
 import { addToBetSlip } from "../../features/slices/pickerSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { OddNUMBERMap } from "../../utils/odd";
+import Circle from "../svg/circle";
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
@@ -66,7 +67,7 @@ function Forthmini(prop: FirstMiniProp) {
     <div className="forthmini_container">
       <div className="childmini childmini3">
         <p
-          className="orange"
+          className="orange cursor-pointer relative"
           onMouseEnter={() => generatehover(".orangenumber")}
           onMouseLeave={() => disablehover(".orangenumber")}
           onClick={() => {
@@ -80,10 +81,10 @@ function Forthmini(prop: FirstMiniProp) {
             );
           }}
         >
-          32/15/19/4/21/2
+          32/15/19/4/21/2{circleState.first12 && <Circle />}
         </p>
         <p
-          className="blue"
+          className="blue cursor-pointer relative"
           onMouseEnter={() => generatehover(".bluenumber")}
           onMouseLeave={() => disablehover(".bluenumber")}
           onClick={() => {
@@ -97,10 +98,10 @@ function Forthmini(prop: FirstMiniProp) {
             );
           }}
         >
-          25/17/34/6/27/13
+          25/17/34/6/27/13{circleState.second12 && <Circle />}
         </p>
         <p
-          className="rose"
+          className="rose cursor-pointer relative"
           onMouseEnter={() => generatehover(".rosenumber")}
           onMouseLeave={() => disablehover(".rosenumber")}
           onClick={() => {
@@ -114,10 +115,10 @@ function Forthmini(prop: FirstMiniProp) {
             );
           }}
         >
-          36/11/30/8/23/10
+          36/11/30/8/23/10{circleState.third12 && <Circle />}
         </p>
         <p
-          className="lightgreen"
+          className="lightgreen cursor-pointer relative"
           onMouseEnter={() => generatehover(".greennumber")}
           onMouseLeave={() => disablehover(".greennumber")}
           onClick={() => {
@@ -131,10 +132,10 @@ function Forthmini(prop: FirstMiniProp) {
             );
           }}
         >
-          5/24/16/33/1/20
+          5/24/16/33/1/20{circleState.forth && <Circle />}
         </p>
         <p
-          className="yellow"
+          className="yellow cursor-pointer relative"
           onMouseEnter={() => generatehover(".yellownumber")}
           onMouseLeave={() => disablehover(".yellownumber")}
           onClick={() => {
@@ -148,10 +149,10 @@ function Forthmini(prop: FirstMiniProp) {
             );
           }}
         >
-          14/31/9/22/18/29
+          14/31/9/22/18/29{circleState.fifth && <Circle />}
         </p>
         <p
-          className="white"
+          className="white cursor-pointer relative"
           onMouseEnter={() => generatehover(".whitenumber")}
           onMouseLeave={() => disablehover(".whitenumber")}
           onClick={() => {
@@ -165,7 +166,7 @@ function Forthmini(prop: FirstMiniProp) {
             );
           }}
         >
-          7/28/12/35/3/26
+          7/28/12/35/3/26{circleState.sixth && <Circle />}
         </p>
       </div>
     </div>
