@@ -145,6 +145,7 @@ export const createBetSlipAndTicket =
         try {
           if (betSlipResponse.data) {
             let updateTicket: TicketInterface = betSlipResponse.data;
+
             updateTicket.tickets.map((ticket) => {
               const gameParts = ticket.game.split(" "); // Split the string into parts
               const firstPart = gameParts[0];

@@ -66,12 +66,12 @@ interface TabPanelProps {
 
 const style = {
   position: "absolute" as "absolute",
-  top: "50%",
+  top: "55%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "86%",
   margin: "auto",
-  height: "660px",
+  height: "80%",
   overflow: "auto",
   borderRadius: "10px",
   bgcolor: "background.paper",

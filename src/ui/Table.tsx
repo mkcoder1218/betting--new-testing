@@ -142,6 +142,7 @@ const BasicTable: React.FC<TableProp> = ({
       );
     }
   };
+
   const getButtonText = (index: number): string => {
     if (clickCounter > 3) {
       return `${index + 1}`;
