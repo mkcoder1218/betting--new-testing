@@ -73,7 +73,9 @@ function HorseRun({ gameType }: prop) {
       }
     }
   }, [gameData, _D_interval]);
-
+  useEffect(() => {
+    dispatch(setIsLive(true));
+  }, [pastIndex]);
   useEffect(() => {
     const __interval = () => {
       _D_setInterval(0);

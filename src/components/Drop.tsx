@@ -195,9 +195,10 @@ const Drop: React.FC<DropProp> = ({
         style={{
           backgroundColor: isPastGame
             ? "#a81005"
-            : isActive
+            : isActiveGame
             ? "#37b34a"
             : "transparent",
+          color: isPastGame || isActiveGame ? "white" : "",
         }}
       >
         <div className="timePlace">
@@ -205,14 +206,21 @@ const Drop: React.FC<DropProp> = ({
             text={time}
             onLive={handleLive}
             isgameActive={isActiveGame}
-            isActive={isActive}
+            isActive={isActiveGame}
+            isPastGame={isPastGame}
           />
-          <IdandPlace Place={place} Id={id} isActive={isActive} />
+          <IdandPlace
+            Place={place}
+            Id={id}
+            isActive={isActiveGame}
+            isPastGame={isPastGame}
+          />
         </div>
         <PlusMinus
           onClick={handleClick}
           isActive={isActive}
           isActiveGame={activeGameForIcon}
+          isPastGame={isPastGame}
         />
       </div>
       {isActive || activeGameForIcon ? (

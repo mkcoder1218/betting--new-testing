@@ -6,14 +6,19 @@ interface plusminusProp {
   isActiveGame?: boolean;
   isActive?: boolean;
   onClick?: () => void;
+  isPastGame?: boolean;
 }
 const PlusMinus: React.FC<plusminusProp> = ({
   isActive = true,
   onClick,
   isActiveGame,
+  isPastGame,
 }) => {
   return (
-    <div className="plusminus" style={{ color: isActive ? "white" : "" }}>
+    <div
+      className="plusminus"
+      style={{ color: isActive || isPastGame ? "white" : "" }}
+    >
       {isActive || isActiveGame ? (
         <RemoveIcon onClick={onClick} />
       ) : (
