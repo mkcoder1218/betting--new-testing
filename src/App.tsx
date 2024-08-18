@@ -328,7 +328,7 @@ function App() {
                   <div className="picker-left basis-full">
                     <TicketSelector
                       gameType={WhichGameSelected}
-                      gameData={gameData}
+                      gameData={game}
                     />
                     <div className="number-picker mt-4 w-full">
                       <NumberPicker />

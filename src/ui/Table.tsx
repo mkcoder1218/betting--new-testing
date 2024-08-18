@@ -147,8 +147,12 @@ const BasicTable: React.FC<TableProp> = ({
     }
   };
   useEffect(() => {
-    setClickOrder([]);
-    setbankClickOrder(0);
+    if (isClearselection) {
+      setClickCounter(0);
+      setClickOrder([]);
+      setbankClickOrder(0);
+      setchangedForm([]);
+    }
   }, [isClearselection]);
   const getButtonText = (index: number): string => {
     if (clickCounter > 3) {
