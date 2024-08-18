@@ -37,6 +37,7 @@ import Hockey from "./svg/Hockey";
 import {
   addGameType,
   ClearSelected,
+  removemessage,
   setIsClearCircle,
 } from "../features/slices/gameType";
 import moment from "moment";
@@ -58,10 +59,14 @@ export default function BetSlip() {
   const [errorBet, setBetError] = useState("");
   const balance = useAppSelector((state) => state.balance);
   const gameType = useAppSelector((state) => state.gameType.gameType);
+  const removemessages = useAppSelector(
+    (state) => state.gameType.removemessage
+  );
   const handleClose = () => {
     setPrinterDialog(false);
   };
 
+  const [removebetsucess, setremovebetsucess] = useState(false);
   const handleTotalStake = (val: number, type: string) => {
     if (val <= 5000) {
       if (type === "inc") {
@@ -147,6 +152,7 @@ export default function BetSlip() {
     setBetError("");
     dispatch(setIsClearCircle(true));
     dispatch(ClearSelected(true));
+    dispatch(removemessage(true));
     const getBiggest = betState.betSlip.filter(
       (item) => item.stake > 1000 || item.stake * item.multiplier <= 50000
     );
@@ -229,7 +235,8 @@ export default function BetSlip() {
         refreshBetSlipNumber,
         clearSlip,
         toggleStatus,
-        clearNumberSelection
+        clearNumberSelection,
+        removebetsucess
       )
     );
   };
@@ -286,7 +293,7 @@ export default function BetSlip() {
         {!betSlipState.loading && betSlipState.error && (
           <FormStatus type="error" content={betSlipState.error} />
         )}
-        {!betSlipState.loading && betSlipState.message && statusVisible && (
+        {!betSlipState.loading && betSlipState.message && removemessages && (
           <FormStatus type="success" content={betSlipState.message} />
         )}
 

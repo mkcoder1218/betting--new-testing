@@ -6,7 +6,7 @@ interface MessageProp {
 const Message: React.FC<MessageProp> = ({ text }) => {
   return (
     <div
-      className="Message capitalize hidden text-black w-full"
+      className="Message capitalize text-black w-full"
       style={{ color: "black !important" }}
     >
       <p>{text}</p>

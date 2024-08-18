@@ -12,6 +12,7 @@ import { defaultStake } from "../config/constants";
 import { GameData } from "../features/slices/RacingGameSlice";
 import moment from "moment";
 import PlusMinus from "../ui/PlusMinus";
+import { removemessage } from "../features/slices/gameType";
 // import { writeToPrinter } from "./SlipPrinter";
 interface TicketHolderProp {
   gameType: string;
@@ -144,7 +145,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
           <button
             style={{ backgroundColor: "#37B34A" }}
             // disabled={currentDate > ticketExpiry}
-            onClick={() =>
+            onClick={() => {
               addToSlip({
                 selected: pickedNumbers,
                 multiplier: odds[odds.length - 1].multiplier,
@@ -154,8 +155,9 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
                 gameId: gameState.game?.gamenumber,
                 gameType: gameType,
                 stakeInformation: "Win",
-              })
-            }
+              });
+              dispatch(removemessage(!removemessage));
+            }}
             className="p-1 addtobetButton pl-3 pr-3 text-white text-lg mt-2"
           >
             ADD TO BETSLIP

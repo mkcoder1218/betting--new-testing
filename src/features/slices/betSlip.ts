@@ -102,14 +102,18 @@ export const createBetSlipAndTicket =
     refreshBetSlipNumber: () => void,
     clearSlip: () => void,
     toggleStatus: (val: boolean) => void,
-    clearNumberSelection: () => void
+    clearNumberSelection: () => void,
+    removebetsucess
   ) =>
+
+
   async (
     dispatch: (arg0: {
       payload: BetSlipState<BetSlip>;
       type: "betSlip/addTicketAndBetSlip";
     }) => void
   ) => {
+
     dispatch(
       addTicketAndBetSlip({
         loading: true,
@@ -135,10 +139,11 @@ export const createBetSlipAndTicket =
         );
         refreshBetSlipNumber();
         toggleStatus(true);
+
         clearSlip();
 
         setTimeout(() => {
-          toggleStatus(false);
+          toggleStatus(false)
           clearNumberSelection();
         }, 500);
 

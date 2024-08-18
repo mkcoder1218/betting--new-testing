@@ -20,9 +20,9 @@ const PlusMinus: React.FC<plusminusProp> = ({
       style={{ color: isActive || isPastGame ? "white" : "" }}
     >
       {isActive || isActiveGame ? (
-        <RemoveIcon onClick={onClick} />
+        <RemoveIcon onClick={onClick} className="cursor-pointer" />
       ) : (
-        <AddIcon onClick={onClick} />
+        <AddIcon onClick={onClick} className="cursor-pointer" />
       )}
     </div>
   );
