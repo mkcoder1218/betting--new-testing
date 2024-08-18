@@ -23,6 +23,7 @@ import Hockey from "./svg/Hockey";
 import { F1 } from "./svg/F1";
 import { CarRacing } from "./svg/CarRacing";
 import { DashingDerby } from "./svg/DashingDerby";
+import moment from "moment";
 
 interface ActionType {
   type: string;
@@ -219,6 +220,11 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                           "Heads and Tails"}
                       </td>
                       <td className="px-3 py-2">
+                        {item.nums.includes(-2) ||
+                        item.nums.includes(-4) ||
+                        item.nums.includes(-6)
+                          ? ""
+                          : item.nums.join(", ")}
                         {item.nums.includes(-2) && "Heads"}
                         {item.nums.includes(-4) && "Evens"}
                         {item.nums.includes(-6) && "Tails"}
