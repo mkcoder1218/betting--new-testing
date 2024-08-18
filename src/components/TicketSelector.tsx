@@ -47,6 +47,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
     gameId,
     gameType,
     expiry,
+    oddType,
   }: Ticket) => {
     if (currentDate > ticketExpiry) {
       return;
@@ -61,7 +62,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
         stake,
         gameId: gameData.id,
         gameType,
-        oddType: "Win",
+        oddType: oddType,
       })
     );
   };
@@ -81,13 +82,14 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
     } else {
       addToSlip({
         selected,
+        expiry: ticketExpiry,
         multiplier: 2,
         toWin: 2,
         stake: defaultStake,
-        expiry: ticketExpiry,
         gameId: gameData.id,
-        oddType: "Heads",
+
         gameType: "SmartPlayKeno",
+        oddType: "Heads",
       });
     }
   };

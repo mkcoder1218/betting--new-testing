@@ -5,7 +5,8 @@ interface gameTypeState {
   error: boolean;
   gameType?: string;
   isClearCircle?: boolean;
-  isLive?:boolean
+  isLive?: boolean,
+  ClearSelected?: boolean
 }
 
 const initalState: gameTypeState = {
@@ -13,7 +14,8 @@ const initalState: gameTypeState = {
   error: false,
   gameType: "SmartPlayKeno",
   isClearCircle: false,
-  isLive:false
+  isLive: false,
+  ClearSelected: false
 };
 
 const gameTypeSlice = createSlice({
@@ -30,9 +32,12 @@ const gameTypeSlice = createSlice({
     setIsLive: (state, action: PayloadAction<boolean>) => {
       state.isClearCircle = action.payload;
     },
+    ClearSelected: (state, action: PayloadAction<boolean>) => {
+      state.ClearSelected = action.payload
+    }
   },
 });
 
-export const { addGameType, setIsClearCircle,setIsLive } = gameTypeSlice.actions;
+export const { addGameType, setIsClearCircle, setIsLive, ClearSelected } = gameTypeSlice.actions;
 
 export default gameTypeSlice.reducer;

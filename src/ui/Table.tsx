@@ -23,6 +23,7 @@ import Images from "./Images";
 import { RootEventData, GameData } from "../features/slices/RacingGameSlice";
 import { Entry } from "../config/types";
 import moment from "moment";
+import { ClearSelected } from "../features/slices/gameType";
 
 interface TableProp {
   clickCount: (val: number) => void;
@@ -81,6 +82,9 @@ const BasicTable: React.FC<TableProp> = ({
   const [changedForm, setchangedForm] = useState<number[]>([]);
   const expiryOfGame = gameCreatedDate?.setMinutes(
     gameCreatedDate.getMinutes() + 5
+  );
+  const isClearselection = useAppSelector(
+    (state) => state.gameType.ClearSelected
   );
   const handleClick = (index: number) => {
     setClickedindex(index);
@@ -142,7 +146,14 @@ const BasicTable: React.FC<TableProp> = ({
       );
     }
   };
-
+  useEffect(() => {
+    if (isClearselection) {
+      setClickCounter(0);
+      setClickOrder([]);
+      setbankClickOrder(0);
+      setchangedForm([]);
+    }
+  }, [isClearselection]);
   const getButtonText = (index: number): string => {
     if (clickCounter > 3) {
       return `${index + 1}`;
@@ -294,6 +305,7 @@ const BasicTable: React.FC<TableProp> = ({
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4);
+                        dispatch(ClearSelected(false));
                         handleDispatch({
                           nameofplayer: row.Name,
                           selected: row.Draw,
@@ -331,6 +343,7 @@ const BasicTable: React.FC<TableProp> = ({
                       onClick={() => {
                         handleClick(index);
                         handleColorChange(index * 4 + 1);
+                        dispatch(ClearSelected(false));
                         handleDispatch({
                           nameofplayer: row.Name,
                           selected: row.Draw,

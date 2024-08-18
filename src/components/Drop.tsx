@@ -79,6 +79,9 @@ const Drop: React.FC<DropProp> = ({
   const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(
     new Set()
   );
+  const isClearSelection = useAppSelector(
+    (state) => state.gameType.ClearSelected
+  );
   const [sortedArray, setSortedArray] = useState<Entry[]>([]);
   const betslips = useAppSelector((state) => state.betSlip);
   const handleClick = () => {
@@ -103,6 +106,7 @@ const Drop: React.FC<DropProp> = ({
     setSelectCombo((prev) => [...prev, index]);
   };
   const handleColorChange = (index: number) => {
+
     setisActivedTableButton((prevActiveButtons) => {
       const updatedButtons = new Set(prevActiveButtons);
       if (updatedButtons.has(index)) {
@@ -118,6 +122,15 @@ const Drop: React.FC<DropProp> = ({
       setVisible(true);
     }
   }, [clickCount]);
+  useEffect(() => {
+    if (isClearSelection) {
+      setClear(true);
+      setVisible(false);
+      setisActivedTableButton(new Set());
+      setBankclick(null);
+      setSelectCombo([]);
+    }
+  }, [isClearSelection]);
   useEffect(() => {
     if (
       data &&
@@ -254,7 +267,7 @@ const Drop: React.FC<DropProp> = ({
             }`}
           >
             {clickCount === 1 || isActivedtableButton.size === 1 ? (
-              <div className="flex-col Need ml-1 text-md mt-16 text-black">
+              <div className="flex-col Need ml-1 text-md mt-16  text-black">
                 <Message text="Need a minimum of two selections to create a combo" />
                 <ButtonSizes
                   text="Clear"
@@ -376,7 +389,7 @@ const Drop: React.FC<DropProp> = ({
                       }}
                     />
                   </div>
-                  <div className="clearbutton ">
+                  <div className="clearbutton">
                     <ButtonSizes
                       text="Clear"
                       isActive={false}

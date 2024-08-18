@@ -34,7 +34,11 @@ import { HorseJump } from "./svg/HorseJump";
 import { DogWithVideo } from "./svg/DogWithVideo";
 import { CircleDraw } from "./svg/CircleDraw";
 import Hockey from "./svg/Hockey";
-import { addGameType, setIsClearCircle } from "../features/slices/gameType";
+import {
+  addGameType,
+  ClearSelected,
+  setIsClearCircle,
+} from "../features/slices/gameType";
 import moment from "moment";
 
 export default function BetSlip() {
@@ -142,7 +146,7 @@ export default function BetSlip() {
   const handleCreateTicket = async () => {
     setBetError("");
     dispatch(setIsClearCircle(true));
-
+    dispatch(ClearSelected(true));
     const getBiggest = betState.betSlip.filter(
       (item) => item.stake > 1000 || item.stake * item.multiplier <= 50000
     );
@@ -183,6 +187,7 @@ export default function BetSlip() {
     const otherGameData: any = [];
     for (let ticket of betState.betSlip) {
       otherGameData.push(ticket.selected);
+
       let ticketItem = {
         toWin: Math.floor(ticket.toWin),
         stake: ticket.stake,
@@ -201,7 +206,7 @@ export default function BetSlip() {
         gameType: ticket.gameType,
         gameNumber: ticket.gameNumber,
       };
-
+      console.log("TIcketas:", ticketItem);
       newTicketToSend.push(ticketItem);
     }
 
@@ -338,6 +343,10 @@ export default function BetSlip() {
                     <p className="text-xs flex items-center -mb-5">
                       {item.stakeInformation?.split(" ")[0] === "Neighbors"
                         ? item.stakeInformation.split(" ")[0]
+                        : item.oddType === "Heads" ||
+                          item.oddType === "Tails" ||
+                          item.oddType === "Evens"
+                        ? "Head and Tails"
                         : item.stakeInformation}
                     </p>
                   </div>
@@ -363,7 +372,13 @@ export default function BetSlip() {
                         ? "."
                         : ""}
                     </p>
-                    {item.gameType === "SmartPlayKeno"
+                    {item.oddType === "Heads"
+                      ? "Heads"
+                      : item.oddType === "Tails"
+                      ? "Tails"
+                      : item.oddType === "Evens"
+                      ? "Even"
+                      : item.gameType === "SmartPlayKeno"
                       ? item.selected.join(", ")
                       : gameType === "SpinAndWin" &&
                         item.selected.length > 0 &&
