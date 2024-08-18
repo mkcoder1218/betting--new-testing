@@ -8,10 +8,15 @@ import {
 } from "../features/slices/pickerSlice";
 import React, { FormEvent, useState } from "react";
 import { defaultStake } from "../config/constants";
+import { GameData } from "../features/slices/RacingGameSlice";
 interface TicketSelectorProp {
   gameType: string;
+  gameData: GameData;
 }
-const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
+const TicketSelector: React.FC<TicketSelectorProp> = ({
+  gameType,
+  gameData,
+}) => {
   const dispatch = useAppDispatch();
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
   const currentDate = new Date().getTime();
@@ -54,7 +59,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         multiplier,
         toWin,
         stake,
-        gameId,
+        gameId: gameData.id,
         gameType,
         oddType: "Win",
       })
@@ -80,8 +85,9 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         toWin: 2,
         stake: defaultStake,
         expiry: ticketExpiry,
-        gameId: gameState.game?.gamenumber,
+        gameId: gameData.id,
         oddType: "Heads",
+        gameType: "SmartPlayKeno",
       });
     }
   };
@@ -105,8 +111,9 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         toWin: 4,
         stake: defaultStake,
         expiry: ticketExpiry,
-        gameId: gameState.game?.gamenumber,
+        gameId: gameData.id,
         oddType: "Evens",
+        gameType: "SmartPlayKeno",
       });
     }
   };
@@ -130,8 +137,9 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({ gameType }) => {
         toWin: 2,
         stake: defaultStake,
         expiry: ticketExpiry,
-        gameId: gameState.game?.gamenumber,
+        gameId: gameData.id,
         oddType: "Tails",
+        gameType: "SmartPlayKeno",
       });
     }
   };

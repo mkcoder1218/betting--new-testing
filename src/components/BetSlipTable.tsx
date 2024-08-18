@@ -219,11 +219,6 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                           "Heads and Tails"}
                       </td>
                       <td className="px-3 py-2">
-                        {item.nums.length > 0 ? item.nums.join(", ") : ""}
-                        {(!item.nums.includes(-2) &&
-                          !item.nums.includes(-4) &&
-                          !item.nums.includes(-6)) ||
-                          item.nums.join(", ")}
                         {item.nums.includes(-2) && "Heads"}
                         {item.nums.includes(-4) && "Evens"}
                         {item.nums.includes(-6) && "Tails"}
