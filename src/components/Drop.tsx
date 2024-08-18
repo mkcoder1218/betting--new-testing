@@ -267,7 +267,7 @@ const Drop: React.FC<DropProp> = ({
             }`}
           >
             {clickCount === 1 || isActivedtableButton.size === 1 ? (
-              <div className="flex-col Need ml-1 text-md mt-16 text-black">
+              <div className="flex-col Need ml-1 text-md mt-16  text-black">
                 <Message text="Need a minimum of two selections to create a combo" />
                 <ButtonSizes
                   text="Clear"
@@ -389,7 +389,7 @@ const Drop: React.FC<DropProp> = ({
                       }}
                     />
                   </div>
-                  <div className="clearbutton ">
+                  <div className="clearbutton">
                     <ButtonSizes
                       text="Clear"
                       isActive={false}

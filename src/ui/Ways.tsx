@@ -18,8 +18,9 @@ const Ways: React.FC<waysProp> = ({
       className="h-full p-0 gap-0 wen"
       onClick={onClick}
       style={{
-        visibility: isvisible && isvisible ? "visible" : "hidden",
+        visibility: isvisible && isvisible ? "hidden" : "hidden",
         width: "95%",
+        pointerEvents: "none",
       }}
     >
       <div className="WaysContainer w-full flex-col items-center h-full pt-1">
