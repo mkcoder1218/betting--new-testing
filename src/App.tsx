@@ -326,7 +326,10 @@ function App() {
               ) : (
                 <div className="picker-container flex justify-stretch items-start ml-7">
                   <div className="picker-left basis-full">
-                    <TicketSelector gameType={WhichGameSelected} />
+                    <TicketSelector
+                      gameType={WhichGameSelected}
+                      gameData={gameData}
+                    />
                     <div className="number-picker mt-4 w-full">
                       <NumberPicker />
                     </div>
