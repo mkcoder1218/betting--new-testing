@@ -101,6 +101,9 @@ function HorseRun({ gameType }: prop) {
         gameData.game &&
         gameData.game.map((game, index) => {
           const data: RootEventData = game.gameData;
+          if (activeIndex - 2 > 0 && index < activeIndex - 2) {
+            return null;
+          }
           return (
             <>
               <Drop
