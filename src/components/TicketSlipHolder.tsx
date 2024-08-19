@@ -9,11 +9,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
 import { defaultStake } from "../config/constants";
-import { GameData } from "../features/slices/RacingGameSlice";
+import { GameData } from '../features/slices/RacingGameSlice';
 import moment from "moment";
 import PlusMinus from "../ui/PlusMinus";
 import { removemessage } from "../features/slices/gameType";
 // import { writeToPrinter } from "./SlipPrinter";
+import racingGameSlice from '../features/slices/RacingGameSlice';
 interface TicketHolderProp {
   gameType: string;
   gameData: GameData;
@@ -30,7 +31,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
   const betState = useAppSelector((state) => state.betSlip);
   const gameState = useAppSelector((state) => state.game);
   const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
-
+const gameDataRacing=useAppSelector(state=>state.racingGame)
   const expiryOfGame = gameCreatedDate?.setMinutes(
     gameCreatedDate.getMinutes() + 5
   );
@@ -59,6 +60,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
     stake,
     gameId,
     stakeInformation,
+    gameNumber
   }: Ticket) => {
     for (let item of betSlip) {
       if (selected === item.selected) {
@@ -69,7 +71,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
     // if (currentDate > ticketExpiry) {
     //   return;
     // }
-
+console.log('gameData:',gameDataRacing)
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
         addToBetSlip({
@@ -82,6 +84,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
           gameType,
           stakeInformation: stakeInformation,
           oddType: "Win",
+gameNumber:gameDataRacing.game[0].gameData.Number
         })
       );
     }
@@ -155,6 +158,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
                 gameId: gameState.game?.gamenumber,
                 gameType: gameType,
                 stakeInformation: "Win",
+
               });
               dispatch(removemessage(!removemessage));
             }}

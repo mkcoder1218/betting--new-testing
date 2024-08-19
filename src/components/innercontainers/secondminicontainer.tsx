@@ -17,6 +17,7 @@ type CircleState = {
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
+  gameIdofBack?:string
 }
 function Secondminicontainer(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();

@@ -67,7 +67,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       icon: <Bicycle />,
       text1: "CycleRacing",
       text2: "SLIP STREAM",
-      text3: "SLIP STREAM",
+      text3: "Track Racing",
       width: "w-12",
     },
     {
@@ -172,6 +172,10 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                     ? dropdownItems[selectedGame]?.text3.toUpperCase()
                     : dropdownItems[selectedGame].text1 === "SpinAndWin"
                     ? dropdownItems[selectedGame].text2.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "CycleRacing"
+                    ? dropdownItems[selectedGame].text3.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "PlatinumHounds"
+                    ? "grayhound racing".toUpperCase()
                     : dropdownItems[selectedGame].text1.toUpperCase()}
                 </div>
                 <div className="text-gray-400 hover:text-green-300 transition-all text-sm ml-2">
@@ -179,6 +183,10 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                   dropdownItems[selectedGame].text2 === "SPIN AND WIN" ||
                   dropdownItems[selectedGame].text1 === "SpeedSkating"
                     ? ""
+                    : dropdownItems[selectedGame].text1 === "PreRecRealDogs"
+                    ? dropdownItems[selectedGame].text2.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "PlatinumHounds"
+                    ? "Platinum Hounds".toUpperCase()
                     : dropdownItems[selectedGame].text2.toUpperCase()}
                 </div>
               </div>
@@ -228,16 +236,23 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                           ? item.text2
                           : item.text1 === "PreRecRealDogs"
                           ? item.text3?.toUpperCase()
+                          : item.text1 ===
+                            "PlatinumHounds"
+                          ? "grayhound racing".toUpperCase()
                           : item.text2 === "Drive"
                           ? item.text3?.toUpperCase()
                           : item.text1 === "SpinAndWin"
                           ? item.text2.toUpperCase()
+                          : item.text1 === "CycleRacing"
+                          ? item.text3.toUpperCase()
                           : item.text1.toUpperCase()}
                       </div>
                       {item.text2 !== "KENO" && (
                         <div className="text-xs">
                           {item.text1 === "PreRecRealDogs"
-                            ? item.text3?.toUpperCase()
+                            ? item.text2?.toUpperCase()
+                            : item.text1 === "PlatinumHounds"
+                            ? "Platinum Hounds".toUpperCase()
                             : item.text1 === "Drive"
                             ? item.text3?.toUpperCase()
                             : item.text1 === "SpinAndWin"

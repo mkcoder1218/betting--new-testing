@@ -342,7 +342,8 @@ function App() {
                       <TicketSlipHolder
                         gameType={"SmartPlayKeno"}
                         gameData={game}
-                        update={update}
+                          update={update}
+
                       />
                     )}
                     <div

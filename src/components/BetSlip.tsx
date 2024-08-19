@@ -193,7 +193,7 @@ export default function BetSlip() {
     const otherGameData: any = [];
     for (let ticket of betState.betSlip) {
       otherGameData.push(ticket.selected);
-
+console.log('SpinData:',ticket)
       let ticketItem = {
         toWin: Math.floor(ticket.toWin),
         stake: ticket.stake,

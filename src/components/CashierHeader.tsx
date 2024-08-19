@@ -40,7 +40,7 @@ export default function CashierHeader({ handleOpen, handleRedeemOpen, handleCanc
     }
 
     return (
-      <div className="header-container bg-white items-start pl-4 pr-4 flex justify-between">
+      <div className="header-container bg-white items-start w-full pl-4 pr-4 flex sticky justify-between">
         <div className="text-xl font-thin font-sans pt-1 text-green-500 text-nowrap -mt-2 ">
           Retail Logo
         </div>

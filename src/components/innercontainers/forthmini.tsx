@@ -7,6 +7,7 @@ import Circle from "../svg/circle";
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
+  gameIdofBack?: string;
 }
 type CircleState = {
   first12: boolean;
@@ -59,6 +60,8 @@ function Forthmini(prop: FirstMiniProp) {
           stake: stake,
           oddType: oddType,
           gameNumber: prop.gameNumber,
+          gameType: 'SpinAndWin',
+          toWin:10
         })
       );
     }

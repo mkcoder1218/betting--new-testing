@@ -52,6 +52,7 @@ import { DogWithVideo } from "./svg/DogWithVideo";
 import { Garri } from "./svg/Garri";
 import { DashingDerby } from "./svg/DashingDerby";
 import { HorseJump } from "./svg/HorseJump";
+import ResultforSpin from "../ui/ResultforSpin";
 
 interface CashierOptionsProps {
   open: boolean;
@@ -730,14 +731,15 @@ export default function CashierOptions({
                             </div>
                           )}
 
-                          {gameResult.gameType !== "SmartPlayKeno" && (
+                          {gameResult.gameType !== "SmartPlayKeno" && gameResult.gameType !== 'SpinAndWin' ? (
+                           
                             <Result
                               Icon={gameTypeSelector(gameResult.gameType)}
                               isSmall={true}
                               gameData={gameResult.result}
                               gameType={gameResult.gameType}
                             />
-                          )}
+                          ) : gameResult.gameType==='SpinAndWin'?<ResultforSpin gameData={gameResult.result} />:''}
 
                           <div>
                             <button

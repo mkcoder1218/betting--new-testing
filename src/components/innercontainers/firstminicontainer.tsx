@@ -18,6 +18,7 @@ type CircleState = {
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
+  gameIdofBack?:string
 }
 function Firstminicontainer(prop: FirstMiniProp) {
   const [circleState, setCircleState] = useState<CircleState>({
@@ -67,7 +68,8 @@ function Firstminicontainer(prop: FirstMiniProp) {
     selected: any,
     stakeInfo: string,
     oddType: string,
-    gameNumber: number
+    gameNumber: number,
+
   ) => {
     dispatch(setIsClearCircle(false));
     setCircleState((prevState) => ({
@@ -190,7 +192,8 @@ function Firstminicontainer(prop: FirstMiniProp) {
                 ColumnMap.col1,
                 "Column",
                 "Column",
-                prop.gameNumber
+                prop.gameNumber,
+
               );
             }}
             onMouseEnter={() => generatehover(".third-row")}
@@ -219,7 +222,8 @@ function Firstminicontainer(prop: FirstMiniProp) {
                 ColumnMap.col2,
                 "Column",
                 "Column",
-                prop.gameNumber
+                prop.gameNumber,
+
               );
             }}
             onMouseEnter={() => generatehover(".second-row")}
@@ -246,7 +250,8 @@ function Firstminicontainer(prop: FirstMiniProp) {
                 ColumnMap.col3,
                 "Column",
                 "Column",
-                prop.gameNumber
+                prop.gameNumber,
+
               );
             }}
             onMouseEnter={() => generatehover(".first-row")}
