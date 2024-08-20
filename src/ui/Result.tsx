@@ -18,6 +18,7 @@ const Result: React.FC<ResultsProp> = ({
   gameData,
   gameType,
 }) => {
+
   const silkGenerator = (row: Entry, gameType: string, index: number) => {
     switch (gameType) {
       case "HarnessRacing":
@@ -135,7 +136,8 @@ const Result: React.FC<ResultsProp> = ({
           </div>
         </div>
       </div>
-      <div className="w-full">
+
+      {gameData&&gameData.MarketResults.length>0&&<div className="w-full">
         <ResultLists
           Name={"Last"}
           value={gameData.MarketResults[0].WinningSelections[0]}
@@ -156,7 +158,7 @@ const Result: React.FC<ResultsProp> = ({
           Name={"Head to Head"}
           value={gameData.MarketResults[4].WinningSelections[0]}
         />
-      </div>
+      </div>}
       <div className="w-full flex justify-center text-sm mt-1">
         <p>Number Of Particepants:{gameData.Race.Name.length}</p>
       </div>
