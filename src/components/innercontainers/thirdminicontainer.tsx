@@ -42,6 +42,13 @@ function Thirdminicontainer(prop: FirstMiniProp) {
   function range(start: number, end: number): number[] {
     return Array.from({ length: end - start + 1 }, (_, i) => i + start);
   }
+    const gameState = useAppSelector((state) => state.game);
+    const gameCreatedDate =
+      gameState.game && new Date(gameState.game?.createdAt);
+    const expiryOfGame = gameCreatedDate?.setMinutes(
+      gameCreatedDate.getMinutes() + 5
+    );
+    const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
   useEffect(() => {
     if (isCircle) {
       setCircleState({
@@ -93,6 +100,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         dispatch(
           addToBetSlip({
             selected: selected,
+            expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
             stakeInformation: stakeInfo,
             multiplier: Multiplier,
             gameId: prop.gameId,
@@ -100,6 +108,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             oddType: oddType,
             gameType: "SpinAndWin",
             gameNumber: prop.gameNumber,
+            toWin:10
           })
         );
       }

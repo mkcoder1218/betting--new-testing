@@ -21,4 +21,7 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    exclude: ['chunk-H2Z55PQF.js'],
+  },
 });

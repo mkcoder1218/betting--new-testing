@@ -116,6 +116,14 @@ const GenerateOption = (
     }
     return keyForValue;
   };
+    const gameStates = useAppSelector((state) => state.game);
+    const gameCreatedDate =
+      gameStates.game && new Date(gameStates.game?.createdAt);
+    const expiryOfGame = gameCreatedDate?.setMinutes(
+      gameCreatedDate.getMinutes() + 5
+    );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  
   const handleClickofNumber = (
     i: number,
     stake: any,
@@ -136,6 +144,7 @@ const GenerateOption = (
       dispatch(
         addToBetSlip({
           selected: selectedArray,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
           stakeInformation: stakeInfo,
           multiplier: OddNUMBERMap.Nei,
           gameId: gameId,
@@ -233,6 +242,15 @@ export const GenerateOption2 = (
   const [circles, setCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
+
+    const gameState = useAppSelector((state) => state.game);
+    const gameCreatedDate =
+      gameState.game && new Date(gameState.game?.createdAt);
+    const expiryOfGame = gameCreatedDate?.setMinutes(
+      gameCreatedDate.getMinutes() + 5
+    );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  
   const [isExist, setisExist] = useState(false);
   useEffect(() => {
     if (IsCircle) setCircles([]); // Run once when IsCircle changes
@@ -265,6 +283,7 @@ export const GenerateOption2 = (
         dispatch(
           addToBetSlip({
             selected: [i],
+            expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
             stakeInformation: "Win",
             multiplier: OddNUMBERMap.Win,
             gameId: gameId,

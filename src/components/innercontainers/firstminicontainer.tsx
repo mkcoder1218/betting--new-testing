@@ -26,6 +26,13 @@ function Firstminicontainer(prop: FirstMiniProp) {
     second12: false,
     third12: false,
   });
+   const gameState = useAppSelector((state) => state.game);
+   const gameCreatedDate =
+     gameState.game && new Date(gameState.game?.createdAt);
+   const expiryOfGame = gameCreatedDate?.setMinutes(
+     gameCreatedDate.getMinutes() + 5
+   );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
 
   const [iszero, setisZero] = useState(false);
   const [background, setbackground] = useState<CircleState>({
@@ -84,6 +91,8 @@ function Firstminicontainer(prop: FirstMiniProp) {
       dispatch(
         addToBetSlip({
           selected: selected,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          toWin:10,
           stakeInformation: stakeInfo,
           multiplier: Multiplier,
           gameId: prop.gameId,
@@ -108,6 +117,8 @@ function Firstminicontainer(prop: FirstMiniProp) {
               dispatch(
                 addToBetSlip({
                   selected: [0],
+                  expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+                  toWin:10,
                   multiplier: OddNUMBERMap.Win,
                   oddType: "Win",
                   stakeInformation: "Win",

@@ -233,7 +233,7 @@ function App() {
   };
 
   return (
-    <div className="bg-white ">
+    <div className="bg-white fixed w-full custom-scrollbar overflow-y-auto">
       <PrinterDialog
         open={printerDialog}
         handleClose={handlePrintDialogClose}
@@ -342,8 +342,7 @@ function App() {
                       <TicketSlipHolder
                         gameType={"SmartPlayKeno"}
                         gameData={game}
-                          update={update}
-
+                        update={update}
                       />
                     )}
                     <div

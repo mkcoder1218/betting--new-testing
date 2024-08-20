@@ -20,7 +20,13 @@ type CircleState = {
 function Forthmini(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
   const betSlip = useAppSelector((state) => state.picker.betSlip);
-
+const gameState = useAppSelector((state) => state.game);
+const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
+const expiryOfGame = gameCreatedDate?.setMinutes(
+  gameCreatedDate.getMinutes() + 5
+);
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  
   const checkIsSelected = (oddType: string) => {
     const index = betSlip.findIndex((value) => {
       if (value.oddType === oddType) return true;
@@ -54,14 +60,15 @@ function Forthmini(prop: FirstMiniProp) {
       dispatch(
         addToBetSlip({
           selected: selected,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
           stakeInformation: stakeInfo,
           multiplier: Multiplier,
           gameId: prop.gameId,
           stake: stake,
           oddType: oddType,
           gameNumber: prop.gameNumber,
-          gameType: 'SpinAndWin',
-          toWin:10
+          gameType: "SpinAndWin",
+          toWin: 10,
         })
       );
     }
