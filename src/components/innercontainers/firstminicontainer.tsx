@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { addToBetSlip } from "../../features/slices/pickerSlice";
 import { OddMultiplier } from "../../features/slices/oddSlice";
 import { ColumnMap } from "../../utils/columnMap";
-import { setIsClearCircle } from "../../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { OddNUMBERMap } from "../../utils/odd";
 type CircleState = {
   first12: boolean;
@@ -88,10 +88,13 @@ function Firstminicontainer(prop: FirstMiniProp) {
       [area]: !prevState[area],
     }));
     if (!checkIsSelected(selected)) {
+    dispatch(removemessage(!removemessage));
+
       dispatch(
+        
         addToBetSlip({
           selected: selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          expiry: ticketExpiry,
           toWin:10,
           stakeInformation: stakeInfo,
           multiplier: Multiplier,
@@ -113,11 +116,14 @@ function Firstminicontainer(prop: FirstMiniProp) {
           onMouseEnter={handleIsZero}
           onMouseLeave={handleIsZero}
           onClick={() => {
+            
             if (!checkIsSelected([0])) {
+    dispatch(removemessage(!removemessage));
+
               dispatch(
                 addToBetSlip({
                   selected: [0],
-                  expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+                  expiry: ticketExpiry,
                   toWin:10,
                   multiplier: OddNUMBERMap.Win,
                   oddType: "Win",

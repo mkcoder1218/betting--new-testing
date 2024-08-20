@@ -3,7 +3,7 @@ import generatehover, { disablehover } from "../../utils/generatehover";
 import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { addToBetSlip } from "../../features/slices/pickerSlice";
-import { setIsClearCircle } from "../../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
 import { OddNUMBERMap } from "../../utils/odd";
@@ -79,6 +79,8 @@ function Secondminicontainer(prop: FirstMiniProp) {
       [area]: !prevState[area],
     }));
     if (!checkIsSelected(Props.oddType)) {
+    dispatch(removemessage(!removemessage));
+
       dispatch(
         addToBetSlip({
           selected: Props.selected,
@@ -87,7 +89,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
           gameId: prop.gameId,
           stake: Props.stake,
           toWin: Props.toWin,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          expiry:ticketExpiry,
           oddType: Props.oddType,
           gameType: "SpinAndWin",
           gameNumber: prop.gameNumber,

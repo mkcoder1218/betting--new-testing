@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 import Fourrowhover from "../components/svg/fourrowhover";
 import Fourrow from "../components/svg/Fourrow";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
-import { addToBetSlip } from "../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../features/slices/pickerSlice";
 import { Market, GameData } from "../features/slices/RacingGameSlice";
-import { setIsClearCircle } from "../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../features/slices/gameType";
 import { DispatchParams } from "../ui/Table";
 import { OddNUMBERMap } from "./odd";
 
@@ -140,7 +140,9 @@ const GenerateOption = (
     const number5 = CollactionNumbersMap.get(handlefindindex(i) - 2);
     const selectedArray = [number1, number2, number3, number4, number5];
     dispatch(setIsClearCircle(false));
-    if (!checkIsSelected(stakeInfo))
+    if (!checkIsSelected(stakeInfo)) {
+      
+      dispatch(removemessage(!removemessage))
       dispatch(
         addToBetSlip({
           selected: selectedArray,
@@ -155,7 +157,8 @@ const GenerateOption = (
           gameNumber: currentgameNumber,
         })
       );
-  };
+    }
+  }
   const handleMouseEnterbottom = (index: number) => {
     setHoverIndex(index);
   };
@@ -253,7 +256,7 @@ export const GenerateOption2 = (
   
   const [isExist, setisExist] = useState(false);
   useEffect(() => {
-    if (IsCircle) setCircles([]); // Run once when IsCircle changes
+    if (IsCircle) setCircles([]);
   }, [IsCircle, setCircles]);
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
@@ -273,6 +276,7 @@ export const GenerateOption2 = (
     const isFirstrow = specialNumbers.firstRownumbers.includes(i);
     const issecondrow = specialNumbers.secRownumbers.includes(i);
     const isThirdrow = specialNumbers.therdRownumbers.includes(i);
+  
 
     const handleclick = (index: number, i: number) => {
       const newCircles = [...circles];
@@ -280,10 +284,11 @@ export const GenerateOption2 = (
       setCircles(newCircles);
       dispatch(setIsClearCircle(false));
       if (!checkIsSelected(i)) {
+          dispatch(removemessage(!removemessage));
         dispatch(
           addToBetSlip({
             selected: [i],
-            expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+            expiry:ticketExpiry,
             stakeInformation: "Win",
             multiplier: OddNUMBERMap.Win,
             gameId: gameId,
@@ -294,7 +299,7 @@ export const GenerateOption2 = (
             gameType: "SpinAndWin",
           })
         );
-      }
+      } 
     };
     const handleMouseEnter = (index: number) => {
       const newHoverCircles = Array(number - start + 1).fill(false);

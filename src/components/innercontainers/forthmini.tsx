@@ -4,6 +4,7 @@ import { addToBetSlip } from "../../features/slices/pickerSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { OddNUMBERMap } from "../../utils/odd";
 import Circle from "../svg/circle";
+import { removemessage } from "../../features/slices/gameType";
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
@@ -57,10 +58,12 @@ const expiryOfGame = gameCreatedDate?.setMinutes(
     }));
 
     if (!checkIsSelected(oddType)) {
+    dispatch(removemessage(!removemessage));
+
       dispatch(
         addToBetSlip({
           selected: selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          expiry: ticketExpiry,
           stakeInformation: stakeInfo,
           multiplier: Multiplier,
           gameId: prop.gameId,

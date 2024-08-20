@@ -4,7 +4,7 @@ import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { addToBetSlip } from "../../features/slices/pickerSlice";
 import { MapRedAndBlack } from "../../utils/redblackMap";
-import { setIsClearCircle } from "../../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { OddNUMBERMap } from "../../utils/odd";
 type CircleState = {
   first12: boolean;
@@ -97,10 +97,12 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         [area]: !prevState[area],
       }));
       if (!checkIsSelected(oddType)) {
+    dispatch(removemessage(!removemessage));
+
         dispatch(
           addToBetSlip({
             selected: selected,
-            expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+            expiry:ticketExpiry,
             stakeInformation: stakeInfo,
             multiplier: Multiplier,
             gameId: prop.gameId,
