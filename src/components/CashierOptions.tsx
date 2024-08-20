@@ -137,11 +137,11 @@ export default function CashierOptions({
 
   React.useEffect(() => {
     dispatch(getCashierNames(userData.user?.Cashier.shopId));
-    dispatch(getNetBalance(userData.user?.Cashier.shopId));
+    dispatch(getNetBalance(userData.user?.Cashier.id));
   }, []);
 
   const refreshNetBalance = () => {
-    dispatch(getNetBalance(userData.user?.Cashier.shopId));
+    dispatch(getNetBalance(userData.user?.Cashier.id));
   };
   const gameTypeSelector = (gameType: string) => {
     switch (gameType) {
@@ -345,11 +345,11 @@ export default function CashierOptions({
             >
               {!balanceState.loading && (
                 <div className="text-green-500 text-lg">
-                  {cashierState.data &&
+                  {/* {cashierState.data &&
                     cashierState.data[0] &&
                     `Credit Balance: Br. ${
                       balanceState.data && balanceState.data[0].creditAmount
-                    }`}{" "}
+                    }`}{" "} */}
                 </div>
               )}
               <div className="flex">

@@ -45,7 +45,7 @@ export const { addNetBalance } = netBalanceSlice.actions;
 export default netBalanceSlice.reducer;
 
 export const getNetBalance =
-  (shopId: string | undefined) =>
+  (cashierId: string | undefined) =>
   async (
     dispatch: (arg0: {
       payload: BalanceState;
@@ -58,7 +58,7 @@ export const getNetBalance =
 
     try {
       const netBalanceRes: ApiResponse = (
-        await axiosInstance.get(`ticket/balance/${shopId}`)
+        await axiosInstance.get(`ticket/balance/cashier/${cashierId}`)
       ).data;
 
       if (netBalanceRes.message === "success") {
