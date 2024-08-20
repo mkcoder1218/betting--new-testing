@@ -6,6 +6,7 @@ import GenerateOption from "../../utils/GenerateOption";
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
+  gameIdofBack?:string
 }
 function Fifthmini(prop: FirstMiniProp) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -66,9 +67,10 @@ function Fifthmini(prop: FirstMiniProp) {
             0,
             37,
             hoverdclass,
-            sethoverdclass,
+            prop.gameId,
             prop.gameNumber,
-            prop.gameId
+
+            sethoverdclass
           )}
         </div>
         <div className="icons">

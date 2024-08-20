@@ -69,12 +69,13 @@ const GenerateOption = (
   start: number,
   number: number,
   hoveredClass: string,
-  gameId?: any,
+  gameId?: string,
   currentgameNumber?: any,
+
   sethoverdclass: (className: string) => void
 ): JSX.Element[] => {
   const betSlip = useAppSelector((state) => state.picker.betSlip);
-
+  const gameState = useAppSelector((state) => state.betData.data);
   const result = [];
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
@@ -117,11 +118,12 @@ const GenerateOption = (
   };
   const handleClickofNumber = (
     i: number,
-    stake: number[],
+    stake: any,
     Multiplier: number,
     selected: string,
     stakeInfo: string,
-    oddType: string
+    oddType: string,
+    gameType: string
   ) => {
     const number1 = CollactionNumbersMap.get(handlefindindex(i));
     const number2 = CollactionNumbersMap.get(handlefindindex(i) + 1);
@@ -138,8 +140,9 @@ const GenerateOption = (
           multiplier: OddNUMBERMap.Nei,
           gameId: gameId,
           stake: 10,
+          toWin: 10,
           oddType: oddType,
-          gameType: "Neighbors",
+          gameType: "SpinAndWin",
           gameNumber: currentgameNumber,
         })
       );
@@ -195,7 +198,8 @@ const GenerateOption = (
               10,
               `Neighbors`,
               `Neighbors of ${hoverIndex}`,
-              "Neighbors"
+              "Neighbors",
+              "SpinAndWin"
             );
           },
         },

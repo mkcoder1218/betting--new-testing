@@ -50,7 +50,7 @@ function Spin() {
           return moment(a.startTime).valueOf() - moment(b.startTime).valueOf();
         });
       console.log("GamesFiltered", gamesFiltered);
-      if (gamesFiltered && gamesFiltered.length > 7) {
+      if (gamesFiltered && gamesFiltered.length > 1) {
         setGame(gamesFiltered[0]);
         setUpdate(false);
       } else {
@@ -112,6 +112,7 @@ function Spin() {
 
     return data2.Number;
   });
+  const gameState = useAppSelector(state => state.betData.data)
 
   return (
     <div className="App">
@@ -123,7 +124,7 @@ function Spin() {
             <CircularUnderLoad />
           </div>
         ) : (
-          game && <Container gameid={game.id} gameNumber={data} />
+          game && <Container gameid={game.id} gameidofback={gameState?.id} gameNumber={data} />
         )}
       </div>
     </div>

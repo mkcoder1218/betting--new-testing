@@ -23,7 +23,7 @@ import Images from "./Images";
 import { RootEventData, GameData } from "../features/slices/RacingGameSlice";
 import { Entry } from "../config/types";
 import moment from "moment";
-import { ClearSelected } from "../features/slices/gameType";
+import { ClearSelected, removemessage } from "../features/slices/gameType";
 
 interface TableProp {
   clickCount: (val: number) => void;
@@ -87,6 +87,7 @@ const BasicTable: React.FC<TableProp> = ({
     (state) => state.gameType.ClearSelected
   );
   const handleClick = (index: number) => {
+    dispatch(removemessage(!removemessage));
     setClickedindex(index);
     selectedCombos(index);
 

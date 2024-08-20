@@ -9,6 +9,7 @@ import Fourrowhover from "../components/svg/fourrowhover";
 interface containerProp {
   gameid?: any;
   gameNumber?: any;
+  gameidofback?:string
 }
 function Container(prop: containerProp) {
   return (
@@ -16,17 +17,28 @@ function Container(prop: containerProp) {
       <Firstminicontainer
         gameId={prop.gameid}
         gameNumber={prop.gameNumber[0]}
+        gameIdofBack={prop.gameidofback}
       />
       <Secondminicontainer
         gameId={prop.gameid}
         gameNumber={prop.gameNumber[0]}
+        gameIdofBack={prop.gameidofback}
       />
       <Thirdminicontainer
         gameId={prop.gameid}
         gameNumber={prop.gameNumber[0]}
+        gameIdofBack={prop.gameidofback}
       />
-      <Forthmini gameId={prop.gameid} gameNumber={prop.gameNumber[0]} />
-      <Fifthmini gameId={prop.gameid} gameNumber={prop.gameNumber[0]} />
+      <Forthmini
+        gameId={prop.gameid}
+        gameNumber={prop.gameNumber[0]}
+        gameIdofBack={prop.gameidofback}
+      />
+      <Fifthmini
+        gameId={prop.gameid}
+        gameNumber={prop.gameNumber[0]}
+        gameIdofBack={prop.gameidofback}
+      />
     </div>
   );
 }

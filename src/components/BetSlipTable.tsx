@@ -24,6 +24,7 @@ import { F1 } from "./svg/F1";
 import { CarRacing } from "./svg/CarRacing";
 import { DashingDerby } from "./svg/DashingDerby";
 import moment from "moment";
+import ResultforSpin from "../ui/ResultforSpin";
 
 interface ActionType {
   type: string;
@@ -307,13 +308,16 @@ const BetSlipTable = ({ type, data }: ActionType) => {
               </div>
             )}
 
-            {gameResult.gameType !== "SmartPlayKeno" && (
+            {gameResult?.gameType !== "SmartPlayKeno" &&
+            gameResult?.gameType !== "SpinAndWin" ? (
               <Result
-                Icon={gameTypeSelector(gameResult.gameType)}
+                Icon={gameTypeSelector(gameResult?.gameType)}
                 isSmall={true}
-                gameData={gameResult.result}
-                gameType={gameResult.gameType}
+                gameData={gameResult?.result}
+                gameType={gameResult?.gameType}
               />
+            ) : (
+              gameResult?.gameType === "SpinAndWin"?<ResultforSpin gameData={gameResult?.result}/>:''
             )}
 
             <div>
