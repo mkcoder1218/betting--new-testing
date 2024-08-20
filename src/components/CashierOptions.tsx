@@ -41,7 +41,7 @@ import { SmartPlay } from "./svg/SmartPlay";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Result from "../ui/Result";
 import { Jaguar } from "./svg/Jaguar";
-import { GameData } from "../features/slices/RacingGameSlice";
+import { GameData, Race, Entry, Market } from '../features/slices/RacingGameSlice';
 import { RootResultInterface } from "../config/types";
 import HorseRun from "../pages/HorseRun";
 import { Bicycle } from "./svg/Bicycle";
@@ -286,11 +286,17 @@ export default function CashierOptions({
       gameTime: item.gameTime,
       formattedTime: moment(item.gameTime).format("YYYY/MM/DD hh:mm:ss"),
       result:
-        item.Game === "SmartPlayKeno"
+        item.Game === "SmartPlayKeno" || item.Game === "SpinAndWin"
           ? item.result.MarketResults[0].WinningSelections.slice()
               .sort((a, b) => parseInt(a) - parseInt(b))
               .join(" ")
-          : "",
+          : item.result.Race.Entries.map((results, index) => {
+              return `${results.Draw}:${results.Name}`;
+            }),
+      Market:
+        item.result.MarketResults.length > 0 ? item.result.MarketResults.map(market => {
+          return `${market.MarketClassDescription}:${market.WinningSelections}`;
+        }) : "",
     };
     printResultToBackend(dataToSend);
   };
