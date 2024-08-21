@@ -265,7 +265,7 @@ export const GenerateOption2 = (
   );
   const checkIsSelected = (selected: number) => {
 for (let value of betSlip) {
-  if (value.selected.includes(selected)){
+  if (value.selected[0]==selected){
     dispatch(removeFromBetSlip(betSlip.indexOf(value)));
           return true;
   }

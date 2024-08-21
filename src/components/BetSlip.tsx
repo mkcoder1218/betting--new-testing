@@ -306,7 +306,7 @@ console.log('SpinData:',ticket)
             <BsCheck2All className="mr-3" size={24} />
           </div>
         )}
-        <div className="overflow-y-auto" style={{maxHeight:'200px',width:'100%'}}>
+        <div className="overflow-y-auto" style={{maxHeight:'400px',width:'100%'}}>
           {betState.betSlip.map((item, index) => {
             return (
               <>

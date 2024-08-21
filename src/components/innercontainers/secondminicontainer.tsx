@@ -8,6 +8,7 @@ import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
 import { OddNUMBERMap } from "../../utils/odd";
 import CheckSelection from "../../utils/CheckSelection";
+import { range } from "../../utils/range";
 type CircleState = {
   first12: boolean;
   second12: boolean;
@@ -53,9 +54,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
     }
   }, [isCircle]);
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
-  function range(start: number, end: number): number[] {
-    return Array.from({ length: end - start + 1 }, (_, i) => i + start);
-  }
+  
   const betSlip = useAppSelector((state) => state.picker.betSlip);
   const checkIsSelected = (oddType: string) => {
     for (let item of betSlip) {
