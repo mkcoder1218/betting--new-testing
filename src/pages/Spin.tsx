@@ -115,8 +115,8 @@ function Spin() {
   const gameState = useAppSelector(state => state.betData.data)
 
   return (
-    <div className="App">
-      <div className="parent-container">
+    <div className="App mt-5">
+      <div className="parent-container mt-5">
         <Timer time={moment(remainingTime).format("mm:ss")} />
 
         {gameData && gameData.loading ? (

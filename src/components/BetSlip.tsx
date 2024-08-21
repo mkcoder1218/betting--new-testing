@@ -306,7 +306,7 @@ console.log('SpinData:',ticket)
             <BsCheck2All className="mr-3" size={24} />
           </div>
         )}
-        <div className="overflow-y-auto custom-scrollbar" style={{maxHeight:'200px',width:'95%'}}>
+        <div className="overflow-y-auto" style={{maxHeight:'200px',width:'100%'}}>
           {betState.betSlip.map((item, index) => {
             return (
               <>
@@ -321,7 +321,7 @@ console.log('SpinData:',ticket)
                     borderRadius: "3px",
                   }}
                   key={index}
-                  className={`selected-nums-con -ml-3 mt-1 text-white font-bold`}
+                  className={`selected-nums-con -ml-1 mt-1 text-white font-bold`}
                 >
                   <div className="ml-2 flex justify-between items-center">
                     <div className="flex gap-1 items-center -mt-4">

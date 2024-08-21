@@ -233,7 +233,7 @@ function App() {
   };
 
   return (
-    <div className="bg-white fixed w-full custom-scrollbar overflow-y-auto" >
+    <div className="bg-white fixed w-full h-full custom-scrollbar overflow-y-auto" >
       <PrinterDialog
         open={printerDialog}
         handleClose={handlePrintDialogClose}
@@ -251,10 +251,10 @@ function App() {
         handleCancelRedeem={handleCancelRedeem}
       />
       <div
-        className="flex items-start justify-between h-screen custom-scrollbar overflow-y-auto"
+        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
         style={{ scrollBehavior: "smooth" }}
       >
-        <div className="left flex flex-col" style={{ width: "80%" }}>
+        <div className="left flex overflow-y-scroll flex-col" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "SmartPlayKeno" ? (
             <>
