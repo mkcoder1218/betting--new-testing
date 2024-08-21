@@ -191,9 +191,10 @@ export default function BetSlip() {
 
     let newTicketToSend = [];
     const otherGameData: any = [];
+    let minWin = 0;
     for (let ticket of betState.betSlip) {
       otherGameData.push(ticket.selected);
-console.log('SpinData:',ticket)
+      console.log("SpinData:", ticket);
       let ticketItem = {
         toWin: Math.floor(ticket.toWin),
         stake: ticket.stake,
@@ -214,9 +215,36 @@ console.log('SpinData:',ticket)
       };
       console.log("TIcketas:", ticketItem);
       newTicketToSend.push(ticketItem);
+      let _ticket_min;
+      if (
+        ticket.gameType === "SmartPlayKeno" ||
+        ticket.gameType === "SpinAndWin"
+      ) {
+        _ticket_min = Math.min(...newTicketToSend.map((item) => item.stake));
+      } else {
+        _ticket_min = Math.min(
+          ...newTicketToSend
+            .filter(
+              (_ticket) =>
+                _ticket.gameType !== "SmartPlayKeno" &&
+                _ticket.gameType !== "SpinAndWin"
+            )
+            .map((item) => {
+              console.log("_MIN_WIN", item);
+              return item.oddType === "WIN"
+                ? item.stake * item.entry?.WinOdds
+                : item.stake * item.entry?.PlaceOdds;
+            })
+        );
+      }
+      if (minWin === 0) {
+        minWin = _ticket_min;
+      } else if (_ticket_min < minWin) {
+        minWin = _ticket_min;
+      }
     }
 
-    const minWin = Math.min(...newTicketToSend.map((item) => item.stake));
+    // const minWin = Math.min(...newTicketToSend.map((item) => item.stake));
 
     const maxWin = newTicketToSend.reduce((a, b) => a + b.maxWin, 0);
 

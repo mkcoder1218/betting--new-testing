@@ -211,7 +211,7 @@ export default function CashierOptions({
   };
 
   const getTicketList = () => {
-    dispatch(recallTickets(cashierName));
+    dispatch(recallTickets([userData.user?.Cashier.id + ""]));
   };
 
   React.useEffect(() => {
@@ -595,7 +595,7 @@ export default function CashierOptions({
                         <div className="cashier-box">
                           <div className="font-bold">Retail User</div>
                           <div className="select-container">
-                            {cashierState.data && (
+                            {/* {cashierState.data && (
                               <FormControl
                                 sx={{ mt: 1, mb: 2, p: 0, minWidth: 260 }}
                                 size="small"
@@ -617,7 +617,7 @@ export default function CashierOptions({
                                   })}
                                 </Select>
                               </FormControl>
-                            )}
+                            )} */}
                           </div>
                         </div>
                         <div className="date-picker-form flex gap-6 items-end">
@@ -731,15 +731,19 @@ export default function CashierOptions({
                             </div>
                           )}
 
-                          {gameResult.gameType !== "SmartPlayKeno" && gameResult.gameType !== 'SpinAndWin' ? (
-                           
+                          {gameResult.gameType !== "SmartPlayKeno" &&
+                          gameResult.gameType !== "SpinAndWin" ? (
                             <Result
                               Icon={gameTypeSelector(gameResult.gameType)}
                               isSmall={true}
                               gameData={gameResult.result}
                               gameType={gameResult.gameType}
                             />
-                          ) : gameResult.gameType==='SpinAndWin'?<ResultforSpin gameData={gameResult.result} />:''}
+                          ) : gameResult.gameType === "SpinAndWin" ? (
+                            <ResultforSpin gameData={gameResult.result} />
+                          ) : (
+                            ""
+                          )}
 
                           <div>
                             <button
