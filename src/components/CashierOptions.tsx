@@ -274,6 +274,9 @@ export default function CashierOptions({
    case "SteepleChase":
      gameType = "SteepleChaseRacing";
      break;
+   case "HarnessRacing":
+     gameType = "HarnessRacing";
+     break;
    default:
      gameType = "Keno";
  }

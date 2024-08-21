@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
 import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
 import { MapRedAndBlack } from "../../utils/redblackMap";
 import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { OddNUMBERMap } from "../../utils/odd";
@@ -72,11 +72,14 @@ function Thirdminicontainer(prop: FirstMiniProp) {
   const betSlip = useAppSelector((state) => state.picker.betSlip);
 
   const checkIsSelected = (oddType: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.oddType === oddType) return true;
-    });
+    for (let value of betSlip) {
+      if (value.oddType === oddType) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+        return true;
+      }
+    }
 
-    if (index > -1) return true;
+
     return false;
   };
     const handleCircleClick = (

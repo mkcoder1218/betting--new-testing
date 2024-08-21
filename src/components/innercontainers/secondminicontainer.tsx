@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
 import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
 import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
@@ -58,11 +58,16 @@ function Secondminicontainer(prop: FirstMiniProp) {
   }
   const betSlip = useAppSelector((state) => state.picker.betSlip);
   const checkIsSelected = (oddType: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.oddType === oddType) return true;
-    });
+    for (let item of betSlip) {
 
-    if (index > -1) return true;
+      if (item.oddType === oddType) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(item)))
+        return true;
+      }
+    }
+  
+
+
     return false;
   };
   const handleCircleClick = (

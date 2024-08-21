@@ -99,11 +99,13 @@ const GenerateOption = (
     ])
   );
   const checkIsSelected = (stakeInfo: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.stakeInformation === stakeInfo) return true;
-    });
-
-    if (index > -1) return true;
+          for (let value of betSlip) {
+            if (value.stakeInformation === stakeInfo) {
+              dispatch(removeFromBetSlip(betSlip.indexOf(value)))
+              return true
+            }
+            }
+         
     return false;
   };
   const handlefindindex = (index: number) => {
@@ -262,11 +264,13 @@ export const GenerateOption2 = (
     Array.from({ length: number - start + 1 }, () => false)
   );
   const checkIsSelected = (selected: number) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.selected.includes(selected)) return true;
-    });
-
-    if (index > -1) return true;
+for (let value of betSlip) {
+  if (value.selected.includes(selected))
+    dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+          return true;
+        
+  }
+  
     return false;
   };
   for (let i = number; i >= start; i--) {
@@ -299,7 +303,7 @@ export const GenerateOption2 = (
             gameType: "SpinAndWin",
           })
         );
-      } 
+      }
     };
     const handleMouseEnter = (index: number) => {
       const newHoverCircles = Array(number - start + 1).fill(false);

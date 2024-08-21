@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { OddNUMBERMap } from "../../utils/odd";
 import Circle from "../svg/circle";
@@ -29,11 +29,12 @@ const expiryOfGame = gameCreatedDate?.setMinutes(
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
   
   const checkIsSelected = (oddType: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.oddType === oddType) return true;
-    });
-
-    if (index > -1) return true;
+   for (let item of betSlip) {
+      if (item.oddType === oddType) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(item)));
+        return true;
+      }
+    }
     return false;
   };
   const [circleState, setCircleState] = useState<CircleState>({

@@ -233,7 +233,7 @@ function App() {
   };
 
   return (
-    <div className="bg-white fixed w-full custom-scrollbar overflow-y-auto">
+    <div className="bg-white fixed w-full custom-scrollbar overflow-y-auto" >
       <PrinterDialog
         open={printerDialog}
         handleClose={handlePrintDialogClose}
@@ -320,7 +320,7 @@ function App() {
                 </div>
               </div>
               {gameData && gameData.loading ? (
-                <div className="w-full h-fit mt-10 flex justify-center">
+                <div className="w-full h-fit mt-10 flex justify-center" >
                   <CircularUnderLoad />
                 </div>
               ) : (
