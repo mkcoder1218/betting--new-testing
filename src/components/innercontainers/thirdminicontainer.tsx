@@ -6,6 +6,8 @@ import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSli
 import { MapRedAndBlack } from "../../utils/redblackMap";
 import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { OddNUMBERMap } from "../../utils/odd";
+import { range } from "../../utils/range";
+import { generateEvenAndOddArrays } from "../../utils/evenoddgenerate";
 type CircleState = {
   first12: boolean;
   second12: boolean;
@@ -39,9 +41,6 @@ function Thirdminicontainer(prop: FirstMiniProp) {
     fifth: false,
     sixth: false,
   });
-  function range(start: number, end: number): number[] {
-    return Array.from({ length: end - start + 1 }, (_, i) => i + start);
-  }
     const gameState = useAppSelector((state) => state.game);
     const gameCreatedDate =
       gameState.game && new Date(gameState.game?.createdAt);
@@ -118,20 +117,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         );
       }
     };
-    function generateEvenAndOddArrays(start: number, end: number) {
-      const evens: number[] = [];
-      const odds: number[] = [];
-
-      for (let i = start; i <= end; i++) {
-        if (i % 2 === 0) {
-          evens.push(i);
-        } else {
-          odds.push(i);
-        }
-      }
-
-      return { evens, odds };
-    }
+   
     const { evens, odds } = generateEvenAndOddArrays(1, 36);
     return (
       <div className="thrmini_container">

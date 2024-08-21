@@ -49,7 +49,7 @@ function Firstminicontainer(prop: FirstMiniProp) {
 
   const checkIsSelected = (selected: number[]) => {
     for (let value of betSlip) {
-      if (value.selected === selected) {
+      if (selected.every(item=>value.selected.includes(item))) {
         dispatch(removeFromBetSlip(betSlip.indexOf(value)));
         return true;
       }

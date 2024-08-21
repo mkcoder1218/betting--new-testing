@@ -3,6 +3,10 @@ import axiosInstance from "../../config/interceptor";
 import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
 import { TicketInterface } from "../../utils/ticket.interface";
+import { ColumnMap } from "../../utils/columnMap";
+import { MapRedAndBlack } from "../../utils/redblackMap";
+import { range } from "../../utils/range";
+import { generateEvenAndOddArrays } from "../../utils/evenoddgenerate";
 
 interface BetSlipData {
   betSlipNumber: string;
@@ -107,173 +111,193 @@ export const createBetSlipAndTicket =
   ) =>
 
 
-  async (
-    dispatch: (arg0: {
-      payload: BetSlipState<BetSlip>;
-      type: "betSlip/addTicketAndBetSlip";
-    }) => void
-  ) => {
+    async (
+      dispatch: (arg0: {
+        payload: BetSlipState<BetSlip>;
+        type: "betSlip/addTicketAndBetSlip";
+      }) => void
+    ) => {
 
-    dispatch(
-      addTicketAndBetSlip({
-        loading: true,
-        error: null,
-        message: null,
-        data: null,
-      })
-    );
+      dispatch(
+        addTicketAndBetSlip({
+          loading: true,
+          error: null,
+          message: null,
+          data: null,
+        })
+      );
 
-    try {
-      const betSlipResponse: BetSlipResponse<ToPrint> = (
-        await axiosInstance.post("ticket/betslip", data)
-      ).data;
+      try {
+        const betSlipResponse: BetSlipResponse<ToPrint> = (
+          await axiosInstance.post("ticket/betslip", data)
+        ).data;
 
-      if (betSlipResponse.message === "betslip added successfully") {
-        dispatch(
-          addTicketAndBetSlip({
-            loading: false,
-            error: null,
-            message: betSlipResponse.message,
-            data: null,
-          })
-        );
-        refreshBetSlipNumber();
-        toggleStatus(true);
+        if (betSlipResponse.message === "betslip added successfully") {
+          dispatch(
+            addTicketAndBetSlip({
+              loading: false,
+              error: null,
+              message: betSlipResponse.message,
+              data: null,
+            })
+          );
+          refreshBetSlipNumber();
+          toggleStatus(true);
 
-        clearSlip();
+          clearSlip();
 
-        setTimeout(() => {
-          toggleStatus(false)
-          clearNumberSelection();
-        }, 500);
+          setTimeout(() => {
+            toggleStatus(false)
+            clearNumberSelection();
+          }, 500);
 
-        try {
-          if (betSlipResponse.data) {
-            let updateTicket: TicketInterface = betSlipResponse.data;
-
-            updateTicket.tickets.map((ticket) => {
-              const gameParts = ticket.game.split(" "); // Split the string into parts
-              const firstPart = gameParts[0];
-              switch (firstPart) {
-                case "SpeedSkating":
-                  gameParts[0] = "Speed Skating";
-                  break;
-                case "SpinAndWin":
-                  gameParts[0] = "Spin And Win";
-                  break;
-                case "Dashing Derby":
-                  gameParts[0] = "Horse Racing";
-                  break;
-                case "MotorRacing":
-                  gameParts[0] = "MotorRacing";
-                  break;
-                case "PlatinumHounds":
-                  gameParts[0] = "GrayHound Racing";
-                  break;
-                case "CycleRacing":
-                  gameParts[0] = "Track Racing";
-                  break;
-                case "PreRecRealDogs":
-                  gameParts[0] = "GREYHOUND RACING";
-                  break;
-                case "SingleSeaterMotorRacing":
-                  gameParts[0] = "SS MOTOR RACING";
-                  break;
-                case "SteepleChase":
-                  gameParts[0] = "SteepleChaseRacing";
-                  break;
-                case "HarnessRacing":
-                  gameParts[0] = "HarnessRacing";
-                  break;
-                default:
-                  gameParts[0] = "Keno";
-              }
-              ticket.game = gameParts.join(" ");
-            });
-            const printResponse = await axios.post(
-              "http://127.0.0.1:5002/printTicket",
-              updateTicket
-            );
+          try {
+            if (betSlipResponse.data) {
+              let updateTicket: TicketInterface = betSlipResponse.data;
+              const { evens, odds } = generateEvenAndOddArrays(1, 36);
+              updateTicket.tickets.map((ticket) => {
+                const gameParts = ticket.game.split(" "); // Split the string into parts
+                const firstPart = gameParts[0];
+                let selected = ticket.selected
+                let oddType = ticket.oddType
+                switch (firstPart) {
+                  case "SpeedSkating":
+                    gameParts[0] = "Speed Skating";
+                    break;
+                  case "SpinAndWin":
+                    gameParts[0] = "Spin And Win";
+                    console.log(selected)
+                    ColumnMap.col1.every(item => selected.includes(Number(item)))
+                      ? (selected = 'col1', oddType = 'Column') : ColumnMap.col2.every(item => selected.includes(Number(item)))
+                        ? (selected = 'col2', oddType = 'Column') : ColumnMap.col3.every(item => selected.includes(Number(item)))
+                          ? (selected = 'col3', oddType = 'Column') : MapRedAndBlack.Black.every(item => selected.includes(Number(item)))
+                            ? (selected = 'Black', oddType = 'Color' ): MapRedAndBlack.Red.every(item => selected.includes(Number(item)))
+                              ? (selected = 'Red', oddType = 'Color') : range(1, 18).every(item => selected.includes(Number(item)))
+                                ? (selected = 'Low', oddType = 'High/Low') : range(19, 36).every(item => selected.includes(Number(item)))
+                                  ? (selected = 'High',oddType = 'High/Low') : evens.every(item => selected.includes(Number(item)))
+                                    ? (selected = 'Evens',oddType = 'Odd/Even' ): odds.every(item => selected.includes(Number(item)))
+                                      ? (selected = 'Odds', oddType = 'Odd/Even'): range(1, 12).every(item => selected.includes(Number(item)))
+                                        ? (selected = '1st 12', oddType = 'Dozens') : range(13, 24).every(item => selected.includes(Number(item)))
+                                          ? (selected = '2nd 12', oddType = 'Dozens') : range(25, 36).every(item => selected.includes(Number(item)))
+                                            ? (selected = '3rd 12', oddType = 'Dozens') : oddType === 'Selector(color)1' ||
+                                              oddType === 'Selector(color)2' || oddType === 'Selector(color)3'
+                                              || oddType === 'Selector(color)4' || oddType === 'Selector(color)5' || oddType === 'Selector(color)6' ? (selected=selected.split(', ').join('/'), oddType = 'Selector(color)') : '' 
+                    break;
+                  case "DashingDerby":
+                    gameParts[0] = "Horse Racing";
+                    break;
+                  case "MotorRacing":
+                    gameParts[0] = "Motor Racing";
+                    break;
+                  case "PlatinumHounds":
+                    gameParts[0] = "GrayHound Racing";
+                    break;
+                  case "CycleRacing":
+                    gameParts[0] = "Track Racing";
+                    break;
+                  case "PreRecRealDogs":
+                    gameParts[0] = "GreyHound RACING";
+                    break;
+                  case "SingleSeaterMotorRacing":
+                    gameParts[0] = "SS MOTOR RACING";
+                    break;
+                  case "SteepleChase":
+                    gameParts[0] = "SteepleChase Racing";
+                    break;
+                  case "HarnessRacing":
+                    gameParts[0] = "Harness Racing";
+                    break;
+                  default:
+                    gameParts[0] = "Keno";
+                }
+                ticket.game = gameParts.join(" ");
+                ticket.selected = selected
+                ticket.oddType=oddType
+              });
+              const printResponse = await axios.post(
+                "http://127.0.0.1:5002/printTicket",
+                updateTicket
+              );
+            }
+          } catch (err) {
+            console.log("print failed");
           }
-        } catch (err) {
-          console.log("print failed");
+        } else {
+          toggleStatus(true);
+          dispatch(
+            addTicketAndBetSlip({
+              loading: false,
+              error: betSlipResponse.error,
+              message: null,
+              data: null,
+            })
+          );
         }
-      } else {
-        toggleStatus(true);
+      } catch (err: AxiosError | any) {
         dispatch(
           addTicketAndBetSlip({
+            message: "",
+            error: err?.response?.data
+              ? err.response.data.error
+              : "Something went wrong",
             loading: false,
-            error: betSlipResponse.error,
-            message: null,
             data: null,
           })
         );
       }
-    } catch (err: AxiosError | any) {
-      dispatch(
-        addTicketAndBetSlip({
-          message: "",
-          error: err?.response?.data
-            ? err.response.data.error
-            : "Something went wrong",
-          loading: false,
-          data: null,
-        })
-      );
-    }
-  };
+    };
 
 export const getLastBetSlip =
   () =>
-  async (
-    dispatch: (arg0: {
-      payload: BetSlipState<BetSlipData>;
-      type: "betSlip/addBetSlipNumber";
-    }) => void
-  ) => {
-    dispatch(
-      addBetSlipNumber({
-        loading: true,
-        error: null,
-        data: null,
-        message: null,
-      })
-    );
+    async (
+      dispatch: (arg0: {
+        payload: BetSlipState<BetSlipData>;
+        type: "betSlip/addBetSlipNumber";
+      }) => void
+    ) => {
+      dispatch(
+        addBetSlipNumber({
+          loading: true,
+          error: null,
+          data: null,
+          message: null,
+        })
+      );
 
-    try {
-      const lastSlipResponse: BetSlipResponse<BetSlipData> = (
-        await axiosInstance.get("ticket/lastSlip")
-      ).data;
+      try {
+        const lastSlipResponse: BetSlipResponse<BetSlipData> = (
+          await axiosInstance.get("ticket/lastSlip")
+        ).data;
 
-      if (lastSlipResponse.message === "success") {
+        if (lastSlipResponse.message === "success") {
+          dispatch(
+            addBetSlipNumber({
+              loading: false,
+              error: null,
+              data: lastSlipResponse.data,
+              message: lastSlipResponse.message,
+            })
+          );
+        } else {
+          dispatch(
+            addBetSlipNumber({
+              loading: false,
+              error: lastSlipResponse.error,
+              data: null,
+              message: null,
+            })
+          );
+        }
+      } catch (err: AxiosError | any) {
         dispatch(
           addBetSlipNumber({
+            message: "",
+            error: err?.response?.data
+              ? err.response.data.error
+              : "Something went wrong",
             loading: false,
-            error: null,
-            data: lastSlipResponse.data,
-            message: lastSlipResponse.message,
-          })
-        );
-      } else {
-        dispatch(
-          addBetSlipNumber({
-            loading: false,
-            error: lastSlipResponse.error,
             data: null,
-            message: null,
           })
         );
       }
-    } catch (err: AxiosError | any) {
-      dispatch(
-        addBetSlipNumber({
-          message: "",
-          error: err?.response?.data
-            ? err.response.data.error
-            : "Something went wrong",
-          loading: false,
-          data: null,
-        })
-      );
-    }
-  };
+    };

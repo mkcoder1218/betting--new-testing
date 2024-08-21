@@ -231,7 +231,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                         {item.nums.includes(-6) && "Tails"}
                       </td>
                       <td className="px-3 py-2">
-                        {item.win && item.win > 0 ? item.win.toFixed(2) : 0.0}{" "}
+                        {item&&item.win&& item.win > 0 ? parseInt(item.win).toFixed(2) : 0.0}{" "}
                         Br
                       </td>
                     </tr>
@@ -244,7 +244,7 @@ const BetSlipTable = ({ type, data }: ActionType) => {
             <div className="flex justify-between text-sm items-center p-3">
               <div>{new Date(data.createdAt).toLocaleDateString()} A.M</div>
               <div className="mr-6">
-                {data.Tickets?.reduce((a, b) => a + b?.win, 0).toFixed(2)} Br
+                {data.Tickets.reduce((a, b) => a + parseInt(b?.win), 0).toFixed(2)} Br
               </div>
             </div>
             <div className="flex items-center justify-end mt-3">
@@ -252,18 +252,18 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                 <div className="font-bold text-l">
                   {data.Tickets &&
                     data.Tickets[0].Game.status === "COMPLETED" &&
-                    data.Tickets?.reduce((a, b) => a + b.win, 0) < 1 &&
+                   data.Tickets.reduce((a, b) => a + parseInt(b.win), 0) < 1 &&
                     "Not a Winning Ticket"}
                   {data.Tickets &&
-                    data.Tickets?.reduce((a, b) => a + b.win, 0) > 0 &&
+                  data.Tickets.reduce((a, b) => a + parseInt(b.win), 0) > 0 &&
                     `Unclaimed Winnings Br. ${data.Tickets?.reduce(
-                      (a, b) => a + b.win,
+                      (a, b) => a + parseInt(b.win),
                       0
                     )}.00 `}
                 </div>
               ) : (
                 <div className="font-bold text-l">
-                  Total Stake Br. {totalStake?.toFixed(2)}
+                  Total Stake Br. {parseInt(totalStake).toFixed(2)}
                 </div>
               )}
               {type === "redeem" ? (
