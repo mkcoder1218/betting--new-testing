@@ -41,7 +41,12 @@ import { SmartPlay } from "./svg/SmartPlay";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Result from "../ui/Result";
 import { Jaguar } from "./svg/Jaguar";
-import { GameData, Race, Entry, Market } from '../features/slices/RacingGameSlice';
+import {
+  GameData,
+  Race,
+  Entry,
+  Market,
+} from "../features/slices/RacingGameSlice";
 import { RootResultInterface } from "../config/types";
 import HorseRun from "../pages/HorseRun";
 import { Bicycle } from "./svg/Bicycle";
@@ -211,7 +216,7 @@ export default function CashierOptions({
   };
 
   const getTicketList = () => {
-    dispatch(recallTickets(cashierName));
+    dispatch(recallTickets([userData.user?.Cashier.id + ""]));
   };
 
   React.useEffect(() => {
@@ -245,41 +250,41 @@ export default function CashierOptions({
 
   const printResult = (item: ResultData) => {
     console.log("itemresult", item);
-    let gameType=''
- switch (item.Game) {
-   case "SpeedSkating":
-     gameType = "Speed Skating";
-     break;
-   case "SpinAndWin":
-     gameType = "Spin And Win";
-     break;
-   case "Dashing Derby":
-     gameType = "Horse Racing";
-     break;
-   case "MotorRacing":
-     gameType = "MotorRacing";
-     break;
-   case "PlatinumHounds":
-     gameType = "GrayHound Racing";
-     break;
-   case "CycleRacing":
-     gameType = "Track Racing";
-     break;
-   case "PreRecRealDogs":
-     gameType = "GREYHOUND RACING";
-     break;
-   case "SingleSeaterMotorRacing":
-     gameType = "SS MOTOR RACING";
-     break;
-   case "SteepleChase":
-     gameType = "SteepleChaseRacing";
-     break;
-   case "HarnessRacing":
-     gameType = "HarnessRacing";
-     break;
-   default:
-     gameType = "Keno";
- }
+    let gameType = "";
+    switch (item.Game) {
+      case "SpeedSkating":
+        gameType = "Speed Skating";
+        break;
+      case "SpinAndWin":
+        gameType = "Spin And Win";
+        break;
+      case "Dashing Derby":
+        gameType = "Horse Racing";
+        break;
+      case "MotorRacing":
+        gameType = "MotorRacing";
+        break;
+      case "PlatinumHounds":
+        gameType = "GrayHound Racing";
+        break;
+      case "CycleRacing":
+        gameType = "Track Racing";
+        break;
+      case "PreRecRealDogs":
+        gameType = "GREYHOUND RACING";
+        break;
+      case "SingleSeaterMotorRacing":
+        gameType = "SS MOTOR RACING";
+        break;
+      case "SteepleChase":
+        gameType = "SteepleChaseRacing";
+        break;
+      case "HarnessRacing":
+        gameType = "HarnessRacing";
+        break;
+      default:
+        gameType = "Keno";
+    }
     const dataToSend = {
       cashierName: item.cashierName,
       shopName: item.shopName,
@@ -297,9 +302,11 @@ export default function CashierOptions({
               return `${results.Draw}:${results.Name}`;
             }),
       Market:
-        item.result.MarketResults.length > 0 ? item.result.MarketResults.map(market => {
-          return `${market.MarketClassDescription}:${market.WinningSelections}`;
-        }) : "",
+        item.result.MarketResults.length > 0
+          ? item.result.MarketResults.map((market) => {
+              return `${market.MarketClassDescription}:${market.WinningSelections}`;
+            })
+          : "",
     };
     printResultToBackend(dataToSend);
   };
@@ -638,7 +645,7 @@ export default function CashierOptions({
                         <div className="cashier-box">
                           <div className="font-bold">Retail User</div>
                           <div className="select-container">
-                            {cashierState.data && (
+                            {/* {cashierState.data && (
                               <FormControl
                                 sx={{ mt: 1, mb: 2, p: 0, minWidth: 260 }}
                                 size="small"
@@ -660,7 +667,7 @@ export default function CashierOptions({
                                   })}
                                 </Select>
                               </FormControl>
-                            )}
+                            )} */}
                           </div>
                         </div>
                         <div className="date-picker-form flex gap-6 items-end">
@@ -774,15 +781,19 @@ export default function CashierOptions({
                             </div>
                           )}
 
-                          {gameResult.gameType !== "SmartPlayKeno" && gameResult.gameType !== 'SpinAndWin' ? (
-                           
+                          {gameResult.gameType !== "SmartPlayKeno" &&
+                          gameResult.gameType !== "SpinAndWin" ? (
                             <Result
                               Icon={gameTypeSelector(gameResult.gameType)}
                               isSmall={true}
                               gameData={gameResult.result}
                               gameType={gameResult.gameType}
                             />
-                          ) : gameResult.gameType==='SpinAndWin'?<ResultforSpin gameData={gameResult.result} />:''}
+                          ) : gameResult.gameType === "SpinAndWin" ? (
+                            <ResultforSpin gameData={gameResult.result} />
+                          ) : (
+                            ""
+                          )}
 
                           <div>
                             <button
@@ -865,6 +876,11 @@ export default function CashierOptions({
                                 type="text"
                                 className="p-2 w-full mt-3 border border-slate-500 bg-white rounded-md"
                                 placeholder="Event number"
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") {
+                                    handleLoadEventResult();
+                                  }
+                                }}
                                 // ref={myInputRef}
                               />
                             </div>
