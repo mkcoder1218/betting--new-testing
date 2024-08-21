@@ -199,10 +199,10 @@ export const createBetSlipAndTicket =
                     gameParts[0] = "GreyHound RACING";
                     break;
                   case "SingleSeaterMotorRacing":
-                    gameParts[0] = "SS MOTOR RACING";
+                    gameParts[0] = "SS Motor Racing";
                     break;
-                  case "SteepleChase":
-                    gameParts[0] = "SteepleChase Racing";
+                  case "Steeple Chase":
+                    gameParts[0] = "Steeple Chase Racing";
                     break;
                   case "HarnessRacing":
                     gameParts[0] = "Harness Racing";
