@@ -5,9 +5,9 @@ import { useState, useEffect } from "react";
 import Fourrowhover from "../components/svg/fourrowhover";
 import Fourrow from "../components/svg/Fourrow";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
-import { addToBetSlip } from "../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../features/slices/pickerSlice";
 import { Market, GameData } from "../features/slices/RacingGameSlice";
-import { setIsClearCircle } from "../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../features/slices/gameType";
 import { DispatchParams } from "../ui/Table";
 import { OddNUMBERMap } from "./odd";
 
@@ -99,11 +99,13 @@ const GenerateOption = (
     ])
   );
   const checkIsSelected = (stakeInfo: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.stakeInformation === stakeInfo) return true;
-    });
-
-    if (index > -1) return true;
+          for (let value of betSlip) {
+            if (value.stakeInformation === stakeInfo) {
+              dispatch(removeFromBetSlip(betSlip.indexOf(value)))
+              return true
+            }
+            }
+         
     return false;
   };
   const handlefindindex = (index: number) => {
@@ -116,6 +118,14 @@ const GenerateOption = (
     }
     return keyForValue;
   };
+    const gameStates = useAppSelector((state) => state.game);
+    const gameCreatedDate =
+      gameStates.game && new Date(gameStates.game?.createdAt);
+    const expiryOfGame = gameCreatedDate?.setMinutes(
+      gameCreatedDate.getMinutes() + 5
+    );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  
   const handleClickofNumber = (
     i: number,
     stake: any,
@@ -132,10 +142,13 @@ const GenerateOption = (
     const number5 = CollactionNumbersMap.get(handlefindindex(i) - 2);
     const selectedArray = [number1, number2, number3, number4, number5];
     dispatch(setIsClearCircle(false));
-    if (!checkIsSelected(stakeInfo))
+    if (!checkIsSelected(stakeInfo)) {
+      
+      dispatch(removemessage(!removemessage))
       dispatch(
         addToBetSlip({
           selected: selectedArray,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
           stakeInformation: stakeInfo,
           multiplier: OddNUMBERMap.Nei,
           gameId: gameId,
@@ -146,7 +159,8 @@ const GenerateOption = (
           gameNumber: currentgameNumber,
         })
       );
-  };
+    }
+  }
   const handleMouseEnterbottom = (index: number) => {
     setHoverIndex(index);
   };
@@ -233,19 +247,30 @@ export const GenerateOption2 = (
   const [circles, setCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
+
+    const gameState = useAppSelector((state) => state.game);
+    const gameCreatedDate =
+      gameState.game && new Date(gameState.game?.createdAt);
+    const expiryOfGame = gameCreatedDate?.setMinutes(
+      gameCreatedDate.getMinutes() + 5
+    );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  
   const [isExist, setisExist] = useState(false);
   useEffect(() => {
-    if (IsCircle) setCircles([]); // Run once when IsCircle changes
+    if (IsCircle) setCircles([]);
   }, [IsCircle, setCircles]);
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
   const checkIsSelected = (selected: number) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.selected.includes(selected)) return true;
-    });
-
-    if (index > -1) return true;
+for (let value of betSlip) {
+  if (value.selected.includes(selected)){
+    dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+          return true;
+  }
+  }
+  
     return false;
   };
   for (let i = number; i >= start; i--) {
@@ -255,6 +280,7 @@ export const GenerateOption2 = (
     const isFirstrow = specialNumbers.firstRownumbers.includes(i);
     const issecondrow = specialNumbers.secRownumbers.includes(i);
     const isThirdrow = specialNumbers.therdRownumbers.includes(i);
+  
 
     const handleclick = (index: number, i: number) => {
       const newCircles = [...circles];
@@ -262,9 +288,11 @@ export const GenerateOption2 = (
       setCircles(newCircles);
       dispatch(setIsClearCircle(false));
       if (!checkIsSelected(i)) {
+          dispatch(removemessage(!removemessage));
         dispatch(
           addToBetSlip({
             selected: [i],
+            expiry:ticketExpiry,
             stakeInformation: "Win",
             multiplier: OddNUMBERMap.Win,
             gameId: gameId,

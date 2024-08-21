@@ -233,7 +233,7 @@ function App() {
   };
 
   return (
-    <div className="bg-white ">
+    <div className="bg-white fixed w-full h-full custom-scrollbar overflow-y-auto" >
       <PrinterDialog
         open={printerDialog}
         handleClose={handlePrintDialogClose}
@@ -251,10 +251,10 @@ function App() {
         handleCancelRedeem={handleCancelRedeem}
       />
       <div
-        className="flex items-start justify-between h-screen custom-scrollbar overflow-y-auto"
+        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
         style={{ scrollBehavior: "smooth" }}
       >
-        <div className="left flex flex-col" style={{ width: "80%" }}>
+        <div className="left flex overflow-y-scroll overflow-x-hidden flex-col" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "SmartPlayKeno" ? (
             <>
@@ -320,7 +320,7 @@ function App() {
                 </div>
               </div>
               {gameData && gameData.loading ? (
-                <div className="w-full h-fit mt-10 flex justify-center">
+                <div className="w-full h-fit mt-10 flex justify-center" >
                   <CircularUnderLoad />
                 </div>
               ) : (
@@ -342,8 +342,7 @@ function App() {
                       <TicketSlipHolder
                         gameType={"SmartPlayKeno"}
                         gameData={game}
-                          update={update}
-
+                        update={update}
                       />
                     )}
                     <div

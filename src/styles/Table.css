@@ -6,8 +6,21 @@
   overflow: hidden !important;
 
 }
+@keyframes tableanimation{
+from{
+  transform: scaleY(0.5);
+}to{
+  transform: scaleY(1);
+}
+}
 .tableContainer{
 overflow: hidden !important;
+}
+.animator{
+animation-name: tableanimation !important;
+animation-duration: 0.3s !important;
+animation-fill-mode: forwards !important;
+transition: all 0.5s !important;
 }
 .table{
   border-collapse: collapse;

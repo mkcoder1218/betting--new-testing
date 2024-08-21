@@ -182,6 +182,9 @@ export const createBetSlipAndTicket =
                 case "SteepleChase":
                   gameParts[0] = "SteepleChaseRacing";
                   break;
+                case "HarnessRacing":
+                  gameParts[0] = "HarnessRacing";
+                  break;
                 default:
                   gameParts[0] = "Keno";
               }

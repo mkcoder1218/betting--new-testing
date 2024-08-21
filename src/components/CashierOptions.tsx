@@ -41,7 +41,7 @@ import { SmartPlay } from "./svg/SmartPlay";
 import { IoChevronBackOutline } from "react-icons/io5";
 import Result from "../ui/Result";
 import { Jaguar } from "./svg/Jaguar";
-import { GameData } from "../features/slices/RacingGameSlice";
+import { GameData, Race, Entry, Market } from '../features/slices/RacingGameSlice';
 import { RootResultInterface } from "../config/types";
 import HorseRun from "../pages/HorseRun";
 import { Bicycle } from "./svg/Bicycle";
@@ -244,20 +244,63 @@ export default function CashierOptions({
   };
 
   const printResult = (item: ResultData) => {
+    console.log("itemresult", item);
+    let gameType=''
+ switch (item.Game) {
+   case "SpeedSkating":
+     gameType = "Speed Skating";
+     break;
+   case "SpinAndWin":
+     gameType = "Spin And Win";
+     break;
+   case "Dashing Derby":
+     gameType = "Horse Racing";
+     break;
+   case "MotorRacing":
+     gameType = "MotorRacing";
+     break;
+   case "PlatinumHounds":
+     gameType = "GrayHound Racing";
+     break;
+   case "CycleRacing":
+     gameType = "Track Racing";
+     break;
+   case "PreRecRealDogs":
+     gameType = "GREYHOUND RACING";
+     break;
+   case "SingleSeaterMotorRacing":
+     gameType = "SS MOTOR RACING";
+     break;
+   case "SteepleChase":
+     gameType = "SteepleChaseRacing";
+     break;
+   case "HarnessRacing":
+     gameType = "HarnessRacing";
+     break;
+   default:
+     gameType = "Keno";
+ }
     const dataToSend = {
       cashierName: item.cashierName,
       shopName: item.shopName,
       date: item.date,
-      Game: item.Game,
-      eventId: item.eventId,
+      Game: gameType,
+      eventId: item.result.EventNumber,
       gameTime: item.gameTime,
       formattedTime: moment(item.gameTime).format("YYYY/MM/DD hh:mm:ss"),
-      result: item.result
-        .slice()
-        .sort((a, b) => parseInt(a) - parseInt(b))
-        .join(" "),
+      result:
+        item.Game === "SmartPlayKeno" || item.Game === "SpinAndWin"
+          ? item.result.MarketResults[0].WinningSelections.slice()
+              .sort((a, b) => parseInt(a) - parseInt(b))
+              .join(" ")
+          : item.result.Race.Entries.map((results, index) => {
+              return `${results.Draw}:${results.Name}`;
+            }),
+      Market:
+        item.result.MarketResults.length > 0 ? item.result.MarketResults.map(market => {
+          return `${market.MarketClassDescription}:${market.WinningSelections}`;
+        }) : "",
     };
-
     printResultToBackend(dataToSend);
   };
 

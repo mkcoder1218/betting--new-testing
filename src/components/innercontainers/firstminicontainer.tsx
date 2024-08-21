@@ -5,10 +5,10 @@ import Circle from "../svg/circle";
 import Fourrowhover from "../svg/fourrowhover";
 import { Market, RootEventData } from "../../features/slices/RacingGameSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
 import { OddMultiplier } from "../../features/slices/oddSlice";
 import { ColumnMap } from "../../utils/columnMap";
-import { setIsClearCircle } from "../../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { OddNUMBERMap } from "../../utils/odd";
 type CircleState = {
   first12: boolean;
@@ -26,6 +26,14 @@ function Firstminicontainer(prop: FirstMiniProp) {
     second12: false,
     third12: false,
   });
+   const gameState = useAppSelector((state) => state.game);
+   const gameCreatedDate =
+     gameState.game && new Date(gameState.game?.createdAt);
+   const expiryOfGame = gameCreatedDate?.setMinutes(
+     gameCreatedDate.getMinutes() + 5
+   );
+  const [zero,setzero]=useState(false)
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
 
   const [iszero, setisZero] = useState(false);
   const [background, setbackground] = useState<CircleState>({
@@ -40,11 +48,14 @@ function Firstminicontainer(prop: FirstMiniProp) {
   const betSlip = useAppSelector((state) => state.picker.betSlip);
 
   const checkIsSelected = (selected: number[]) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.selected === selected) return true;
-    });
+    for (let value of betSlip) {
+      if (value.selected === selected) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+        return true;
+      }
+    }
 
-    if (index > -1) return true;
+  
     return false;
   };
   useEffect(() => {
@@ -81,9 +92,14 @@ function Firstminicontainer(prop: FirstMiniProp) {
       [area]: !prevState[area],
     }));
     if (!checkIsSelected(selected)) {
+    dispatch(removemessage(!removemessage));
+
       dispatch(
+        
         addToBetSlip({
           selected: selected,
+          expiry: ticketExpiry,
+          toWin:10,
           stakeInformation: stakeInfo,
           multiplier: Multiplier,
           gameId: prop.gameId,
@@ -104,10 +120,22 @@ function Firstminicontainer(prop: FirstMiniProp) {
           onMouseEnter={handleIsZero}
           onMouseLeave={handleIsZero}
           onClick={() => {
-            if (!checkIsSelected([0])) {
+            setzero(!zero)
+            if (zero) {
+               for (let item of betSlip) {
+                 if (item.selected[0] === 0) {
+                   dispatch(removeFromBetSlip(betSlip.indexOf(item)));
+                   return;
+                 }
+               }
+            }else{
+    dispatch(removemessage(!removemessage));
+
               dispatch(
                 addToBetSlip({
                   selected: [0],
+                  expiry: ticketExpiry,
+                  toWin:10,
                   multiplier: OddNUMBERMap.Win,
                   oddType: "Win",
                   stakeInformation: "Win",

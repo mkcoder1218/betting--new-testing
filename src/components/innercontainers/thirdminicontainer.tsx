@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
 import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
 import { MapRedAndBlack } from "../../utils/redblackMap";
-import { setIsClearCircle } from "../../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { OddNUMBERMap } from "../../utils/odd";
 type CircleState = {
   first12: boolean;
@@ -42,6 +42,13 @@ function Thirdminicontainer(prop: FirstMiniProp) {
   function range(start: number, end: number): number[] {
     return Array.from({ length: end - start + 1 }, (_, i) => i + start);
   }
+    const gameState = useAppSelector((state) => state.game);
+    const gameCreatedDate =
+      gameState.game && new Date(gameState.game?.createdAt);
+    const expiryOfGame = gameCreatedDate?.setMinutes(
+      gameCreatedDate.getMinutes() + 5
+    );
+    const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
   useEffect(() => {
     if (isCircle) {
       setCircleState({
@@ -65,11 +72,14 @@ function Thirdminicontainer(prop: FirstMiniProp) {
   const betSlip = useAppSelector((state) => state.picker.betSlip);
 
   const checkIsSelected = (oddType: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.oddType === oddType) return true;
-    });
+    for (let value of betSlip) {
+      if (value.oddType === oddType) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+        return true;
+      }
+    }
 
-    if (index > -1) return true;
+
     return false;
   };
     const handleCircleClick = (
@@ -90,9 +100,12 @@ function Thirdminicontainer(prop: FirstMiniProp) {
         [area]: !prevState[area],
       }));
       if (!checkIsSelected(oddType)) {
+    dispatch(removemessage(!removemessage));
+
         dispatch(
           addToBetSlip({
             selected: selected,
+            expiry:ticketExpiry,
             stakeInformation: stakeInfo,
             multiplier: Multiplier,
             gameId: prop.gameId,
@@ -100,6 +113,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             oddType: oddType,
             gameType: "SpinAndWin",
             gameNumber: prop.gameNumber,
+            toWin:10
           })
         );
       }

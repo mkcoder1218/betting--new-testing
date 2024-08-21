@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { OddNUMBERMap } from "../../utils/odd";
 import Circle from "../svg/circle";
+import { removemessage } from "../../features/slices/gameType";
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
@@ -20,13 +21,20 @@ type CircleState = {
 function Forthmini(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
   const betSlip = useAppSelector((state) => state.picker.betSlip);
-
+const gameState = useAppSelector((state) => state.game);
+const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
+const expiryOfGame = gameCreatedDate?.setMinutes(
+  gameCreatedDate.getMinutes() + 5
+);
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+  
   const checkIsSelected = (oddType: string) => {
-    const index = betSlip.findIndex((value) => {
-      if (value.oddType === oddType) return true;
-    });
-
-    if (index > -1) return true;
+   for (let item of betSlip) {
+      if (item.oddType === oddType) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(item)));
+        return true;
+      }
+    }
     return false;
   };
   const [circleState, setCircleState] = useState<CircleState>({
@@ -51,17 +59,20 @@ function Forthmini(prop: FirstMiniProp) {
     }));
 
     if (!checkIsSelected(oddType)) {
+    dispatch(removemessage(!removemessage));
+
       dispatch(
         addToBetSlip({
           selected: selected,
+          expiry: ticketExpiry,
           stakeInformation: stakeInfo,
           multiplier: Multiplier,
           gameId: prop.gameId,
           stake: stake,
           oddType: oddType,
           gameNumber: prop.gameNumber,
-          gameType: 'SpinAndWin',
-          toWin:10
+          gameType: "SpinAndWin",
+          toWin: 10,
         })
       );
     }
