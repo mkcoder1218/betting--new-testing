@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Entry } from "./RacingGameSlice";
 import betSlip from "./betSlip";
+import moment from "moment";
 
 export interface Ticket {
   selected: number[];
@@ -47,7 +48,6 @@ const pickerSlice = createSlice({
     },
     addRandomNumbers: (state, action: PayloadAction<number[]>) => {
       state.selected = action.payload;
-
     },
     clearNumbers: (state) => {
       state.selected = [];
@@ -65,12 +65,14 @@ const pickerSlice = createSlice({
         return false;
       });
 
-
       if (_index > -1) {
         state.betSlip = state.betSlip.filter((item, index) => {
           return _index !== index;
         });
       } else {
+        state.betSlip = state.betSlip.filter((item) => {
+          return new Date().getTime() < item.expiry;
+        });
         state.betSlip = [...state.betSlip, action.payload];
       }
       const totals = calculateTotals(state.betSlip);
