@@ -254,7 +254,7 @@ function App() {
         className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
         style={{ scrollBehavior: "smooth" }}
       >
-        <div className="left flex overflow-y-scroll flex-col" style={{ width: "80%" }}>
+        <div className="left flex overflow-y-scroll overflow-x-hidden flex-col" style={{ width: "80%" }}>
           <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "SmartPlayKeno" ? (
             <>
