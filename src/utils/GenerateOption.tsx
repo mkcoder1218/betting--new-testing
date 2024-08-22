@@ -26,7 +26,7 @@ const specialNumbers = {
   therdRownumbers: [3, 6, 9, 12, 15, 18, 21, 24, 27, 28, 30, 33, 36],
 };
 const CollactionNumbers = {
-  0: 37,
+  0: 32,
   1: 15,
   2: 19,
   3: 4,
@@ -99,33 +99,29 @@ const GenerateOption = (
     ])
   );
   const checkIsSelected = (stakeInfo: string) => {
-          for (let value of betSlip) {
-            if (value.stakeInformation === stakeInfo) {
-              dispatch(removeFromBetSlip(betSlip.indexOf(value)))
-              return true
-            }
-            }
-         
+    for (let value of betSlip) {
+      if (value.stakeInformation === stakeInfo) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+        return true;
+      }
+    }
+
     return false;
   };
   const handlefindindex = (index: number) => {
     const keyForValue = Array.from(CollactionNumbersMap.entries()).find(
       ([, value]) => value === index
     )?.[0];
-    if (keyForValue === 0) {
-      const lastIndex = Array.from(CollactionNumbersMap.values()).length - 1;
-      return lastIndex;
-    }
     return keyForValue;
   };
-    const gameStates = useAppSelector((state) => state.game);
-    const gameCreatedDate =
-      gameStates.game && new Date(gameStates.game?.createdAt);
-    const expiryOfGame = gameCreatedDate?.setMinutes(
-      gameCreatedDate.getMinutes() + 5
-    );
+  const gameStates = useAppSelector((state) => state.game);
+  const gameCreatedDate =
+    gameStates.game && new Date(gameStates.game?.createdAt);
+  const expiryOfGame = gameCreatedDate?.setMinutes(
+    gameCreatedDate.getMinutes() + 5
+  );
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
-  
+
   const handleClickofNumber = (
     i: number,
     stake: any,
@@ -135,16 +131,24 @@ const GenerateOption = (
     oddType: string,
     gameType: string
   ) => {
+    const totalKeys = Array.from(CollactionNumbersMap.keys()).length;
     const number1 = CollactionNumbersMap.get(handlefindindex(i));
-    const number2 = CollactionNumbersMap.get(handlefindindex(i) + 1);
-    const number3 = CollactionNumbersMap.get(handlefindindex(i) + 2);
-    const number4 = CollactionNumbersMap.get(handlefindindex(i) - 1);
-    const number5 = CollactionNumbersMap.get(handlefindindex(i) - 2);
+    const number2 = CollactionNumbersMap.get(
+      (handlefindindex(i) + 1) % totalKeys
+    );
+    const number3 = CollactionNumbersMap.get(
+      (handlefindindex(i) + 2) % totalKeys
+    );
+    const number4 = CollactionNumbersMap.get(
+      (handlefindindex(i) - 1 + totalKeys) % totalKeys
+    );
+    const number5 = CollactionNumbersMap.get(
+      (handlefindindex(i) - 2 + totalKeys) % totalKeys
+    );
     const selectedArray = [number1, number2, number3, number4, number5];
     dispatch(setIsClearCircle(false));
     if (!checkIsSelected(stakeInfo)) {
-      
-      dispatch(removemessage(!removemessage))
+      dispatch(removemessage(!removemessage));
       dispatch(
         addToBetSlip({
           selected: selectedArray,
@@ -160,7 +164,7 @@ const GenerateOption = (
         })
       );
     }
-  }
+  };
   const handleMouseEnterbottom = (index: number) => {
     setHoverIndex(index);
   };
@@ -168,7 +172,8 @@ const GenerateOption = (
   const handleMouseLeavebottom = () => {
     setHoverIndex(null);
   };
-  for (let i = 0; i < number; i++) {
+
+  for (let i = 0; i <= number; i++) {
     if (i == 0) {
       className = "green";
     }

@@ -152,7 +152,7 @@ height: 10%;
 }
 .fifthmini_container{
   text-transform: uppercase;
-  margin-left: 1%;
+  margin-left: 2%;
   overflow-x: auto;
   scroll-behavior: smooth;
   margin-top: 1.8%;
@@ -278,7 +278,7 @@ z-index: 400;
   font-size: 24px;
   position: absolute;
   top: -5px;
-left:0rem;
+left:-1rem;
 z-index: 400;
   box-shadow: -10px 1px 5px 23px rgb(28, 64, 28);
   background-color: rgb(28, 64, 28);
@@ -287,13 +287,13 @@ z-index: 400;
   margin-right:10px ;
   font-size: 24px;
   position: absolute;
-  top: -29px;
+  top: -24px;
 
-left:63.7rem;
+left:63.3rem;
 z-index: 400;
-box-shadow: -6px 1px 15px 2px rgb(28, 64, 28);
-  background-color: rgb(28, 64, 28);
-  height:70px;
+box-shadow: -20px 1px 10px 5px rgb(28, 64, 28);
+  background-color: rgba(28, 64, 28, 0.12);
+  height:60px;
  
 }
 @media screen and (max-width:1280px) {
@@ -397,6 +397,14 @@ background-color: rgba(1, 153, 29, 0.535);
 .small_mini_container svg{
   margin-left: -20%;
   margin-top: 150%;
+}
+.zerocircle svg{
+  margin-left: -20%;
+  margin-top: 150%;
+}
+.zerocircle{
+position: absolute;
+left: 103%;
 }
 .svg_container{
 position: absolute;

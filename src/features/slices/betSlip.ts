@@ -168,20 +168,18 @@ export const createBetSlipAndTicket =
                     gameParts[0] = "Spin And Win";
                     console.log(selected)
                     ColumnMap.col1.every(item => selected.includes(Number(item)))
-                      ? (selected = 'col1', oddType = 'Column') : ColumnMap.col2.every(item => selected.includes(Number(item)))
-                        ? (selected = 'col2', oddType = 'Column') : ColumnMap.col3.every(item => selected.includes(Number(item)))
-                          ? (selected = 'col3', oddType = 'Column') : MapRedAndBlack.Black.every(item => selected.includes(Number(item)))
-                            ? (selected = 'Black', oddType = 'Color' ): MapRedAndBlack.Red.every(item => selected.includes(Number(item)))
-                              ? (selected = 'Red', oddType = 'Color') : range(1, 18).every(item => selected.includes(Number(item)))
-                                ? (selected = 'Low', oddType = 'High/Low') : range(19, 36).every(item => selected.includes(Number(item)))
-                                  ? (selected = 'High',oddType = 'High/Low') : evens.every(item => selected.includes(Number(item)))
-                                    ? (selected = 'Evens',oddType = 'Odd/Even' ): odds.every(item => selected.includes(Number(item)))
-                                      ? (selected = 'Odds', oddType = 'Odd/Even'): range(1, 12).every(item => selected.includes(Number(item)))
-                                        ? (selected = '1st 12', oddType = 'Dozens') : range(13, 24).every(item => selected.includes(Number(item)))
-                                          ? (selected = '2nd 12', oddType = 'Dozens') : range(25, 36).every(item => selected.includes(Number(item)))
-                                            ? (selected = '3rd 12', oddType = 'Dozens') : oddType === 'Selector(color)1' ||
-                                              oddType === 'Selector(color)2' || oddType === 'Selector(color)3'
-                                              || oddType === 'Selector(color)4' || oddType === 'Selector(color)5' || oddType === 'Selector(color)6' ? (selected=selected.split(', ').join('/'), oddType = 'Selector(color)') : '' 
+                      ? (selected = 'col1 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Column') : ColumnMap.col2.every(item => selected.includes(Number(item)))
+                        ? (selected = 'col2 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Column') : ColumnMap.col3.every(item => selected.includes(Number(item)))
+                          ? (selected = 'col3 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Column') : MapRedAndBlack.Black.every(item => selected.includes(Number(item)))
+                            ? (selected = 'Black ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Color') : MapRedAndBlack.Red.every(item => selected.includes(Number(item)))
+                              ? (selected = 'Red ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Color') : range(1, 18).every(item => selected.includes(Number(item)))
+                                ? (selected = '1-18 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'High/Low') : range(19, 36).every(item => selected.includes(Number(item)))
+                                  ? (selected = '19-36 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'High/Low') : evens.every(item => selected.includes(Number(item)))
+                                    ? (selected = 'Even ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Odd/Even') : odds.every(item => selected.includes(Number(item)))
+                                      ? (selected = 'Odd ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Odd/Even') : range(1, 12).every(item => selected.includes(Number(item)))
+                                        ? (selected = '1st 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : range(13, 24).every(item => selected.includes(Number(item)))
+                                          ? (selected = '2nd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : range(25, 36).every(item => selected.includes(Number(item)))
+                                            ? (selected = '3rd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : oddType === 'Selector(color)1' || oddType === 'Selector(color)2' || oddType === 'Selector(color)3' || oddType === 'Selector(color)4' || oddType === 'Selector(color)5' || oddType === 'Selector(color)6' ? oddType = 'Selector(color)' : ''
                     break;
                   case "DashingDerby":
                     gameParts[0] = "Horse Racing";
@@ -211,7 +209,7 @@ export const createBetSlipAndTicket =
                     gameParts[0] = "Keno";
                 }
                 ticket.game = gameParts.join(" ");
-                ticket.selected = selected
+                ticket.selected = selected 
                 ticket.oddType=oddType
               });
               const printResponse = await axios.post(

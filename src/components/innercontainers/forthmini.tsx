@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
-import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
+import {
+  addToBetSlip,
+  removeFromBetSlip,
+} from "../../features/slices/pickerSlice";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { OddNUMBERMap } from "../../utils/odd";
 import Circle from "../svg/circle";
-import { removemessage } from "../../features/slices/gameType";
+import {
+  removemessage,
+  setIsClearCircle,
+} from "../../features/slices/gameType";
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
@@ -21,15 +27,15 @@ type CircleState = {
 function Forthmini(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
   const betSlip = useAppSelector((state) => state.picker.betSlip);
-const gameState = useAppSelector((state) => state.game);
-const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
-const expiryOfGame = gameCreatedDate?.setMinutes(
-  gameCreatedDate.getMinutes() + 5
-);
+  const gameState = useAppSelector((state) => state.game);
+  const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
+  const expiryOfGame = gameCreatedDate?.setMinutes(
+    gameCreatedDate.getMinutes() + 5
+  );
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
-  
+
   const checkIsSelected = (oddType: string) => {
-   for (let item of betSlip) {
+    for (let item of betSlip) {
       if (item.oddType === oddType) {
         dispatch(removeFromBetSlip(betSlip.indexOf(item)));
         return true;
@@ -37,6 +43,8 @@ const expiryOfGame = gameCreatedDate?.setMinutes(
     }
     return false;
   };
+  const isCircle = useAppSelector((state) => state.gameType.isClearCircle);
+
   const [circleState, setCircleState] = useState<CircleState>({
     first12: false,
     second12: false,
@@ -45,6 +53,18 @@ const expiryOfGame = gameCreatedDate?.setMinutes(
     fifth: false,
     sixth: false,
   });
+  useEffect(() => {
+    if (isCircle) {
+      setCircleState({
+        first12: false,
+        second12: false,
+        third12: false,
+        forth: false,
+        fifth: false,
+        sixth: false,
+      });
+    }
+  }, [isCircle]);
   const handleCircleClick = (
     area: keyof CircleState,
     stake: number,
@@ -53,13 +73,14 @@ const expiryOfGame = gameCreatedDate?.setMinutes(
     stakeInfo: string,
     oddType: string
   ) => {
+    dispatch(setIsClearCircle(false));
     setCircleState((prevState) => ({
       ...prevState,
       [area]: !prevState[area],
     }));
 
     if (!checkIsSelected(oddType)) {
-    dispatch(removemessage(!removemessage));
+      dispatch(removemessage(!removemessage));
 
       dispatch(
         addToBetSlip({

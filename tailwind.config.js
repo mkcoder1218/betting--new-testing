@@ -14,7 +14,8 @@ export default {
       },
       width: {
         "28p": "28%",
-        "99p": "99%", // Custom width of 28%
+        "99p": "99%",
+        "90p": "94%", // Custom width of 28%
       },
     },
   },

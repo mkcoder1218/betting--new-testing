@@ -54,7 +54,10 @@ function Fifthmini(prop: FirstMiniProp) {
   };
 
   return (
-    <div className="fifthmini_container h-1/3 w-99p overflow-hidden">
+    <div
+      className="fifthmini_container h-1/3 ml-10 overflow-hidden"
+      style={{ width: "95%" }}
+    >
       <div className="child_mini flex flex-col w-full overflow-hidden gap-5 h-full items-start justify-center">
         <p className="text-xl">Neighbors</p>
         <div
@@ -65,7 +68,7 @@ function Fifthmini(prop: FirstMiniProp) {
           {GenerateOption(
             "span",
             0,
-            37,
+            36,
             hoverdclass,
             prop.gameId,
             prop.gameNumber,
