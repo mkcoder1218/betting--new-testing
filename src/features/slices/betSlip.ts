@@ -160,6 +160,7 @@ export const createBetSlipAndTicket =
                 const firstPart = gameParts[0];
                 let selected = ticket.selected
                 let oddType = ticket.oddType
+
                 switch (firstPart) {
                   case "SpeedSkating":
                     gameParts[0] = "Speed Skating";
@@ -179,7 +180,7 @@ export const createBetSlipAndTicket =
                                       ? (selected = 'Odd ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Odd/Even') : range(1, 12).every(item => selected.includes(Number(item)))
                                         ? (selected = '1st 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : range(13, 24).every(item => selected.includes(Number(item)))
                                           ? (selected = '2nd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : range(25, 36).every(item => selected.includes(Number(item)))
-                                            ? (selected = '3rd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : oddType === 'Selector(color)1' || oddType === 'Selector(color)2' || oddType === 'Selector(color)3' || oddType === 'Selector(color)4' || oddType === 'Selector(color)5' || oddType === 'Selector(color)6' ? oddType = 'Selector(color)' : ''
+                                            ? (selected = '3rd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : oddType.split(')')[0] === 'Selector(color' ? (oddType = 'Sector(Colour)', selected = selected.split(' ').slice(0, -1).join(' ').split(', ').reverse().join(', ') + ' ' + selected.split(' ').pop()) : oddType === 'Neighbors' ? selected = selected.split(', ').join('/') : ''
                     break;
                   case "DashingDerby":
                     gameParts[0] = "Horse Racing";
@@ -209,8 +210,8 @@ export const createBetSlipAndTicket =
                     gameParts[0] = "Keno";
                 }
                 ticket.game = gameParts.join(" ");
-                ticket.selected = selected 
-                ticket.oddType=oddType
+                ticket.selected = selected
+                ticket.oddType = oddType
               });
               const printResponse = await axios.post(
                 "http://127.0.0.1:5002/printTicket",

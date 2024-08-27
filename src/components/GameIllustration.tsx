@@ -57,7 +57,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-8",
     },
     {
-      icon: <DogVideo />,
+      icon: <DogVideo isGreen={isActive === 1} />,
       text1: "PreRecRealDogs",
       text2: "PLATINUM HOUNDS",
       text3: "greyHOund Racing",
@@ -83,7 +83,12 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       text2: "SPIN AND WIN",
       width: "w-1",
     },
-    { icon: <Hockey />, text1: "SpeedSkating", text2: "", width: "w-8" },
+    {
+      icon: <Hockey isGreen={isActive === 5} />,
+      text1: "SpeedSkating",
+      text2: "",
+      width: "w-8",
+    },
     {
       icon: <F1 />,
       text1: "SingleSeaterMotorRacing",
@@ -236,8 +241,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                           ? item.text2
                           : item.text1 === "PreRecRealDogs"
                           ? item.text3?.toUpperCase()
-                          : item.text1 ===
-                            "PlatinumHounds"
+                          : item.text1 === "PlatinumHounds"
                           ? "grayhound racing".toUpperCase()
                           : item.text2 === "Drive"
                           ? item.text3?.toUpperCase()

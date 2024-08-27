@@ -143,6 +143,7 @@ export default function BetSlip() {
   const clearSlip = () => {
     dispatch(clearBetSlip());
     dispatch(clearNumbers());
+    dispatch(ClearSelected(true));
     dispatch(setIsClearCircle(true));
     setBetError("");
     console.log("gametype,", gameType);
@@ -302,10 +303,7 @@ export default function BetSlip() {
         Betslip
       </div>
 
-      <div
-        className="right-slip-content w-full flex flex-col items-center mt-2 overflow-y-auto"
-
-      >
+      <div className="right-slip-content w-full flex flex-col items-center mt-2 overflow-y-auto">
         <div className="slip-right-head mb-2 flex items-center justify-center bg-green-500 rounded-sm p-1">
           <div className="left cursor-pointer bg-green-500 pr-3 pl-4 text-xs text-white rounded-sm">
             SINGLE
@@ -334,7 +332,10 @@ export default function BetSlip() {
             <BsCheck2All className="mr-3" size={24} />
           </div>
         )}
-        <div className="overflow-y-auto" style={{maxHeight:'400px',width:'100%'}}>
+        <div
+          className="overflow-y-auto"
+          style={{ maxHeight: "400px", width: "100%" }}
+        >
           {betState.betSlip.map((item, index) => {
             return (
               <>
