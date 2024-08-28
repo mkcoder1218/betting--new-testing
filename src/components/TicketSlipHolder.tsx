@@ -9,12 +9,12 @@ import {
 import React, { useEffect, useState } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
 import { defaultStake } from "../config/constants";
-import { GameData } from '../features/slices/RacingGameSlice';
+import { GameData } from "../features/slices/RacingGameSlice";
 import moment from "moment";
 import PlusMinus from "../ui/PlusMinus";
 import { removemessage } from "../features/slices/gameType";
 // import { writeToPrinter } from "./SlipPrinter";
-import racingGameSlice from '../features/slices/RacingGameSlice';
+import racingGameSlice from "../features/slices/RacingGameSlice";
 interface TicketHolderProp {
   gameType: string;
   gameData: GameData;
@@ -31,7 +31,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
   const betState = useAppSelector((state) => state.betSlip);
   const gameState = useAppSelector((state) => state.game);
   const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
-const gameDataRacing=useAppSelector(state=>state.racingGame)
+  const gameDataRacing = useAppSelector((state) => state.racingGame);
   const expiryOfGame = gameCreatedDate?.setMinutes(
     gameCreatedDate.getMinutes() + 5
   );
@@ -60,7 +60,7 @@ const gameDataRacing=useAppSelector(state=>state.racingGame)
     stake,
     gameId,
     stakeInformation,
-    gameNumber
+    gameNumber,
   }: Ticket) => {
     for (let item of betSlip) {
       if (selected === item.selected) {
@@ -71,7 +71,7 @@ const gameDataRacing=useAppSelector(state=>state.racingGame)
     // if (currentDate > ticketExpiry) {
     //   return;
     // }
-console.log('gameData:',gameDataRacing)
+    console.log("gameData:", gameDataRacing);
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
         addToBetSlip({
@@ -84,7 +84,7 @@ console.log('gameData:',gameDataRacing)
           gameType,
           stakeInformation: stakeInformation,
           oddType: "Win",
-gameNumber:gameDataRacing.game[0].gameData.Number
+          gameNumber: gameDataRacing.game[0].gameData.Number,
         })
       );
     }
@@ -158,16 +158,15 @@ gameNumber:gameDataRacing.game[0].gameData.Number
                 gameId: gameState.game?.gamenumber,
                 gameType: gameType,
                 stakeInformation: "Win",
-
               });
               dispatch(removemessage(!removemessage));
             }}
-            className="p-1 addtobetButton pl-3 pr-3 text-white text-lg mt-2"
+            className="p-1 addtobetButton text-white text-lg mt-2 -ml-5"
           >
             ADD TO BETSLIP
           </button>
 
-          <div className="slip-container w-64 md:w-68 max-lg:-ml-16 -ml-10 md:-ml-14 mt-3 flex flex-col">
+          <div className="slip-container w-56 md:w-68 max-lg:-ml-16 -ml-14 md:-ml-14 mt-3 flex flex-col">
             <div
               className={`slip-head ${
                 isAddbutton
