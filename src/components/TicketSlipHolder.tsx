@@ -172,10 +172,11 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
                 isAddbutton
                   ? "bg-green-500 text-white"
                   : "border text-green-600 border-t-green-700"
-              } flex justify-between text-start font-bold text-lg `}
+              } flex justify-between text-start font-bold text-sm `}
             >
-              HIGHEST PAYOUT {Math.max(...odds.map((item) => item.multiplier))}{" "}
-              FROM {pickedNumbers.length}
+              {`HIGHEST PAYOUT ${Math.max(
+                ...odds.map((item) => item.multiplier)
+              )} FROM ${pickedNumbers.length}`}
               <PlusMinus onClick={handleAddandRemove} isActive={isAddbutton} />
             </div>
             {isAddbutton ? (
