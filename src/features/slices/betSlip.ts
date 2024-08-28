@@ -180,7 +180,7 @@ export const createBetSlipAndTicket =
                                       ? (selected = 'Odd ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Odd/Even') : range(1, 12).every(item => selected.includes(Number(item)))
                                         ? (selected = '1st 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : range(13, 24).every(item => selected.includes(Number(item)))
                                           ? (selected = '2nd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : range(25, 36).every(item => selected.includes(Number(item)))
-                                            ? (selected = '3rd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : oddType.split(')')[0] === 'Selector(color' ? (oddType = 'Sector(Colour)', selected = selected.split(' ').slice(0, -1).join(' ').split(', ').reverse().join(', ') + ' ' + selected.split(' ').pop()) : oddType === 'Neighbors' ? selected = selected.split(', ').join('/') : ''
+                                            ? (selected = '3rd 12 ' + ticket.selected.split(' ')[(ticket.selected.split(' ').length) - 1], oddType = 'Dozens') : oddType.split(')')[0] === 'Selector(color' ? oddType = 'Sector(Colour)' : oddType === 'Neighbors' ? selected = selected.split(', ').join('/') : ''
                     break;
                   case "DashingDerby":
                     gameParts[0] = "Horse Racing";
@@ -200,7 +200,7 @@ export const createBetSlipAndTicket =
                   case "SingleSeaterMotorRacing":
                     gameParts[0] = "SS Motor Racing";
                     break;
-                  case "Steeple Chase":
+                  case "SteepleChase":
                     gameParts[0] = "Steeple Chase Racing";
                     break;
                   case "HarnessRacing":
