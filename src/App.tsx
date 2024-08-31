@@ -84,15 +84,6 @@ function App() {
   }, [WhichGameSelected]);
 
   useEffect(() => {
-    dispatch(
-      getLastRacingGames(
-        "9c6d610d-33e9-4847-80ab-5e179833591e",
-        "SmartPlayKeno"
-      )
-    );
-  }, []);
-
-  useEffect(() => {
     if (
       gameData &&
       gameData.gameType === "SmartPlayKeno" &&
@@ -107,7 +98,7 @@ function App() {
         .sort((a, b) => {
           return moment(a.startTime).valueOf() - moment(b.startTime).valueOf();
         });
-      console.log("GamesFiltered", gamesFiltered);
+      console.log("GamesFiltered", gamesFiltered.length);
 
       if (gamesFiltered && gamesFiltered.length > 0) {
         setGame(gamesFiltered[0]);
@@ -178,11 +169,6 @@ function App() {
 
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
-    // dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno"));
-    //for stake
-    // if (remainingTime === 0) {
-    //   dispatch(getLastGame(user.user?.Cashier.shopId));
-    // }
   }, []);
 
   const checkStatus = async () => {
