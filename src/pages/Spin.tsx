@@ -26,10 +26,6 @@ function Spin() {
   const [lastCheck, setLastCheck] = useState(0);
 
   useEffect(() => {
-    // dispatch()
-    dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SpinAndWin"));
-  }, []);
-  useEffect(() => {
     console.log("GamesFiltered", gameData.gameType);
     if (
       gameData &&
@@ -49,8 +45,8 @@ function Spin() {
           );
           return moment(a.startTime).valueOf() - moment(b.startTime).valueOf();
         });
-      console.log("GamesFiltered", gamesFiltered);
-      if (gamesFiltered && gamesFiltered.length > 1) {
+      console.log("GamesFiltered", gamesFiltered.length);
+      if (gamesFiltered && gamesFiltered.length >= 1) {
         setGame(gamesFiltered[0]);
         setUpdate(false);
       } else {
@@ -112,7 +108,7 @@ function Spin() {
 
     return data2.Number;
   });
-  const gameState = useAppSelector(state => state.betData.data)
+  const gameState = useAppSelector((state) => state.betData.data);
 
   return (
     <div className="App mt-5">
@@ -124,7 +120,13 @@ function Spin() {
             <CircularUnderLoad />
           </div>
         ) : (
-          game && <Container gameid={game.id} gameidofback={gameState?.id} gameNumber={data} />
+          game && (
+            <Container
+              gameid={game.id}
+              gameidofback={gameState?.id}
+              gameNumber={data}
+            />
+          )
         )}
       </div>
     </div>
