@@ -236,83 +236,86 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      <div
-        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
-        style={{ scrollBehavior: "smooth" }}
-      >
+      {gameData && gameData.loading ? (
+        <div className="w-full h-fit mt-10 flex justify-center">
+          <CircularUnderLoad />
+        </div>
+      ) : (
         <div
-          className="left flex overflow-x-hidden flex-col"
-          style={{ width: "80%" }}
+          className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
+          style={{ scrollBehavior: "smooth" }}
         >
-          <GameIllustration WhichGame={handleIconSelect} />
-          {WhichGameSelected === "SmartPlayKeno" ? (
-            <>
-              {" "}
-              <div className="next-draw flex mt-4  ml-7">
-                {game && remainingTime > 0 ? (
+          <div
+            className="left flex overflow-x-hidden flex-col"
+            style={{ width: "80%" }}
+          >
+            <GameIllustration WhichGame={handleIconSelect} />
+            {WhichGameSelected === "SmartPlayKeno" ? (
+              <>
+                {" "}
+                <div className="next-draw flex mt-4  ml-7">
+                  {game && remainingTime > 0 ? (
+                    <div
+                      className=" font-bold text-md p-1 h-fit flex items-center"
+                      style={{
+                        backgroundColor: "#f00",
+                        borderTopLeftRadius: 4,
+                        borderBottomLeftRadius: 4,
+                        color: "white",
+                        opacity: 1,
+                      }}
+                    >
+                      NEXT DRAW{" "}
+                      <span
+                        className=" font-bold ml-2"
+                        style={{ color: "#ff0" }}
+                      >
+                        {formatTime(minutes, seconds)}
+                      </span>
+                    </div>
+                  ) : (
+                    <div
+                      className="bg-red-500 text-sm flex font-bold items-center"
+                      style={{
+                        borderTopLeftRadius: 4,
+                        borderBottomLeftRadius: 4,
+                        color: "white",
+                        opacity: 1,
+                      }}
+                    >
+                      NEXT DRAW{" "}
+                      <span className="font-bold text-amber-500 ml-4">
+                        {"00"}:{"00"}
+                      </span>
+                    </div>
+                  )}
                   <div
-                    className=" font-bold text-md p-1 h-fit flex items-center"
+                    className="text-md p-1 h-fit font-bold"
                     style={{
-                      backgroundColor: "#f00",
-                      borderTopLeftRadius: 4,
-                      borderBottomLeftRadius: 4,
+                      borderTopRightRadius: 4,
+                      borderBottomRightRadius: 4,
                       color: "white",
                       opacity: 1,
+                      backgroundColor: "rgba(22 163 74 )",
                     }}
                   >
-                    NEXT DRAW{" "}
-                    <span className=" font-bold ml-2" style={{ color: "#ff0" }}>
-                      {formatTime(minutes, seconds)}
+                    REPEAT{" "}
+                    <span className="text-black rounded-md bg-gray-400">
+                      <select onChange={handleRepeat}>
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                          return (
+                            <option
+                              key={index}
+                              className="bg-gray-500 text-white"
+                            >
+                              {item}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </span>
                   </div>
-                ) : (
-                  <div
-                    className="bg-red-500 text-sm flex font-bold items-center"
-                    style={{
-                      borderTopLeftRadius: 4,
-                      borderBottomLeftRadius: 4,
-                      color: "white",
-                      opacity: 1,
-                    }}
-                  >
-                    NEXT DRAW{" "}
-                    <span className="font-bold text-amber-500 ml-4">
-                      {"00"}:{"00"}
-                    </span>
-                  </div>
-                )}
-                <div
-                  className="text-md p-1 h-fit font-bold"
-                  style={{
-                    borderTopRightRadius: 4,
-                    borderBottomRightRadius: 4,
-                    color: "white",
-                    opacity: 1,
-                    backgroundColor: "rgba(22 163 74 )",
-                  }}
-                >
-                  REPEAT{" "}
-                  <span className="text-black rounded-md bg-gray-400">
-                    <select onChange={handleRepeat}>
-                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
-                        return (
-                          <option
-                            key={index}
-                            className="bg-gray-500 text-white"
-                          >
-                            {item}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </span>
                 </div>
-              </div>
-              {gameData && gameData.loading ? (
-                <div className="w-full h-fit mt-10 flex justify-center">
-                  <CircularUnderLoad />
-                </div>
-              ) : (
                 <div className="picker-container flex justify-stretch items-start ml-7">
                   <div className="picker-left basis-full">
                     <TicketSelector
@@ -349,16 +352,16 @@ function App() {
                     </div>
                   </div>
                 </div>
-              )}
-            </>
-          ) : WhichGameSelected === "SpinAndWin" ? (
-            <Spin />
-          ) : (
-            <HorseRun gameType={WhichGameSelected} />
-          )}
+              </>
+            ) : WhichGameSelected === "SpinAndWin" ? (
+              <Spin />
+            ) : (
+              <HorseRun gameType={WhichGameSelected} />
+            )}
+          </div>
+          <BetSlip />
         </div>
-        <BetSlip />
-      </div>
+      )}
     </div>
   );
 }
