@@ -93,7 +93,7 @@ function HorseRun({ gameType }: prop) {
         activeIndexprop={handleActiveIndex}
       />
       {gameData && gameData.loading ? (
-        <div className="w-full h-fit mt-10 flex justify-center">
+        <div className="w-3/4 h-fit mt-10 flex justify-center">
           <CircularUnderLoad />
         </div>
       ) : (

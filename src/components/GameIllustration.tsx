@@ -28,7 +28,14 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGame, setSelected] = useState(0);
   const [selectedGametext, setSelectedGame] = useState("");
-  const [isActive, setActive] = useState(0);
+  const [isActive, setActive] = useState(() => {
+    const setisActive = localStorage.getItem("isActive");
+    return setisActive !== null ? JSON.parse(setisActive) : 0;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("isActive", JSON.stringify(isActive));
+  }, [isActive]);
   const [isSelectedindex, setIndexSelected] = useState<number | null>(null);
   const dispatch = useAppDispatch();
   const toggleDropdown = () => {

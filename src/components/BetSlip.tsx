@@ -174,7 +174,8 @@ export default function BetSlip() {
         return;
       }
     }
-    if (betState.totalToWin > 900000) {
+    console.log("betState,", betState.totalToWin);
+    if (betState.totalToWin > 90000) {
       setBetError(
         "The stake on one or more of your bets is not within the allowed betting limits"
       );
