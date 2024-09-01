@@ -159,6 +159,7 @@ export const createBetSlipAndTicket =
             updateTicket.maxPayout = formatNumberWithCommas(
               parseFloat(updateTicket.maxPayout + "")
             );
+            updateTicket.stake = updateTicket.stake.toFixed(2);
             updateTicket.tickets.map((ticket) => {
               const gameParts = ticket.game.split(" "); // Split the string into parts
               const firstPart = gameParts[0];
