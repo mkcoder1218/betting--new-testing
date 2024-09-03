@@ -238,7 +238,7 @@ function App() {
       />
       {gameData && gameData.loading && (
         <div
-          className="w-full h-full bg-gray-100 absolute  flex justify-center"
+          className="w-full h-full bg-gray-100 z-20 absolute  flex justify-center"
           style={{ opacity: 0.5 }}
         >
           <CircularUnderLoad />
@@ -322,7 +322,11 @@ function App() {
                     gameType={WhichGameSelected}
                     gameData={game}
                   />
-                  <div className="number-picker mt-4 w-full">
+                  <div
+                    className={`${
+                      gameData.loading ? "hidden" : "visible"
+                    }number-picker mt-4 w-full`}
+                  >
                     <NumberPicker />
                   </div>
                 </div>
