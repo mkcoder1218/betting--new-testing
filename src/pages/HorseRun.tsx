@@ -92,12 +92,7 @@ function HorseRun({ gameType }: prop) {
         texts={texts}
         activeIndexprop={handleActiveIndex}
       />
-      {gameData && gameData.loading ? (
-        <div className="w-3/4 h-fit mt-10 flex justify-center">
-          <CircularUnderLoad />
-        </div>
-      ) : (
-        gameData &&
+      {gameData &&
         gameData.game &&
         gameData.game.map((game, index) => {
           const data: RootEventData = game.gameData;
@@ -119,8 +114,8 @@ function HorseRun({ gameType }: prop) {
               />
             </>
           );
-        })
-      )}
+        })}
+
       {}
     </div>
   );

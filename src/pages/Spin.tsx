@@ -115,18 +115,12 @@ function Spin() {
       <div className="parent-container mt-5">
         <Timer time={moment(remainingTime).format("mm:ss")} />
 
-        {gameData && gameData.loading ? (
-          <div className="w-full h-fit mt-10 flex justify-center">
-            <CircularUnderLoad />
-          </div>
-        ) : (
-          game && (
-            <Container
-              gameid={game.id}
-              gameidofback={gameState?.id}
-              gameNumber={data}
-            />
-          )
+        {game && (
+          <Container
+            gameid={game.id}
+            gameidofback={gameState?.id}
+            gameNumber={data}
+          />
         )}
       </div>
     </div>

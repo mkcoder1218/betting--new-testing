@@ -236,132 +236,129 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      {gameData && gameData.loading ? (
-        <div className="w-full h-fit mt-10 flex justify-center">
+      {gameData && gameData.loading && (
+        <div
+          className="w-full h-full bg-gray-100 absolute  flex justify-center"
+          style={{ opacity: 0.5 }}
+        >
           <CircularUnderLoad />
         </div>
-      ) : (
+      )}
+      <div
+        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
+        style={{ scrollBehavior: "smooth" }}
+      >
         <div
-          className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
-          style={{ scrollBehavior: "smooth" }}
+          className="left flex overflow-x-hidden flex-col"
+          style={{ width: "80%" }}
         >
-          <div
-            className="left flex overflow-x-hidden flex-col"
-            style={{ width: "80%" }}
-          >
-            <GameIllustration WhichGame={handleIconSelect} />
-            {WhichGameSelected === "SmartPlayKeno" ? (
-              <>
-                {" "}
-                <div className="next-draw flex mt-4  ml-7">
-                  {game && remainingTime > 0 ? (
-                    <div
-                      className=" font-bold text-md p-1 h-fit flex items-center"
-                      style={{
-                        backgroundColor: "#f00",
-                        borderTopLeftRadius: 4,
-                        borderBottomLeftRadius: 4,
-                        color: "white",
-                        opacity: 1,
-                      }}
-                    >
-                      NEXT DRAW{" "}
-                      <span
-                        className=" font-bold ml-2"
-                        style={{ color: "#ff0" }}
-                      >
-                        {formatTime(minutes, seconds)}
-                      </span>
-                    </div>
-                  ) : (
-                    <div
-                      className="bg-red-500 text-sm flex font-bold items-center"
-                      style={{
-                        borderTopLeftRadius: 4,
-                        borderBottomLeftRadius: 4,
-                        color: "white",
-                        opacity: 1,
-                      }}
-                    >
-                      NEXT DRAW{" "}
-                      <span className="font-bold text-amber-500 ml-4">
-                        {"00"}:{"00"}
-                      </span>
-                    </div>
-                  )}
+          <GameIllustration WhichGame={handleIconSelect} />
+          {WhichGameSelected === "SmartPlayKeno" ? (
+            <>
+              {" "}
+              <div className="next-draw flex mt-4  ml-7">
+                {game && remainingTime > 0 ? (
                   <div
-                    className="text-md p-1 h-fit font-bold"
+                    className=" font-bold text-md p-1 h-fit flex items-center"
                     style={{
-                      borderTopRightRadius: 4,
-                      borderBottomRightRadius: 4,
+                      backgroundColor: "#f00",
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
                       color: "white",
                       opacity: 1,
-                      backgroundColor: "rgba(22 163 74 )",
                     }}
                   >
-                    REPEAT{" "}
-                    <span className="text-black rounded-md bg-gray-400">
-                      <select onChange={handleRepeat}>
-                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
-                          return (
-                            <option
-                              key={index}
-                              className="bg-gray-500 text-white"
-                            >
-                              {item}
-                            </option>
-                          );
-                        })}
-                      </select>
+                    NEXT DRAW{" "}
+                    <span className=" font-bold ml-2" style={{ color: "#ff0" }}>
+                      {formatTime(minutes, seconds)}
                     </span>
                   </div>
-                </div>
-                <div className="picker-container flex justify-stretch items-start ml-7">
-                  <div className="picker-left basis-full">
-                    <TicketSelector
-                      gameType={WhichGameSelected}
-                      gameData={game}
-                    />
-                    <div className="number-picker mt-4 w-full">
-                      <NumberPicker />
-                    </div>
-                  </div>
+                ) : (
                   <div
-                    className="flex flex-col gap-4 items-start mt-2"
-                    style={{ flexBasis: "38%" }}
+                    className="bg-red-500 text-sm flex font-bold items-center"
+                    style={{
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      color: "white",
+                      opacity: 1,
+                    }}
                   >
-                    {game && (
-                      <TicketSlipHolder
-                        gameType={"SmartPlayKeno"}
-                        gameData={game}
-                        update={update}
-                      />
-                    )}
-                    <div
-                      className="w-4/5 speech left mt-20 max-lg:w-full"
-                      style={{
-                        visibility:
-                          ticketPicker.selected.length < 1
-                            ? "visible"
-                            : "hidden",
-                      }}
-                    >
-                      Pick 1 to 10 numbers from 80. Pick numbers which you think
-                      randomly will be selected. The more you pick the more you
-                      could win.
-                    </div>
+                    NEXT DRAW{" "}
+                    <span className="font-bold text-amber-500 ml-4">
+                      {"00"}:{"00"}
+                    </span>
+                  </div>
+                )}
+                <div
+                  className="text-md p-1 h-fit font-bold"
+                  style={{
+                    borderTopRightRadius: 4,
+                    borderBottomRightRadius: 4,
+                    color: "white",
+                    opacity: 1,
+                    backgroundColor: "rgba(22 163 74 )",
+                  }}
+                >
+                  REPEAT{" "}
+                  <span className="text-black rounded-md bg-gray-400">
+                    <select onChange={handleRepeat}>
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                        return (
+                          <option
+                            key={index}
+                            className="bg-gray-500 text-white"
+                          >
+                            {item}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </span>
+                </div>
+              </div>
+              <div className="picker-container flex justify-stretch items-start ml-7">
+                <div className="picker-left basis-full">
+                  <TicketSelector
+                    gameType={WhichGameSelected}
+                    gameData={game}
+                  />
+                  <div className="number-picker mt-4 w-full">
+                    <NumberPicker />
                   </div>
                 </div>
-              </>
-            ) : WhichGameSelected === "SpinAndWin" ? (
-              <Spin />
-            ) : (
-              <HorseRun gameType={WhichGameSelected} />
-            )}
-          </div>
-          <BetSlip />
+                <div
+                  className="flex flex-col gap-4 items-start mt-2"
+                  style={{ flexBasis: "38%" }}
+                >
+                  {game && (
+                    <TicketSlipHolder
+                      gameType={"SmartPlayKeno"}
+                      gameData={game}
+                      update={update}
+                    />
+                  )}
+                  <div
+                    className="w-4/5 speech left mt-20 max-lg:w-full"
+                    style={{
+                      visibility:
+                        ticketPicker.selected.length < 1 ? "visible" : "hidden",
+                    }}
+                  >
+                    Pick 1 to 10 numbers from 80. Pick numbers which you think
+                    randomly will be selected. The more you pick the more you
+                    could win.
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : WhichGameSelected === "SpinAndWin" ? (
+            <Spin />
+          ) : (
+            <HorseRun gameType={WhichGameSelected} />
+          )}
         </div>
-      )}
+        <BetSlip />
+      </div>
     </div>
   );
 }
