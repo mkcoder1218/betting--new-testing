@@ -8,33 +8,34 @@ import {
   GameData,
   getLastRacingGames,
   RootEventData,
-} from "../features/slices/RacingGameSlice";
+} from "../features/slices/RacingGameSliceMultipleSports";
 import CircularUnderLoad from "../components/svg/Loader";
 import moment from "moment";
 import { addExpiry } from "../features/slices/ticketExpiry";
 import { getLastBetSlip } from "../features/slices/betSlip";
-import { RootEventData } from "../features/slices/RacingGameSlice";
+import { RootEventData } from "../features/slices/RacingGameSliceMultipleSports";
 function Spin() {
   const [gameid, setgameId] = useState<RootEventData | null>(null);
 
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const gameData = useAppSelector((state) => state.racingGame);
+  const gameData = useAppSelector(
+    (state) => state.racingGame.gamesByType["SpinAndWin"]
+  );
   const [game, setGame] = useState<GameData>();
   const [update, setUpdate] = useState(true);
   const [remainingTime, setRemainingTime] = useState(0);
   const [lastCheck, setLastCheck] = useState(0);
 
   useEffect(() => {
-    console.log("GamesFiltered", gameData.gameType);
     if (
       gameData &&
-      gameData.game &&
-      gameData.gameType === "SpinAndWin" &&
+      gameData.games &&
+      // gameData.gameType === "SpinAndWin" &&
       update
     ) {
-      console.log("GamesFiltered", gameData.game?.length);
-      const gamesFiltered = gameData.game
+      console.log("GamesFiltered", gameData.games?.length);
+      const gamesFiltered = gameData.games
         .filter((gamedata) => {
           return moment(gamedata.startTime).diff(moment(), "seconds") > 0;
         })
@@ -103,11 +104,14 @@ function Spin() {
       // dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
-  const data = gameData.game?.map((game) => {
-    const data2: RootEventData = game.gameData;
+  const data =
+    gameData &&
+    gameData.games &&
+    gameData.games?.map((game) => {
+      const data2: RootEventData = game.gameData;
 
-    return data2.Number;
-  });
+      return data2.Number;
+    });
   const gameState = useAppSelector((state) => state.betData.data);
 
   return (

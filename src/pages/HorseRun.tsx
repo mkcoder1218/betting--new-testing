@@ -10,7 +10,7 @@ import { useAppSelector } from "../features/hooks";
 import {
   getLastRacingGames,
   RootEventData,
-} from "../features/slices/RacingGameSlice";
+} from "../features/slices/RacingGameSliceMultipleSports";
 import moment from "moment";
 import CircularUnderLoad from "../components/svg/Loader";
 import { setIsLive } from "../features/slices/gameType";
@@ -30,7 +30,9 @@ function HorseRun({ gameType }: prop) {
   const handleClickMenu = (text: string) => {
     setSelectedText(text);
   };
-  const gameData = useAppSelector((state) => state.racingGame);
+  const gameData = useAppSelector(
+    (state) => state.racingGame.gamesByType[gameType]
+  );
 
   const handleActiveIndex = (val: number) => {
     const text = texts[val];
@@ -39,15 +41,15 @@ function HorseRun({ gameType }: prop) {
   };
 
   useEffect(() => {
-    if (gameData && gameData.game) {
+    if (gameData && gameData.games) {
       let activeIndex: { index: number; millisecond: number }[] = [];
-      for (let index in gameData.game) {
+      for (let index in gameData.games) {
         if (
-          moment(gameData.game[index].startTime).diff(moment(), "seconds") > 0
+          moment(gameData.games[index].startTime).diff(moment(), "seconds") > 0
         ) {
           activeIndex.push({
             index: parseInt(index),
-            millisecond: moment(gameData.game[index].startTime).diff(
+            millisecond: moment(gameData.games[index].startTime).diff(
               moment(),
               "milliseconds"
             ),
@@ -93,8 +95,8 @@ function HorseRun({ gameType }: prop) {
         activeIndexprop={handleActiveIndex}
       />
       {gameData &&
-        gameData.game &&
-        gameData.game.map((game, index) => {
+        gameData.games &&
+        gameData.games.map((game, index) => {
           const data: RootEventData = game.gameData;
           if (activeIndex - 2 > 0 && index < activeIndex - 2) {
             return null;

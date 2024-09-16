@@ -10,7 +10,7 @@ import RedeemTicket from "./components/RedeemTicket";
 import BetSlip from "./components/BetSlip";
 import { useAppDispatch, useAppSelector } from "./features/hooks";
 import { getOdds } from "./features/slices/oddSlice";
-import { getLastGame } from "./features/slices/gameSlice";
+import { getLastGame } from "./features/slices/RacingGameSliceMultipleSports";
 import { getLastBetSlip } from "./features/slices/betSlip";
 import { addGameType } from "./features/slices/gameType";
 import { addExpiry } from "./features/slices/ticketExpiry";
@@ -33,7 +33,7 @@ import Formula1 from "./pages/Formula1";
 import {
   GameData,
   getLastRacingGames,
-} from "./features/slices/RacingGameSlice";
+} from "./features/slices/RacingGameSliceMultipleSports";
 import Spin from "./pages/Spin";
 import TestComponent from "./utils/Tst";
 import { useAxiosInterceptors } from "./config/interceptor";
@@ -74,24 +74,30 @@ function App() {
     } else {
       if (WhichGameSelected.length > 0)
         dispatch(addGameType(WhichGameSelected));
-      dispatch(
-        getLastRacingGames(
-          "9c6d610d-33e9-4847-80ab-5e179833591e",
-          WhichGameSelected
-        )
-      );
+      if (
+        !gameData.gamesByType[WhichGameSelected] ||
+        gameData.gamesByType[WhichGameSelected].games.length < 2
+      ) {
+        dispatch(
+          getLastRacingGames(
+            "9c6d610d-33e9-4847-80ab-5e179833591e",
+            WhichGameSelected
+          )
+        );
+      }
     }
   }, [WhichGameSelected]);
 
   useEffect(() => {
     if (
       gameData &&
-      gameData.gameType === "SmartPlayKeno" &&
-      gameData.game &&
+      WhichGameSelected === "SmartPlayKeno" &&
+      gameData.gamesByType[WhichGameSelected] &&
+      gameData.gamesByType[WhichGameSelected].games &&
       update
     ) {
       console.log("GamesFiltered", gameData);
-      const gamesFiltered = gameData.game
+      const gamesFiltered = gameData.gamesByType[WhichGameSelected].games
         ?.filter((gamedata) => {
           return moment(gamedata.startTime).diff(moment(), "seconds") > 0;
         })
@@ -236,14 +242,16 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      {gameData && gameData.loading && (
-        <div
-          className="w-full h-full bg-gray-100 z-20 absolute  flex justify-center"
-          style={{ opacity: 0.5 }}
-        >
-          <CircularUnderLoad />
-        </div>
-      )}
+      {gameData &&
+        (!gameData.gamesByType[WhichGameSelected] ||
+          gameData.gamesByType[WhichGameSelected].loading) && (
+          <div
+            className="w-full h-full bg-gray-100 z-20 absolute  flex justify-center"
+            style={{ opacity: 0.5 }}
+          >
+            <CircularUnderLoad />
+          </div>
+        )}
       <div
         className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
         style={{ scrollBehavior: "smooth" }}
