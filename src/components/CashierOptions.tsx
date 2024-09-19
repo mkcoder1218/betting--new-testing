@@ -199,7 +199,8 @@ export default function CashierOptions({
       getSummaryData(
         from?.toISOString(),
         to?.toISOString(),
-        userData.user?.Cashier.shopId
+        userData.user?.Cashier.shopId,
+        userData.user?.Cashier.id
       )
     );
   };

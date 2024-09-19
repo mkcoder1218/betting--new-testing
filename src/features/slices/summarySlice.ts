@@ -96,7 +96,8 @@ export const getSummaryData =
   (
     from: string | undefined,
     to: string | undefined,
-    cashierId: string | undefined
+    cashierId: string | undefined,
+    cashierIId: string | undefined
   ) =>
   async (
     dispatch: (arg0: {
@@ -123,7 +124,9 @@ export const getSummaryData =
             loading: false,
             error: null,
             message: summaryData.message,
-            data: summaryData.data,
+            data: summaryData.data.filter((value, index) => {
+              return value.cashierCreateId === cashierIId;
+            }),
           })
         );
       } else {
