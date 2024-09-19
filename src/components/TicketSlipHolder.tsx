@@ -71,7 +71,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
     // if (currentDate > ticketExpiry) {
     //   return;
     // }
-    console.log("gameData:", gameDataRacing);
+    console.log("gameData:", gameDataRacing, gameData);
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
         addToBetSlip({
@@ -84,7 +84,7 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
           gameType,
           stakeInformation: stakeInformation,
           oddType: "Win",
-          gameNumber: gameDataRacing.game[0].gameData.Number,
+          gameNumber: gameData.gameData.Number,
         })
       );
     }
