@@ -179,8 +179,8 @@ function App() {
 
   const checkStatus = async () => {
     const checkPrinter = await isPrinterUp();
-
-    setPrinterDialog(checkPrinter);
+    console.log("CHECKING_PRINTER", checkPrinter);
+    setPrinterDialog(!checkPrinter);
   };
 
   const logout = () => {
