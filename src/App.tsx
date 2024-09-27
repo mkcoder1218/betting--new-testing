@@ -227,7 +227,7 @@ function App() {
   return (
     <div className="bg-white fixed w-full h-full custom-scrollbar overflow-y-auto">
       <PrinterDialog
-        open={printerDialog}
+        open={false}
         handleClose={handlePrintDialogClose}
         logout={logout}
       />
