@@ -182,12 +182,13 @@ export default function BetSlip() {
       return;
     }
 
-    const checkPrinter = await isPrinterUp();
+    // const checkPrinter = await isPrinterUp();
+    // console.log("CHECKER", checkPrinter);
 
-    if (checkPrinter) {
-      setPrinterDialog(checkPrinter);
-      // return;
-    }
+    // if (checkPrinter) {
+    //   // setPrinterDialog(checkPrinter);
+    //   // return;
+    // }
 
     refreshBetSlipNumber();
 
