@@ -168,7 +168,7 @@ function transformData(data) {
   // Iterate over tickets and add ticket information
   data.tickets.forEach((ticket) => {
     lineItems.push({
-      LineItem: ticket.oddType,
+      LineItem: ticket.oddType.charAt(0).toUpperCase() + ticket.oddType.slice(1).toLowerCase(),
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
@@ -201,7 +201,7 @@ function transformData(data) {
     });
 
     lineItems.push({
-      LineItem: ticket.gameType === 'Keno' && ticket.gameType === "Spin And Win" ? ticket.selected : ticket.selected.split(' ')[0] + '. ' + ticket.playerName + ticket.selected.split(' ')[1],
+      LineItem: '    ' + ticket.gameType === 'Keno' && ticket.gameType === "Spin And Win" ? ticket.selected : ticket.selected.split(' ')[0] + '. ' + ticket.playerName + ' ' + ticket.selected.split(' ')[1],
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
