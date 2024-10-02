@@ -235,7 +235,7 @@ export const printSummaryToBackend = async (data: any) => {
 };
 const ResultData = (data) => {
   const listItems = []
-  console.log('datain', data)
+  console.log('datain', data.gameTime)
   listItems.push({
     LineItem: data.shopName,
     FontName: "Arial",
@@ -397,13 +397,13 @@ const ResultData = (data) => {
       Underline: false
     },
     {
-      LineItem: data.gameTime.toString(),
+      LineItem: data.gameTime,
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
       Italic: false,
-      Alignment: 2,
-      NewLine: false,
+      Alignment: 0,
+      NewLine: true,
       PartOfHeader: false,
       PrintDoubleBlock: false,
       RowsInDoubleBlock: 2,
