@@ -158,6 +158,22 @@ function transformData(data) {
   // Iterate over tickets and add ticket information
   data.tickets.forEach((ticket) => {
     lineItems.push({
+      LineItem: ticket.oddType,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    })
+    lineItems.push({
       LineItem: ticket.game,
       FontName: "Arial",
       FontSize: 8,
@@ -239,22 +255,7 @@ function transformData(data) {
         Underline: false
       })
     // Add stake information
-    lineItems.push({
-      LineItem: "Stake",
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: true,
-      Italic: false,
-      Alignment: 0,
-      NewLine: true,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    });
+
 
     lineItems.push({
       LineItem: `Br ${ticket.stake}`,
@@ -273,7 +274,37 @@ function transformData(data) {
       Underline: false
     });
   });
-
+  lineItems.push({
+    LineItem: "Total Stake",
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: true,
+    Italic: false,
+    Alignment: 0,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false
+  }, {
+    LineItem: data.maxWin,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: true,
+    Italic: false,
+    Alignment: 2,
+    NewLine: false,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false
+  })
   // Add payout information
   lineItems.push({
     LineItem: "Min Payout (Incl. Stake)",
