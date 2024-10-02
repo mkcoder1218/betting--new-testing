@@ -190,7 +190,54 @@ function transformData(data) {
       ImageFileType: null,
       Underline: false
     });
-
+    lineItems.push({
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+      {
+        LineItem: null,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false
+      },
+      {
+        LineItem: null,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false
+      })
     // Add stake information
     lineItems.push({
       LineItem: "Stake",
@@ -353,172 +400,172 @@ export const createBetSlipAndTicket =
             if (betSlipResponse.data) {
 
 
-              // let updateTicket: TicketInterface = betSlipResponse.data;
-              // const { evens, odds } = generateEvenAndOddArrays(1, 36);
-              // updateTicket.minPayout = formatNumberWithCommas(
-              //   parseFloat(updateTicket.minPayout + "")
-              // );
-              // updateTicket.maxPayout = formatNumberWithCommas(
-              //   parseFloat(updateTicket.maxPayout + "")
-              // );
-              // updateTicket.stake = updateTicket.stake.toFixed(2);
-              // updateTicket.tickets.map((ticket) => {
-              //   const gameParts = ticket.game.split(" "); // Split the string into parts
-              //   const firstPart = gameParts[0];
-              //   let selected = ticket.selected;
-              //   let oddType = ticket.oddType;
+              let updateTicket: TicketInterface = betSlipResponse.data;
+              const { evens, odds } = generateEvenAndOddArrays(1, 36);
+              updateTicket.minPayout = formatNumberWithCommas(
+                parseFloat(updateTicket.minPayout + "")
+              );
+              updateTicket.maxPayout = formatNumberWithCommas(
+                parseFloat(updateTicket.maxPayout + "")
+              );
+              updateTicket.stake = updateTicket.stake.toFixed(2);
+              updateTicket.tickets.map((ticket) => {
+                const gameParts = ticket.game.split(" "); // Split the string into parts
+                const firstPart = gameParts[0];
+                let selected = ticket.selected;
+                let oddType = ticket.oddType;
 
-              //   switch (firstPart) {
-              //     case "SpeedSkating":
-              //       gameParts[0] = "Speed Skating";
-              //       break;
-              //     case "SpinAndWin":
-              //       gameParts[0] = "Spin And Win";
-              //       console.log(selected);
-              //       ColumnMap.col1.every((item) =>
-              //         selected.includes(Number(item))
-              //       )
-              //         ? ((selected =
-              //             "col1 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Column"))
-              //         : ColumnMap.col2.every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "col2 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Column"))
-              //         : ColumnMap.col3.every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "col3 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Column"))
-              //         : MapRedAndBlack.Black.every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "Black " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Color"))
-              //         : MapRedAndBlack.Red.every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "Red " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Color"))
-              //         : range(1, 18).every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "1-18 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "High/Low"))
-              //         : range(19, 36).every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "19-36 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "High/Low"))
-              //         : evens.every((item) => selected.includes(Number(item)))
-              //         ? ((selected =
-              //             "Even " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Odd/Even"))
-              //         : odds.every((item) => selected.includes(Number(item)))
-              //         ? ((selected =
-              //             "Odd " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Odd/Even"))
-              //         : range(1, 12).every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "1st 12 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Dozens"))
-              //         : range(13, 24).every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "2nd 12 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Dozens"))
-              //         : range(25, 36).every((item) =>
-              //             selected.includes(Number(item))
-              //           )
-              //         ? ((selected =
-              //             "3rd 12 " +
-              //             ticket.selected.split(" ")[
-              //               ticket.selected.split(" ").length - 1
-              //             ]),
-              //           (oddType = "Dozens"))
-              //         : oddType.split(")")[0] === "Selector(color"
-              //         ? (oddType = "Sector(Colour)")
-              //         : oddType === "Neighbors"
-              //         ? (selected = selected.split(", ").join("/"))
-              //         : "";
-              //       break;
-              //     case "DashingDerby":
-              //       gameParts[0] = "Horse Racing";
-              //       break;
-              //     case "MotorRacing":
-              //       gameParts[0] = "Motor Racing";
-              //       break;
-              //     case "PlatinumHounds":
-              //       gameParts[0] = "GrayHound Racing";
-              //       break;
-              //     case "CycleRacing":
-              //       gameParts[0] = "Track Racing";
-              //       break;
-              //     case "PreRecRealDogs":
-              //       gameParts[0] = "GreyHound RACING";
-              //       break;
-              //     case "SingleSeaterMotorRacing":
-              //       gameParts[0] = "SS Motor Racing";
-              //       break;
-              //     case "SteepleChase":
-              //       gameParts[0] = "Steeple Chase Racing";
-              //       break;
-              //     case "HarnessRacing":
-              //       gameParts[0] = "Harness Racing";
-              //       break;
-              //     default:
-              //       gameParts[0] = "Keno";
-              //   }
-              //   ticket.game = gameParts.join(" ");
-              //   ticket.selected = selected;
-              //   ticket.oddType = oddType;
-              // });
+                switch (firstPart) {
+                  case "SpeedSkating":
+                    gameParts[0] = "Speed Skating";
+                    break;
+                  case "SpinAndWin":
+                    gameParts[0] = "Spin And Win";
+                    console.log(selected);
+                    ColumnMap.col1.every((item) =>
+                      selected.includes(Number(item))
+                    )
+                      ? ((selected =
+                        "col1 " +
+                        ticket.selected.split(" ")[
+                        ticket.selected.split(" ").length - 1
+                        ]),
+                        (oddType = "Column"))
+                      : ColumnMap.col2.every((item) =>
+                        selected.includes(Number(item))
+                      )
+                        ? ((selected =
+                          "col2 " +
+                          ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                          ]),
+                          (oddType = "Column"))
+                        : ColumnMap.col3.every((item) =>
+                          selected.includes(Number(item))
+                        )
+                          ? ((selected =
+                            "col3 " +
+                            ticket.selected.split(" ")[
+                            ticket.selected.split(" ").length - 1
+                            ]),
+                            (oddType = "Column"))
+                          : MapRedAndBlack.Black.every((item) =>
+                            selected.includes(Number(item))
+                          )
+                            ? ((selected =
+                              "Black " +
+                              ticket.selected.split(" ")[
+                              ticket.selected.split(" ").length - 1
+                              ]),
+                              (oddType = "Color"))
+                            : MapRedAndBlack.Red.every((item) =>
+                              selected.includes(Number(item))
+                            )
+                              ? ((selected =
+                                "Red " +
+                                ticket.selected.split(" ")[
+                                ticket.selected.split(" ").length - 1
+                                ]),
+                                (oddType = "Color"))
+                              : range(1, 18).every((item) =>
+                                selected.includes(Number(item))
+                              )
+                                ? ((selected =
+                                  "1-18 " +
+                                  ticket.selected.split(" ")[
+                                  ticket.selected.split(" ").length - 1
+                                  ]),
+                                  (oddType = "High/Low"))
+                                : range(19, 36).every((item) =>
+                                  selected.includes(Number(item))
+                                )
+                                  ? ((selected =
+                                    "19-36 " +
+                                    ticket.selected.split(" ")[
+                                    ticket.selected.split(" ").length - 1
+                                    ]),
+                                    (oddType = "High/Low"))
+                                  : evens.every((item) => selected.includes(Number(item)))
+                                    ? ((selected =
+                                      "Even " +
+                                      ticket.selected.split(" ")[
+                                      ticket.selected.split(" ").length - 1
+                                      ]),
+                                      (oddType = "Odd/Even"))
+                                    : odds.every((item) => selected.includes(Number(item)))
+                                      ? ((selected =
+                                        "Odd " +
+                                        ticket.selected.split(" ")[
+                                        ticket.selected.split(" ").length - 1
+                                        ]),
+                                        (oddType = "Odd/Even"))
+                                      : range(1, 12).every((item) =>
+                                        selected.includes(Number(item))
+                                      )
+                                        ? ((selected =
+                                          "1st 12 " +
+                                          ticket.selected.split(" ")[
+                                          ticket.selected.split(" ").length - 1
+                                          ]),
+                                          (oddType = "Dozens"))
+                                        : range(13, 24).every((item) =>
+                                          selected.includes(Number(item))
+                                        )
+                                          ? ((selected =
+                                            "2nd 12 " +
+                                            ticket.selected.split(" ")[
+                                            ticket.selected.split(" ").length - 1
+                                            ]),
+                                            (oddType = "Dozens"))
+                                          : range(25, 36).every((item) =>
+                                            selected.includes(Number(item))
+                                          )
+                                            ? ((selected =
+                                              "3rd 12 " +
+                                              ticket.selected.split(" ")[
+                                              ticket.selected.split(" ").length - 1
+                                              ]),
+                                              (oddType = "Dozens"))
+                                            : oddType.split(")")[0] === "Selector(color"
+                                              ? (oddType = "Sector(Colour)")
+                                              : oddType === "Neighbors"
+                                                ? (selected = selected.split(", ").join("/"))
+                                                : "";
+                    break;
+                  case "DashingDerby":
+                    gameParts[0] = "Horse Racing";
+                    break;
+                  case "MotorRacing":
+                    gameParts[0] = "Motor Racing";
+                    break;
+                  case "PlatinumHounds":
+                    gameParts[0] = "GrayHound Racing";
+                    break;
+                  case "CycleRacing":
+                    gameParts[0] = "Track Racing";
+                    break;
+                  case "PreRecRealDogs":
+                    gameParts[0] = "GreyHound RACING";
+                    break;
+                  case "SingleSeaterMotorRacing":
+                    gameParts[0] = "SS Motor Racing";
+                    break;
+                  case "SteepleChase":
+                    gameParts[0] = "Steeple Chase Racing";
+                    break;
+                  case "HarnessRacing":
+                    gameParts[0] = "Harness Racing";
+                    break;
+                  default:
+                    gameParts[0] = "Keno";
+                }
+                ticket.game = gameParts.join(" ");
+                ticket.selected = selected;
+                ticket.oddType = oddType;
+              });
               const printResponse = await axios.post(
                 "http://localhost:8080/PRINT",
-                transformData(betSlipResponse.data)
+                transformData(updateTicket)
               );
             }
           } catch (err) {
