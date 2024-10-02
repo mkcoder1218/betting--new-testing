@@ -235,7 +235,7 @@ export const printSummaryToBackend = async (data: any) => {
 };
 const ResultData = (data) => {
   const listItems = []
-
+  console.log('datain', data)
   listItems.push({
     LineItem: data.shopName,
     FontName: "Arial",
@@ -428,7 +428,7 @@ const ResultData = (data) => {
       ImageFileType: null,
       Underline: false
     })
-  data.result.map(result => {
+  data.Game !== 'Keno' && data.Game !== 'Spin And Win' ? data.result.map(result => {
     listItems.push({
       LineItem: result,
       FontName: "Arial",
@@ -445,6 +445,21 @@ const ResultData = (data) => {
       ImageFileType: null,
       Underline: false
     })
+  }) : listItems.push({
+    LineItem: data.result,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 0,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false
   })
   listItems.push({
     LineItem: null,
