@@ -365,7 +365,7 @@ const ResultData = (data) => {
       Underline: false
     },
     {
-      LineItem: data.eventId,
+      LineItem: data.eventId.toString(),
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
@@ -445,6 +445,8 @@ const ResultData = (data) => {
       ImageFileType: null,
       Underline: false
     })
+
+
   }) : listItems.push({
     LineItem: data.result,
     FontName: "Arial",
@@ -461,6 +463,24 @@ const ResultData = (data) => {
     ImageFileType: null,
     Underline: false
   })
+  data.Market.length > 0 ? data.Market.map(data => {
+    listItems.push({
+      LineItem: data,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    })
+  }) : ''
   listItems.push({
     LineItem: null,
     FontName: "Arial",
