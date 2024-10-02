@@ -397,7 +397,7 @@ const ResultData = (data) => {
       Underline: false
     },
     {
-      LineItem: data.gameTime,
+      LineItem: data.gameTime.toString(),
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
@@ -471,7 +471,7 @@ const ResultData = (data) => {
       Bold: false,
       Italic: false,
       Alignment: 0,
-      NewLine: true,
+      NewLine: false,
       PartOfHeader: false,
       PrintDoubleBlock: false,
       RowsInDoubleBlock: 2,
