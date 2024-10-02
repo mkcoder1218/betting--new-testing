@@ -577,25 +577,11 @@ function transformData(data) {
       ImageFileType: null,
       Underline: false
     },
-    {
-      LineItem: "This bet was placed via SKB",
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: false,
-      Italic: false,
-      Alignment: 0,
-      NewLine: true,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    }
+
   )
   return {
-    Content: lineItems
+    Content: lineItems,
+    PrintWatermark: data.isCopy,
   };
 }
 export const createBetSlipAndTicket =
