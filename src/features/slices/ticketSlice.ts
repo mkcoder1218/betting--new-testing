@@ -215,7 +215,7 @@ function transformData(data) {
       ImageFileType: null,
       Underline: false
     }, {
-      LineItem: `Br ${formatNumber(ticket.stake)}`,
+      LineItem: `Br ${formatNumber(parseInt(ticket.stake))}`,
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
@@ -332,7 +332,7 @@ function transformData(data) {
     ImageFileType: null,
     Underline: false
   }, {
-    LineItem: data.stake,
+    LineItem: "Br " + data.stake,
     FontName: "Arial",
     FontSize: 8,
     Bold: true,
@@ -613,7 +613,7 @@ function transformData(data) {
   )
   return {
     Content: lineItems,
-    PrintWatermark: data.isCopy,
+    PrintWatermark: data.isCopy === false ? false : true,
   };
 }
 export const printSelectedTickets = async (req: any) => {
