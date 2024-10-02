@@ -201,7 +201,7 @@ function transformData(data) {
     });
 
     lineItems.push({
-      LineItem: ticket.game.split(' ')[0] === 'Keno' || ticket.game.split(' ')[0] === "Spin And Win" ? '    ' + ticket.selected : '    ' + ticket.selected.split(' ')[0] + '. ' + ticket.playerName + ' ' + ticket.selected.split(' ')[1],
+      LineItem: ticket.game.split(' ')[0] === 'Keno' || ticket.game.split(' ')[0] === "Spin" ? '    ' + ticket.selected : '    ' + ticket.selected.split(' ')[0] + '. ' + ticket.playerName + ' ' + ticket.selected.split(' ')[1],
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
