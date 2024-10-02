@@ -184,7 +184,7 @@ function transformData(data) {
       Underline: false
     })
     lineItems.push({
-      LineItem: ticket.gameType === 'Keno' && ticket.gameType === "Spin And Win" ? ticket.game : ticket.game + '. ' + ticket.nameOfplayer,
+      LineItem: ticket.game,
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
@@ -201,7 +201,7 @@ function transformData(data) {
     });
 
     lineItems.push({
-      LineItem: ticket.selected,
+      LineItem: ticket.gameType === 'Keno' && ticket.gameType === "Spin And Win" ? ticket.selected : ticket.selected.split(' ')[0] + '. ' + ticket.playerName + ticket.selected.split(' ')[1],
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
