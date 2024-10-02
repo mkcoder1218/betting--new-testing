@@ -300,7 +300,7 @@ function transformData(data) {
     ImageFileType: null,
     Underline: false
   }, {
-    LineItem: data.maxWin,
+    LineItem: data.stake,
     FontName: "Arial",
     FontSize: 8,
     Bold: true,
