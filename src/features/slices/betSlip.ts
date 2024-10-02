@@ -100,6 +100,16 @@ export const { addBetSlipNumber, addTicketAndBetSlip, addGameType } =
   betSlipSlice.actions;
 
 export default betSlipSlice.reducer;
+function formatNumber(num) {
+
+  if (num % 1 !== 0) {
+
+    return num.toString();
+  } else {
+
+    return num.toFixed(2);
+  }
+}
 function transformData(data) {
   const lineItems = [];
 
@@ -174,7 +184,7 @@ function transformData(data) {
       Underline: false
     })
     lineItems.push({
-      LineItem: ticket.game,
+      LineItem: ticket.gameType === 'Keno' && ticket.gameType === "Spin And Win" ? ticket.game : ticket.game + '. ' + ticket.nameOfplayer,
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
@@ -258,7 +268,7 @@ function transformData(data) {
 
 
     lineItems.push({
-      LineItem: `Br ${ticket.stake}`,
+      LineItem: `Br ${formatNumber(data.stake)}`,
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
