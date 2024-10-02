@@ -482,7 +482,7 @@ const ResultData = (data) => {
 export const printResultToBackend = async (data: any) => {
   try {
     const callPrinterWithData = await axios.post(
-      "http://127.0.0.1:5002/PrintResult",
+      "http://localhost:8080/PRINT",
       ResultData(data)
     );
   } catch (err) {
