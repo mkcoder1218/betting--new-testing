@@ -233,7 +233,11 @@ export const printSummaryToBackend = async (data: any) => {
     console.log(err);
   }
 };
+
 const ResultData = (data) => {
+  const map = data.Game !== 'Keno' && data.Game !== 'Spin And Win' && data.Market.length > 0 ? data.Market.map(data => {
+    return (data)
+  }) : ''
   const listItems = []
   console.log('datain', data)
   listItems.push({
@@ -463,9 +467,7 @@ const ResultData = (data) => {
     ImageFileType: null,
     Underline: false
   })
-  const map = data.Game !== 'Keno' && data.Game !== 'Spin And Win' && data.Market.length > 0 ? data.Market.map(data => {
-    return (data)
-  }) : ''
+
   listItems.push({
     LineItem: map,
     FontName: "Arial",
