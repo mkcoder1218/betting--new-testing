@@ -182,6 +182,21 @@ function transformData(data) {
       IsTerms: false,
       ImageFileType: null,
       Underline: false
+    }, {
+      LineItem: `Br ${formatNumber(ticket.stake)}`,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
     })
     lineItems.push({
       LineItem: ticket.game,
@@ -267,22 +282,7 @@ function transformData(data) {
     // Add stake information
 
 
-    lineItems.push({
-      LineItem: `Br ${formatNumber(ticket.stake)}`,
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: true,
-      Italic: false,
-      Alignment: 2,
-      NewLine: false,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    });
+
   });
   lineItems.push({
     LineItem: "Total Stake",
