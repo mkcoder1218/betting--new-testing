@@ -63,6 +63,7 @@ function App() {
   useAxiosInterceptors();
   const handlePrintDialogClose = () => {
     setPrinterDialog(true);
+    logout();
   };
 
   function handleRepeat(event: React.ChangeEvent<HTMLSelectElement>) {
