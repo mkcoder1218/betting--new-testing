@@ -268,7 +268,7 @@ function transformData(data) {
 
 
     lineItems.push({
-      LineItem: `Br ${formatNumber(data.stake)}`,
+      LineItem: `Br ${formatNumber(ticket.stake)}`,
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
