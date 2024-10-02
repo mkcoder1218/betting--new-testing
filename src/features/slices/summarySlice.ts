@@ -493,6 +493,9 @@ const ResultData = (data) => {
       ImageFileType: null,
       Underline: false
     })
+  return {
+    Content: listItems,
+  };
 }
 export const printResultToBackend = async (data: any) => {
   try {
