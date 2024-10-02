@@ -463,24 +463,25 @@ const ResultData = (data) => {
     ImageFileType: null,
     Underline: false
   })
-  data.Market.length > 0 ? data.Market.map(data => {
-    listItems.push({
-      LineItem: data,
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: false,
-      Italic: false,
-      Alignment: 0,
-      NewLine: false,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    })
+  const map = data.Game !== 'Keno' && data.Game !== 'Spin And Win' && data.Market.length > 0 ? data.Market.map(data => {
+    return (data)
   }) : ''
+  listItems.push({
+    LineItem: map,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 0,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false
+  })
   listItems.push({
     LineItem: null,
     FontName: "Arial",
