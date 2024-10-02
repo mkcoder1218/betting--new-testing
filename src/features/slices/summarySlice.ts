@@ -99,60 +99,60 @@ export const getSummaryData =
     cashierId: string | undefined,
     cashierIId: string | undefined
   ) =>
-  async (
-    dispatch: (arg0: {
-      payload: SummaryState;
-      type: "summary/addSummary";
-    }) => void
-  ) => {
-    dispatch(
-      addSummary({ loading: true, error: null, message: null, data: null })
-    );
+    async (
+      dispatch: (arg0: {
+        payload: SummaryState;
+        type: "summary/addSummary";
+      }) => void
+    ) => {
+      dispatch(
+        addSummary({ loading: true, error: null, message: null, data: null })
+      );
 
-    try {
-      const summaryData: Response = (
-        await axiosInstance.post("ticket/summary", {
-          from: from,
-          to: to,
-          cashierId: cashierId,
-        })
-      ).data;
-
-      if (summaryData.message === "success") {
-        dispatch(
-          addSummary({
-            loading: false,
-            error: null,
-            message: summaryData.message,
-            data: summaryData.data.filter((value, index) => {
-              return value.cashierCreateId === cashierIId;
-            }),
+      try {
+        const summaryData: Response = (
+          await axiosInstance.post("ticket/summary", {
+            from: from,
+            to: to,
+            cashierId: cashierId,
           })
-        );
-      } else {
+        ).data;
+
+        if (summaryData.message === "success") {
+          dispatch(
+            addSummary({
+              loading: false,
+              error: null,
+              message: summaryData.message,
+              data: summaryData.data.filter((value, index) => {
+                return value.cashierCreateId === cashierIId;
+              }),
+            })
+          );
+        } else {
+          dispatch(
+            addSummary({
+              loading: false,
+              error: summaryData.error,
+              message: null,
+              data: null,
+            })
+          );
+        }
+      } catch (err: AxiosError | any) {
         dispatch(
           addSummary({
+            message: "",
+            error:
+              typeof err?.response?.data?.error === "string"
+                ? err.response.data.error
+                : "Something went wrong",
             loading: false,
-            error: summaryData.error,
-            message: null,
             data: null,
           })
         );
       }
-    } catch (err: AxiosError | any) {
-      dispatch(
-        addSummary({
-          message: "",
-          error:
-            typeof err?.response?.data?.error === "string"
-              ? err.response.data.error
-              : "Something went wrong",
-          loading: false,
-          data: null,
-        })
-      );
-    }
-  };
+    };
 export const getEventResult =
   (
     from: string | undefined,
@@ -160,64 +160,64 @@ export const getEventResult =
     gameNumber: string | undefined,
     shopId: string | undefined
   ) =>
-  async (
-    dispatch: (arg0: {
-      payload: GameAPIResult;
-      type: "summary/udpateGameResult";
-    }) => void
-  ) => {
-    dispatch(
-      udpateGameResult({
-        loading: true,
-        error: null,
-        message: null,
-        data: null,
-      })
-    );
-
-    try {
-      const summaryData: GameAPIResult = (
-        await axiosInstance.post("/game/gameData", {
-          from: from,
-          to: to,
-          gameNumber: gameNumber,
-          shopId: shopId,
+    async (
+      dispatch: (arg0: {
+        payload: GameAPIResult;
+        type: "summary/udpateGameResult";
+      }) => void
+    ) => {
+      dispatch(
+        udpateGameResult({
+          loading: true,
+          error: null,
+          message: null,
+          data: null,
         })
-      ).data;
+      );
 
-      if (summaryData.message === "success") {
-        dispatch(
-          udpateGameResult({
-            loading: false,
-            error: null,
-            message: summaryData.message,
-            data: summaryData.data,
+      try {
+        const summaryData: GameAPIResult = (
+          await axiosInstance.post("/game/gameData", {
+            from: from,
+            to: to,
+            gameNumber: gameNumber,
+            shopId: shopId,
           })
-        );
-      } else {
+        ).data;
+
+        if (summaryData.message === "success") {
+          dispatch(
+            udpateGameResult({
+              loading: false,
+              error: null,
+              message: summaryData.message,
+              data: summaryData.data,
+            })
+          );
+        } else {
+          dispatch(
+            udpateGameResult({
+              loading: false,
+              error: summaryData.error,
+              message: null,
+              data: null,
+            })
+          );
+        }
+      } catch (err: AxiosError | any) {
         dispatch(
           udpateGameResult({
+            message: "",
+            error:
+              typeof err?.response?.data?.error === "string"
+                ? err.response.data.error
+                : "Something went wrong",
             loading: false,
-            error: summaryData.error,
-            message: null,
             data: null,
           })
         );
       }
-    } catch (err: AxiosError | any) {
-      dispatch(
-        udpateGameResult({
-          message: "",
-          error:
-            typeof err?.response?.data?.error === "string"
-              ? err.response.data.error
-              : "Something went wrong",
-          loading: false,
-          data: null,
-        })
-      );
-    }
-  };
+    };
 
 export const printSummaryToBackend = async (data: any) => {
   try {
@@ -233,12 +233,257 @@ export const printSummaryToBackend = async (data: any) => {
     console.log(err);
   }
 };
+const ResultData = (data) => {
+  const listItems = []
 
+  listItems.push({
+    LineItem: data.shopName,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 2,
+    NewLine: true,
+    PartOfHeader: true,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false
+  },
+    {
+      LineItem: data.cashierName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: data.formattedTime,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: "Event Result",
+      FontName: "Arial",
+      FontSize: 9,
+      Bold: true,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: "Game",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: data.Game,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: "Event ID",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: data.eventId,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: "Time",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: data.gameTime,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    })
+  data.result.map(result => {
+    listItems.push({
+      LineItem: result,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    })
+  })
+  listItems.push({
+    LineItem: null,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 0,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false
+  },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false
+    })
+}
 export const printResultToBackend = async (data: any) => {
   try {
     const callPrinterWithData = await axios.post(
       "http://127.0.0.1:5002/PrintResult",
-      data
+      ResultData(data)
     );
   } catch (err) {
     console.log(err);
