@@ -190,9 +190,10 @@ export const getTicketsToRedeem =
     };
 const cancelPrint = (data) => {
   const lists = []
-  console.log('datatoprint', data)
+
   const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
   const currentTime = moment().format('HH:mm:ss');
+  console.log('datatoprint', data)
   lists.push({
     LineItem: data.shopName,
     FontName: "Arial",
@@ -353,6 +354,9 @@ const cancelPrint = (data) => {
       ImageFileType: null,
       Underline: false
     })
+  return {
+    Content: lists,
+  };
 }
 export const cancelTicket =
   (
