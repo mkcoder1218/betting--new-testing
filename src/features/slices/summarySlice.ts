@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
 import { updateBetSlipItem } from "./pickerSlice";
+import moment from "moment";
 
 export interface CashierData {
   cashierCreateId: string;
@@ -221,6 +222,8 @@ export const getEventResult =
 const SummeryData = (data) => {
   const listItems = []
   console.log('datain', data)
+  const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
   listItems.push({
     LineItem: data.shopName,
     FontName: "Arial",
@@ -254,7 +257,7 @@ const SummeryData = (data) => {
       Underline: false
     },
     {
-      LineItem: "2024/10/02 17:06:23",
+      LineItem: currentDateTime,
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
