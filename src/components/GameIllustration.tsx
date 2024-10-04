@@ -64,18 +64,17 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-8",
     },
     {
-      icon: <DogVideo isGreen={isActive === 1} />,
-      text1: "PreRecRealDogs",
-      text2: "PLATINUM HOUNDS",
-      text3: "greyHOund Racing",
-      width: "w-8",
+      icon: <CircleDraw />,
+      text1: "SpinAndWin",
+      text2: "SPIN AND WIN",
+      width: "w-1",
     },
     {
-      icon: <Bicycle />,
-      text1: "CycleRacing",
-      text2: "SLIP STREAM",
-      text3: "Track Racing",
-      width: "w-12",
+      icon: <F1 />,
+      text1: "SingleSeaterMotorRacing",
+      text2: "Drive",
+      text3: "SS motor Racing",
+      width: "w-8",
     },
     {
       icon: <HorseJump />,
@@ -85,24 +84,33 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-12",
     },
     {
-      icon: <CircleDraw />,
-      text1: "SpinAndWin",
-      text2: "SPIN AND WIN",
-      width: "w-1",
+      icon: <Garri />,
+      text1: "HarnessRacing",
+      text2: "CHARGING CHARIOTS",
+      width: "w-12",
     },
+    // {
+    //   icon: <DogVideo isGreen={isActive === 1} />,
+    //   text1: "PreRecRealDogs",
+    //   text2: "PLATINUM HOUNDS",
+    //   text3: "greyHOund Racing",
+    //   width: "w-8",
+    // },
+    {
+      icon: <Bicycle />,
+      text1: "CycleRacing",
+      text2: "SLIP STREAM",
+      text3: "Track Racing",
+      width: "w-12",
+    },
+
     {
       icon: <Hockey isGreen={isActive === 5} />,
       text1: "SpeedSkating",
       text2: "",
       width: "w-8",
     },
-    {
-      icon: <F1 />,
-      text1: "SingleSeaterMotorRacing",
-      text2: "Drive",
-      text3: "SS motor Racing",
-      width: "w-8",
-    },
+
     {
       icon: <CarRacing />,
       text1: "MotorRacing",
@@ -116,12 +124,6 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
       width: "w-10",
     },
 
-    {
-      icon: <Garri />,
-      text1: "HarnessRacing",
-      text2: "CHARGING CHARIOTS",
-      width: "w-12",
-    },
     {
       icon: <Jaguar />,
       text1: "PlatinumHounds",
