@@ -101,18 +101,15 @@ export const { addBetSlipNumber, addTicketAndBetSlip, addGameType } =
 
 export default betSlipSlice.reducer;
 function formatNumber(num) {
-
   if (num % 1 !== 0) {
-
     return num.toString();
   } else {
-
     return num.toFixed(2);
   }
 }
 function transformData(data) {
   const lineItems = [];
-  console.log('daada', data)
+  console.log("daada", data);
   // Add header information
   lineItems.push({
     LineItem: data.betSlipNumber,
@@ -128,7 +125,7 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
 
   lineItems.push({
@@ -145,7 +142,7 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
 
   lineItems.push({
@@ -162,42 +159,47 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
 
   // Iterate over tickets and add ticket information
   data.tickets.forEach((ticket) => {
-    lineItems.push({
-      LineItem: ticket.oddType.charAt(0).toUpperCase() + ticket.oddType.slice(1).toLowerCase(),
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: true,
-      Italic: false,
-      Alignment: 0,
-      NewLine: true,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    }, {
-      LineItem: `Br ${formatNumber(ticket.stake)}`,
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: true,
-      Italic: false,
-      Alignment: 2,
-      NewLine: false,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    })
+    lineItems.push(
+      {
+        LineItem:
+          ticket.oddType.charAt(0).toUpperCase() +
+          ticket.oddType.slice(1).toLowerCase(),
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: true,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      },
+      {
+        LineItem: `Br ${formatNumber(ticket.stake)}`,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: true,
+        Italic: false,
+        Alignment: 2,
+        NewLine: false,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      }
+    );
     lineItems.push({
       LineItem: ticket.game,
       FontName: "Arial",
@@ -212,11 +214,20 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     });
 
     lineItems.push({
-      LineItem: ticket.game.split(' ')[0] === 'Keno' || ticket.game.split(' ')[0] === "Spin" ? '    ' + ticket.selected : '    ' + ticket.selected.split(' ')[0] + '. ' + ticket.playerName + ' ' + ticket.selected.split(' ')[1],
+      LineItem:
+        ticket.game.split(" ")[0] === "Keno" ||
+        ticket.game.split(" ")[0] === "Spin"
+          ? "    " + ticket.selected
+          : "    " +
+            ticket.selected.split(" ")[0] +
+            ". " +
+            ticket.playerName +
+            " " +
+            ticket.selected.split(" ")[1],
       FontName: "Arial",
       FontSize: 8,
       Bold: false,
@@ -229,24 +240,9 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     });
-    lineItems.push({
-      LineItem: null,
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: false,
-      Italic: false,
-      Alignment: 0,
-      NewLine: true,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    },
+    lineItems.push(
       {
         LineItem: null,
         FontName: "Arial",
@@ -261,7 +257,7 @@ function transformData(data) {
         IsImage: false,
         IsTerms: false,
         ImageFileType: null,
-        Underline: false
+        Underline: false,
       },
       {
         LineItem: null,
@@ -277,44 +273,61 @@ function transformData(data) {
         IsImage: false,
         IsTerms: false,
         ImageFileType: null,
-        Underline: false
-      })
+        Underline: false,
+      },
+      {
+        LineItem: null,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      }
+    );
     // Add stake information
-
-
-
   });
-  lineItems.push({
-    LineItem: "Total Stake",
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: true,
-    Italic: false,
-    Alignment: 0,
-    NewLine: true,
-    PartOfHeader: false,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  }, {
-    LineItem: data.stake,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: true,
-    Italic: false,
-    Alignment: 2,
-    NewLine: false,
-    PartOfHeader: false,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  })
+  lineItems.push(
+    {
+      LineItem: "Total Stake",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.stake,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
   // Add payout information
   lineItems.push({
     LineItem: "Min Payout (Incl. Stake)",
@@ -330,7 +343,7 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
 
   lineItems.push({
@@ -347,7 +360,7 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
 
   lineItems.push({
@@ -364,7 +377,7 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
 
   lineItems.push({
@@ -381,24 +394,9 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
+    Underline: false,
   });
-  lineItems.push({
-    LineItem: null,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 0,
-    NewLine: true,
-    PartOfHeader: false,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+  lineItems.push(
     {
       LineItem: null,
       FontName: "Arial",
@@ -413,7 +411,7 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -429,7 +427,7 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -445,9 +443,25 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
     }
-  )
+  );
   lineItems.push({
     LineItem: `*${data.betSlipNumber}*`,
     FontName: "BetManBarcode",
@@ -462,25 +476,9 @@ function transformData(data) {
     IsImage: false,
     IsTerms: false,
     ImageFileType: null,
-    Underline: false
-  }
-  )
-  lineItems.push({
-    LineItem: null,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 0,
-    NewLine: true,
-    PartOfHeader: false,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+    Underline: false,
+  });
+  lineItems.push(
     {
       LineItem: null,
       FontName: "Arial",
@@ -495,7 +493,23 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
     },
     {
       LineItem: "N/A",
@@ -511,7 +525,7 @@ function transformData(data) {
       IsImage: false,
       IsTerms: true,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -527,7 +541,7 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: ".",
@@ -543,7 +557,7 @@ function transformData(data) {
       IsImage: false,
       IsTerms: true,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -559,7 +573,7 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -575,10 +589,9 @@ function transformData(data) {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
-    },
-
-  )
+      Underline: false,
+    }
+  );
   return {
     Content: lineItems,
     PrintWatermark: data.isCopy,
@@ -593,297 +606,294 @@ export const createBetSlipAndTicket =
     clearNumberSelection: () => void,
     removebetsucess
   ) =>
-    async (
-      dispatch: (arg0: {
-        payload: BetSlipState<BetSlip>;
-        type: "betSlip/addTicketAndBetSlip";
-      }) => void
-    ) => {
-      dispatch(
-        addTicketAndBetSlip({
-          loading: true,
-          error: null,
-          message: null,
-          data: null,
-        })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState<BetSlip>;
+      type: "betSlip/addTicketAndBetSlip";
+    }) => void
+  ) => {
+    dispatch(
+      addTicketAndBetSlip({
+        loading: true,
+        error: null,
+        message: null,
+        data: null,
+      })
+    );
 
-      try {
-        const betSlipResponse: BetSlipResponse<ToPrint> = (
-          await axiosInstance.post("ticket/betslip", data)
-        ).data;
+    try {
+      const betSlipResponse: BetSlipResponse<ToPrint> = (
+        await axiosInstance.post("ticket/betslip", data)
+      ).data;
 
-        if (betSlipResponse.message === "betslip added successfully") {
-          dispatch(
-            addTicketAndBetSlip({
-              loading: false,
-              error: null,
-              message: betSlipResponse.message,
-              data: null,
-            })
-          );
-          refreshBetSlipNumber();
-          toggleStatus(true);
-
-          clearSlip();
-
-          setTimeout(() => {
-            toggleStatus(false);
-            clearNumberSelection();
-          }, 500);
-
-          try {
-
-            if (betSlipResponse.data) {
-
-
-              let updateTicket: TicketInterface = betSlipResponse.data;
-              const { evens, odds } = generateEvenAndOddArrays(1, 36);
-              updateTicket.minPayout = formatNumberWithCommas(
-                parseFloat(updateTicket.minPayout + "")
-              );
-              updateTicket.maxPayout = formatNumberWithCommas(
-                parseFloat(updateTicket.maxPayout + "")
-              );
-              updateTicket.stake = updateTicket.stake.toFixed(2);
-              updateTicket.tickets.map((ticket) => {
-                const gameParts = ticket.game.split(" "); // Split the string into parts
-                const firstPart = gameParts[0];
-                let selected = ticket.selected;
-                let oddType = ticket.oddType;
-
-                switch (firstPart) {
-                  case "SpeedSkating":
-                    gameParts[0] = "Speed Skating";
-                    break;
-                  case "SpinAndWin":
-                    gameParts[0] = "Spin And Win";
-                    console.log(selected);
-                    ColumnMap.col1.every((item) =>
-                      selected.includes(Number(item))
-                    )
-                      ? ((selected =
-                        "col1 " +
-                        ticket.selected.split(" ")[
-                        ticket.selected.split(" ").length - 1
-                        ]),
-                        (oddType = "Column"))
-                      : ColumnMap.col2.every((item) =>
-                        selected.includes(Number(item))
-                      )
-                        ? ((selected =
-                          "col2 " +
-                          ticket.selected.split(" ")[
-                          ticket.selected.split(" ").length - 1
-                          ]),
-                          (oddType = "Column"))
-                        : ColumnMap.col3.every((item) =>
-                          selected.includes(Number(item))
-                        )
-                          ? ((selected =
-                            "col3 " +
-                            ticket.selected.split(" ")[
-                            ticket.selected.split(" ").length - 1
-                            ]),
-                            (oddType = "Column"))
-                          : MapRedAndBlack.Black.every((item) =>
-                            selected.includes(Number(item))
-                          )
-                            ? ((selected =
-                              "Black " +
-                              ticket.selected.split(" ")[
-                              ticket.selected.split(" ").length - 1
-                              ]),
-                              (oddType = "Color"))
-                            : MapRedAndBlack.Red.every((item) =>
-                              selected.includes(Number(item))
-                            )
-                              ? ((selected =
-                                "Red " +
-                                ticket.selected.split(" ")[
-                                ticket.selected.split(" ").length - 1
-                                ]),
-                                (oddType = "Color"))
-                              : range(1, 18).every((item) =>
-                                selected.includes(Number(item))
-                              )
-                                ? ((selected =
-                                  "1-18 " +
-                                  ticket.selected.split(" ")[
-                                  ticket.selected.split(" ").length - 1
-                                  ]),
-                                  (oddType = "High/Low"))
-                                : range(19, 36).every((item) =>
-                                  selected.includes(Number(item))
-                                )
-                                  ? ((selected =
-                                    "19-36 " +
-                                    ticket.selected.split(" ")[
-                                    ticket.selected.split(" ").length - 1
-                                    ]),
-                                    (oddType = "High/Low"))
-                                  : evens.every((item) => selected.includes(Number(item)))
-                                    ? ((selected =
-                                      "Even " +
-                                      ticket.selected.split(" ")[
-                                      ticket.selected.split(" ").length - 1
-                                      ]),
-                                      (oddType = "Odd/Even"))
-                                    : odds.every((item) => selected.includes(Number(item)))
-                                      ? ((selected =
-                                        "Odd " +
-                                        ticket.selected.split(" ")[
-                                        ticket.selected.split(" ").length - 1
-                                        ]),
-                                        (oddType = "Odd/Even"))
-                                      : range(1, 12).every((item) =>
-                                        selected.includes(Number(item))
-                                      )
-                                        ? ((selected =
-                                          "1st 12 " +
-                                          ticket.selected.split(" ")[
-                                          ticket.selected.split(" ").length - 1
-                                          ]),
-                                          (oddType = "Dozens"))
-                                        : range(13, 24).every((item) =>
-                                          selected.includes(Number(item))
-                                        )
-                                          ? ((selected =
-                                            "2nd 12 " +
-                                            ticket.selected.split(" ")[
-                                            ticket.selected.split(" ").length - 1
-                                            ]),
-                                            (oddType = "Dozens"))
-                                          : range(25, 36).every((item) =>
-                                            selected.includes(Number(item))
-                                          )
-                                            ? ((selected =
-                                              "3rd 12 " +
-                                              ticket.selected.split(" ")[
-                                              ticket.selected.split(" ").length - 1
-                                              ]),
-                                              (oddType = "Dozens"))
-                                            : oddType.split(")")[0] === "Selector(color"
-                                              ? (oddType = "Sector(Colour)")
-                                              : oddType === "Neighbors"
-                                                ? (selected = selected.split(", ").join("/"))
-                                                : "";
-                    break;
-                  case "DashingDerby":
-                    gameParts[0] = "Horse Racing";
-                    break;
-                  case "MotorRacing":
-                    gameParts[0] = "Motor Racing";
-                    break;
-                  case "PlatinumHounds":
-                    gameParts[0] = "GrayHound Racing";
-                    break;
-                  case "CycleRacing":
-                    gameParts[0] = "Track Racing";
-                    break;
-                  case "PreRecRealDogs":
-                    gameParts[0] = "GreyHound RACING";
-                    break;
-                  case "SingleSeaterMotorRacing":
-                    gameParts[0] = "SS Motor Racing";
-                    break;
-                  case "SteepleChase":
-                    gameParts[0] = "Steeple Chase Racing";
-                    break;
-                  case "HarnessRacing":
-                    gameParts[0] = "Harness Racing";
-                    break;
-                  default:
-                    gameParts[0] = "Keno";
-                }
-                ticket.game = gameParts.join(" ");
-                ticket.selected = selected;
-                ticket.oddType = oddType;
-              });
-              const printResponse = await axios.post(
-                "http://localhost:8080/PRINT",
-                transformData(updateTicket)
-              );
-            }
-          } catch (err) {
-            console.log("print failed");
-          }
-        } else {
-          toggleStatus(true);
-          dispatch(
-            addTicketAndBetSlip({
-              loading: false,
-              error: betSlipResponse.error,
-              message: null,
-              data: null,
-            })
-          );
-        }
-      } catch (err: AxiosError | any) {
+      if (betSlipResponse.message === "betslip added successfully") {
         dispatch(
           addTicketAndBetSlip({
-            message: "",
-            error: err?.response?.data
-              ? err.response.data.error
-              : "Something went wrong",
             loading: false,
+            error: null,
+            message: betSlipResponse.message,
+            data: null,
+          })
+        );
+        refreshBetSlipNumber();
+        toggleStatus(true);
+
+        clearSlip();
+
+        setTimeout(() => {
+          toggleStatus(false);
+          clearNumberSelection();
+        }, 500);
+
+        try {
+          if (betSlipResponse.data) {
+            let updateTicket: TicketInterface = betSlipResponse.data;
+            const { evens, odds } = generateEvenAndOddArrays(1, 36);
+            updateTicket.minPayout = formatNumberWithCommas(
+              parseFloat(updateTicket.minPayout + "")
+            );
+            updateTicket.maxPayout = formatNumberWithCommas(
+              parseFloat(updateTicket.maxPayout + "")
+            );
+            updateTicket.stake = updateTicket.stake.toFixed(2);
+            updateTicket.tickets.map((ticket) => {
+              const gameParts = ticket.game.split(" "); // Split the string into parts
+              const firstPart = gameParts[0];
+              let selected = ticket.selected;
+              let oddType = ticket.oddType;
+
+              switch (firstPart) {
+                case "SpeedSkating":
+                  gameParts[0] = "Speed Skating";
+                  break;
+                case "SpinAndWin":
+                  gameParts[0] = "Spin And Win";
+                  console.log(selected);
+                  ColumnMap.col1.every((item) =>
+                    selected.includes(Number(item))
+                  )
+                    ? ((selected =
+                        "col1 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Column"))
+                    : ColumnMap.col2.every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "col2 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Column"))
+                    : ColumnMap.col3.every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "col3 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Column"))
+                    : MapRedAndBlack.Black.every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "Black " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Color"))
+                    : MapRedAndBlack.Red.every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "Red " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Color"))
+                    : range(1, 18).every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "1-18 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "High/Low"))
+                    : range(19, 36).every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "19-36 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "High/Low"))
+                    : evens.every((item) => selected.includes(Number(item)))
+                    ? ((selected =
+                        "Even " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Odd/Even"))
+                    : odds.every((item) => selected.includes(Number(item)))
+                    ? ((selected =
+                        "Odd " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Odd/Even"))
+                    : range(1, 12).every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "1st 12 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Dozens"))
+                    : range(13, 24).every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "2nd 12 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Dozens"))
+                    : range(25, 36).every((item) =>
+                        selected.includes(Number(item))
+                      )
+                    ? ((selected =
+                        "3rd 12 " +
+                        ticket.selected.split(" ")[
+                          ticket.selected.split(" ").length - 1
+                        ]),
+                      (oddType = "Dozens"))
+                    : oddType.split(")")[0] === "Selector(color"
+                    ? (oddType = "Sector(Colour)")
+                    : oddType === "Neighbors"
+                    ? (selected = selected.split(", ").join("/"))
+                    : "";
+                  break;
+                case "DashingDerby":
+                  gameParts[0] = "Horse Racing";
+                  break;
+                case "MotorRacing":
+                  gameParts[0] = "Motor Racing";
+                  break;
+                case "PlatinumHounds":
+                  gameParts[0] = "GrayHound Racing";
+                  break;
+                case "CycleRacing":
+                  gameParts[0] = "Track Racing";
+                  break;
+                case "PreRecRealDogs":
+                  gameParts[0] = "GreyHound RACING";
+                  break;
+                case "SingleSeaterMotorRacing":
+                  gameParts[0] = "SS Motor Racing";
+                  break;
+                case "SteepleChase":
+                  gameParts[0] = "Steeple Chase Racing";
+                  break;
+                case "HarnessRacing":
+                  gameParts[0] = "Harness Racing";
+                  break;
+                default:
+                  gameParts[0] = "Keno";
+              }
+              ticket.game = gameParts.join(" ");
+              ticket.selected = selected;
+              ticket.oddType = oddType;
+            });
+            const printResponse = await axios.post(
+              "http://localhost:8080/PRINT/",
+              transformData(updateTicket)
+            );
+          }
+        } catch (err) {
+          console.log("print failed");
+        }
+      } else {
+        toggleStatus(true);
+        dispatch(
+          addTicketAndBetSlip({
+            loading: false,
+            error: betSlipResponse.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addTicketAndBetSlip({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 
 export const getLastBetSlip =
   () =>
-    async (
-      dispatch: (arg0: {
-        payload: BetSlipState<BetSlipData>;
-        type: "betSlip/addBetSlipNumber";
-      }) => void
-    ) => {
-      dispatch(
-        addBetSlipNumber({
-          loading: true,
-          error: null,
-          data: null,
-          message: null,
-        })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState<BetSlipData>;
+      type: "betSlip/addBetSlipNumber";
+    }) => void
+  ) => {
+    dispatch(
+      addBetSlipNumber({
+        loading: true,
+        error: null,
+        data: null,
+        message: null,
+      })
+    );
 
-      try {
-        const lastSlipResponse: BetSlipResponse<BetSlipData> = (
-          await axiosInstance.get("ticket/lastSlip")
-        ).data;
+    try {
+      const lastSlipResponse: BetSlipResponse<BetSlipData> = (
+        await axiosInstance.get("ticket/lastSlip")
+      ).data;
 
-        if (lastSlipResponse.message === "success") {
-          dispatch(
-            addBetSlipNumber({
-              loading: false,
-              error: null,
-              data: lastSlipResponse.data,
-              message: lastSlipResponse.message,
-            })
-          );
-        } else {
-          dispatch(
-            addBetSlipNumber({
-              loading: false,
-              error: lastSlipResponse.error,
-              data: null,
-              message: null,
-            })
-          );
-        }
-      } catch (err: AxiosError | any) {
+      if (lastSlipResponse.message === "success") {
         dispatch(
           addBetSlipNumber({
-            message: "",
-            error: err?.response?.data
-              ? err.response.data.error
-              : "Something went wrong",
             loading: false,
+            error: null,
+            data: lastSlipResponse.data,
+            message: lastSlipResponse.message,
+          })
+        );
+      } else {
+        dispatch(
+          addBetSlipNumber({
+            loading: false,
+            error: lastSlipResponse.error,
             data: null,
+            message: null,
           })
         );
       }
-    };
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addBetSlipNumber({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };

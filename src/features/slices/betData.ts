@@ -91,125 +91,126 @@ export default betDataSlice.reducer;
 
 export const getTicketsToCancel =
   (betslip: number | undefined) =>
-    async (
-      dispatch: (arg0: {
-        payload: BetSlipState;
-        type: "betSlip/addBetData";
-      }) => void
-    ) => {
-      dispatch(
-        addBetData({ loading: true, error: null, message: null, data: null })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState;
+      type: "betSlip/addBetData";
+    }) => void
+  ) => {
+    dispatch(
+      addBetData({ loading: true, error: null, message: null, data: null })
+    );
 
-      try {
-        const ticketsToCancel: BetSlipResponse = (
-          await axiosInstance.get(`ticket/betslip/byNumber/toCancel/${betslip}`)
-        ).data;
+    try {
+      const ticketsToCancel: BetSlipResponse = (
+        await axiosInstance.get(`ticket/betslip/byNumber/toCancel/${betslip}`)
+      ).data;
 
-        if (ticketsToCancel.message === "success") {
-          dispatch(
-            addBetData({
-              loading: false,
-              error: null,
-              message: ticketsToCancel.message,
-              data: ticketsToCancel.data as BetSlip,
-            })
-          );
-        } else {
-          dispatch(
-            addBetData({
-              loading: true,
-              error: ticketsToCancel.error,
-              message: null,
-              data: null,
-            })
-          );
-        }
-      } catch (err: AxiosError | any) {
+      if (ticketsToCancel.message === "success") {
         dispatch(
           addBetData({
-            message: "",
-            error: err?.response?.data
-              ? err.response.data.error
-              : "Something went wrong",
             loading: false,
+            error: null,
+            message: ticketsToCancel.message,
+            data: ticketsToCancel.data as BetSlip,
+          })
+        );
+      } else {
+        dispatch(
+          addBetData({
+            loading: true,
+            error: ticketsToCancel.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addBetData({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 
 export const getTicketsToRedeem =
   (betslip: number | undefined) =>
-    async (
-      dispatch: (arg0: {
-        payload: BetSlipState;
-        type: "betSlip/addBetData";
-      }) => void
-    ) => {
-      dispatch(
-        addBetData({ loading: true, error: null, message: null, data: null })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState;
+      type: "betSlip/addBetData";
+    }) => void
+  ) => {
+    dispatch(
+      addBetData({ loading: true, error: null, message: null, data: null })
+    );
 
-      try {
-        const ticketsToCancel: BetSlipResponse = (
-          await axiosInstance.get(`ticket/betslip/byNumber/toRedeem/${betslip}`)
-        ).data;
+    try {
+      const ticketsToCancel: BetSlipResponse = (
+        await axiosInstance.get(`ticket/betslip/byNumber/toRedeem/${betslip}`)
+      ).data;
 
-        if (ticketsToCancel.message === "success") {
-          dispatch(
-            addBetData({
-              loading: false,
-              error: null,
-              message: ticketsToCancel.message,
-              data: ticketsToCancel.data as BetSlip,
-            })
-          );
-        } else {
-          dispatch(
-            addBetData({
-              loading: true,
-              error: ticketsToCancel.error,
-              message: null,
-              data: null,
-            })
-          );
-        }
-      } catch (err: AxiosError | any) {
+      if (ticketsToCancel.message === "success") {
         dispatch(
           addBetData({
-            message: "",
-            error: err?.response?.data
-              ? err.response.data.error
-              : "Something went wrong",
             loading: false,
+            error: null,
+            message: ticketsToCancel.message,
+            data: ticketsToCancel.data as BetSlip,
+          })
+        );
+      } else {
+        dispatch(
+          addBetData({
+            loading: true,
+            error: ticketsToCancel.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addBetData({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 const cancelPrint = (data) => {
-  const lists = []
+  const lists = [];
 
-  const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
-  const currentTime = moment().format('HH:mm:ss');
-  console.log('datatoprint', data)
-  lists.push({
-    LineItem: data.shopName,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 2,
-    NewLine: true,
-    PartOfHeader: true,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+  const currentDateTime = moment().format("YYYY/MM/DD HH:mm:ss");
+  const currentTime = moment().format("HH:mm:ss");
+  console.log("datatoprint", data);
+  lists.push(
+    {
+      LineItem: data.shopName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
     {
       LineItem: data.cashierName,
       FontName: "Arial",
@@ -224,7 +225,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: currentDateTime,
@@ -240,7 +241,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Cancel Receipt",
@@ -256,7 +257,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.betSlipNumber,
@@ -272,7 +273,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -288,7 +289,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Cancelled Amount:",
@@ -304,7 +305,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.cancelledAmount,
@@ -320,7 +321,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Cancelled Time:",
@@ -336,7 +337,7 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: currentTime,
@@ -352,106 +353,108 @@ const cancelPrint = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
-    })
+      Underline: false,
+    }
+  );
   return {
     Content: lists,
   };
-}
+};
 export const cancelTicket =
   (
     gamenumber: number | undefined,
     betslip: number | undefined,
     cashierCreateId: string | undefined
   ) =>
-    async (
-      dispatch: (arg0: {
-        payload: BetSlipState;
-        type: "betSlip/addBetData";
-      }) => void
-    ) => {
-      dispatch(
-        addBetData({ loading: true, error: null, message: null, data: null })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState;
+      type: "betSlip/addBetData";
+    }) => void
+  ) => {
+    dispatch(
+      addBetData({ loading: true, error: null, message: null, data: null })
+    );
 
-      try {
-        const cancelTicketResponse = (
-          await axiosInstance.put("ticket/cancel", {
-            gamenumber,
-            betslip,
-            cashierCreateId,
-          })
-        ).data;
+    try {
+      const cancelTicketResponse = (
+        await axiosInstance.put("ticket/cancel", {
+          gamenumber,
+          betslip,
+          cashierCreateId,
+        })
+      ).data;
 
-        if (cancelTicketResponse.message === "Bet cancelled successfully") {
-          try {
-            const printCancelRes = await axios.post(
-              "http://localhost:8080/PRINT",
-              cancelPrint(cancelTicketResponse.data)
-            );
-          } catch (err) {
-            console.log(err);
-          }
-
-          dispatch(
-            addBetData({
-              loading: false,
-              error: null,
-              message: "Ticket cancelled successfully",
-              data: null,
-            })
+      if (cancelTicketResponse.message === "Bet cancelled successfully") {
+        try {
+          const printCancelRes = await axios.post(
+            "http://localhost:8080/PRINT/",
+            cancelPrint(cancelTicketResponse.data)
           );
-        } else {
-          dispatch(
-            addBetData({
-              loading: true,
-              error: cancelTicketResponse.error,
-              message: null,
-              data: null,
-            })
-          );
+        } catch (err) {
+          console.log(err);
         }
 
-        setTimeout(() => {
-          dispatch(
-            addBetData({ loading: false, error: null, message: null, data: null })
-          );
-        }, 2000);
-      } catch (err: AxiosError | any) {
         dispatch(
           addBetData({
-            message: "",
-            error: err?.response?.data
-              ? err.response.data.error
-              : "Something went wrong",
             loading: false,
+            error: null,
+            message: "Ticket cancelled successfully",
+            data: null,
+          })
+        );
+      } else {
+        dispatch(
+          addBetData({
+            loading: true,
+            error: cancelTicketResponse.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+
+      setTimeout(() => {
+        dispatch(
+          addBetData({ loading: false, error: null, message: null, data: null })
+        );
+      }, 2000);
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addBetData({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 
 const printReedem = (data) => {
-  const lists = []
-  console.log('DataTransfer', data)
-  const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
-  const currentTime = moment().format('HH:mm:ss');
-  lists.push({
-    LineItem: data.shopName,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 2,
-    NewLine: true,
-    PartOfHeader: true,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+  const lists = [];
+  console.log("DataTransfer", data);
+  const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
+  const currentTime = moment().format("HH:mm:ss");
+  lists.push(
+    {
+      LineItem: data.shopName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
     {
       LineItem: data.cashierName,
       FontName: "Arial",
@@ -466,7 +469,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: currentDateTime,
@@ -482,7 +485,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Redeem Receipt",
@@ -498,7 +501,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.betSlipNumber,
@@ -514,7 +517,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -530,7 +533,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Redeemed Amount:",
@@ -546,7 +549,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.redeemedAmount,
@@ -562,7 +565,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Redeemed Time:",
@@ -578,7 +581,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: currentTime,
@@ -594,7 +597,7 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -610,10 +613,13 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
-      LineItem: parseFloat(data.redeemedAmount) > 0 ? "Winning Ticket" : "Not a Winning Ticket",
+      LineItem:
+        parseFloat(data.redeemedAmount) > 0
+          ? "Winning Ticket"
+          : "Not a Winning Ticket",
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
@@ -626,74 +632,74 @@ const printReedem = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     }
-  )
+  );
   return {
     Content: lists,
   };
-}
+};
 export const redeemTicket =
   (cashierRedeemId: string | undefined, betslip: number | undefined) =>
-    async (
-      dispatch: (arg0: {
-        payload: BetSlipState;
-        type: "betSlip/addBetData";
-      }) => void
-    ) => {
-      dispatch(
-        addBetData({ loading: true, error: null, message: null, data: null })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: BetSlipState;
+      type: "betSlip/addBetData";
+    }) => void
+  ) => {
+    dispatch(
+      addBetData({ loading: true, error: null, message: null, data: null })
+    );
 
-      try {
-        const redeemTicketResposne = (
-          await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
-        ).data;
+    try {
+      const redeemTicketResposne = (
+        await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
+      ).data;
 
-        if (redeemTicketResposne.message === "Ticket redeemed successfully") {
-          try {
-            await axios.post(
-              "http://localhost:8080/PRINT",
-              printReedem(redeemTicketResposne.data)
-            );
-          } catch (err) {
-            console.log(err);
-          }
-
-          dispatch(
-            addBetData({
-              loading: false,
-              error: null,
-              message: "Ticket redeemed successfully",
-              data: null,
-            })
+      if (redeemTicketResposne.message === "Ticket redeemed successfully") {
+        try {
+          await axios.post(
+            "http://localhost:8080/PRINT/",
+            printReedem(redeemTicketResposne.data)
           );
-        } else {
-          dispatch(
-            addBetData({
-              loading: true,
-              error: redeemTicketResposne.error,
-              message: null,
-              data: null,
-            })
-          );
+        } catch (err) {
+          console.log(err);
         }
 
-        setTimeout(() => {
-          dispatch(
-            addBetData({ loading: false, error: null, message: null, data: null })
-          );
-        }, 2000);
-      } catch (err: AxiosError | any) {
         dispatch(
           addBetData({
-            message: "",
-            error: err?.response?.data
-              ? err.response.data.error
-              : "Something went wrong",
             loading: false,
+            error: null,
+            message: "Ticket redeemed successfully",
+            data: null,
+          })
+        );
+      } else {
+        dispatch(
+          addBetData({
+            loading: true,
+            error: redeemTicketResposne.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+
+      setTimeout(() => {
+        dispatch(
+          addBetData({ loading: false, error: null, message: null, data: null })
+        );
+      }, 2000);
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addBetData({
+          message: "",
+          error: err?.response?.data
+            ? err.response.data.error
+            : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };

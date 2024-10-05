@@ -100,60 +100,60 @@ export const getSummaryData =
     cashierId: string | undefined,
     cashierIId: string | undefined
   ) =>
-    async (
-      dispatch: (arg0: {
-        payload: SummaryState;
-        type: "summary/addSummary";
-      }) => void
-    ) => {
-      dispatch(
-        addSummary({ loading: true, error: null, message: null, data: null })
-      );
+  async (
+    dispatch: (arg0: {
+      payload: SummaryState;
+      type: "summary/addSummary";
+    }) => void
+  ) => {
+    dispatch(
+      addSummary({ loading: true, error: null, message: null, data: null })
+    );
 
-      try {
-        const summaryData: Response = (
-          await axiosInstance.post("ticket/summary", {
-            from: from,
-            to: to,
-            cashierId: cashierId,
-          })
-        ).data;
+    try {
+      const summaryData: Response = (
+        await axiosInstance.post("ticket/summary", {
+          from: from,
+          to: to,
+          cashierId: cashierId,
+        })
+      ).data;
 
-        if (summaryData.message === "success") {
-          dispatch(
-            addSummary({
-              loading: false,
-              error: null,
-              message: summaryData.message,
-              data: summaryData.data.filter((value, index) => {
-                return value.cashierCreateId === cashierIId;
-              }),
-            })
-          );
-        } else {
-          dispatch(
-            addSummary({
-              loading: false,
-              error: summaryData.error,
-              message: null,
-              data: null,
-            })
-          );
-        }
-      } catch (err: AxiosError | any) {
+      if (summaryData.message === "success") {
         dispatch(
           addSummary({
-            message: "",
-            error:
-              typeof err?.response?.data?.error === "string"
-                ? err.response.data.error
-                : "Something went wrong",
             loading: false,
+            error: null,
+            message: summaryData.message,
+            data: summaryData.data.filter((value, index) => {
+              return value.cashierCreateId === cashierIId;
+            }),
+          })
+        );
+      } else {
+        dispatch(
+          addSummary({
+            loading: false,
+            error: summaryData.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+    } catch (err: AxiosError | any) {
+      dispatch(
+        addSummary({
+          message: "",
+          error:
+            typeof err?.response?.data?.error === "string"
+              ? err.response.data.error
+              : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 export const getEventResult =
   (
     from: string | undefined,
@@ -161,85 +161,86 @@ export const getEventResult =
     gameNumber: string | undefined,
     shopId: string | undefined
   ) =>
-    async (
-      dispatch: (arg0: {
-        payload: GameAPIResult;
-        type: "summary/udpateGameResult";
-      }) => void
-    ) => {
-      dispatch(
-        udpateGameResult({
-          loading: true,
-          error: null,
-          message: null,
-          data: null,
+  async (
+    dispatch: (arg0: {
+      payload: GameAPIResult;
+      type: "summary/udpateGameResult";
+    }) => void
+  ) => {
+    dispatch(
+      udpateGameResult({
+        loading: true,
+        error: null,
+        message: null,
+        data: null,
+      })
+    );
+
+    try {
+      const summaryData: GameAPIResult = (
+        await axiosInstance.post("/game/gameData", {
+          from: from,
+          to: to,
+          gameNumber: gameNumber,
+          shopId: shopId,
         })
-      );
+      ).data;
 
-      try {
-        const summaryData: GameAPIResult = (
-          await axiosInstance.post("/game/gameData", {
-            from: from,
-            to: to,
-            gameNumber: gameNumber,
-            shopId: shopId,
-          })
-        ).data;
-
-        if (summaryData.message === "success") {
-          dispatch(
-            udpateGameResult({
-              loading: false,
-              error: null,
-              message: summaryData.message,
-              data: summaryData.data,
-            })
-          );
-        } else {
-          dispatch(
-            udpateGameResult({
-              loading: false,
-              error: summaryData.error,
-              message: null,
-              data: null,
-            })
-          );
-        }
-      } catch (err: AxiosError | any) {
+      if (summaryData.message === "success") {
         dispatch(
           udpateGameResult({
-            message: "",
-            error:
-              typeof err?.response?.data?.error === "string"
-                ? err.response.data.error
-                : "Something went wrong",
             loading: false,
+            error: null,
+            message: summaryData.message,
+            data: summaryData.data,
+          })
+        );
+      } else {
+        dispatch(
+          udpateGameResult({
+            loading: false,
+            error: summaryData.error,
+            message: null,
             data: null,
           })
         );
       }
-    };
+    } catch (err: AxiosError | any) {
+      dispatch(
+        udpateGameResult({
+          message: "",
+          error:
+            typeof err?.response?.data?.error === "string"
+              ? err.response.data.error
+              : "Something went wrong",
+          loading: false,
+          data: null,
+        })
+      );
+    }
+  };
 const SummeryData = (data) => {
-  const listItems = []
-  console.log('datain', data)
-  const currentDateTime = moment().format('YYYY-MM-DD HH:mm:ss');
+  const listItems = [];
+  console.log("datain", data);
+  const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
 
-  listItems.push({
-    LineItem: data.shopName,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 2,
-    NewLine: true,
-    PartOfHeader: true,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+  listItems.push(
+    {
+      LineItem: data.shopName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
     {
       LineItem: data.cashierName,
       FontName: "Arial",
@@ -254,7 +255,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: currentDateTime,
@@ -270,7 +271,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Summary  (${data.cashierName})`,
@@ -286,7 +287,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `${data.from} - ${data.to}`,
@@ -302,7 +303,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -318,7 +319,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Start Balance",
@@ -334,7 +335,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.startBalance.toString()}`,
@@ -350,7 +351,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Deposits",
@@ -366,7 +367,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.deposits}`,
@@ -382,7 +383,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Bets",
@@ -398,7 +399,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.bets}`,
@@ -414,7 +415,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Cancellations",
@@ -430,7 +431,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.cancellations}`,
@@ -446,7 +447,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Redeemed",
@@ -462,7 +463,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.redeemed}`,
@@ -478,7 +479,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Withdraws",
@@ -494,7 +495,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.withdraws}`,
@@ -510,7 +511,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "End Balance",
@@ -526,7 +527,7 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: `Br ${data.endBalance}`,
@@ -542,19 +543,20 @@ const SummeryData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
-    })
+      Underline: false,
+    }
+  );
   return {
     Content: listItems,
   };
-}
+};
 export const printSummaryToBackend = async (data: any) => {
   try {
     const printResponse = await axiosInstance.post("ticket/printSummary", data);
 
     if (printResponse.status === 200 || printResponse.status === 201) {
       const callPrinterWithData = await axios.post(
-        "http://localhost:8080/PRINT",
+        "http://localhost:8080/PRINT/",
         SummeryData(printResponse.data.data)
       );
     }
@@ -563,24 +565,25 @@ export const printSummaryToBackend = async (data: any) => {
   }
 };
 const ResultData = (data) => {
-  const listItems = []
-  console.log('datain', data.gameTime)
-  listItems.push({
-    LineItem: data.shopName,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 2,
-    NewLine: true,
-    PartOfHeader: true,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+  const listItems = [];
+  console.log("datain", data.gameTime);
+  listItems.push(
+    {
+      LineItem: data.shopName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
     {
       LineItem: data.cashierName,
       FontName: "Arial",
@@ -595,7 +598,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.formattedTime,
@@ -611,7 +614,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Event Result",
@@ -627,7 +630,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -643,7 +646,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Game",
@@ -659,7 +662,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.Game,
@@ -675,7 +678,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Event ID",
@@ -691,7 +694,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.eventId.toString(),
@@ -707,7 +710,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: "Time",
@@ -723,7 +726,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: data.gameTime,
@@ -739,7 +742,7 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
+      Underline: false,
     },
     {
       LineItem: null,
@@ -755,77 +758,65 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
-    })
-  data.Game !== 'Keno' && data.Game !== 'Spin And Win' ? data.result.map(result => {
-    listItems.push({
-      LineItem: result,
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: false,
-      Italic: false,
-      Alignment: 0,
-      NewLine: true,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    })
-
-
-  }) : listItems.push({
-    LineItem: data.result,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 0,
-    NewLine: true,
-    PartOfHeader: false,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  })
-  data.Game !== 'Keno' && data.Game !== 'Spin And Win' && data.Market.length > 0 ? data.Market.map(data => {
-    listItems.push({
-      LineItem: data,
-      FontName: "Arial",
-      FontSize: 8,
-      Bold: false,
-      Italic: false,
-      Alignment: 0,
-      NewLine: true,
-      PartOfHeader: false,
-      PrintDoubleBlock: false,
-      RowsInDoubleBlock: 2,
-      IsImage: false,
-      IsTerms: false,
-      ImageFileType: null,
-      Underline: false
-    })
-  }) : ''
-  listItems.push({
-    LineItem: null,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 0,
-    NewLine: true,
-    PartOfHeader: false,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false
-  },
+      Underline: false,
+    }
+  );
+  data.Game !== "Keno" && data.Game !== "Spin And Win"
+    ? data.result.map((result) => {
+        listItems.push({
+          LineItem: result,
+          FontName: "Arial",
+          FontSize: 8,
+          Bold: false,
+          Italic: false,
+          Alignment: 0,
+          NewLine: true,
+          PartOfHeader: false,
+          PrintDoubleBlock: false,
+          RowsInDoubleBlock: 2,
+          IsImage: false,
+          IsTerms: false,
+          ImageFileType: null,
+          Underline: false,
+        });
+      })
+    : listItems.push({
+        LineItem: data.result,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      });
+  data.Game !== "Keno" && data.Game !== "Spin And Win" && data.Market.length > 0
+    ? data.Market.map((data) => {
+        listItems.push({
+          LineItem: data,
+          FontName: "Arial",
+          FontSize: 8,
+          Bold: false,
+          Italic: false,
+          Alignment: 0,
+          NewLine: true,
+          PartOfHeader: false,
+          PrintDoubleBlock: false,
+          RowsInDoubleBlock: 2,
+          IsImage: false,
+          IsTerms: false,
+          ImageFileType: null,
+          Underline: false,
+        });
+      })
+    : "";
+  listItems.push(
     {
       LineItem: null,
       FontName: "Arial",
@@ -840,16 +831,33 @@ const ResultData = (data) => {
       IsImage: false,
       IsTerms: false,
       ImageFileType: null,
-      Underline: false
-    })
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
   return {
     Content: listItems,
   };
-}
+};
 export const printResultToBackend = async (data: any) => {
   try {
     const callPrinterWithData = await axios.post(
-      "http://localhost:8080/PRINT",
+      "http://localhost:8080/PRINT/",
       ResultData(data)
     );
   } catch (err) {
