@@ -389,7 +389,7 @@ export const cancelTicket =
         try {
           const printCancelRes = await axios.post(
             "http://localhost:8080/PRINT/",
-            cancelPrint(cancelTicketResponse.data),
+            JSON.stringify(cancelPrint(cancelTicketResponse.data)),
             {
               headers: {
                 "Content-Type":
@@ -666,7 +666,7 @@ export const redeemTicket =
         try {
           await axios.post(
             "http://localhost:8080/PRINT/",
-            printReedem(redeemTicketResposne.data),
+            JSON.stringify(printReedem(redeemTicketResposne.data)),
             {
               headers: {
                 "Content-Type":
