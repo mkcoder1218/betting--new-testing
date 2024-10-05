@@ -793,7 +793,12 @@ export const printSelectedTickets = async (req: any) => {
       console.log("update" + updateTicket);
       const printSelectedData = await axios.post(
         "http://localhost:8080/PRINT/",
-        transformData(updateTicket)
+        transformData(updateTicket),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+        }
       );
     }
   } catch (err) {

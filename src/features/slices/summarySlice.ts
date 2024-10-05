@@ -557,7 +557,12 @@ export const printSummaryToBackend = async (data: any) => {
     if (printResponse.status === 200 || printResponse.status === 201) {
       const callPrinterWithData = await axios.post(
         "http://localhost:8080/PRINT/",
-        SummeryData(printResponse.data.data)
+        SummeryData(printResponse.data.data),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+        }
       );
     }
   } catch (err) {
@@ -858,7 +863,12 @@ export const printResultToBackend = async (data: any) => {
   try {
     const callPrinterWithData = await axios.post(
       "http://localhost:8080/PRINT/",
-      ResultData(data)
+      ResultData(data),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+        },
+      }
     );
   } catch (err) {
     console.log(err);
