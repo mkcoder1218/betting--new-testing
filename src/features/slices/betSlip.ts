@@ -812,7 +812,7 @@ export const createBetSlipAndTicket =
             });
             const printResponse = await axios.post(
               "http://localhost:8080/PRINT/",
-              transformData(updateTicket),
+              JSON.stringify(transformData(updateTicket)),
               {
                 headers: {
                   "Content-Type":
