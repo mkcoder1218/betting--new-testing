@@ -143,7 +143,7 @@ function App() {
         if (lastCheck <= 10) {
           setLastCheck(lastCheck + 1);
         } else {
-          // dispatch(getLastGame(user.user?.Cashier.shopId));
+          dispatch(getLastGame(user.user?.Cashier.shopId));
         }
       }, 1000);
 
