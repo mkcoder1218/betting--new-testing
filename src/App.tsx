@@ -10,7 +10,6 @@ import RedeemTicket from "./components/RedeemTicket";
 import BetSlip from "./components/BetSlip";
 import { useAppDispatch, useAppSelector } from "./features/hooks";
 import { getOdds } from "./features/slices/oddSlice";
-import { getLastGame } from "./features/slices/RacingGameSliceMultipleSports";
 import { getLastBetSlip } from "./features/slices/betSlip";
 import { addGameType } from "./features/slices/gameType";
 import { addExpiry } from "./features/slices/ticketExpiry";
@@ -38,6 +37,7 @@ import Spin from "./pages/Spin";
 import TestComponent from "./utils/Tst";
 import { useAxiosInterceptors } from "./config/interceptor";
 import CircularUnderLoad from "./components/svg/Loader";
+import { getLastGame } from "./features/slices/gameSlice";
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
