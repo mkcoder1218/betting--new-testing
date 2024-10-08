@@ -154,7 +154,7 @@ function App() {
   useEffect(() => {
     if (remainingTime < 0 && !update) {
       if (game) setUpdate(true);
-      // dispatch(getLastGame(user.user?.Cashier.shopId));
+      dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
 
