@@ -25,6 +25,7 @@ function HorseRun({ gameType }: prop) {
   const [activeIndex, setActiveindex] = useState(0);
   const [ActiveGame, setIsActivegame] = useState(false);
   const [_D_interval, _D_setInterval] = useState(0);
+  const user = useAppSelector((state) => state.user);
   const [pastIndex, setpastIndex] = useState<number | null>(null);
   const [liveIndex, setLiveIndex] = useState(false);
   const handleClickMenu = (text: string) => {
@@ -69,9 +70,7 @@ function HorseRun({ gameType }: prop) {
           dispatch(setIsLive(true));
         }
       } else {
-        dispatch(
-          getLastRacingGames("9c6d610d-33e9-4847-80ab-5e179833591e", gameType)
-        );
+        dispatch(getLastRacingGames(user.user?.Cashier.shopId, gameType));
       }
     }
   }, [gameData, _D_interval]);
