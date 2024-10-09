@@ -29,7 +29,6 @@ const Timer: React.FC<Time> = ({ _time, isPastGame, isbecomeLive }) => {
         return prevTime - 1;
       });
     }, 1000);
-
     // Check if the event is live
     const checkTime = () => {
       if (moment(_time).diff(moment(), "seconds") < 1) {
@@ -37,14 +36,12 @@ const Timer: React.FC<Time> = ({ _time, isPastGame, isbecomeLive }) => {
         isbecomeLive(true);
       }
     };
-
     const checkLiveInterval = setInterval(checkTime, 1000);
-
     return () => {
       clearInterval(timerId);
       clearInterval(checkLiveInterval);
     };
-  }, [_time]);
+  }, [_time, isbecomeLive]);
 
   return (
     <>
