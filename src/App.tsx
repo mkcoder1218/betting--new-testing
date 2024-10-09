@@ -108,9 +108,9 @@ function App() {
         setGame(gamesFiltered[0]);
         setUpdate(false);
       } else {
-        dispatch(
-          getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
-        );
+        // dispatch(
+        //   getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
+        // );
       }
     }
   }, [gameData, update]);
@@ -140,7 +140,7 @@ function App() {
         if (lastCheck <= 10) {
           setLastCheck(lastCheck + 1);
         } else {
-          dispatch(getLastGame(user.user?.Cashier.shopId));
+          // dispatch(getLastGame(user.user?.Cashier.shopId));
         }
       }, 1000);
 
@@ -151,7 +151,7 @@ function App() {
   useEffect(() => {
     if (remainingTime < 0 && !update) {
       if (game) setUpdate(true);
-      dispatch(getLastGame(user.user?.Cashier.shopId));
+      // dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
 
