@@ -80,10 +80,7 @@ function App() {
         gameData.gamesByType[WhichGameSelected].games.length < 2
       ) {
         dispatch(
-          getLastRacingGames(
-            "9c6d610d-33e9-4847-80ab-5e179833591e",
-            WhichGameSelected
-          )
+          getLastRacingGames(user.user?.Cashier.shopId, WhichGameSelected)
         );
       }
     }

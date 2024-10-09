@@ -221,7 +221,9 @@ export default function CashierOptions({
   };
 
   React.useEffect(() => {
-    getTicketList();
+    setTimeout(() => {
+      getTicketList();
+    }, 1000);
   }, [cashierName]);
   React.useEffect(() => {
     if (cashierState && cashierState.data) {
