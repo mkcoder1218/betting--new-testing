@@ -108,9 +108,9 @@ function App() {
         setGame(gamesFiltered[0]);
         setUpdate(false);
       } else {
-        // dispatch(
-        //   getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
-        // );
+        dispatch(
+          getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
+        );
       }
     }
   }, [gameData, update]);
