@@ -19,7 +19,7 @@ jobs:
           node-version: "20.3.0" # Specify the Node.js version
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --force
 
       - name: Build React app
         run: npm run build
