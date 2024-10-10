@@ -121,7 +121,7 @@ function App() {
           );
       }
     }
-  }, [gameData, update]);
+  }, [gameData, update, WhichGameSelected]);
 
   useEffect(() => {
     if (game) {
