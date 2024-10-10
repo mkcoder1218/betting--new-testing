@@ -70,20 +70,27 @@ function App() {
     dispatch(addRepeat({ repeat: parseInt(event.target.value) }));
   }
   useEffect(() => {
-    if (WhichGameSelected === "KENO") {
-      dispatch(addGameType(WhichGameSelected));
-    } else {
-      if (WhichGameSelected.length > 0)
+    // Create a debounce function using lodash or use a custom debounce function.
+    const debounceFetch = setTimeout(() => {
+      if (WhichGameSelected === "KENO") {
         dispatch(addGameType(WhichGameSelected));
-      if (
-        !gameData.gamesByType[WhichGameSelected] ||
-        gameData.gamesByType[WhichGameSelected].games.length < 2
-      ) {
-        dispatch(
-          getLastRacingGames(user.user?.Cashier.shopId, WhichGameSelected)
-        );
+      } else {
+        if (WhichGameSelected.length > 0) {
+          dispatch(addGameType(WhichGameSelected));
+        }
+        if (
+          !gameData.gamesByType[WhichGameSelected] ||
+          gameData.gamesByType[WhichGameSelected].games.length <= 2
+        ) {
+          dispatch(
+            getLastRacingGames(user.user?.Cashier.shopId, WhichGameSelected)
+          );
+        }
       }
-    }
+    }, 5000); // 2-second debounce
+
+    // Cleanup function to clear the timeout when `WhichGameSelected` changes.
+    return () => clearTimeout(debounceFetch);
   }, [WhichGameSelected]);
 
   useEffect(() => {
@@ -108,9 +115,9 @@ function App() {
         setGame(gamesFiltered[0]);
         setUpdate(false);
       } else {
-        dispatch(
-          getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
-        );
+        // dispatch(
+        //   getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
+        // );
       }
     }
   }, [gameData, update]);

@@ -70,7 +70,7 @@ function HorseRun({ gameType }: prop) {
           dispatch(setIsLive(true));
         }
       } else {
-        dispatch(getLastRacingGames(user.user?.Cashier.shopId, gameType));
+        // dispatch(getLastRacingGames(user.user?.Cashier.shopId, gameType));
       }
     }
   }, [gameData, _D_interval]);

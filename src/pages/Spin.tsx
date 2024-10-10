@@ -51,7 +51,8 @@ function Spin() {
         setGame(gamesFiltered[0]);
         setUpdate(false);
       } else {
-        dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SpinAndWin"));
+        if (gamesFiltered)
+          dispatch(getLastRacingGames(user.user?.Cashier.shopId, "SpinAndWin"));
       }
     }
   }, [gameData, update]);
