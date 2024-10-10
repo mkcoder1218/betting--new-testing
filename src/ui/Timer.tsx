@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
 import Live from "./Live";
 import { useAppSelector } from "../features/hooks";
@@ -18,31 +18,45 @@ const Timer: React.FC<Time> = ({ _time, isPastGame, isbecomeLive }) => {
   ); // State to track the countdown
   const [isLive, setIsLive] = useState(false);
   const livegame = useAppSelector((state) => state.gameType.isLive);
+  const timerIdRef = useRef(null); // Ref to hold the interval ID
+
   useEffect(() => {
-    // Update the countdown every second
-    const timerId = setInterval(() => {
+    // Set initial countdown time based on _time
+    const initialTime = moment(_time).diff(moment(), "seconds");
+    setTime(initialTime > 0 ? initialTime : 0);
+
+    // Clear any existing interval before setting a new one
+    if (timerIdRef.current) {
+      clearInterval(timerIdRef.current);
+    }
+
+    // Set up a new interval to countdown and check live status
+    timerIdRef.current = setInterval(() => {
       setTime((prevTime) => {
         if (prevTime <= 0) {
-          clearInterval(timerId);
+          clearInterval(timerIdRef.current);
+          timerIdRef.current = null;
           return 0;
         }
         return prevTime - 1;
       });
-    }, 1000);
-    // Check if the event is live
-    const checkTime = () => {
-      if (moment(_time).diff(moment(), "seconds") < 1) {
+
+      // Check if the event should be marked as live
+      if (moment(_time).diff(moment(), "seconds") < 1 && !isLive) {
         setIsLive(true);
         isbecomeLive(true);
+        clearInterval(timerIdRef.current); // Clear interval when event goes live
+        timerIdRef.current = null;
+      }
+    }, 1000);
+
+    // Cleanup on unmount or when dependencies change
+    return () => {
+      if (timerIdRef.current) {
+        clearInterval(timerIdRef.current);
       }
     };
-    const checkLiveInterval = setInterval(checkTime, 1000);
-    return () => {
-      clearInterval(timerId);
-      clearInterval(checkLiveInterval);
-    };
   }, [_time, isbecomeLive]);
-
   return (
     <>
       <div className="Timer">{moment(time * 1000).format("mm:ss")}</div>
