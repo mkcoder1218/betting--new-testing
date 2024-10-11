@@ -622,10 +622,7 @@ const printReedem = (data) => {
       Underline: false,
     },
     {
-      LineItem:
-        parseFloat(data.redeemedAmount) > 0
-          ? "Winning Ticket"
-          : "Not a Winning Ticket",
+      LineItem: data.status,
       FontName: "Arial",
       FontSize: 8,
       Bold: true,
