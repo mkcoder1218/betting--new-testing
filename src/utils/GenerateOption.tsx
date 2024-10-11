@@ -328,7 +328,9 @@ export const GenerateOption2 = (
           : "Red relative redhover";
     } else if (i >= 11 && i <= 19) {
       className =
-        i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
+        i % 2 === 0 || i === 19
+          ? "Red redhover relative"
+          : "black relative blackhover";
     } else if (i >= 20 && i <= 28) {
       className =
         i % 2 === 0 ? "black blackhover relative" : "Red relative redhover";
