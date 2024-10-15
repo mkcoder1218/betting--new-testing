@@ -86,14 +86,11 @@ const racingGameSlice = createSlice({
           loading: false,
           error: null,
           message,
-          games: [...games], // Initialize with the games fetched
+          games: games, // Initialize with the games fetched
         };
       } else {
         // Append the new games to the existing array
-        state.gamesByType[gameType].games = [
-          ...state.gamesByType[gameType].games,
-          ...games,
-        ];
+        state.gamesByType[gameType].games = games;
         state.gamesByType[gameType].message = message;
       }
     },

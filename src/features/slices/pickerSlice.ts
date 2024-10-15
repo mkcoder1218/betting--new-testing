@@ -88,7 +88,7 @@ const pickerSlice = createSlice({
         (item, index) => index !== action.payload
       );
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -105,7 +105,7 @@ const pickerSlice = createSlice({
       }
 
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -124,7 +124,7 @@ const pickerSlice = createSlice({
       }
 
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -162,7 +162,7 @@ const pickerSlice = createSlice({
       }
 
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -175,6 +175,7 @@ const pickerSlice = createSlice({
 });
 
 function calculateTotals(betSlip: Ticket[]) {
+  console.log("betSLIPPP", betSlip);
   const totalStake = betSlip.reduce((acc, curr) => acc + curr.stake, 0);
   const maxWin = Math.max(
     ...betSlip.map((ticket) => ticket.stake * ticket.multiplier)
