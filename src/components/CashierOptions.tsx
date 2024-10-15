@@ -316,7 +316,7 @@ export default function CashierOptions({
 
   const printSelected = (item: Ticket) => {
     const payload = {
-      betslipId: item.betSlipId,
+      betslipId: item.id,
       shopId: userData.user?.Cashier.shopId,
       cashierCreateId: userData.user?.Cashier.id,
       isCopy: true,
@@ -716,7 +716,8 @@ export default function CashierOptions({
                                       className="even:bg-gray-200 odd:bg-white text-start text-sm p-2 border-l-slate-300"
                                     >
                                       <td className="border border-l-slate-400 p-2">
-                                        {item.BetSlip.Cashier.User.username}
+                                        {item.Cashier &&
+                                          item.Cashier.User.username}
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
                                         {`${new Date(
@@ -733,10 +734,11 @@ export default function CashierOptions({
                                         })}`}
                                       </td>
                                       <td className="border border-l-slate-400 p-2">
-                                        {parseFloat(item.stake).toFixed(2)} Br
+                                        {parseFloat(item.totalStake).toFixed(2)}{" "}
+                                        Br
                                       </td>
                                       <td className="border border-l-slate-400 pl-5 p-2">
-                                        {`${item.gameType}-${item.Game.gameData.Number}`}
+                                        {item.description}
                                       </td>
                                       <td
                                         onClick={() => printSelected(item)}
@@ -1117,7 +1119,8 @@ export default function CashierOptions({
                                           className="even:bg-gray-200 odd:bg-white text-start text-sm p-2 border-l-slate-300"
                                         >
                                           <td className="border border-l-slate-400 p-2">
-                                            {item.BetSlip.Cashier.User.username}
+                                            {item.Cashier &&
+                                              item.Cashier.User.username}
                                           </td>
                                           <td className="border border-l-slate-400 p-2">
                                             {`${new Date(
@@ -1135,11 +1138,13 @@ export default function CashierOptions({
                                             })}`}
                                           </td>
                                           <td className="border border-l-slate-400 p-2">
-                                            {parseFloat(item.stake).toFixed(2)}{" "}
+                                            {parseFloat(
+                                              item.totalStake
+                                            ).toFixed(2)}{" "}
                                             Br
                                           </td>
                                           <td className="border border-l-slate-400 p-2">
-                                            {`Single, Keno-${item.Game.gamenumber}`}
+                                            {item.description}
                                           </td>
                                           <td
                                             onClick={() => printSelected(item)}

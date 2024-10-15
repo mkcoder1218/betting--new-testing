@@ -7,6 +7,7 @@ import { formatNumberWithCommas } from "../../utils/numberGenerate";
 import { ColumnMap } from "../../utils/columnMap";
 import { MapRedAndBlack } from "../../utils/redblackMap";
 import { range } from "../../utils/range";
+import { BetSlipResponse } from "../../utils/patch";
 
 interface Game {
   id: string;
@@ -53,7 +54,7 @@ export interface Ticket {
 }
 
 interface TicketResponse {
-  data: Ticket[];
+  data: BetSlipResponse[];
   message: string;
   error: null | any;
 }
@@ -62,7 +63,7 @@ interface TicketState {
   loading: boolean;
   error: string | null;
   message: string | null;
-  data: Ticket[];
+  data: BetSlipResponse[];
 }
 
 let initialState: TicketState = {
