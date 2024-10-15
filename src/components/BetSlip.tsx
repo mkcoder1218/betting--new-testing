@@ -253,7 +253,7 @@ export default function BetSlip() {
 
     const requestPayload = {
       minWin: minWin,
-      maxWin: betState.totalToWin,
+      maxWin: betState.maxWin.toFixed(2),
       cashierCreateId: userState.user?.Cashier.id,
       shopId: userState.user?.Cashier.shopId,
       ticketData: newTicketToSend,

@@ -26,6 +26,7 @@ export interface PickerType {
   betSlip: Ticket[];
   totalToWin: number;
   totalStake: number;
+  maxWin: number;
 }
 
 let initialState: PickerType = {
@@ -33,6 +34,7 @@ let initialState: PickerType = {
   betSlip: [],
   totalToWin: 0.0,
   totalStake: 0.0,
+  maxWin: 0,
 };
 
 const pickerSlice = createSlice({
@@ -79,6 +81,7 @@ const pickerSlice = createSlice({
 
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
+      state.maxWin = totals.maxWin;
     },
     removeFromBetSlip: (state, action: PayloadAction<number>) => {
       state.betSlip = state.betSlip.filter(
@@ -173,11 +176,15 @@ const pickerSlice = createSlice({
 
 function calculateTotals(betSlip: Ticket[]) {
   const totalStake = betSlip.reduce((acc, curr) => acc + curr.stake, 0);
+  const maxWin = Math.max(
+    ...betSlip.map((ticket) => ticket.stake * ticket.multiplier)
+  );
   const totalToWin = betSlip.reduce(
-    (acc, curr) => acc + curr.multiplier * curr.stake,
+    (acc, curr) => acc + curr.stake * curr.multiplier,
     0
   );
-  return { totalStake, totalToWin };
+
+  return { totalStake, totalToWin, maxWin };
 }
 
 export const {
