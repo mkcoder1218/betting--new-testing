@@ -8,6 +8,8 @@ import { MapRedAndBlack } from "../../utils/redblackMap";
 import { range } from "../../utils/range";
 import { generateEvenAndOddArrays } from "../../utils/evenoddgenerate";
 import { formatNumberWithCommas } from "../../utils/numberGenerate";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { getCashierNames } from "./cashierData";
 
 interface BetSlipData {
   betSlipNumber: string;
@@ -620,13 +622,14 @@ export const createBetSlipAndTicket =
         data: null,
       })
     );
-
+ 
     try {
       const betSlipResponse: BetSlipResponse<ToPrint> = (
         await axiosInstance.post("ticket/betslip", data)
       ).data;
 
       if (betSlipResponse.message === "betslip added successfully") {
+
         dispatch(
           addTicketAndBetSlip({
             loading: false,
