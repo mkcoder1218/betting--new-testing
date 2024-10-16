@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
+import moment from "moment";
 
 export interface GameData {
   id: string;
@@ -90,7 +91,9 @@ const racingGameSlice = createSlice({
         };
       } else {
         // Append the new games to the existing array
-        state.gamesByType[gameType].games = games;
+        state.gamesByType[gameType].games = games.sort((a, b) => {
+          return moment(a.startTime).diff(moment(b.startTime), "minutes");
+        });
         state.gamesByType[gameType].message = message;
       }
     },

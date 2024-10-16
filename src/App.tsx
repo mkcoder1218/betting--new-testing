@@ -87,7 +87,7 @@ function App() {
           );
         }
       }
-    }, 5000); // 2-second debounce
+    }, 500); // 2-second debounce
 
     // Cleanup function to clear the timeout when `WhichGameSelected` changes.
     return () => clearTimeout(debounceFetch);
