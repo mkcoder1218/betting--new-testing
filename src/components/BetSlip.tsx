@@ -41,6 +41,7 @@ import {
   setIsClearCircle,
 } from "../features/slices/gameType";
 import moment from "moment";
+import { getCashierNames } from "../features/slices/cashierData";
 
 export default function BetSlip() {
   const dispatch = useAppDispatch();
@@ -139,7 +140,11 @@ export default function BetSlip() {
   const updateStakeAll = (stake: number, type: string) => {
     dispatch(updateStakeForAllTickets({ value: stake, type: type }));
   };
+  useEffect(() => {
+    if(betSlipState.message==="betslip added successfully")
+          dispatch(getCashierNames(userData.user?.Cashier.shopId));
 
+},[betSlipState.message])
   const clearSlip = () => {
     dispatch(clearBetSlip());
     dispatch(clearNumbers());
@@ -148,6 +153,7 @@ export default function BetSlip() {
     setBetError("");
     console.log("gametype,", gameType);
   };
+  const userData = useAppSelector((state) => state.user);
 
   const handleCreateTicket = async () => {
     setBetError("");
@@ -164,7 +170,9 @@ export default function BetSlip() {
       setBetError("One or More Bets Expired");
       return;
     }
-
+    if (betState) {
+  
+}
     if (getBiggest.length > 0) {
       const biggetsFirst = getBiggest[0].stake;
       if (biggetsFirst > 1000) {
