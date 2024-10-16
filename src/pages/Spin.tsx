@@ -16,7 +16,12 @@ import { getLastBetSlip } from "../features/slices/betSlip";
 import { RootEventData } from "../features/slices/RacingGameSliceMultipleSports";
 function Spin() {
   const [gameid, setgameId] = useState<RootEventData | null>(null);
-
+const userIsActive = useAppSelector((state) => state.gameType.Active);
+if (!userIsActive) {
+  window.location.reload();
+  console.log("user Is Inactive");
+  localStorage.clear();
+}
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
   const gameData = useAppSelector(

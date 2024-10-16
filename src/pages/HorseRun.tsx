@@ -14,6 +14,7 @@ import {
 import moment from "moment";
 import CircularUnderLoad from "../components/svg/Loader";
 import { setIsLive } from "../features/slices/gameType";
+import { useNavigate } from "react-router-dom";
 interface prop {
   gameType: string;
 }
@@ -28,6 +29,13 @@ function HorseRun({ gameType }: prop) {
   const user = useAppSelector((state) => state.user);
   const [pastIndex, setpastIndex] = useState<number | null>(null);
   const [liveIndex, setLiveIndex] = useState(false);
+  const userIsActive = useAppSelector(state => state.gameType.Active)
+  if (!userIsActive) {
+
+    window.location.reload()
+    console.log('user Is Inactive')
+    localStorage.clear()
+  }
   const handleClickMenu = (text: string) => {
     setSelectedText(text);
   };

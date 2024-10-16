@@ -7,7 +7,8 @@ interface gameTypeState {
   isClearCircle?: boolean;
   isLive?: boolean,
   ClearSelected?: boolean,
-  removemessage?: boolean
+  removemessage?: boolean,
+  Active?:boolean
 }
 
 const initalState: gameTypeState = {
@@ -17,7 +18,8 @@ const initalState: gameTypeState = {
   isClearCircle: false,
   isLive: false,
   ClearSelected: false,
-  removemessage: false
+  removemessage: false,
+  Active:true
 };
 
 const gameTypeSlice = createSlice({
@@ -39,10 +41,13 @@ const gameTypeSlice = createSlice({
     },
     removemessage: (state, action: PayloadAction<boolean>) => {
       state.removemessage = action.payload
+    },
+    setuserActive: (state, action: PayloadAction<boolean>) => {
+      state.Active=action.payload
     }
   },
 });
 
-export const { addGameType, setIsClearCircle, setIsLive, ClearSelected, removemessage } = gameTypeSlice.actions;
+export const { setuserActive,addGameType, setIsClearCircle, setIsLive, ClearSelected, removemessage } = gameTypeSlice.actions;
 
 export default gameTypeSlice.reducer;

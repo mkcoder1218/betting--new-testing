@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
 import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface Data {
   netAmount: string;
@@ -60,6 +61,7 @@ export const getNetBalance =
       const netBalanceRes: ApiResponse = (
         await axiosInstance.get(`ticket/balance/cashier/${cashierId}`)
       ).data;
+      
 
       if (netBalanceRes.message === "success") {
         dispatch(

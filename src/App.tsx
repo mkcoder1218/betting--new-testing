@@ -229,7 +229,12 @@ function App() {
   const handleIconSelect = (val: string) => {
     setWhichgameSelected(val);
   };
-
+const userIsActive = useAppSelector((state) => state.gameType.Active);
+if (!userIsActive) {
+  window.location.reload();
+  console.log("user Is Inactive");
+  localStorage.clear();
+}
   return (
     <div className="bg-white fixed w-full h-full custom-scrollbar overflow-y-auto">
       <PrinterDialog

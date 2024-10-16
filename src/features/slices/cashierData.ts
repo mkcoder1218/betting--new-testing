@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
+import {  setuserActive } from './gameType';
 
 interface User {
   id: string;
@@ -81,7 +82,21 @@ export const getCashierNames =
       const cashierResponse: ApiResponse = (
         await axiosInstance.get(`cashier/${shopId}`)
       ).data;
-
+    
+const session = localStorage.getItem("user_session");
+const user = session && JSON.parse(session)?.Cashier?.id;
+      const match = cashierResponse?.data && cashierResponse.data.find((id) => id.id === user)
+            console.log("netBalanceRes", cashierResponse, "id ", user,'Match',match);
+      if (user === match?.id) {
+        if (!match?.active) {
+          localStorage.clear()
+         dispatch(setuserActive(false))
+          
+        }
+        else {
+          dispatch(setuserActive(true))
+        }
+}
       if (cashierResponse.message === "success") {
         dispatch(
           addCashierData({

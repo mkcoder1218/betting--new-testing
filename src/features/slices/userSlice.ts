@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { LOCAL_USER } from "../../config/constants";
 import axiosInstance, { handleLoginSuccess } from "../../config/interceptor";
 import { AxiosError } from "axios";
-import { NavigateFunction } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 
 export interface AxiosResponseWrapper<T> {
   data: T;
@@ -109,7 +109,7 @@ export const authUser =
       dispatch(
         loginUser({ message: "", error: "", loading: false, user: null })
       );
-
+      
       if (loginResponse.data.message === "login successful") {
         localStorage.setItem(
           LOCAL_USER,
@@ -122,7 +122,9 @@ export const authUser =
             loading: true,
             user: loginResponse.data.data.user,
           })
+          
         );
+        console.log("loginResponse.data", loginResponse.data);
         handleLoginSuccess();
         // window.location.href = "/home"
       } else {
