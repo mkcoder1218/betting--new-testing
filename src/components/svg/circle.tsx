@@ -14,7 +14,7 @@ function circle(prop: circleProp) {
         }`}
       >
         <CircleIcon
-          className={` ${prop.margin ? "bigFont pt-1 pr-1" : ""} ${
+          className={` ${prop.margin ? "bigFont pt-1.5 pr-2" : ""} ${
             prop.pad ? "" : "relative "
           }`}
           style={{ fontSize: "24px" }}

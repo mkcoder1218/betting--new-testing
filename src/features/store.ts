@@ -12,8 +12,9 @@ import repeatReducer from "./slices/betRepeat";
 import cashierReducer from "./slices/cashierData";
 import balanceReducer from "./slices/netBalance";
 import gameTypeSlice from "./slices/gameType";
-import RacingGameSlice from "./slices/RacingGameSlice";
-import HeadTextReducer from './slices/HeadSlice'
+// import RacingGameSlice from "./slices/RacingGameSlice";
+import HeadTextReducer from "./slices/HeadSlice";
+import RacingGameSliceMultipleSports from "./slices/RacingGameSliceMultipleSports";
 export const store = configureStore({
   reducer: {
     picker: pickerReducer,
@@ -29,8 +30,8 @@ export const store = configureStore({
     cashier: cashierReducer,
     balance: balanceReducer,
     gameType: gameTypeSlice,
-    racingGame: RacingGameSlice,
-    Head: HeadTextReducer
+    racingGame: RacingGameSliceMultipleSports,
+    Head: HeadTextReducer,
   },
 });
 

@@ -1,12 +1,14 @@
 import React from "react";
 import Circle from "@mui/icons-material/Circle";
 import generatecircle from "./generatecircle";
+
 interface Rows {
   row1: number;
   row2: number;
   row3: number;
   i: number;
 }
+
 function fourrowhover(Prop: Rows) {
   return (
     <div className="svg_container">

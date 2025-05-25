@@ -1,4 +1,5 @@
 import * as React from "react";
+import { memo } from "react";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import Typography from "@mui/material/Typography";
@@ -8,7 +9,7 @@ interface Rating {
   isHeadToHead?: boolean;
   rating?: number;
 }
-export default function BasicRating(Props: Rating) {
+function BasicRating(Props: Rating) {
   const [value, setValue] = React.useState<number | null>(
     Props.rating ? Props.rating : 2
   );
@@ -31,3 +32,5 @@ export default function BasicRating(Props: Rating) {
     </Box>
   );
 }
+
+export default memo(BasicRating);

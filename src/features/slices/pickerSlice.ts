@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { Entry } from "./RacingGameSlice";
 import betSlip from "./betSlip";
+import moment from "moment";
 
 export interface Ticket {
   selected: number[];
@@ -17,6 +18,8 @@ export interface Ticket {
   oddType?: string;
   draw?: number;
   nameofPlayer?: string;
+  gameNumber?: number;
+  startTime: string;
 }
 
 export interface PickerType {
@@ -24,6 +27,7 @@ export interface PickerType {
   betSlip: Ticket[];
   totalToWin: number;
   totalStake: number;
+  maxWin: number;
 }
 
 let initialState: PickerType = {
@@ -31,6 +35,7 @@ let initialState: PickerType = {
   betSlip: [],
   totalToWin: 0.0,
   totalStake: 0.0,
+  maxWin: 0,
 };
 
 const pickerSlice = createSlice({
@@ -46,7 +51,6 @@ const pickerSlice = createSlice({
     },
     addRandomNumbers: (state, action: PayloadAction<number[]>) => {
       state.selected = action.payload;
-
     },
     clearNumbers: (state) => {
       state.selected = [];
@@ -64,27 +68,48 @@ const pickerSlice = createSlice({
         return false;
       });
 
-
       if (_index > -1) {
         state.betSlip = state.betSlip.filter((item, index) => {
           return _index !== index;
         });
       } else {
+        state.betSlip = state.betSlip.filter((item) => {
+          return new Date().getTime() < item.expiry;
+        });
         state.betSlip = [...state.betSlip, action.payload];
       }
       const totals = calculateTotals(state.betSlip);
 
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
+      state.maxWin = totals.maxWin;
     },
     removeFromBetSlip: (state, action: PayloadAction<number>) => {
-      state.betSlip = state.betSlip.filter(
-        (item, index) => index !== action.payload
-      );
-      const totals = calculateTotals(state.betSlip);
+      // Get the index of the ticket to remove
+      const indexToRemove = action.payload;
 
-      state.totalStake = totals.totalStake;
-      state.totalToWin = totals.totalToWin;
+      // Log for debugging
+      console.log('Removing bet slip item:', {
+        indexToRemove,
+        currentBetSlipLength: state.betSlip.length,
+        ticketToRemove: state.betSlip[indexToRemove]
+      });
+
+      // Make sure the index is valid
+      if (indexToRemove >= 0 && indexToRemove < state.betSlip.length) {
+        // Remove the specific ticket from the bet slip
+        state.betSlip = state.betSlip.filter(
+          (_, index) => index !== indexToRemove
+        );
+
+        // Recalculate totals
+        const totals = calculateTotals(state.betSlip);
+        state.maxWin = totals.maxWin;
+        state.totalStake = totals.totalStake;
+        state.totalToWin = totals.totalToWin;
+      } else {
+        console.error('Invalid index to remove from bet slip:', indexToRemove);
+      }
     },
     updateBetSlipItem: (
       state,
@@ -99,7 +124,7 @@ const pickerSlice = createSlice({
       }
 
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -118,7 +143,7 @@ const pickerSlice = createSlice({
       }
 
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -156,7 +181,7 @@ const pickerSlice = createSlice({
       }
 
       const totals = calculateTotals(state.betSlip);
-
+      state.maxWin = totals.maxWin;
       state.totalStake = totals.totalStake;
       state.totalToWin = totals.totalToWin;
     },
@@ -169,12 +194,17 @@ const pickerSlice = createSlice({
 });
 
 function calculateTotals(betSlip: Ticket[]) {
+  console.log("betSLIPPP", betSlip);
   const totalStake = betSlip.reduce((acc, curr) => acc + curr.stake, 0);
+  const maxWin = Math.max(
+    ...betSlip.map((ticket) => ticket.stake * ticket.multiplier)
+  );
   const totalToWin = betSlip.reduce(
-    (acc, curr) => acc + curr.multiplier * curr.stake,
+    (acc, curr) => acc + curr.stake * curr.multiplier,
     0
   );
-  return { totalStake, totalToWin };
+
+  return { totalStake, totalToWin, maxWin };
 }
 
 export const {

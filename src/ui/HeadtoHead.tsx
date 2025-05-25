@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -38,7 +38,6 @@ const HeadToHead: React.FC = () => {
   const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
   const repeatState = useAppSelector((state) => state.repeat);
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
-  const betSlip = useAppSelector((state) => state.picker.betSlip);
   const currentDate = new Date().getTime();
   const [clickOrder, setClickOrder] = useState<number[]>([]);
   const expiryOfGame = gameCreatedDate?.setMinutes(
@@ -50,7 +49,8 @@ const HeadToHead: React.FC = () => {
     toWin: number,
     expiry: number,
     stake: number,
-    gameId: number
+    gameId: number,
+    startTime: string
   ) => {
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
@@ -62,6 +62,7 @@ const HeadToHead: React.FC = () => {
           stake: toWin,
           gameId: gameId,
           gameType: gameType,
+          startTime: startTime,
         })
       );
     }
@@ -135,12 +136,32 @@ const HeadToHead: React.FC = () => {
             <div className="oddeven flex justify-center">
               <ButtonSizes
                 text="ODD 1.2"
-                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+                onClick={() =>
+                  handleDispatch(
+                    "12.4",
+                    1,
+                    10,
+                    12,
+                    12,
+                    6000,
+                    gameState.game?.startTime + ""
+                  )
+                }
                 isHeadToHead={true}
               />
               <ButtonSizes
                 text="EVEN 1.2"
-                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+                onClick={() =>
+                  handleDispatch(
+                    "12.4",
+                    1,
+                    10,
+                    12,
+                    12,
+                    6000,
+                    gameState.game?.startTime + ""
+                  )
+                }
                 isHeadToHead={true}
               />
             </div>
@@ -148,12 +169,32 @@ const HeadToHead: React.FC = () => {
               <ButtonSizes
                 text="LOW 1.2"
                 isHeadToHead={true}
-                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+                onClick={() =>
+                  handleDispatch(
+                    "12.4",
+                    1,
+                    10,
+                    12,
+                    12,
+                    6000,
+                    gameState.game?.startTime + ""
+                  )
+                }
               />
               <ButtonSizes
                 text="HIGH 1.2"
                 isHeadToHead={true}
-                onClick={() => handleDispatch("12.4", 1, 10, 12, 12, 6000)}
+                onClick={() =>
+                  handleDispatch(
+                    "12.4",
+                    1,
+                    10,
+                    12,
+                    12,
+                    6000,
+                    gameState.game?.startTime + ""
+                  )
+                }
               />
             </div>
           </div>
@@ -163,4 +204,4 @@ const HeadToHead: React.FC = () => {
   );
 };
 
-export default HeadToHead;
+export default memo(HeadToHead);

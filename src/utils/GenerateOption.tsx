@@ -5,10 +5,14 @@ import { useState, useEffect } from "react";
 import Fourrowhover from "../components/svg/fourrowhover";
 import Fourrow from "../components/svg/Fourrow";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
-import { addToBetSlip } from "../features/slices/pickerSlice";
+import {
+  addToBetSlip,
+  removeFromBetSlip,
+} from "../features/slices/pickerSlice";
 import { Market, GameData } from "../features/slices/RacingGameSlice";
-import { setIsClearCircle } from "../features/slices/gameType";
+import { removemessage, setIsClearCircle } from "../features/slices/gameType";
 import { DispatchParams } from "../ui/Table";
+import { OddNUMBERMap } from "./odd";
 
 type ElementTag = keyof JSX.IntrinsicElements;
 
@@ -25,7 +29,7 @@ const specialNumbers = {
   therdRownumbers: [3, 6, 9, 12, 15, 18, 21, 24, 27, 28, 30, 33, 36],
 };
 const CollactionNumbers = {
-  0: 37,
+  0: 32,
   1: 15,
   2: 19,
   3: 4,
@@ -62,16 +66,19 @@ const CollactionNumbers = {
   34: 3,
   35: 26,
   36: 0,
-  37: undefined,
 };
 const GenerateOption = (
   element: ElementTag,
   start: number,
   number: number,
   hoveredClass: string,
-  gameId?: any,
+  gameId?: string,
+  currentgameNumber?: any,
+
   sethoverdclass: (className: string) => void
 ): JSX.Element[] => {
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+  const gameState = useAppSelector((state) => state.betData.data);
   const result = [];
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
@@ -94,47 +101,84 @@ const GenerateOption = (
       value,
     ])
   );
+  const checkIsSelected = (stakeInfo: string) => {
+    for (let value of betSlip) {
+      if (value.stakeInformation === stakeInfo) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+        return true;
+      }
+    }
 
+    return false;
+  };
   const handlefindindex = (index: number) => {
     const keyForValue = Array.from(CollactionNumbersMap.entries()).find(
       ([, value]) => value === index
     )?.[0];
-
     return keyForValue;
   };
+  const gameStates = useAppSelector((state) => state.game);
+  const gameCreatedDate =
+    gameStates.game && new Date(gameStates.game?.createdAt);
+  const expiryOfGame = gameCreatedDate?.setMinutes(
+    gameCreatedDate.getMinutes() + 5
+  );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+
   const handleClickofNumber = (
     i: number,
-    stake: number[],
+    stake: any,
     Multiplier: number,
     selected: string,
     stakeInfo: string,
-    oddType?: string
+    oddType: string,
+    gameType: string
   ) => {
-    const number1 = handlefindindex(i);
-    const number2 = handlefindindex(i + 1);
-    const number3 = handlefindindex(i + 2);
-    const number4 = handlefindindex(i - 1);
-    const number5 = handlefindindex(i - 2);
-    dispatch(setIsClearCircle(false));
-    dispatch(
-      addToBetSlip({
-        selected: [number1, number2, number3, number4, number5],
-        stakeInformation: stakeInfo,
-        multiplier: Multiplier,
-        gameId: gameId,
-        stake: stake,
-        oddType: oddType,
-      })
+    const startTime = gameStates.game?.startTime + "";
+    const totalKeys = Array.from(CollactionNumbersMap.keys()).length;
+    const number1 = CollactionNumbersMap.get(handlefindindex(i));
+    const number2 = CollactionNumbersMap.get(
+      (handlefindindex(i) + 1) % totalKeys
     );
+    const number3 = CollactionNumbersMap.get(
+      (handlefindindex(i) + 2) % totalKeys
+    );
+    const number4 = CollactionNumbersMap.get(
+      (handlefindindex(i) - 1 + totalKeys) % totalKeys
+    );
+    const number5 = CollactionNumbersMap.get(
+      (handlefindindex(i) - 2 + totalKeys) % totalKeys
+    );
+    const selectedArray = [number5, number4, number1, number2, number3];
+    dispatch(setIsClearCircle(false));
+    if (!checkIsSelected(stakeInfo)) {
+      dispatch(removemessage(!removemessage));
+      dispatch(
+        addToBetSlip({
+          selected: selectedArray,
+          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          stakeInformation: stakeInfo,
+          multiplier: OddNUMBERMap.Nei,
+          gameId: gameId,
+          stake: 10,
+          toWin: 10,
+          oddType: oddType,
+          gameType: "SpinAndWin",
+          gameNumber: currentgameNumber,
+          startTime: startTime,
+        })
+      );
+    }
   };
-  for (let i = 0; i < number; i++) {
-    const handleMouseEnterbottom = (index: number) => {
-      setHoverIndex(index);
-    };
+  const handleMouseEnterbottom = (index: number) => {
+    setHoverIndex(index);
+  };
 
-    const handleMouseLeavebottom = () => {
-      setHoverIndex(null);
-    };
+  const handleMouseLeavebottom = () => {
+    setHoverIndex(null);
+  };
+
+  for (let i = 0; i <= number; i++) {
     if (i == 0) {
       className = "green";
     }
@@ -172,7 +216,15 @@ const GenerateOption = (
           },
           onMouseLeave: handleMouseLeavebottom,
           onClick: () => {
-            handleClickofNumber(i, 10, 10, "1st 12", "Neighbors", "Neighbors");
+            handleClickofNumber(
+              hoverIndex,
+              OddNUMBERMap.Nei,
+              10,
+              `Neighbors`,
+              `Neighbors of ${hoverIndex}`,
+              "Neighbors",
+              "SpinAndWin"
+            );
           },
         },
         i.toString(),
@@ -195,20 +247,42 @@ export const GenerateOption2 = (
   element: ElementTag,
   start: number,
   number: number,
-  gameId?: any
+  gameId?: any,
+  gameNumber?: any,
+  gameStartTime?: any,
 ): JSX.Element[] => {
   const result = [];
   const dispatch = useAppDispatch();
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
   const IsCircle = useAppSelector((state) => state.gameType.isClearCircle);
   const [circles, setCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
+
+  const gameState = useAppSelector((state) => state.game);
+  const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
+  const expiryOfGame = gameCreatedDate?.setMinutes(
+    gameCreatedDate.getMinutes() + 5
+  );
+  const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
+
+  const [isExist, setisExist] = useState(false);
   useEffect(() => {
-    if (IsCircle) setCircles([]); // Run once when IsCircle changes
+    if (IsCircle) setCircles([]);
   }, [IsCircle, setCircles]);
   const [hoverCircles, setHoverCircles] = useState<boolean[]>(
     Array.from({ length: number - start + 1 }, () => false)
   );
+  const checkIsSelected = (selected: number) => {
+    for (let value of betSlip) {
+      if (value.selected[0] == selected) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(value)));
+        return true;
+      }
+    }
+
+    return false;
+  };
   for (let i = number; i >= start; i--) {
     var className = "";
     var containerclassName = "";
@@ -217,22 +291,30 @@ export const GenerateOption2 = (
     const issecondrow = specialNumbers.secRownumbers.includes(i);
     const isThirdrow = specialNumbers.therdRownumbers.includes(i);
 
-    const handleclick = (index: number, i: number, param: DispatchParams) => {
+    const handleclick = (index: number, i: number) => {
+      console.log('game start time',gameStartTime);
       const newCircles = [...circles];
       newCircles[index] = !newCircles[index];
       setCircles(newCircles);
       dispatch(setIsClearCircle(false));
-      dispatch(
-        addToBetSlip({
-          selected: [i],
-          stakeInformation: "Win",
-          multiplier: 10,
-          gameId: gameId,
-          stake: 10,
-          toWin: 10,
-          oddType: "Win",
-        })
-      );
+      if (!checkIsSelected(i)) {
+        dispatch(removemessage(!removemessage));
+        dispatch(
+          addToBetSlip({
+            selected: [i],
+            expiry: ticketExpiry,
+            stakeInformation: "Win",
+            multiplier: OddNUMBERMap.Win,
+            gameId: gameId,
+            stake: 10,
+            toWin: 10,
+            oddType: "Win",
+            gameNumber: gameNumber,
+            gameType: "SpinAndWin",
+            startTime: gameStartTime + "",
+          })
+        );
+      }
     };
     const handleMouseEnter = (index: number) => {
       const newHoverCircles = Array(number - start + 1).fill(false);
@@ -251,7 +333,9 @@ export const GenerateOption2 = (
           : "Red relative redhover";
     } else if (i >= 11 && i <= 19) {
       className =
-        i % 2 === 0 ? "Red redhover relative" : "black relative blackhover";
+        i % 2 === 0 || i === 19
+          ? "Red redhover relative"
+          : "black relative blackhover";
     } else if (i >= 20 && i <= 28) {
       className =
         i % 2 === 0 ? "black blackhover relative" : "Red relative redhover";

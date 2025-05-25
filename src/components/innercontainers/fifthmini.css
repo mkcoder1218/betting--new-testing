@@ -1,0 +1,96 @@
+.neighbors-container {
+  min-height: 120px;
+  max-height: 120px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.neighbors-title {
+  font-size: 16px;
+  color: white;
+  padding: 8px 16px;
+}
+
+.neighbors-scroll-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 70px;
+}
+
+.scroll-button {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 100%;
+  background-color: rgb(28, 64, 28);
+  color: white;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.scroll-button.left {
+  left: 0px;
+}
+
+.scroll-button.right {
+  right: 0;
+}
+
+.numbers-container {
+  flex: 1;
+  display: flex;
+  overflow-x: scroll;
+  padding: 0 32px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  max-width: calc(42vw * 30); /* Show roughly 30 numbers initially */
+  background-color: white; /* White background for borders */
+}
+
+.numbers-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Styling for the custom number items */
+.number-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  color: white;
+  font-weight: normal;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  flex-shrink: 0; /* Prevent number items from shrinking */
+  border: 1px solid white; /* White border around each number */
+}
+
+.number-item.red {
+  background-color: #e20612;
+}
+
+.number-item.black {
+  background-color: #000;
+}
+
+.number-item.green {
+  background-color: #1e3a1e;
+}
+
+/* Hover and selected states */
+.number-item:hover {
+  opacity: 0.8;
+}
+
+.number-item.hovered {
+  background-color: #1e3a1e !important; /* Green background for all hovered neighbors */
+  border: 1px solid #34c759; /* Green border for hovered neighbors */
+  opacity: 1;
+} 

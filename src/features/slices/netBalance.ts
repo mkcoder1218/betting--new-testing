@@ -1,10 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
 import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 interface Data {
   netAmount: string;
   creditAmount: string;
+  limitMet: boolean;
 }
 
 interface ApiResponse {
@@ -45,7 +48,7 @@ export const { addNetBalance } = netBalanceSlice.actions;
 export default netBalanceSlice.reducer;
 
 export const getNetBalance =
-  (shopId: string | undefined) =>
+  (cashierId: string | undefined, shopId: string | undefined) =>
   async (
     dispatch: (arg0: {
       payload: BalanceState;
@@ -58,7 +61,11 @@ export const getNetBalance =
 
     try {
       const netBalanceRes: ApiResponse = (
-        await axiosInstance.get(`ticket/balance/${shopId}`)
+        await axiosInstance.post(`ticket/balance/cashier`, {
+          cashierId: cashierId,
+          shopId: shopId,
+          date: moment().toISOString(),
+        })
       ).data;
 
       if (netBalanceRes.message === "success") {

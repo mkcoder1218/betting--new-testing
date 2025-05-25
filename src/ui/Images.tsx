@@ -1,17 +1,19 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface Image {
   src: string;
   isHeadtoHead?: boolean;
+  className?: string;
 }
 function Images(Prop: Image) {
+
   return (
     <img
-      className={`${!Prop.isHeadtoHead ? "pr-14" : "h-8"}`}
+      className={`${!Prop.isHeadtoHead ? "pr-5" : "h-8"} ${Prop.className || ""}`}
       src={Prop.src}
-      style={{ width: !Prop.isHeadtoHead ? "29%" : "20%" }}
+      style={{ width: !Prop.isHeadtoHead ? "38%" : "100%" }}
     />
   );
 }
 
-export default Images;
+export default memo(Images);

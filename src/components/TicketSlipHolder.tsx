@@ -6,21 +6,32 @@ import {
   addToBetSlip,
   clearNumbers,
 } from "../features/slices/pickerSlice";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
 import { defaultStake } from "../config/constants";
+import { GameData } from "../features/slices/RacingGameSlice";
+import moment from "moment";
+import PlusMinus from "../ui/PlusMinus";
+import { removemessage } from "../features/slices/gameType";
 // import { writeToPrinter } from "./SlipPrinter";
+import racingGameSlice from "../features/slices/RacingGameSlice";
 interface TicketHolderProp {
   gameType: string;
+  gameData: GameData;
+  update: boolean;
 }
 
-const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
+const TicketSlipHolder: React.FC<TicketHolderProp> = ({
+  gameType,
+  gameData,
+  update,
+}) => {
   const pickedNumbers = useAppSelector((state) => state.picker.selected);
   const betSlip = useAppSelector((state) => state.picker.betSlip);
   const betState = useAppSelector((state) => state.betSlip);
   const gameState = useAppSelector((state) => state.game);
   const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
-
+  const gameDataRacing = useAppSelector((state) => state.racingGame);
   const expiryOfGame = gameCreatedDate?.setMinutes(
     gameCreatedDate.getMinutes() + 5
   );
@@ -38,12 +49,18 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
     setOdds([]);
   };
 
+  useEffect(() => {
+    if (update) clearList();
+  }, [update]);
+
   const addToSlip = ({
     selected,
     multiplier,
     toWin,
     stake,
     gameId,
+    stakeInformation,
+    gameNumber,
   }: Ticket) => {
     for (let item of betSlip) {
       if (selected === item.selected) {
@@ -54,17 +71,21 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
     // if (currentDate > ticketExpiry) {
     //   return;
     // }
-
+    console.log("gameData:", gameDataRacing, gameData);
     for (let i = 0; i < repeatState.repeat; i++) {
       dispatch(
         addToBetSlip({
           selected: selected,
-          expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
+          expiry: new Date(gameData.startTime).getTime(),
           multiplier,
           toWin,
           stake,
-          gameId,
+          gameId: gameData.id,
           gameType,
+          stakeInformation: stakeInformation,
+          oddType: "Win",
+          gameNumber: gameData.gameData.Number,
+          startTime: gameData.startTime,
         })
       );
     }
@@ -99,7 +120,10 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
 
     // writeToPrinter();
   }, [pickedNumbers]);
-
+  const [isAddbutton, setIsAddbutton] = useState(true);
+  const handleAddandRemove = useCallback(() => {
+    setIsAddbutton(prev => !prev);
+  }, []);
   return (
     <div
       className=""
@@ -113,58 +137,75 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({ gameType }) => {
       <button
         // disabled={!gameState.game || odds.length < 1}
         onClick={clearList}
-        className="flex items-center gap-3 bg-red-500 text-white p-1 pl-3 pr-3 disabled:bg-red-300 ml-8"
+        className="flex items-center gap-1 bg-rose-400 text-white p-1 pl-3 pr-3 disabled:bg-red-300 ml-5 mb-4 clearAdd"
       >
         CLEAR{" "}
         <span>
           <RiDeleteBin6Line />
         </span>{" "}
       </button>
-      {
-        /*gameState.game &&*/ odds.length > 0 && (
-          <>
-            <button
-              style={{ backgroundColor: "#37B34A" }}
-              // disabled={currentDate > ticketExpiry}
-              onClick={() =>
-                addToSlip({
-                  selected: pickedNumbers,
-                  multiplier: odds[odds.length - 1].multiplier,
-                  toWin: odds[odds.length - 1].multiplier,
-                  expiry: ticketExpiry,
-                  stake: defaultStake,
-                  gameId: gameState.game?.gamenumber,
-                  gameType: gameType,
-                })
-              }
-              className="p-1 pl-3 pr-3 ml-8 text-white text-lg mt-2"
-            >
-              ADD TO BETSLIP
-            </button>
-            <div className="slip-container w-70 mt-3 flex flex-col flex-shrink-0">
-              <div className="slip-head bg-green-500 font-bold text-sm text-white p-2">
-                HIGHEST PAYOUT{" "}
-                {Math.max(...odds.map((item) => item.multiplier))} FROM{" "}
-                {pickedNumbers.length}
-              </div>
-              {odds.map((item, index) => {
-                return (
-                  <SlipItem
-                    selected={item.winLength}
-                    maxWin={item.multiplier}
-                    key={index}
-                  />
-                );
-              })}
+      {pickedNumbers.length > 0 ? (
+        /*gameState.game &&*/ <>
+          <button
+            style={{ backgroundColor: "#37B34A" }}
+            // disabled={currentDate > ticketExpiry}
+            onClick={() => {
+              addToSlip({
+                selected: pickedNumbers,
+                multiplier: odds[odds.length - 1].multiplier,
+                toWin: odds[odds.length - 1].multiplier,
+                expiry: ticketExpiry,
+                stake: defaultStake,
+                gameId: gameState.game?.gamenumber,
+                gameType: gameType,
+                stakeInformation: "Win",
+                startTime: gameState.game?.startTime + "",
+              });
+              dispatch(removemessage(!removemessage));
+            }}
+            className="p-1 addtobetButton text-white text-lg mt-2 -ml-5"
+          >
+            ADD TO BETSLIP
+          </button>
 
-              <div className="slip-footer pl-10 pr-10 text-black flex justify-between items-center p-1.5">
-                <span>Hits</span>
-                <span>Pays</span>
-              </div>
+          <div className="slip-container w-56 md:w-68 max-lg:-ml-16 -ml-14 md:-ml-14 mt-3 flex flex-col">
+            <div
+              className={`slip-head ${
+                isAddbutton
+                  ? "bg-green-500 text-white"
+                  : "border text-green-600 border-t-green-700"
+              } flex justify-between text-start font-bold text-sm `}
+            >
+              {`HIGHEST PAYOUT ${Math.max(
+                ...odds.map((item) => item.multiplier)
+              )} FROM ${pickedNumbers.length}`}
+              <PlusMinus onClick={handleAddandRemove} isActive={isAddbutton} />
             </div>
-          </>
-        )
-      }
+            {isAddbutton ? (
+              <>
+                {" "}
+                {odds.map((item, index) => {
+                  return (
+                    <SlipItem
+                      selected={item.winLength}
+                      maxWin={item.multiplier}
+                      key={index}
+                    />
+                  );
+                })}
+                <div className="slip-footer pl-10 pr-10 text-black flex justify-between items-center p-1.5">
+                  <span>Hits</span>
+                  <span>Pays</span>
+                </div>
+              </>
+            ) : (
+              ""
+            )}
+          </div>
+        </>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

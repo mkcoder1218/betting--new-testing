@@ -28,6 +28,9 @@ function Bike() {
         id="6000"
         time="00:00"
         activeIndexValues={activeIndexValue}
+        isActiveGame={false}
+        WhichGameSelected="Bike"
+        isActiveClicked={() => {}}
       />
     </div>
   );

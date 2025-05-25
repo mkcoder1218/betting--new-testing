@@ -1,6 +1,13 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
+import { TicketInterface } from "../../utils/ticket.interface";
+import { generateEvenAndOddArrays } from "../../utils/evenoddgenerate";
+import { formatNumberWithCommas } from "../../utils/numberGenerate";
+import { ColumnMap } from "../../utils/columnMap";
+import { MapRedAndBlack } from "../../utils/redblackMap";
+import { range } from "../../utils/range";
+import { BetSlipResponse } from "../../utils/patch";
 
 interface Game {
   id: string;
@@ -43,11 +50,11 @@ export interface Ticket {
   updatedAt: string;
   Game: Game;
   BetSlip: BetSlip;
-  gameType?: string
+  gameType?: string;
 }
 
 interface TicketResponse {
-  data: Ticket[];
+  data: BetSlipResponse[];
   message: string;
   error: null | any;
 }
@@ -56,7 +63,7 @@ interface TicketState {
   loading: boolean;
   error: string | null;
   message: string | null;
-  data: Ticket[];
+  data: BetSlipResponse[];
 }
 
 let initialState: TicketState = {
@@ -132,21 +139,691 @@ export const recallTickets =
     }
   };
 
-export const printSelectedTickets = async (req: any) => {
-    try {
-        const printSelectedResponse = await axiosInstance.post("ticket/printEvent", req);
-
-        if (printSelectedResponse.status === 200 || printSelectedResponse.status === 201) {
-            const printSelectedData = await axios.post("http://localhost:5000/printEvent", printSelectedResponse.data.data)
-        }
-    } catch (err) {
-        console.log(err);
-    }
+function formatNumber(num) {
+  if (num % 1 !== 0) {
+    return num.toString();
+  } else {
+    return num.toFixed(2);
+  }
 }
+function transformData(data) {
+  const lineItems = [];
+
+  // Add header information
+  lineItems.push({
+    LineItem: data.betSlipNumber,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 2,
+    NewLine: true,
+    PartOfHeader: true,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+  lineItems.push({
+    LineItem: data.shopName,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 2,
+    NewLine: true,
+    PartOfHeader: true,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+
+  lineItems.push({
+    LineItem: data.cashierName,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 2,
+    NewLine: true,
+    PartOfHeader: true,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+
+  lineItems.push({
+    LineItem: data.gameStart,
+    FontName: "Arial",
+    FontSize: 8,
+    Bold: false,
+    Italic: false,
+    Alignment: 2,
+    NewLine: true,
+    PartOfHeader: true,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+
+  // Iterate over tickets and add ticket information
+  data.tickets.forEach((ticket) => {
+    lineItems.push(
+      {
+        LineItem:
+          ticket.oddType.charAt(0).toUpperCase() +
+          ticket.oddType.slice(1).toLowerCase(),
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: true,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      },
+      {
+        LineItem: `Br ${formatNumber(parseFloat(ticket.stake))}`,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: true,
+        Italic: false,
+        Alignment: 2,
+        NewLine: false,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      }
+    );
+    lineItems.push({
+      LineItem: ticket.game,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    });
+
+    lineItems.push({
+      LineItem:
+        ticket.game.split(" ")[0] === "Keno" ||
+        ticket.game.split(" ")[0] === "Spin"
+          ? "    " + ticket.selected
+          : "    " +
+            ticket.selected.split(" ")[0] +
+            ". " +
+            ticket.playerName +
+            " " +
+            ticket.selected.split(" ")[1],
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    });
+    lineItems.push(
+      {
+        LineItem: null,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      },
+      {
+        LineItem: null,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      },
+      {
+        LineItem: null,
+        FontName: "Arial",
+        FontSize: 8,
+        Bold: false,
+        Italic: false,
+        Alignment: 0,
+        NewLine: true,
+        PartOfHeader: false,
+        PrintDoubleBlock: false,
+        RowsInDoubleBlock: 2,
+        IsImage: false,
+        IsTerms: false,
+        ImageFileType: null,
+        Underline: false,
+      }
+    );
+    // Add stake information
+  });
+  lineItems.push(
+    {
+      LineItem: "Total Stake",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Br " + data.stake,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
+  // Add payout information
+  lineItems.push({
+    LineItem: "Min Payout (Incl. Stake)",
+    FontName: "Arial",
+    FontSize: 9,
+    Bold: true,
+    Italic: false,
+    Alignment: 0,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: true,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+
+  lineItems.push({
+    LineItem: `Br ${data.minPayout}`,
+    FontName: "Arial",
+    FontSize: 9,
+    Bold: true,
+    Italic: false,
+    Alignment: 2,
+    NewLine: false,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+
+  lineItems.push({
+    LineItem: "Max Payout (Incl. Stake)",
+    FontName: "Arial",
+    FontSize: 9,
+    Bold: true,
+    Italic: false,
+    Alignment: 0,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+
+  lineItems.push({
+    LineItem: `Br ${data.maxPayout}`,
+    FontName: "Arial",
+    FontSize: 9,
+    Bold: true,
+    Italic: false,
+    Alignment: 2,
+    NewLine: false,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+  lineItems.push(
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
+  lineItems.push({
+    LineItem: `*${data.betSlipNumber}*`,
+    FontName: "BetManBarcode",
+    FontSize: 11,
+    Bold: false,
+    Italic: false,
+    Alignment: 1,
+    NewLine: true,
+    PartOfHeader: false,
+    PrintDoubleBlock: false,
+    RowsInDoubleBlock: 2,
+    IsImage: false,
+    IsTerms: false,
+    ImageFileType: null,
+    Underline: false,
+  });
+  lineItems.push(
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "N/A",
+      FontName: "Arial",
+      FontSize: 5,
+      Bold: false,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: true,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: ".",
+      FontName: "Arial",
+      FontSize: 5,
+      Bold: false,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: true,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
+  return {
+    Content: lineItems,
+    PrintWatermark: data.isCopy === false ? false : true,
+  };
+}
+export const printSelectedTickets = async (req: any) => {
+  try {
+    const printSelectedResponse = await axiosInstance.post(
+      "ticket/printSelected",
+      req
+    );
+    if (printSelectedResponse.data) {
+      let updateTicket = printSelectedResponse?.data?.data;
+      const { evens, odds } = generateEvenAndOddArrays(1, 36);
+      updateTicket.minPayout = formatNumberWithCommas(
+        parseFloat(updateTicket.minPayout + "")
+      );
+      updateTicket.maxPayout = formatNumberWithCommas(
+        parseFloat(updateTicket.maxPayout + "")
+      );
+      updateTicket.stake = parseFloat(updateTicket.stake).toFixed(2);
+
+      updateTicket.tickets.map((ticket) => {
+        const gameParts = ticket.game.split(" "); // Split the string into parts
+        const firstPart = gameParts[0];
+        let selected = ticket.selected;
+        let oddType = ticket.oddType;
+
+        switch (firstPart) {
+          case "SpeedSkating":
+            gameParts[0] = "Speed Skating";
+            break;
+          case "SpinAndWin":
+            gameParts[0] = "Spin And Win";
+
+            ColumnMap.col1.every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "col1 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Column"))
+              : ColumnMap.col2.every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "col2 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Column"))
+              : ColumnMap.col3.every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "col3 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Column"))
+              : MapRedAndBlack.Black.every((item) =>
+                  selected.includes(Number(item))
+                )
+              ? ((selected =
+                  "Black " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Color"))
+              : MapRedAndBlack.Red.every((item) =>
+                  selected.includes(Number(item))
+                )
+              ? ((selected =
+                  "Red " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Color"))
+              : range(1, 18).every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "1-18 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "High/Low"))
+              : range(19, 36).every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "19-36 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "High/Low"))
+              : evens.every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "Even " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Odd/Even"))
+              : odds.every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "Odd " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Odd/Even"))
+              : range(1, 12).every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "1st 12 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Dozens"))
+              : range(13, 24).every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "2nd 12 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Dozens"))
+              : range(25, 36).every((item) => selected.includes(Number(item)))
+              ? ((selected =
+                  "3rd 12 " +
+                  ticket.selected.split(" ")[
+                    ticket.selected.split(" ").length - 1
+                  ]),
+                (oddType = "Dozens"))
+              : oddType.split(")")[0] === "Selector(color"
+              ? (oddType = "Sector(Colour)")
+              : oddType === "Neighbors"
+              ? (selected = selected.split(", ").join("/"))
+              : "";
+            break;
+          case "DashingDerby":
+            gameParts[0] = "Horse Racing";
+            break;
+          case "MotorRacing":
+            gameParts[0] = "Motor Racing";
+            break;
+          case "PlatinumHounds":
+            gameParts[0] = "GrayHound Racing";
+            break;
+          case "CycleRacing":
+            gameParts[0] = "Track Racing";
+            break;
+          case "PreRecRealDogs":
+            gameParts[0] = "GreyHound RACING";
+            break;
+          case "SingleSeaterMotorRacing":
+            gameParts[0] = "SS Motor Racing";
+            break;
+          case "SteepleChase":
+            gameParts[0] = "Steeple Chase Racing";
+            break;
+          case "HarnessRacing":
+            gameParts[0] = "Harness Racing";
+            break;
+          default:
+            gameParts[0] = "Keno";
+        }
+        ticket.game = gameParts.join(" ");
+        ticket.selected = selected;
+        ticket.oddType = oddType;
+      });
+
+      const printSelectedData = await axios.post(
+        "http://localhost:8080/PRINT/",
+        JSON.stringify(transformData(updateTicket)),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+        }
+      );
+    }
+  } catch (err) {}
+};
 
 export const isPrinterUp = async () => {
   try {
-    const printerStatus = await axios.get("http://localhost:5000/check");
+    const printerStatus = await axios.get("http://127.0.0.1:5002/check");
 
     if (printerStatus.status === 200) {
       return true;

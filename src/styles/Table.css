@@ -2,97 +2,139 @@
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   margin: 20px 0;
-  padding: 0; 
-
+  padding: 0;
+  overflow: hidden !important;
 }
-.table{
+/* High-performance animation using opacity instead of transform */
+@keyframes tableanimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  contain: content; /* Improve performance with CSS containment */
+}
+
+/* Apply hardware acceleration and reduce paint operations */
+.animator {
+  animation: tableanimation 0.2s ease-out forwards;
+  will-change: opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+  transform: translate3d(0, 0, 0);
+}
+.table {
   border-collapse: collapse;
-  border-spacing:0;
-width: 0% !important;
+  border-spacing: 0;
+}
+.notCombo {
+  color: rgba(5, 8, 5, 0.808) !important;
+  border-radius: 10% !important;
+  font-size: 19px !important;
+  border-color: rgba(55, 174, 5, 0.878) !important;
+  font-family: "Roboto Condensed" !important;
+  text-align: center !important;
+  height: 5px !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  min-width: 45px !important;
+  min-height: 25px !important;
+}
+.notCombo-color {
+  background-color: rgba(255, 255, 0, 0.574) !important;
+}
+.isCombo {
+  min-width: 34px !important;
+  border-radius: 10% !important;
+  min-height: 26px !important;
+  font-size: 14px !important;
+  height: 3px !important;
+}
+.isActive{
+  background-color: #257832 !important;
+}
 
-}
-.notCombo{
-  
- color: rgba(5, 8, 5, 0.808) !important;
- border-radius: 10% !important;
- font-size: 19px !important;
- border-color: rgba(6, 231, 6, 0.637) !important;
-   font-family: 'Roboto Condensed' !important;
-text-align: center !important;
-height: 5px !important;
-max-width: 40px;
-min-height: 30px !important;
-}
-.notCombo-color{
-background-color: rgba(255, 255, 0, 0.574) !important;
-}
-.isCombo{
-min-width: 38px !important;
-border-radius: 10% !important;
-min-height: 26px !important;
-font-size: 14px !important;
-height: 3px !important;
-
-
-}
 .TableHead th {
-  border: none; 
-  font-size: 10px !important; 
-  line-height: 1.2; 
+  border: none;
+  font-size: 11.5px !important;
+  line-height: 1.2;
   height: 50px;
-   margin: 0 0 0 0 !important;
-   padding: 2px 1px !important;
-color: rgb(87, 87, 87) !important;
-text-transform: uppercase !important;
-
-
-
+  margin: 0 0 0 0 !important;
+  padding: 2px 1px !important;
+  color: rgb(87, 87, 87) !important;
+  text-transform: uppercase !important;
 }
-.TableHead th:nth-child(7){
-   border-left: #02ad1c25 0.5px solid !important;
-   padding-left: 10px !important;
-
+.TableHead th:nth-child(7) {
+  border-left: #02ad1c25 0.5px solid !important;
+  padding-left: 3px !important;
 }
-.Tablerow{
+.Tablerow {
   width: 10px;
 }
-.tableBody svg{
-width: 12px;
- color: rgb(0, 202, 37);
- gap: 1px;
+.tableBody svg {
+  width: 12px;
+  color: rgb(0, 202, 37);
+  gap: 1px;
 }
-.tableBody{
-      display: table-row-group;
-      vertical-align: middle;
-    
+.tableBody {
+  display: table-row-group;
+  vertical-align: middle;
 }
-.tableBody td:nth-child(2),td:nth-child(3),td:nth-child(4),td:nth-child(5),td:nth-child(7) {
-  padding: 0.3px 0px; /* Minimal padding for body cells */
-  border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
+/* Optimized table cell styles with CSS variables and reduced specificity */
+:root {
+  --table-border-light: rgba(172, 231, 182, 0.308);
+  --table-border-lighter: rgba(172, 231, 182, 0.139);
+  --table-border-accent: #02ad1c25;
+  --table-text-color: gray;
+  --table-font-size-small: 9px;
+  --table-font-size-normal: 13px;
+}
+
+/* Common styles for table cells */
+.tableBody td {
+  border-bottom: 1px solid var(--table-border-light);
+  padding: 10px 0 5px;
   line-height: 1;
- margin: 0 0 0 0 !important;
-font-size: 13px !important;
-  padding-top: 10px !important;
+  font-size: var(--table-font-size-normal);
+  color: var(--table-text-color);
+  contain: content; /* CSS containment for better performance */
 }
+
+/* First cell specific styles */
+.tableBody td:first-child {
+  font-size: var(--table-font-size-small);
+  text-transform: capitalize;
+  padding: 2px;
+}
+
+/* Sixth cell specific styles */
 .tableBody td:nth-child(6) {
-  padding: 0.3px 5px; /* Minimal padding for body cells */
-  border-bottom: rgba(172, 231, 182, 0.308) 1px solid; 
-  line-height: 1;
- margin: 0 0 0 0 !important;
-  padding-top: 10px !important;
- 
+  border-bottom-color: var(--table-border-lighter);
 }
 
-.tableBody td:nth-child(7){
-   border-left: #02ad1c25 0.5px solid !important;
-
-
+/* Seventh cell specific styles */
+.tableBody td:nth-child(7) {
+  border-left: 0.5px solid var(--table-border-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-color: var(--table-border-lighter);
 }
 
-.tableBody td:nth-child(1){
+/* Eighth cell specific styles */
+.tableBody td:nth-child(8) {
+  border-left: 0.5px solid var(--table-border-accent);
+  border-bottom-color: var(--table-border-lighter);
+}
 
-  font-size: 10px !important;
-  color: gray !important;
-text-transform: capitalize !important;
-padding: 2px !important;
+/* Bank specific styles */
+.bank {
+  padding-bottom: 5px;
 }

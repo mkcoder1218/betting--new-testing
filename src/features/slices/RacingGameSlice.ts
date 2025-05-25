@@ -84,7 +84,7 @@ export interface Race {
   Name: string;
   PlacePaysOn: number;
   Distance: number;
-  Entries: any[];
+  Entries: Entry[];
   Result: any;
   KenoFeedID: number;
   KenoResult: any;
@@ -248,100 +248,25 @@ export interface RaceSelection {
 }
 
 export interface BettingLayout {
-  EventTypeEnumValue: number;
-  MarketClassEventTypeID: number;
-  Position: number;
-  IsExpanded: boolean;
-  BettingLayoutEnumValue: number;
-  MarketClassID: number;
-  ParentEventTypeEnumValue: any;
-  LayoutPattern: any;
+  ID: string;
+  Description: string;
+  ClassValue?: number;
 }
 
 const initialState: RacingGameState = {
   loading: false,
   error: null,
   message: null,
-  gameType: "MotorRacing",
+  game: null,
+  gameType: "",
 };
 
 const racingGameSlice = createSlice({
-  name: "racinggame",
-  initialState: initialState,
+  name: "racingGame",
+  initialState,
   reducers: {
-    addRacingGame: (state, action: PayloadAction<RacingGameState>) => {
-      state.loading = action.payload.loading;
-      state.error = action.payload.error;
-      state.message = action.payload.message;
-      state.game = action.payload.game;
-    },
+    // Add your reducers here if needed
   },
 });
 
-export const { addRacingGame } = racingGameSlice.actions;
-
 export default racingGameSlice.reducer;
-
-export const getLastRacingGames =
-  (shopId: string | undefined, gameType: string) =>
-  async (
-    dispatch: (arg0: {
-      payload: RacingGameState;
-      type: "racinggame/addRacingGame";
-    }) => void
-  ) => {
-    dispatch(
-      addRacingGame({
-        loading: true,
-        error: null,
-        message: null,
-        game: null,
-        gameType,
-      })
-    );
-
-    try {
-      const gameResponse: GameResponse = (
-        await axiosInstance.post("game/getEventsAndDetails", {
-          shopId: shopId,
-          name: gameType,
-        })
-      ).data;
-
-      if (gameResponse.message === "success") {
-        dispatch(
-          addRacingGame({
-            loading: false,
-            error: gameResponse.error,
-            message: gameResponse.message,
-            game: gameResponse.data.reverse(),
-            gameType,
-          })
-        );
-      } else {
-        dispatch(
-          addRacingGame({
-            loading: false,
-            error: gameResponse.message,
-            message: null,
-            game: null,
-            gameType,
-          })
-        );
-      }
-
-
-    } catch (err: AxiosError | any) {
-      dispatch(
-        addRacingGame({
-          message: "",
-          error: err?.response?.data
-            ? err.response.data.error
-            : "Something went wrong",
-          loading: false,
-          game: null,
-          gameType,
-        })
-      );
-    }
-  };

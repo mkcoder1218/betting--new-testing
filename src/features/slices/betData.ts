@@ -2,6 +2,8 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../config/interceptor";
 import axios, { AxiosError } from "axios";
 import { clearNumbers } from "./pickerSlice";
+import { GameData } from "./RacingGameSlice";
+import moment from "moment";
 
 interface Game {
   gamenumber: number;
@@ -28,7 +30,7 @@ interface Ticket {
   betSlipId: string;
   createdAt: string;
   updatedAt: string;
-  Game: Game;
+  Game: GameData;
 }
 
 export interface BetSlip {
@@ -124,7 +126,6 @@ export const getTicketsToCancel =
         );
       }
     } catch (err: AxiosError | any) {
-
       dispatch(
         addBetData({
           message: "",
@@ -139,7 +140,7 @@ export const getTicketsToCancel =
   };
 
 export const getTicketsToRedeem =
-  (betslip: number | undefined) =>
+  (betslip: number | undefined, shopId: string) =>
   async (
     dispatch: (arg0: {
       payload: BetSlipState;
@@ -152,7 +153,10 @@ export const getTicketsToRedeem =
 
     try {
       const ticketsToCancel: BetSlipResponse = (
-        await axiosInstance.get(`ticket/betslip/byNumber/toRedeem/${betslip}`)
+        await axiosInstance.post(`ticket/betslip/byNumber/toRedeem`, {
+          betSlipNumber: betslip,
+          shopId: shopId,
+        })
       ).data;
 
       if (ticketsToCancel.message === "success") {
@@ -187,7 +191,178 @@ export const getTicketsToRedeem =
       );
     }
   };
+const cancelPrint = (data) => {
+  const lists = [];
 
+  const currentDateTime = moment().format("YYYY/MM/DD HH:mm:ss");
+  const currentTime = moment().format("HH:mm:ss");
+  console.log("datatoprint", data);
+  lists.push(
+    {
+      LineItem: data.shopName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.cashierName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: currentDateTime,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Cancel Receipt",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.betSlipNumber,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Cancelled Amount:",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.cancelledAmount,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Cancelled Time:",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: currentTime,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
+  return {
+    Content: lists,
+  };
+};
 export const cancelTicket =
   (
     gamenumber: number | undefined,
@@ -216,8 +391,14 @@ export const cancelTicket =
       if (cancelTicketResponse.message === "Bet cancelled successfully") {
         try {
           const printCancelRes = await axios.post(
-            "http://localhost:5000/printCancel",
-            cancelTicketResponse.data
+            "http://localhost:8080/PRINT/",
+            JSON.stringify(cancelPrint(cancelTicketResponse.data)),
+            {
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8",
+              },
+            }
           );
         } catch (err) {
           console.log(err);
@@ -261,8 +442,217 @@ export const cancelTicket =
     }
   };
 
+const printReedem = (data) => {
+  const lists = [];
+  console.log("DataTransfer", data);
+  const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
+  const currentTime = moment().format("HH:mm:ss");
+  lists.push(
+    {
+      LineItem: data.shopName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.cashierName,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: currentDateTime,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: true,
+      PartOfHeader: true,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Redeem Receipt",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.betSlipNumber,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Redeemed Amount:",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.redeemedAmount,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: "Redeemed Time:",
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: currentTime,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 2,
+      NewLine: false,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: null,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: false,
+      Italic: false,
+      Alignment: 0,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    },
+    {
+      LineItem: data.status,
+      FontName: "Arial",
+      FontSize: 8,
+      Bold: true,
+      Italic: false,
+      Alignment: 1,
+      NewLine: true,
+      PartOfHeader: false,
+      PrintDoubleBlock: false,
+      RowsInDoubleBlock: 2,
+      IsImage: false,
+      IsTerms: false,
+      ImageFileType: null,
+      Underline: false,
+    }
+  );
+  return {
+    Content: lists,
+  };
+};
 export const redeemTicket =
-  (cashierRedeemId: string | undefined, betslip: number | undefined) =>
+  (
+    cashierRedeemId: string | undefined,
+    betslip: number | undefined,
+    userId: string,
+    shopName: string,
+    cashierName: string
+  ) =>
   async (
     dispatch: (arg0: {
       payload: BetSlipState;
@@ -275,16 +665,26 @@ export const redeemTicket =
 
     try {
       const redeemTicketResposne = (
-        await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
+        await axiosInstance.post("ticket/redeem", {
+          cashierRedeemId,
+          betslip,
+          userId,
+          shopName,
+          cashierName,
+        })
       ).data;
-
-
 
       if (redeemTicketResposne.message === "Ticket redeemed successfully") {
         try {
           await axios.post(
-            "http://localhost:5000/printRedeem",
-            redeemTicketResposne.data
+            "http://localhost:8080/PRINT/",
+            JSON.stringify(printReedem(redeemTicketResposne.data)),
+            {
+              headers: {
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8",
+              },
+            }
           );
         } catch (err) {
           console.log(err);

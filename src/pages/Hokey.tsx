@@ -29,6 +29,9 @@ function Hokey() {
         id="6000"
         time="00:00"
         activeIndexValues={activeIndexValue}
+        isActiveGame={false}
+        WhichGameSelected="Hockey"
+        isActiveClicked={() => {}}
       />
     </div>
   );

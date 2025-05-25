@@ -10,7 +10,6 @@ import RedeemTicket from "./components/RedeemTicket";
 import BetSlip from "./components/BetSlip";
 import { useAppDispatch, useAppSelector } from "./features/hooks";
 import { getOdds } from "./features/slices/oddSlice";
-import { getLastGame } from "./features/slices/gameSlice";
 import { getLastBetSlip } from "./features/slices/betSlip";
 import { addGameType } from "./features/slices/gameType";
 import { addExpiry } from "./features/slices/ticketExpiry";
@@ -28,101 +27,194 @@ import HorseJumping from "./pages/HorseJumping";
 import DogWithOutVideo from "./pages/DogWithOutVideo";
 import Car from "./pages/Car";
 import Hockey from "./pages/Hokey";
-
 import Formula1 from "./pages/Formula1";
-import { getLastRacingGames } from "./features/slices/RacingGameSlice";
+import {
+  fetchEventDetail,
+  GameData,
+  getLastRacingGames,
+} from "./features/slices/RacingGameSliceMultipleSports";
 import Spin from "./pages/Spin";
 import TestComponent from "./utils/Tst";
+import { useAxiosInterceptors } from "./config/interceptor";
+import CircularUnderLoad from "./components/svg/Loader";
+import { getLastGame } from "./features/slices/gameSlice";
+import { getNetBalance } from "./features/slices/netBalance";
+import { getShopData } from "./features/slices/cashierData";
+import setupCashierStatusCheck from "./utils/cashierStatusCheck";
+
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
+  const cashier = useAppSelector((state) => state.cashier);
   const oddData = useAppSelector((state) => state.odd);
-  const gameData = useAppSelector((state) => state.game);
+  // const gameData = useAppSelector((state) => state.game);
   const [printerDialog, setPrinterDialog] = useState(false);
-  const [WhichGameSelected, setWhichgameSelected] = useState("KENO");
+  const [WhichGameSelected, setWhichgameSelected] = useState("SmartPlayKeno");
   const ticketExpiry = useAppSelector((state) => state.expiry);
   const ticketPicker = useAppSelector((state) => state.picker);
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false);
   const [cancelRedeem, setCancelRedeem] = useState("redeem");
   const [lastCheck, setLastCheck] = useState(0);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    dispatch(getNetBalance(user.user?.Cashier.id, user.user?.Cashier.shopId));
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
-
+  const gameData = useAppSelector((state) => state.racingGame);
   const handleRedeemOpen = () => setRedeemStatus(true);
   const handleRedeemClose = () => setRedeemStatus(false);
   const handleCancelRedeem = (val: string) => setCancelRedeem(val);
-
+  const [game, setGame] = useState<GameData>();
   const [remainingTime, setRemainingTime] = useState(0);
-
+  const [update, setUpdate] = useState(true);
+  const [loadCounter, setLoadCounter] = useState(0);
+  useAxiosInterceptors();
   const handlePrintDialogClose = () => {
-    setPrinterDialog(false);
+    setPrinterDialog(true);
+    logout();
   };
 
   function handleRepeat(event: React.ChangeEvent<HTMLSelectElement>) {
     dispatch(addRepeat({ repeat: parseInt(event.target.value) }));
   }
   useEffect(() => {
-    if (WhichGameSelected === "KENO") {
-      dispatch(addGameType(WhichGameSelected));
-    } else {
-      if (WhichGameSelected.length > 0)
+    // Create a debounce function using lodash or use a custom debounce function.
+    const debounceFetch = setTimeout(() => {
+      if (WhichGameSelected === "KENO") {
         dispatch(addGameType(WhichGameSelected));
-      dispatch(
-        getLastRacingGames(
-          "9c6d610d-33e9-4847-80ab-5e179833591e",
-          WhichGameSelected
-        )
-      );
-    }
-  }, [WhichGameSelected]);
-  function calculateRemainingTime() {
-    const lastUpdatedTime = gameData.game?.startTime
-      ? new Date(gameData.game.startTime).getTime()
-      : new Date().getTime();
-    const targetTime = lastUpdatedTime;
-    const currentTime = new Date().getTime();
-    const difference = targetTime - currentTime;
-
-    return difference > 0 ? difference : 0;
-  }
-
-  useEffect(() => {
-    const lastUpdatedTime = gameData.game?.startTime
-      ? new Date(gameData.game.startTime).getTime()
-      : new Date().getTime();
-    dispatch(addExpiry({ expiry: lastUpdatedTime }));
-
-    if (gameData.game) {
-      const currentDiff =
-        new Date().getTime() - new Date(gameData.game?.startTime).getTime();
-      const diffInMinutes = currentDiff / (1000 * 60);
-
-      if (diffInMinutes <= 10) {
-        setRemainingTime(
-          moment(gameData.game?.startTime).diff(moment(), "milliseconds")
-        );
-        dispatch(getLastBetSlip());
-      }
-    }
-
-    const timer = setInterval(() => {
-      setRemainingTime(
-        moment(gameData.game?.startTime).diff(moment(), "milliseconds")
-      );
-      if (lastCheck <= 10) {
-        setLastCheck(lastCheck + 1);
       } else {
-        dispatch(getLastGame(user.user?.Cashier.shopId));
+        if (WhichGameSelected.length > 0) {
+          dispatch(addGameType(WhichGameSelected));
+        }
+        if (
+          !gameData.gamesByType[WhichGameSelected] ||
+          gameData.gamesByType[WhichGameSelected].games.filter((game) => {
+            return moment().diff(moment(game.startTime), "seconds") < 0;
+          }).length <= 1
+        ) {
+          if (cashier.ShopData)
+            dispatch(
+              getLastRacingGames(
+                user.user?.Cashier.shopId,
+                WhichGameSelected,
+                cashier.ShopData?.KironCookieId + ""
+              )
+            );
+          setLoadCounter(loadCounter + 1);
+        }
       }
-    }, 1000);
+    }, 50); // 2-second debounce
 
-    return () => clearInterval(timer);
-  }, [gameData]);
+    // Cleanup function to clear the timeout when `WhichGameSelected` changes.
+    // if (cashier) return () => clearTimeout(debounceFetch);
+  }, [WhichGameSelected, cashier]);
 
   useEffect(() => {
-    if (remainingTime <= 0) {
-      dispatch(getLastGame(user.user?.Cashier.shopId));
+    if (
+      gameData &&
+      WhichGameSelected === "SmartPlayKeno" &&
+      gameData.gamesByType[WhichGameSelected] &&
+      gameData.gamesByType[WhichGameSelected].games &&
+      update
+    ) {
+      const gamesFiltered = gameData.gamesByType[WhichGameSelected].games
+        ?.filter((gamedata) => {
+          return moment(gamedata.startTime).diff(moment(), "seconds") > 0;
+        })
+        .sort((a, b) => {
+          return moment(a.startTime).valueOf() - moment(b.startTime).valueOf();
+        });
+      if (gamesFiltered && gamesFiltered.length > 0) {
+        setGame(gamesFiltered[0]);
+        setLoadCounter(0);
+        setUpdate(false);
+      } else {
+        if (gameData.gamesByType[WhichGameSelected].games)
+          if (loadCounter < 3 && cashier) {
+            dispatch(
+              getLastRacingGames(
+                user.user?.Cashier.shopId,
+                "SmartPlayKeno",
+                cashier.ShopData?.KironCookieId + ""
+              )
+            );
+            setLoadCounter(loadCounter + 1);
+          } else {
+            dispatch(getShopData());
+          }
+      }
+    } else if (
+      !gameData ||
+      (gameData && !gameData.gamesByType[WhichGameSelected]) ||
+      (gameData &&
+        gameData.gamesByType[WhichGameSelected] &&
+        !gameData.gamesByType[WhichGameSelected].games &&
+        WhichGameSelected !== "SmartPlayKeno")
+    ) {
+      if (!cashier.ShopData) {
+        dispatch(getShopData());
+        // dispatch(
+        //   getLastRacingGames(
+        //     user.user?.Cashier.shopId,
+        //     WhichGameSelected,
+        //     cashier.ShopData?.KironCookieId + ""
+        //   )
+        // );
+      } else {
+        // dispatch(getShopData());
+      }
+    }
+  }, [gameData, update, WhichGameSelected]);
+
+  useEffect(() => {
+    dispatch(getShopData());
+  }, []);
+
+  useEffect(() => {
+    if (game) {
+      const lastUpdatedTime = game
+        ? new Date(game.startTime).getTime()
+        : new Date().getTime();
+      dispatch(addExpiry({ expiry: lastUpdatedTime }));
+
+      if (game && update) {
+        const currentDiff =
+          new Date().getTime() - new Date(game.startTime).getTime();
+        const diffInMinutes = currentDiff / (1000 * 60);
+
+        if (diffInMinutes <= 10) {
+          setRemainingTime(
+            moment(game.startTime).diff(moment(), "milliseconds")
+          );
+        }
+      }
+      const timer = setInterval(() => {
+        setRemainingTime(moment(game.startTime).diff(moment(), "milliseconds"));
+        if (lastCheck <= 10) {
+          setLastCheck(lastCheck + 1);
+        } else {
+          // dispatch(getLastGame(user.user?.Cashier.shopId));
+        }
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [game, update]);
+  useEffect(() => {
+    const intervalMs = 10 * 60 * 1000; // 10 minutes in milliseconds
+    const intervalId = setInterval(() => {
+      dispatch(getNetBalance(user.user?.Cashier.id, user.user?.Cashier.shopId));
+    }, intervalMs);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (remainingTime < 0 && !update) {
+      if (game) setUpdate(true);
+      // dispatch(getLastGame(user.user?.Cashier.shopId));
     }
   }, [remainingTime]);
 
@@ -144,10 +236,6 @@ function App() {
 
   useEffect(() => {
     dispatch(getOdds(user.user?.Cashier.shopId));
-
-    if (remainingTime === 0) {
-      dispatch(getLastGame(user.user?.Cashier.shopId));
-    }
   }, []);
 
   const checkStatus = async () => {
@@ -171,24 +259,38 @@ function App() {
   };
 
   const timerRef = useRef<any>(null);
+  const lastActivityRef = useRef<number>(Date.now());
 
   useEffect(() => {
-    const handleUserActivity = () => {
-      clearTimeout(timerRef.current);
+    const checkInactivity = () => {
+      const now = Date.now();
+      const inactiveTime = now - lastActivityRef.current;
 
-      timerRef.current = setTimeout(() => {
+      // If inactive for 1 minute (60000 ms), logout
+      if (inactiveTime >= 10 * 60 * 1000) {
         logoutAuto();
-      }, 20 * 60 * 1000);
+      } else {
+        // Schedule next check
+        timerRef.current = setTimeout(checkInactivity, 60000); // Check every minute
+      }
     };
 
+    const handleUserActivity = () => {
+      lastActivityRef.current = Date.now(); // Update last activity timestamp
+    };
+
+    // Add event listeners for mouse activity
     window.addEventListener("mousemove", handleUserActivity);
+    window.addEventListener("mousedown", handleUserActivity);
     window.addEventListener("click", handleUserActivity);
 
-    handleUserActivity();
+    // Start checking for inactivity
+    timerRef.current = setTimeout(checkInactivity, 60000);
 
     return () => {
       clearTimeout(timerRef.current);
       window.removeEventListener("mousemove", handleUserActivity);
+      window.removeEventListener("mousedown", handleUserActivity);
       window.removeEventListener("click", handleUserActivity);
     };
   }, []);
@@ -196,11 +298,27 @@ function App() {
   const handleIconSelect = (val: string) => {
     setWhichgameSelected(val);
   };
+  const userIsActive = useAppSelector((state) => state.gameType.Active);
+  if (!userIsActive) {
+    window.location.reload();
+
+    localStorage.clear();
+  }
+
+  useEffect(() => {
+    // Set up the cashier status check interval
+    const statusCheckIntervalId = setupCashierStatusCheck();
+
+    // Clean up the interval on component unmount
+    return () => {
+      clearInterval(statusCheckIntervalId);
+    };
+  }, []);
 
   return (
-    <div className="bg-white">
+    <div className="bg-gray-50/80 fixed w-full h-full custom-scrollbar overflow-y-auto">
       <PrinterDialog
-        open={printerDialog}
+        open={false}
         handleClose={handlePrintDialogClose}
         logout={logout}
       />
@@ -215,29 +333,73 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      <div className="border-gray-300 border-t-4 flex items-start justify-between">
-        <div className="left" style={{ width: "80%" }}>
-          <GameIllustration WhichGame={handleIconSelect} />
-          {WhichGameSelected === "KENO" ? (
+      {gameData &&
+        (!gameData.gamesByType[WhichGameSelected] ||
+          gameData.gamesByType[WhichGameSelected].loading) && (
+          <div
+            className="w-full h-full bg-gray-100 z-20 absolute flex justify-center"
+            style={{ opacity: 0.5 }}
+          >
+            <CircularUnderLoad />
+          </div>
+        )}
+      <div
+        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto md:flex-row flex-col px-2 md:px-0"
+        style={{ scrollBehavior: "smooth" }}
+      >
+        <div
+          className="left flex overflow-x-hidden flex-col w-full md:w-[75%]"
+        >
+          <GameIllustration WhichGame={(val: string) => {
+            handleIconSelect(val);
+            return true;
+          }} />
+          {WhichGameSelected === "SmartPlayKeno" ? (
             <>
               {" "}
-              <div className="next-draw flex mt-4 ml-7">
-                {gameData.game && remainingTime > 0 ? (
-                  <div className="bg-red-500 font-bold p-2 text-sm text-white flex items-center">
+              <div className="next-draw flex mt-4 max-w-[305px] justify-center mx-auto md:mx-0">
+                {game && remainingTime > 0 ? (
+                  <div
+                    className="!font-light text-sm p-1 h-fit flex bg-black items-center"
+                    style={{
+                      backgroundColor: "#f00",
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      color: "white",
+                      opacity: 1,
+                    }}
+                  >
                     NEXT DRAW{" "}
-                    <span className="text-amber-300 font-bold ml-4">
+                    <span className="font-bold ml-2" style={{ color: "#ff0" }}>
                       {formatTime(minutes, seconds)}
                     </span>
                   </div>
                 ) : (
-                  <div className="bg-red-500 p-2 text-sm text-white flex font-bold items-center">
+                  <div
+                    className="bg-red-500 text-sm flex font-light items-center"
+                    style={{
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      color: "white",
+                      opacity: 1,
+                    }}
+                  >
                     NEXT DRAW{" "}
-                    <span className="font-bold text-amber-300 ml-4">
+                    <span className="font-bold text-amber-500 ml-4">
                       {"00"}:{"00"}
                     </span>
                   </div>
                 )}
-                <div className="bg-green-600 p-2 text-sm text-white font-bold">
+                <div
+                  className="text-sm p-1 h-fit font-light"
+                  style={{
+                    borderTopRightRadius: 4,
+                    borderBottomRightRadius: 4,
+                    color: "white",
+                    opacity: 1,
+                    backgroundColor: "rgba(22 163 74 )",
+                  }}
+                >
                   REPEAT{" "}
                   <span className="text-black rounded-md bg-gray-400">
                     <select onChange={handleRepeat}>
@@ -255,20 +417,33 @@ function App() {
                   </span>
                 </div>
               </div>
-              <div className="picker-container flex justify-stretch items-start ml-7">
-                <div className="picker-left basis-full">
-                  <TicketSelector gameType={WhichGameSelected} />
-                  <div className="number-picker mt-4 w-full">
+              <div className="picker-container flex  -ml-[calc(1.7vw)]  items-start  md:flex-row flex-col w-full md:w-[100%]">
+                <div className="picker-left w-full">
+                  <TicketSelector
+                    gameType={WhichGameSelected}
+                    gameData={game as any}
+                  />
+                  <div
+                    className={`${
+                      gameData.gamesByType[WhichGameSelected]?.loading ? "hidden" : "visible"
+                    }number-picker mt-4 w-full`}
+                  >
                     <NumberPicker />
                   </div>
                 </div>
                 <div
-                  className="flex flex-col gap-4 items-start mt-2"
+                  className="flex flex-col gap-4 items-center md:items-start mt-2 w-full md:w-auto"
                   style={{ flexBasis: "38%" }}
                 >
-                  <TicketSlipHolder gameType={WhichGameSelected} />
+                  {game && (
+                    <TicketSlipHolder
+                      gameType={"SmartPlayKeno"}
+                      gameData={game as any}
+                      update={update}
+                    />
+                  )}
                   <div
-                    className="speech left mt-20"
+                    className="max-w-[80%] speech !border-0 left !font-light mt-4 md:mt-20 max-lg:w-full"
                     style={{
                       visibility:
                         ticketPicker.selected.length < 1 ? "visible" : "hidden",
@@ -284,7 +459,7 @@ function App() {
           ) : WhichGameSelected === "SpinAndWin" ? (
             <Spin />
           ) : (
-            <HorseRun />
+            <HorseRun gameType={WhichGameSelected} />
           )}
         </div>
         <BetSlip />

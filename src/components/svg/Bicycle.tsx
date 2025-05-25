@@ -9,7 +9,7 @@ export const Bicycle = (props: SmartPlayProp) => (
     xmlns="http://www.w3.org/2000/svg"
     x="0px"
     y="0px"
-    height={props.isSmall ? 18 : 28}
+    height={props.isSmall ? 18 : 31}
     viewBox="0 0 66 35.8"
     data-svg-id="MotorRacingSVG"
     className="fill-current"

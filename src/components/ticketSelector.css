@@ -1,0 +1,39 @@
+/* Mobile responsive styles for TicketSelector component */
+@media (max-width: 640px) {
+  /* Make container use flex-wrap to stack items on mobile */
+  .flex.items-center.justify-center.mt-2.gap-1.w-full {
+    flex-wrap: wrap;
+  }
+
+  /* Style for all head-tail items */
+  .head-tail {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    justify-content: space-between;
+  }
+
+  /* Adjust spacing for buttons */
+  .head-tail.ml-3 {
+    margin-left: 0;
+  }
+
+  /* Fix the spacing for the numbers */
+  .head-tail-sub {
+    margin-left: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Add minimum width to the quick pick button */
+  .text-sm.p-2.rounded-sm.flex.font-light.items-center.justify-center.gap-2.max-h-8.text-white {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Make select inputs full width */
+  .text-black.rounded-sm.bg-gray-400 select {
+    width: 100%;
+  }
+} 

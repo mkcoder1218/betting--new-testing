@@ -7,7 +7,7 @@ export const Football = (props: SVGProps<SVGSVGElement>) => (
         x="0px"
         y="0px"
         viewBox="0 0 35.7 35.7"
-        height={24}
+        height={28}
         data-svg-id="FootballGroupSVG"
     >
         <g>

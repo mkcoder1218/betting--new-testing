@@ -11,7 +11,7 @@ export const SmartPlay = (props: SmartPlayProp) => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 50 50"
     data-svg-id="SmartPlayKenoSVG"
-    height={props.isSmall ? 18 : 28}
+    height={props.isSmall ? 20 : 28}
   >
     <path
       className="cls-1"

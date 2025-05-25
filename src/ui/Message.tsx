@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface MessageProp {
   text: string;
@@ -6,12 +6,12 @@ interface MessageProp {
 const Message: React.FC<MessageProp> = ({ text }) => {
   return (
     <div
-      className="Message capitalize text-black w-full"
+      className="Message capitalize text-black !text-sm font-light w-full"
       style={{ color: "black !important" }}
     >
-      <p>{text}</p>
+      <span>{text}</span>
     </div>
   );
 };
 
-export default Message;
+export default memo(Message);

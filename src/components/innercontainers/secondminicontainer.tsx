@@ -2,10 +2,19 @@ import React, { useEffect, useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
 import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { addToBetSlip } from "../../features/slices/pickerSlice";
-import { setIsClearCircle } from "../../features/slices/gameType";
+import {
+  addToBetSlip,
+  removeFromBetSlip,
+} from "../../features/slices/pickerSlice";
+import {
+  removemessage,
+  setIsClearCircle,
+} from "../../features/slices/gameType";
 import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
+import { OddNUMBERMap } from "../../utils/odd";
+import CheckSelection from "../../utils/CheckSelection";
+import { range } from "../../utils/range";
 type CircleState = {
   first12: boolean;
   second12: boolean;
@@ -14,6 +23,9 @@ type CircleState = {
 
 interface FirstMiniProp {
   gameId?: any;
+  gameNumber?: any;
+  gameIdofBack?: string;
+  gameStartTime?: any;
 }
 function Secondminicontainer(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
@@ -50,6 +62,17 @@ function Secondminicontainer(prop: FirstMiniProp) {
   }, [isCircle]);
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
 
+  const betSlip = useAppSelector((state) => state.picker.betSlip);
+  const checkIsSelected = (oddType: string) => {
+    for (let item of betSlip) {
+      if (item.oddType === oddType) {
+        dispatch(removeFromBetSlip(betSlip.indexOf(item)));
+        return true;
+      }
+    }
+
+    return false;
+  };
   const handleCircleClick = (
     area: keyof CircleState,
     Props: DispatchParams
@@ -63,18 +86,26 @@ function Secondminicontainer(prop: FirstMiniProp) {
       ...prevState,
       [area]: !prevState[area],
     }));
-    dispatch(
-      addToBetSlip({
-        selected: Props.selected,
-        stakeInformation: Props.stakeInfo,
-        multiplier: Props.multiplier,
-        gameId: prop.gameId,
-        stake: Props.stake,
-        toWin: Props.toWin,
-        expiry: expiryOfGame ? expiryOfGame : ticketExpiry,
-        oddType: Props.oddType,
-      })
-    );
+    if (!checkIsSelected(Props.oddType)) {
+      dispatch(removemessage(!removemessage));
+
+      dispatch(
+        addToBetSlip({
+          selected: Props.selected,
+          stakeInformation: Props.stakeInfo,
+          multiplier: Props.multiplier,
+          gameId: prop.gameId,
+          stake: Props.stake,
+          toWin: Props.toWin,
+
+          expiry: ticketExpiry,
+          oddType: Props.oddType,
+          gameType: "SpinAndWin",
+          gameNumber: prop.gameNumber,
+          startTime: prop.gameStartTime,
+        })
+      );
+    }
   };
 
   return (
@@ -83,16 +114,17 @@ function Secondminicontainer(prop: FirstMiniProp) {
         <p
           className={`first_twel ${
             background.first12 && !isCircle ? "greenClick relative" : "relative"
-          }`}
+          } `}
           onClick={() => {
             handleCircleClick("first12", {
-              selected: [-1],
+              selected: range(1, 12),
               stakeInfo: "Dozens",
-              multiplier: 10,
+              multiplier: OddNUMBERMap.Dozens,
               gameId: prop.gameId,
               stake: 10,
               toWin: 10,
               oddType: "Dozens1",
+              gameNumber: prop.gameNumber,
             });
           }}
           onMouseOver={() => generatehover(".number-row1")}
@@ -108,13 +140,14 @@ function Secondminicontainer(prop: FirstMiniProp) {
           }`}
           onClick={() => {
             handleCircleClick("second12", {
-              selected: [-3],
+              selected: range(13, 24),
               stakeInfo: "Dozens",
-              multiplier: 10,
+              multiplier: OddNUMBERMap.Dozens,
               gameId: prop.gameId,
               stake: 10,
               toWin: 10,
               oddType: "Dozens2",
+              gameNumber: prop.gameNumber,
             });
           }}
           onMouseOver={() => generatehover(".number-row2")}
@@ -128,13 +161,14 @@ function Secondminicontainer(prop: FirstMiniProp) {
           }`}
           onClick={() => {
             handleCircleClick("third12", {
-              selected: [-5],
+              selected: range(25, 36),
               stakeInfo: "Dozens",
-              multiplier: 10,
+              multiplier: OddNUMBERMap.Dozens,
               gameId: prop.gameId,
               stake: 10,
               toWin: 10,
               oddType: "Dozens3",
+              gameNumber: prop.gameNumber,
             });
           }}
           onMouseOver={() => generatehover(".number-row3")}

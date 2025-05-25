@@ -6,7 +6,7 @@ export const LuckyLoot = (props: SVGProps<SVGSVGElement>) => (
         viewBox="0 0 46.89 46.89"
         data-svg-id="LuckyLoot624SVG"
         className="fill-current"
-        height={26}
+        height={29}
     >
         <g id="LottoLoot" data-name="LottoLoot">
             <path

@@ -12,4 +12,8 @@ export const routes = createBrowserRouter([
     path: "/index.html/home",
     element: <AuthGuard element={<App />} />,
   },
+  {
+    path: "*",
+    element: <AuthGuard element={<App />} />,
+  },
 ]);

@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import StartTimer from "../ui/StartTimer";
 import IdandPlace from "../ui/IdandPlace";
 import PlusMinus from "../ui/PlusMinus";
 import BasicTable from "../ui/Table";
-import Ways from "../ui/Ways";
-import ButtonSizes from "../ui/Win";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import Message from "../ui/Message";
 import HeadToHead from "../ui/HeadtoHead";
-import { useAppDispatch, useAppSelector } from "../features/hooks";
-import {
-  Ticket,
-  addToBetSlip,
-  clearNumbers,
-} from "../features/slices/pickerSlice";
-import { combineSlices } from "@reduxjs/toolkit";
-import { GameData, RootEventData } from "../features/slices/RacingGameSlice";
-import moment from "moment";
-type Entry = {
-  WinOdds: number;
-};
+import { useAppSelector } from "../features/hooks";
+import { GameData } from "../features/slices/RacingGameSliceMultipleSports";
+import CircularUnderLoad from "./svg/Loader";
+
+// Define RootEventData interface locally since the import has issues
+interface RootEventData {
+  Race?: {
+    Name: string;
+    Distance: number;
+    Entries?: any[];
+  };
+  Number: number;
+  eventDetail?: any;
+  ID: string;
+}
+
+
 interface DropProp {
   id: string;
   time: string;
@@ -29,20 +31,17 @@ interface DropProp {
   gameData?: GameData;
   data: RootEventData;
   isActiveGame: boolean;
-}
-interface DispatchParams {
-  selected: any;
-  min_multiplier: number;
-  max_multiplier: number;
-  toWin: number;
-  expiry?: number;
-  stake: number;
-  gameId: number;
-  draw?: number;
-  stakeInfo?: string;
-  isCombo?: boolean;
   isPastGame?: boolean;
+  gameNumber?: number;
+  WhichGameSelected: string;
+  isActiveClicked: (activated: boolean) => void;
+  // New props for preserving selections
+  savedSelections?: number[];
+  isExpanded?: boolean;
+  onSelectionsChange?: (selections: number[]) => void;
+  onTimerEnd?: () => void; // Add callback for when timer reaches 0
 }
+
 const Drop: React.FC<DropProp> = ({
   id,
   time,
@@ -53,152 +52,251 @@ const Drop: React.FC<DropProp> = ({
   data,
   isActiveGame = false,
   isPastGame = false,
+  gameNumber,
+  isActiveClicked,
+  // New props with defaults
+  savedSelections = [],
+  isExpanded = false,
+  onSelectionsChange = () => {},
+  onTimerEnd,
 }) => {
+  // Optimized state management - consolidate related states
   const [isActive, setIsActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [clickIndex, setClickIndex] = useState(0);
-  const [removeText, setRemovetext] = useState(true);
-  const [isLive, setisLive] = useState(false);
-  const gameState = useAppSelector((state) => state.game);
-  const [visible, setVisible] = useState(false);
-  const [init, setInited] = useState(false);
-  const gameType = useAppSelector((state) => state.gameType.gameType);
-  const gameCreatedDate = gameState.game && new Date(gameState.game?.createdAt);
-  const [selectCombo, setSelectCombo] = useState([]);
-  const dispatch = useAppDispatch();
-  const expiryOfGame = gameCreatedDate?.setMinutes(
-    gameCreatedDate.getMinutes() + 5
-  );
-  const repeatState = useAppSelector((state) => state.repeat);
-  const [BankClick, setBankclick] = useState<number | null>();
+  const [selectCombo, setSelectCombo] = useState<number[]>(savedSelections || []);
+  const [BankClick, setBankclick] = useState<number | undefined>(undefined);
   const [ClearTheClick, setClear] = useState(false);
-  const [activeGameForIcon, setActiveGame] = useState(false);
-  const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(
-    new Set()
-  );
-  const [sortedArray, setSortedArray] = useState<Entry[]>([]);
-  const betslips = useAppSelector((state) => state.betSlip);
-  const handleClick = () => {
-    setIsActive(!isActive);
-    setActiveGame(false);
-  };
-  const handleClickCount = (val: number) => {
+  const [activeGameForIcon, setActiveGame] = useState(isExpanded || false);
+  const [isPlayersDataLoaded, setIsPlayersDataLoaded] = useState(false);
+
+
+  // Initialize active table buttons from saved selections
+  const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(() => {
+    const set = new Set<number>();
+    if (savedSelections?.length > 0) {
+      savedSelections.forEach((num) => set.add(num));
+      // Use setTimeout to avoid state update during render
+      setTimeout(() => {
+        setClickCount(savedSelections.length);
+      }, 0);
+    }
+    return set;
+  });
+
+  // Memoized selectors to prevent unnecessary re-renders
+  const isClearSelection = useAppSelector((state) => state.gameType.ClearSelected);
+
+  // Update active state based on isExpanded prop
+  useEffect(() => {
+    setIsActive(isExpanded);
+    setActiveGame(isExpanded);
+  }, [isExpanded]);
+
+  // Optimized event handlers with useCallback to prevent unnecessary re-renders
+  const handleClick = useCallback(() => {
+    setIsActive(prev => {
+      const newActiveState = !prev;
+      setActiveGame(newActiveState);
+      isActiveClicked(newActiveState);
+      return newActiveState;
+    });
+  }, [isActiveClicked]);
+
+  const handleClickCount = useCallback((val: number) => {
     setClickCount(val);
     setClear(false);
-  };
-  const handleLive = (val: boolean) => {
-    setisLive(val);
-  };
-  const handleClear = () => {
+  }, []);
+
+  const handleLive = useCallback((val: boolean) => {
+    // This function was referencing a non-existent state variable
+    // If needed, add the state variable or remove this function
+    console.log('Live state:', val);
+  }, []);
+
+  const handleClear = useCallback(() => {
+    // Clear only this drop's local state
     setClear(true);
-    setVisible(false);
     setisActivedTableButton(new Set());
-    setBankclick(null);
+    setBankclick(undefined);
     setSelectCombo([]);
-  };
-  const handleSelectCombo = (index: number) => {
-    setSelectCombo((prev) => [...prev, index]);
-  };
-  const handleColorChange = (index: number) => {
+    onSelectionsChange([]); // Update parent with empty selections
+
+    // Create a custom event to notify that only this drop's selections should be cleared
+    // We'll include the drop's ID to identify which drop's selections to clear
+    const event = new CustomEvent('clearDropSelections', {
+      detail: {
+        dropId: id, // Include the drop's ID to identify which drop to clear
+        gameNumber: gameNumber
+      }
+    });
+    document.dispatchEvent(event);
+
+    // Dispatch a custom action to remove betslip items for this specific game
+    // This avoids the need to access betSlip state directly in the component
+    if (gameNumber) {
+      // Create a custom event that the BetSlip component can listen to
+      const clearBetSlipEvent = new CustomEvent('clearBetSlipForGame', {
+        detail: { gameNumber }
+      });
+      document.dispatchEvent(clearBetSlipEvent);
+    }
+
+    // Log the action for debugging
+    console.log('Clearing selections for drop:', id, 'game number:', gameNumber);
+  }, [id, gameNumber, onSelectionsChange]);
+
+  const handleSelectCombo = useCallback((index: number) => {
+    const newSelectCombo = [...selectCombo, index];
+    setSelectCombo(newSelectCombo);
+    onSelectionsChange(newSelectCombo); // Notify parent of selection change
+  }, [selectCombo, onSelectionsChange]);
+
+  const handleColorChange = useCallback((index: number) => {
     setisActivedTableButton((prevActiveButtons) => {
       const updatedButtons = new Set(prevActiveButtons);
+
+      // Normal toggle behavior
       if (updatedButtons.has(index)) {
         updatedButtons.delete(index);
       } else {
         updatedButtons.add(index);
       }
+
+      // Update parent with new selections
+      const newSelections = Array.from(updatedButtons);
+      setTimeout(() => onSelectionsChange(newSelections), 0);
+
       return updatedButtons;
     });
-  };
+  }, [onSelectionsChange]);
+
+  const HandleBankClick = useCallback((index: number) => {
+    setBankclick(index);
+  }, []);
+
+  // Listen for the removeSelection and clearAllSelections custom events
   useEffect(() => {
-    if (clickCount > 2) {
-      setVisible(true);
-    }
+    // Function to handle the removeSelection event
+    const handleRemoveSelection = (event: any) => {
+      const { buttonIndex, buttonType, rowIndex, isSingleSelection, removeRelatedCombo, gameNumber: eventGameNumber } = event.detail;
+
+      // Only process the event if it's for this drop's game number
+      if (buttonIndex >= 0 && eventGameNumber === gameNumber) {
+        // Remove the specific button from the active buttons
+        setisActivedTableButton((prevActiveButtons) => {
+          const updatedButtons = new Set(prevActiveButtons);
+          updatedButtons.delete(buttonIndex);
+
+          // Update parent with new selections
+          const newSelections = Array.from(updatedButtons);
+          setTimeout(() => onSelectionsChange(newSelections), 0);
+
+          return updatedButtons;
+        });
+
+        // If this is a single selection removal (from betslip)
+        if (isSingleSelection) {
+          // If it's the first selection (bank), update the bank selection
+          if (rowIndex === BankClick) {
+            setBankclick(undefined);
+          }
+
+          // Update the combo selections
+          setSelectCombo(prev => prev.filter(item => item !== rowIndex));
+        }
+
+        // Log the removal for debugging
+        console.log('Drop component removed selection:', {
+          buttonIndex,
+          buttonType,
+          rowIndex,
+          isSingleSelection,
+          removeRelatedCombo,
+          gameNumber: eventGameNumber,
+          dropGameNumber: gameNumber,
+          currentComboSelections: selectCombo
+        });
+      }
+    };
+
+    // Function to handle clearing all selections
+    const handleClearAllSelections = () => {
+      // Clear all selections
+      setisActivedTableButton(new Set());
+      setBankclick(undefined);
+      setSelectCombo([]);
+      setClear(true);
+      onSelectionsChange([]); // Update parent with empty selections
+
+      console.log('Cleared all selections from Drop component');
+    };
+
+    // Add event listeners
+    document.addEventListener('removeSelection', handleRemoveSelection);
+    document.addEventListener('clearAllSelections', handleClearAllSelections);
+
+    // Clean up
+    return () => {
+      document.removeEventListener('removeSelection', handleRemoveSelection);
+      document.removeEventListener('clearAllSelections', handleClearAllSelections);
+    };
+  }, [onSelectionsChange, BankClick]);
+
+  useEffect(() => {
+    // This effect was used to set visibility state which is no longer needed
+    // The visibility is now controlled by clickCount and isActivedtableButton.size
   }, [clickCount]);
+
+  // Optimized useEffect for clear selection
   useEffect(() => {
-    if (
-      data &&
-      data.eventDetail &&
-      data.eventDetail.Event &&
-      data.eventDetail.Event.Race &&
-      Array.isArray(data.eventDetail.Event.Race.Entries)
-    ) {
-      const sorted: Entry[] = [...data.eventDetail.Event.Race.Entries].sort(
-        (a, b) => a.WinOdds - b.WinOdds
-      );
-      setSortedArray(sorted);
+    if (isClearSelection) {
+      setClear(true);
+      setisActivedTableButton(new Set());
+      setBankclick(undefined);
+      setSelectCombo([]);
+      onSelectionsChange([]); // Update parent with empty selections
+    }
+  }, [isClearSelection, onSelectionsChange]);
+
+  useEffect(() => {
+    // Check if we have data to work with
+    if (data) {
+      // Set loading state initially to false when data changes
+      setIsPlayersDataLoaded(false);
+
+      // Check if player data is fully loaded
+      if (
+        data.eventDetail &&
+        data.eventDetail.Event &&
+        data.eventDetail.Event.Race &&
+        Array.isArray(data.eventDetail.Event.Race.Entries) &&
+        data.eventDetail.Event.Race.Entries.length > 0
+      ) {
+        // Data is sorted by the BasicTable component internally if needed
+
+        // Set loading state to true when data is fully loaded
+        setIsPlayersDataLoaded(true);
+      }
     }
   }, [data]);
-  const HandleBankClick = (index: number) => {
-    setBankclick(index);
-  };
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!init) {
-        setInited(true);
-        setActiveGame(isActiveGame);
-      }
-    }, 1000);
+    setActiveGame(isActiveGame);
   }, [isActiveGame]);
 
-  const CombinationDispatch = (params: DispatchParams) => {
-    for (let i = 0; i < repeatState.repeat; i++) {
-      dispatch(
-        addToBetSlip({
-          selected: params.selected,
-          expiry: expiryOfGame ? expiryOfGame : {},
-          min_multiplier: params.min_multiplier,
-          max_multiplier: params.max_multiplier,
-          toWin: params.toWin,
-          stake: params.toWin,
-          gameId: params.gameId,
-          gameType: gameType,
-          draw: params.draw,
-          stakeInformation: params.stakeInfo,
-          isCombo: params.isCombo,
-        })
-      );
-    }
-  };
-  function factorial(n: number) {
-    if (n === 0 || n === 1) {
-      return 1;
-    }
-    return n * factorial(n - 1);
-  }
-  function combinations(
-    number: number,
-    combination: number,
-    multiplayer: number
-  ) {
-    if (combination === 3 && number <= 2) {
-      return 0;
-    }
-    const calculate =
-      factorial(number) /
-      (factorial(combination) * factorial(number - combination));
-    return calculate * multiplayer;
-  }
-  function trifectaCombinations(n: number) {
-    if (n < 3) {
-      return 0;
-    }
-    if (n === 3) {
-      return 1;
-    }
-    return factorial(n) / Math.abs(factorial(n - 3));
-  }
+
+
   return (
-    <div className="DropContainer">
+    <div className="DropContainer w-full max-w-full">
       <div
-        className="container"
+        className="container w-full"
         style={{
           backgroundColor: isPastGame
             ? "#a81005"
-            : isActive
+            : isActiveGame
             ? "#37b34a"
             : "transparent",
+          color: isPastGame || isActiveGame ? "white" : "",
         }}
       >
         <div className="timePlace">
@@ -206,19 +304,35 @@ const Drop: React.FC<DropProp> = ({
             text={time}
             onLive={handleLive}
             isgameActive={isActiveGame}
-            isActive={isActive}
+            isActive={isActiveGame}
+            isPastGame={isPastGame}
+            onTimerEnd={onTimerEnd}
           />
-          <IdandPlace Place={place} Id={id} isActive={isActive} />
+          <IdandPlace
+            Place={place}
+            Id={id}
+            isActive={isActiveGame}
+            isPastGame={isPastGame}
+          />
         </div>
         <PlusMinus
           onClick={handleClick}
           isActive={isActive}
-          isActiveGame={activeGameForIcon}
+          isActiveGame={isActiveGame}
+          isPastGame={isPastGame}
         />
       </div>
-      {isActive || activeGameForIcon ? (
-        <div className="container2 flex justify-between">
-          <div className="" style={{ width: "75%" }}>
+      {(isActive || activeGameForIcon) && data ? (
+        <div className="container2 flex flex-col md:flex-row  pb-3 gap-2 w-full">
+          {!isPlayersDataLoaded && data && (
+            <div className="w-full flex justify-center absolute top-0 items-center py-8 min-h-full min-w-[100vh]">
+              <div className="text-center absulute">
+                <CircularUnderLoad />
+              </div>
+            </div>
+          )}
+
+          <div className={`w-full md:w-[80%] ${!isPlayersDataLoaded ? 'hidden' : ''}`}>
             {activeIndexValues !== 1 || isActiveGame ? (
               <BasicTable
                 selectedCombos={handleSelectCombo}
@@ -229,9 +343,10 @@ const Drop: React.FC<DropProp> = ({
                 handleBankColorChange={HandleBankClick}
                 isActiveBank={BankClick}
                 HeadTexttoTable={Headtext}
-                data={data}
-                gameDatalist={gameData}
-                sortedByOdd={sortedArray}
+                data={data as any}
+                gameDatalist={gameData as any}
+                isActiveGame={isActiveGame}
+                isPastGame={isPastGame}
               />
             ) : activeIndexValues === 1 ? (
               <HeadToHead />
@@ -243,153 +358,114 @@ const Drop: React.FC<DropProp> = ({
           <div
             className={`${
               clickCount > 1 && activeIndexValues === 0 ? "miniContainer" : ""
-            }`}
+            } w-full max-w-[25%] min-w-[25%] md:w-[20%] ${!isPlayersDataLoaded ? 'hidden' : ''}`}
           >
             {clickCount === 1 || isActivedtableButton.size === 1 ? (
-              <div className="flex-col Need ml-1 text-md mt-16 text-black">
+              <div className="flex-col Need ml-1 text-md mt-4 md:mt-16 text-black">
                 <Message text="Need a minimum of two selections to create a combo" />
-                <ButtonSizes
-                  text="Clear"
-                  isActive={false}
-                  SvgIconComponent={DeleteOutlineOutlinedIcon}
+                <button
+                  className="flex items-center justify-center px-3 mt-2 py-1 bg-[#ff6b6b] text-white font-medium"
                   onClick={() => {
+                    // Call handleClear which now also clears the bet slip
                     handleClear();
                     setClickCount(0);
                   }}
-                />
+                >
+                  <span>CLEAR</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="10" height="30" viewBox="0 0 24 24">
+                    <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z" fill="white"></path>
+                  </svg>
+                </button>
               </div>
-            ) : clickCount > 1 && activeIndexValues === 0 ? (
-              <div className="Need waysbut w-full flex-col ml-3 h-full items-center">
-                <div className="h-full flex-col items-end  justify-end">
-                  <div className="waysShow Need gap-2 mt-6 h-fit">
-                    <Ways
-                      text="QUINELLA"
-                      text2="2 any order"
-                      text3={`${combinations(clickCount, 2, 1)} Combinations`}
-                      onClick={() => {
-                        combineSlices();
-                        CombinationDispatch({
-                          selected: selectCombo.map((number, index) => {
-                            return `${index == 0 ? "[" : ""}${
-                              index === 0 ? "" : "-"
-                            }${number + 1}${
-                              index === selectCombo.length - 1 ? "]" : ""
-                            }`;
-                          }),
-                          min_multiplier: 12,
-                          max_multiplier: 1,
-                          toWin: 100,
-                          stake: 32,
-                          gameId: data.ID.toString(),
-                          stakeInfo: "2 any order",
-                          isCombo: true,
-                        });
-                      }}
-                      isvisible={true}
-                    />
-
-                    <Ways
-                      text="TRIO"
-                      text2="3 any order"
-                      text3={`${combinations(clickCount, 3, 1)} Combinations`}
-                      isvisible={visible}
-                      onClick={() => {
-                        combineSlices();
-                        // CombinationDispatch({
-                        //   selected: row.Name,
-                        //   multiplier: row.WinOdds,
-                        //   toWin: 10,
-                        //   stake: 12,
-                        //   gameId: row.ID,
-                        //   draw: row.Draw,
-                        //   stakeInfo: "win",
-                        // });
-                      }}
-                    />
-
-                    <Ways
-                      text="EXACTA"
-                      text2="2 in order"
-                      text3={`${combinations(clickCount, 2, 2)} Combinations`}
-                      isvisible={true}
-                      onClick={() => {
-                        combineSlices();
-                        // CombinationDispatch(
-                        //   "1st Two any order",
-                        //   1,
-                        //   10,
-                        //   10,
-                        //   10,
-                        //   4000,
-                        //   true,
-                        //   gameType
-                        // );
-                      }}
-                    />
-
-                    <Ways
-                      text="TRIFECTA"
-                      text2="3 in order"
-                      text3={`${trifectaCombinations(clickCount)} Combinations`}
-                      isvisible={visible}
-                      onClick={() => {
-                        combineSlices();
-                        // CombinationDispatch(
-                        //   "1st Two any order",
-                        //   1,
-                        //   10,
-                        //   10,
-                        //   10,
-                        //   4000,
-                        //   true,
-                        //   gameType
-                        // );
-                      }}
-                    />
-
-                    <Ways
-                      text="SWINGER"
-                      text2="2 in 3 any order"
-                      text3={`${combinations(clickCount, 2, 1)} Combinations`}
-                      isvisible={true}
-                      onClick={() => {
-                        combineSlices();
-                        // CombinationDispatch(
-                        //   "1st Two any order",
-                        //   1,
-                        //   10,
-                        //   10,
-                        //   10,
-                        //   4000,
-                        //   true,
-                        //   gameType
-                        // );
-                      }}
-                    />
+            ) :  (
+              <div className={`NeedQ flex flex-col w-full ${isActivedtableButton.size >= 1 ? "opacity-100" : "opacity-0"}`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full max-w-full mb-2">
+                  <div
+                    className="bg-[#09b517] text-white p-1 text-center min-w-fit min-h-fit flex !px-2 flex-col items-center justify-center  cursor-default"
+                  >
+                    <span className="font-bold text-sm md:text-xs">QUINELLA</span>
+                    <span className="text-xs md:text-[10px]">2 any order</span>
+                    <span className="text-[8px]">3 combinations</span>
                   </div>
-                  <div className="clearbutton">
-                    <ButtonSizes
-                      text="Clear"
-                      isActive={false}
-                      SvgIconComponent={DeleteOutlineOutlinedIcon}
-                      onClick={() => {
-                        handleClear();
-                        setClickCount(0);
-                      }}
-                    />
+
+
+                    <div
+                      className={`bg-[#09b517] text-white p-2 text-center flex flex-col items-center justify-center min-w-fit min-h-fit ${isActivedtableButton.size >= 3 ? "opacity-100" : "opacity-0"} cursor-default`}
+                    >
+                      <span className="font-bold text-xs md:text-base">TRIO</span>
+                      <span className="text-xs md:text-[10px]">3 any order</span>
+                      <span className="text-[8px]">1 combinations</span>
+                    </div>
+
+
+                  <div
+                    className="bg-[#09b517] text-white p-2 text-center flex flex-col items-center justify-center min-w-fit min-h-fit  cursor-default"
+                  >
+                    <span className="font-bold text-[xs] ">EXACTA</span>
+                    <span className="text-xs md:text-[10px]">2 in order</span>
+                    <span className="text-[8px]">3 combinations</span>
+                  </div>
+
+
+                    <div
+                      className={`bg-[#09b517] text-white p-2 text-center flex flex-col items-center justify-center min-w-fit min-h-fit ${isActivedtableButton.size >= 3 ? "opacity-100" : "opacity-0"} cursor-default`}
+                    >
+                      <span className="font-bold text-sm md:text-[xs]">TRIFECTA</span>
+                      <span className="text-xs md:text-[10px]">3 in order</span>
+                      <span className="text-[8px]">1 combinations</span>
+                    </div>
+
+
+                  <div
+                    className="bg-[#09b517] text-white p-2 text-center flex flex-col items-center justify-center min-w-fit min-h-fit  cursor-default"
+                  >
+                    <span className="font-bold text-sm md:text-[xs]">SWINGER</span>
+                    <span className="text-xs md:text-[10px]">2 to 3 any order</span>
+                    <span className="text-[8px]">3 combinations</span>
                   </div>
                 </div>
+
+                <div
+                  className="flex items-center justify-center px-3 max-w-fit mt-2 py-1 !bg-[#ff6b6b] text-white font-medium cursor-pointer"
+                  onClick={() => {
+                    // Call handleClear which now also clears the bet slip
+                    handleClear();
+                    setClickCount(0);
+                  }}
+                >
+                  <span>CLEAR</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="30" viewBox="0 0 24 24">
+                    <path d="M 10 2 L 9 3 L 4 3 L 4 5 L 5 5 L 5 20 C 5 20.522222 5.1913289 21.05461 5.5683594 21.431641 C 5.9453899 21.808671 6.4777778 22 7 22 L 17 22 C 17.522222 22 18.05461 21.808671 18.431641 21.431641 C 18.808671 21.05461 19 20.522222 19 20 L 19 5 L 20 5 L 20 3 L 15 3 L 14 2 L 10 2 z M 7 5 L 17 5 L 17 20 L 7 20 L 7 5 z M 9 7 L 9 18 L 11 18 L 11 7 L 9 7 z M 13 7 L 13 18 L 15 18 L 15 7 L 13 7 z" fill="white"></path>
+                  </svg>
+                </div>
               </div>
-            ) : (
-              ""
-            )}
+            ) }
           </div>
         </div>
-      ) : (
-        ""
-      )}
+      ):""}
     </div>
   );
 };
 
-export default Drop;
+export default React.memo(Drop, (prevProps, nextProps) => {
+  // Custom comparison function to prevent unnecessary re-renders
+  return (
+    prevProps.id === nextProps.id &&
+    prevProps.time === nextProps.time &&
+    prevProps.place === nextProps.place &&
+    prevProps.activeIndexValues === nextProps.activeIndexValues &&
+    prevProps.Headtext === nextProps.Headtext &&
+    prevProps.isActiveGame === nextProps.isActiveGame &&
+    prevProps.isPastGame === nextProps.isPastGame &&
+    prevProps.gameNumber === nextProps.gameNumber &&
+    prevProps.WhichGameSelected === nextProps.WhichGameSelected &&
+    prevProps.isExpanded === nextProps.isExpanded &&
+    // Compare data object by reference - if it's the same object, no need to re-render
+    prevProps.data === nextProps.data &&
+    prevProps.gameData === nextProps.gameData &&
+    // Compare savedSelections array by length and content
+    JSON.stringify(prevProps.savedSelections) === JSON.stringify(nextProps.savedSelections)
+    // Note: We intentionally don't compare function props (isActiveClicked, onSelectionsChange, onTimerEnd)
+    // as they may change but the component behavior remains the same
+  );
+});
