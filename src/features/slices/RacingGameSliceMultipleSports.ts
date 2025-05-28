@@ -240,8 +240,12 @@ export const getLastRacingGames =
 
 export const fetchEventDetail =
   (eventId: string, gameType: string) =>
-  async (dispatch: (arg0: any) => void) => {
-    // dispatch(setLoading({ gameType, loading: true }));
+  async (dispatch: (arg0: any) => void, getState: () => any) => {
+    // Only set loading to true if it's not already true
+    const currentState = getState();
+    if (!currentState.racingGame.gamesByType[gameType]?.loading) {
+      dispatch(setLoading({ gameType, loading: true }));
+    }
 
     try {
       const gameResponse: EventDetailInterface = (
@@ -259,10 +263,35 @@ export const fetchEventDetail =
             message: gameResponse.message,
           })
         );
+
+        // Check if all visible games now have complete data
+        const updatedState = getState();
+        const gameTypeData = updatedState.racingGame.gamesByType[gameType];
+        if (gameTypeData && gameTypeData.games) {
+          const visibleGames = gameTypeData.games.slice(0, 5);
+          const allGamesComplete = visibleGames.every((game: any) => {
+            const gameDataObj = game.gameData;
+            return (
+              gameDataObj &&
+              typeof gameDataObj === "object" &&
+              "eventDetail" in gameDataObj &&
+              gameDataObj.eventDetail &&
+              gameDataObj.eventDetail.Event &&
+              gameDataObj.eventDetail.Event.Race &&
+              Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) &&
+              gameDataObj.eventDetail.Event.Race.Entries.length > 0
+            );
+          });
+
+          // Only set loading to false if all visible games are complete
+          if (allGamesComplete) {
+            dispatch(setLoading({ gameType, loading: false }));
+          }
+        }
       } else {
         dispatch(setGameError({ gameType, error: gameResponse.message }));
+        dispatch(setLoading({ gameType, loading: false }));
       }
-      // dispatch(setLoading({ gameType, loading: false }));
     } catch (err: AxiosError | any) {
       dispatch(
         setGameError({
@@ -270,7 +299,6 @@ export const fetchEventDetail =
           error: err?.response?.data?.error || "Something went wrong",
         })
       );
-    } finally {
       dispatch(setLoading({ gameType, loading: false }));
     }
   };
@@ -278,7 +306,7 @@ export const fetchEventDetail =
 export const fetchEventResult =
   (eventId: string, gameType: string) =>
   async (dispatch: (arg0: any) => void) => {
-    // dispatch(setLoading({ gameType, loading: true }));
+    dispatch(setLoading({ gameType, loading: true }));
 
     try {
       const gameResponse: EventDetailInterface = (
@@ -299,7 +327,7 @@ export const fetchEventResult =
       } else {
         dispatch(setGameError({ gameType, error: gameResponse.message }));
       }
-      // dispatch(setLoading({ gameType, loading: false }));
+      dispatch(setLoading({ gameType, loading: false }));
     } catch (err: AxiosError | any) {
       dispatch(
         setGameError({

@@ -248,6 +248,41 @@ function App() {
     dispatch(logoutUser());
   };
 
+  // Helper function to check if games are still loading or missing event details
+  const isGameDataStillLoading = (gameType: string) => {
+    const gameTypeData = gameData?.gamesByType[gameType];
+
+    // If no game data exists yet, we're still loading
+    if (!gameTypeData || !gameTypeData.games || gameTypeData.games.length === 0) {
+      return true;
+    }
+
+    // If the loading flag is true, we're still loading
+    if (gameTypeData.loading) {
+      return true;
+    }
+
+    // Check if any visible games are missing event details
+    // We only check the first few games that would be displayed
+    const visibleGames = gameTypeData.games.slice(0, 5); // Check first 5 games
+
+    const hasIncompleteGames = visibleGames.some((game) => {
+      const gameDataObj = game.gameData;
+      return (
+        !gameDataObj ||
+        typeof gameDataObj !== "object" ||
+        !("eventDetail" in gameDataObj) ||
+        !gameDataObj.eventDetail ||
+        !gameDataObj.eventDetail.Event ||
+        !gameDataObj.eventDetail.Event.Race ||
+        !Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) ||
+        gameDataObj.eventDetail.Event.Race.Entries.length === 0
+      );
+    });
+
+    return hasIncompleteGames;
+  };
+
   useEffect(() => {
     //check printer status to prevent ticket creation if printer is not running
     checkStatus();
@@ -334,11 +369,12 @@ function App() {
         handleCancelRedeem={handleCancelRedeem}
       />
       {gameData &&
-        (!gameData.gamesByType[WhichGameSelected] ||
-          gameData.gamesByType[WhichGameSelected].loading) && (
+        WhichGameSelected !== "SmartPlayKeno" &&
+        WhichGameSelected !== "SpinAndWin" &&
+        isGameDataStillLoading(WhichGameSelected) && (
           <div
             className="w-full h-full bg-gray-100 z-20 absolute flex justify-center"
-            style={{ opacity: 0.5 }}
+            style={{ opacity: 0.9 }}
           >
             <CircularUnderLoad />
           </div>

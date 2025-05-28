@@ -7,7 +7,6 @@ import Message from "../ui/Message";
 import HeadToHead from "../ui/HeadtoHead";
 import { useAppSelector } from "../features/hooks";
 import { GameData } from "../features/slices/RacingGameSliceMultipleSports";
-import CircularUnderLoad from "./svg/Loader";
 
 // Define RootEventData interface locally since the import has issues
 interface RootEventData {
@@ -67,9 +66,6 @@ const Drop: React.FC<DropProp> = ({
   const [BankClick, setBankclick] = useState<number | undefined>(undefined);
   const [ClearTheClick, setClear] = useState(false);
   const [activeGameForIcon, setActiveGame] = useState(isExpanded || false);
-  const [isPlayersDataLoaded, setIsPlayersDataLoaded] = useState(false);
-
-
   // Initialize active table buttons from saved selections
   const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(() => {
     const set = new Set<number>();
@@ -258,27 +254,7 @@ const Drop: React.FC<DropProp> = ({
     }
   }, [isClearSelection, onSelectionsChange]);
 
-  useEffect(() => {
-    // Check if we have data to work with
-    if (data) {
-      // Set loading state initially to false when data changes
-      setIsPlayersDataLoaded(false);
-
-      // Check if player data is fully loaded
-      if (
-        data.eventDetail &&
-        data.eventDetail.Event &&
-        data.eventDetail.Event.Race &&
-        Array.isArray(data.eventDetail.Event.Race.Entries) &&
-        data.eventDetail.Event.Race.Entries.length > 0
-      ) {
-        // Data is sorted by the BasicTable component internally if needed
-
-        // Set loading state to true when data is fully loaded
-        setIsPlayersDataLoaded(true);
-      }
-    }
-  }, [data]);
+  // Remove the local loading state management as it will be handled at the application level
 
   useEffect(() => {
     setActiveGame(isActiveGame);
@@ -324,15 +300,7 @@ const Drop: React.FC<DropProp> = ({
       </div>
       {(isActive || activeGameForIcon) && data ? (
         <div className="container2 flex flex-col md:flex-row  pb-3 gap-2 w-full">
-          {!isPlayersDataLoaded && data && (
-            <div className="w-full flex justify-center absolute top-0 items-center py-8 min-h-full min-w-[100vh]">
-              <div className="text-center absulute">
-                <CircularUnderLoad />
-              </div>
-            </div>
-          )}
-
-          <div className={`w-full md:w-[80%] ${!isPlayersDataLoaded ? 'hidden' : ''}`}>
+          <div className="w-full md:w-[80%]">
             {activeIndexValues !== 1 || isActiveGame ? (
               <BasicTable
                 selectedCombos={handleSelectCombo}
@@ -358,7 +326,7 @@ const Drop: React.FC<DropProp> = ({
           <div
             className={`${
               clickCount > 1 && activeIndexValues === 0 ? "miniContainer" : ""
-            } w-full max-w-[25%] min-w-[25%] md:w-[20%] ${!isPlayersDataLoaded ? 'hidden' : ''}`}
+            } w-full max-w-[25%] min-w-[25%] md:w-[20%]`}
           >
             {clickCount === 1 || isActivedtableButton.size === 1 ? (
               <div className="flex-col Need ml-1 text-md mt-4 md:mt-16 text-black">

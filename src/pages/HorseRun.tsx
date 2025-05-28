@@ -154,20 +154,27 @@ function HorseRun({ gameType }: prop) {
     if (
       gameData &&
       gameData.games &&
-      gameData.games?.length > 0 &&
-      gameData.games[activated] &&
-      gameData.games[activated].gameData
+      gameData.games?.length > 0
     ) {
-      // Check if eventDetail is missing in a type-safe way
-      const gameDataObj = gameData.games[activated].gameData;
-      if (
-        !gameDataObj ||
-        typeof gameDataObj !== "object" ||
-        !("eventDetail" in gameDataObj)
-      ) {
-        setRestart(false);
-        dispatch(fetchEventDetail(gameData.games[activated].id, gameType));
-      }
+      // Fetch event details for all visible games (first 5 games)
+      const visibleGames = gameData.games.slice(0, 5);
+
+      visibleGames.forEach((game) => {
+        const gameDataObj = game.gameData;
+        if (
+          !gameDataObj ||
+          typeof gameDataObj !== "object" ||
+          !("eventDetail" in gameDataObj) ||
+          !gameDataObj.eventDetail ||
+          !gameDataObj.eventDetail.Event ||
+          !gameDataObj.eventDetail.Event.Race ||
+          !Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) ||
+          gameDataObj.eventDetail.Event.Race.Entries.length === 0
+        ) {
+          setRestart(false);
+          dispatch(fetchEventDetail(game.id, gameType));
+        }
+      });
     }
   }, [gameData, activated]);
 
