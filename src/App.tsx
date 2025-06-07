@@ -257,30 +257,33 @@ function App() {
       return true;
     }
 
-    // If the loading flag is true, we're still loading
-    if (gameTypeData.loading) {
-      return true;
+    // If the loading flag is explicitly set to false AND we have complete data, don't show loading
+    if (gameTypeData.loading === false) {
+      // Get visible games (active and upcoming games)
+      const visibleGames = gameTypeData.games
+        .filter(game => moment(game.startTime).diff(moment(), "seconds") >= -60) // Include current and upcoming games
+        .slice(0, 3); // Focus on the most immediate games
+      
+      // Check if ALL visible games have complete data
+      const allGamesComplete = visibleGames.every(game => {
+        const gameDataObj = game.gameData;
+        return (
+          gameDataObj &&
+          typeof gameDataObj === "object" &&
+          "eventDetail" in gameDataObj &&
+          gameDataObj.eventDetail &&
+          gameDataObj.eventDetail.Event &&
+          gameDataObj.eventDetail.Event.Race &&
+          Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) &&
+          gameDataObj.eventDetail.Event.Race.Entries.length > 0
+        );
+      });
+      
+      return !allGamesComplete; // Keep loading if not all games are complete
     }
-
-    // Check if any visible games are missing event details
-    // We only check the first few games that would be displayed
-    const visibleGames = gameTypeData.games.slice(0, 5); // Check first 5 games
-
-    const hasIncompleteGames = visibleGames.some((game) => {
-      const gameDataObj = game.gameData;
-      return (
-        !gameDataObj ||
-        typeof gameDataObj !== "object" ||
-        !("eventDetail" in gameDataObj) ||
-        !gameDataObj.eventDetail ||
-        !gameDataObj.eventDetail.Event ||
-        !gameDataObj.eventDetail.Event.Race ||
-        !Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) ||
-        gameDataObj.eventDetail.Event.Race.Entries.length === 0
-      );
-    });
-
-    return hasIncompleteGames;
+    
+    // If loading flag is true, continue showing loading
+    return true;
   };
 
   useEffect(() => {
@@ -368,7 +371,7 @@ function App() {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      {gameData &&
+      {
         WhichGameSelected !== "SmartPlayKeno" &&
         WhichGameSelected !== "SpinAndWin" &&
         isGameDataStillLoading(WhichGameSelected) && (

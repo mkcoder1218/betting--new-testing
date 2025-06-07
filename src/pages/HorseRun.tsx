@@ -150,33 +150,9 @@ function HorseRun({ gameType }: prop) {
     }
   }, [gameData, _D_interval, cashier]);
 
-  useEffect(() => {
-    if (
-      gameData &&
-      gameData.games &&
-      gameData.games?.length > 0
-    ) {
-      // Fetch event details for all visible games (first 5 games)
-      const visibleGames = gameData.games.slice(0, 5);
-
-      visibleGames.forEach((game) => {
-        const gameDataObj = game.gameData;
-        if (
-          !gameDataObj ||
-          typeof gameDataObj !== "object" ||
-          !("eventDetail" in gameDataObj) ||
-          !gameDataObj.eventDetail ||
-          !gameDataObj.eventDetail.Event ||
-          !gameDataObj.eventDetail.Event.Race ||
-          !Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) ||
-          gameDataObj.eventDetail.Event.Race.Entries.length === 0
-        ) {
-          setRestart(false);
-          dispatch(fetchEventDetail(game.id, gameType));
-        }
-      });
-    }
-  }, [gameData, activated]);
+  // useEffect(() => {
+  
+  // }, [activated]);
 
   useEffect(() => {
     dispatch(setIsLive(true));
@@ -208,7 +184,12 @@ function HorseRun({ gameType }: prop) {
       }
     };
   }, [_D_interval, dispatch, gameType, cashier?.KironCookieId, user.user?.Cashier.shopId]);
+const FetchGameDetail=(gameId:string,gameType:string)=>{
 
+          setRestart(false);
+          dispatch(fetchEventDetail(gameId, gameType));
+      
+}
   // Handler for when a game is toggled
   const handleGameToggle = (
     gameId: string,
@@ -376,6 +357,7 @@ function HorseRun({ gameType }: prop) {
                 isPastGame={game.id === liveGameId}
                 gameNumber={gameDataAny.Number}
                 WhichGameSelected={gameType}
+                makeActiveFetch={FetchGameDetail}
                 isActiveClicked={(activated: boolean) => {
                   // Pass saved selections to the Drop component
                   handleGameToggle(
@@ -398,6 +380,7 @@ function HorseRun({ gameType }: prop) {
                   setGameSelections(newSelections);
                 }}
                 // Handle timer end to fetch new games
+                index={index}
                 onTimerEnd={handleTimerEnd}
               />
             </React.Fragment>

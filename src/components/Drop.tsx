@@ -30,11 +30,13 @@ interface DropProp {
   gameData?: GameData;
   data: RootEventData;
   isActiveGame: boolean;
+  index: number;
   isPastGame?: boolean;
   gameNumber?: number;
   WhichGameSelected: string;
   isActiveClicked: (activated: boolean) => void;
   // New props for preserving selections
+  makeActiveFetch?:(gameId:string,gameType:string)=>void,
   savedSelections?: number[];
   isExpanded?: boolean;
   onSelectionsChange?: (selections: number[]) => void;
@@ -45,7 +47,9 @@ const Drop: React.FC<DropProp> = ({
   id,
   time,
   place,
+  makeActiveFetch,
   activeIndexValues,
+  index,
   Headtext,
   gameData,
   data,
@@ -86,10 +90,19 @@ const Drop: React.FC<DropProp> = ({
   useEffect(() => {
     setIsActive(isExpanded);
     setActiveGame(isExpanded);
+    
+
+   if(isExpanded){
+    console.log('this is the event id'+JSON.stringify(gameData))
+ if(makeActiveFetch)
+    makeActiveFetch(gameData?.id||'',gameData?.gameType||'')
+}
   }, [isExpanded]);
 
   // Optimized event handlers with useCallback to prevent unnecessary re-renders
   const handleClick = useCallback(() => {
+
+
     setIsActive(prev => {
       const newActiveState = !prev;
       setActiveGame(newActiveState);
@@ -258,9 +271,14 @@ const Drop: React.FC<DropProp> = ({
 
   useEffect(() => {
     setActiveGame(isActiveGame);
+    
+
   }, [isActiveGame]);
 
-
+useEffect(()=>{
+ if(makeActiveFetch)
+    makeActiveFetch(gameData?.id||'',gameData?.gameType||'')
+},[isActive])
 
   return (
     <div className="DropContainer w-full max-w-full">
