@@ -115,7 +115,6 @@ export default function RedeemTicket({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
   return (
     <div>
       <Modal
@@ -159,7 +158,12 @@ export default function RedeemTicket({
                   <div className="w-full flex items-center justify-between p-2 bg-green-600 rounded-md">
                     <div className="flex gap-1">
                     <CheckCircle className="text-white border-white bg-transparent" />
-                    <p className="text-white ml-2">{betSlipData.message}</p>
+                    <p className="text-white ml-2">
+                      {/* Ensure message is a string */}
+                      {typeof betSlipData.message === 'object' 
+                        ? 'Ticket processed successfully' 
+                        : betSlipData.message}
+                    </p>
                     </div>
                     <BsXCircle/>
                   </div>
@@ -260,7 +264,11 @@ export default function RedeemTicket({
                 )}
                 {betSlipData.error && (
                   <div className="w-3/4 p-0 flex items-start justify-center">
-                    <p className="text-gray-600">{betSlipData.error}</p>
+                    <p className="text-gray-600">
+                      {typeof betSlipData.error === 'object' 
+                        ? 'An error occurred' 
+                        : betSlipData.error}
+                    </p>
                   </div>
                 )}
                

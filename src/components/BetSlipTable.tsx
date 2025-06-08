@@ -57,8 +57,9 @@ const BetSlipTable = ({ type, data }: ActionType) => {
 
     dispatch(
       redeemTicket(
+  data?.id,
         userData.user.Cashier.id,
-        parseInt(data?.betSlipNumber),
+        Number(data?.betSlipNumber),
         userData.user.Cashier.userId,
         userData.shop?.name || "",
         userData.user.username || ""

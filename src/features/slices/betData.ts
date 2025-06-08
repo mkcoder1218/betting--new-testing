@@ -647,6 +647,7 @@ const printReedem = (data) => {
 };
 export const redeemTicket =
   (
+    betSlipId: string | undefined,
     cashierRedeemId: string | undefined,
     betslip: number | undefined,
     userId: string,
@@ -666,6 +667,7 @@ export const redeemTicket =
     try {
       const redeemTicketResposne = (
         await axiosInstance.post("ticket/redeem", {
+          betSlipId,
           cashierRedeemId,
           betslip,
           userId,
