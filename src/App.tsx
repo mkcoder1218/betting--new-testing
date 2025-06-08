@@ -79,21 +79,21 @@ function App() {
     dispatch(addRepeat({ repeat: parseInt(event.target.value) }));
   }
   useEffect(() => {
-    // Create a debounce function using lodash or use a custom debounce function.
+    // Create a debounce function with proper cleanup
     const debounceFetch = setTimeout(() => {
       if (WhichGameSelected === "KENO") {
         dispatch(addGameType(WhichGameSelected));
-      } else {
-        if (WhichGameSelected.length > 0) {
-          dispatch(addGameType(WhichGameSelected));
-        }
+      } else if (WhichGameSelected.length > 0) {
+        dispatch(addGameType(WhichGameSelected));
+        
+        // Only fetch games if we need to
         if (
           !gameData.gamesByType[WhichGameSelected] ||
           gameData.gamesByType[WhichGameSelected].games.filter((game) => {
             return moment().diff(moment(game.startTime), "seconds") < 0;
           }).length <= 1
         ) {
-          if (cashier.ShopData)
+          if (cashier.ShopData) {
             dispatch(
               getLastRacingGames(
                 user.user?.Cashier.shopId,
@@ -101,13 +101,14 @@ function App() {
                 cashier.ShopData?.KironCookieId + ""
               )
             );
-          setLoadCounter(loadCounter + 1);
+            setLoadCounter(loadCounter + 1);
+          }
         }
       }
-    }, 50); // 2-second debounce
+    }, 300); // Increased debounce time to prevent multiple calls
 
-    // Cleanup function to clear the timeout when `WhichGameSelected` changes.
-    // if (cashier) return () => clearTimeout(debounceFetch);
+    // Proper cleanup function to clear the timeout
+    return () => clearTimeout(debounceFetch);
   }, [WhichGameSelected, cashier]);
 
   useEffect(() => {
@@ -129,21 +130,23 @@ function App() {
         setGame(gamesFiltered[0]);
         setLoadCounter(0);
         setUpdate(false);
-      } else {
-        if (gameData.gamesByType[WhichGameSelected].games)
-          if (loadCounter < 3 && cashier) {
-            dispatch(
-              getLastRacingGames(
-                user.user?.Cashier.shopId,
-                "SmartPlayKeno",
-                cashier.ShopData?.KironCookieId + ""
-              )
-            );
-            setLoadCounter(loadCounter + 1);
-          } else {
-            dispatch(getShopData());
-          }
-      }
+      } 
+      // else {
+      //   if (gameData.gamesByType[WhichGameSelected].games)
+      //     if (loadCounter < 3 && cashier) {
+
+      //       dispatch(
+      //         getLastRacingGames(
+      //           user.user?.Cashier.shopId,
+      //           "SmartPlayKeno",
+      //           cashier.ShopData?.KironCookieId + ""
+      //         )
+      //       );
+      //       setLoadCounter(loadCounter + 1);
+      //     } else {
+      //       dispatch(getShopData());
+      //     }
+      // }
     } else if (
       !gameData ||
       (gameData && !gameData.gamesByType[WhichGameSelected]) ||

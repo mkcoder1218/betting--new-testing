@@ -275,10 +275,19 @@ const Drop: React.FC<DropProp> = ({
    
   }, [isActiveGame]);
 
-useEffect(()=>{
-  if(isLiveGame)
-         dispatch(fetchEventDetail(gameData?.id||'', gameData?.gameType||''))
-},[isLiveGame])
+  const fetchedGamesRef = React.useRef(new Set<string>());
+
+  useEffect(() => {
+    // Only fetch event details once when the game becomes live
+    if (isLiveGame && gameData?.id && gameData?.gameType) {
+      // Use a ref to track if we've already fetched for this game
+      const gameKey = `${gameData.id}-${gameData.gameType}`;
+      if (!fetchedGamesRef.current.has(gameKey)) {
+        dispatch(fetchEventDetail(gameData.id, gameData.gameType));
+        fetchedGamesRef.current.add(gameKey);
+      }
+    }
+  }, [isLiveGame, gameData?.id, gameData?.gameType]);
 
   return (
     <div className="DropContainer w-full max-w-full">
