@@ -5,8 +5,8 @@ import PlusMinus from "../ui/PlusMinus";
 import BasicTable from "../ui/Table";
 import Message from "../ui/Message";
 import HeadToHead from "../ui/HeadtoHead";
-import { useAppSelector } from "../features/hooks";
-import { GameData } from "../features/slices/RacingGameSliceMultipleSports";
+import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { fetchEventDetail, GameData } from "../features/slices/RacingGameSliceMultipleSports";
 
 // Define RootEventData interface locally since the import has issues
 interface RootEventData {
@@ -30,13 +30,15 @@ interface DropProp {
   gameData?: GameData;
   data: RootEventData;
   isActiveGame: boolean;
+  isLiveGame: boolean;
+  liveGameId?:string;
   index: number;
   isPastGame?: boolean;
   gameNumber?: number;
   WhichGameSelected: string;
   isActiveClicked: (activated: boolean) => void;
   // New props for preserving selections
-  makeActiveFetch?:(gameId:string,gameType:string)=>void,
+  // makeActiveFetch?:(gameId:string,gameType:string)=>void,
   savedSelections?: number[];
   isExpanded?: boolean;
   onSelectionsChange?: (selections: number[]) => void;
@@ -47,12 +49,14 @@ const Drop: React.FC<DropProp> = ({
   id,
   time,
   place,
-  makeActiveFetch,
+  // makeActiveFetch,
   activeIndexValues,
   index,
   Headtext,
   gameData,
   data,
+  isLiveGame,
+  liveGameId,
   isActiveGame = false,
   isPastGame = false,
   gameNumber,
@@ -70,6 +74,7 @@ const Drop: React.FC<DropProp> = ({
   const [BankClick, setBankclick] = useState<number | undefined>(undefined);
   const [ClearTheClick, setClear] = useState(false);
   const [activeGameForIcon, setActiveGame] = useState(isExpanded || false);
+  const dispatch=useAppDispatch()
   // Initialize active table buttons from saved selections
   const [isActivedtableButton, setisActivedTableButton] = useState<Set<number>>(() => {
     const set = new Set<number>();
@@ -90,13 +95,9 @@ const Drop: React.FC<DropProp> = ({
   useEffect(() => {
     setIsActive(isExpanded);
     setActiveGame(isExpanded);
-    
-
-   if(isExpanded){
-    console.log('this is the event id'+JSON.stringify(gameData))
- if(makeActiveFetch)
-    makeActiveFetch(gameData?.id||'',gameData?.gameType||'')
-}
+    if(isExpanded){
+         dispatch(fetchEventDetail(gameData?.id||'', gameData?.gameType||''))
+        }
   }, [isExpanded]);
 
   // Optimized event handlers with useCallback to prevent unnecessary re-renders
@@ -271,14 +272,13 @@ const Drop: React.FC<DropProp> = ({
 
   useEffect(() => {
     setActiveGame(isActiveGame);
-    
-
+   
   }, [isActiveGame]);
 
 useEffect(()=>{
- if(makeActiveFetch)
-    makeActiveFetch(gameData?.id||'',gameData?.gameType||'')
-},[isActive])
+  if(isLiveGame)
+         dispatch(fetchEventDetail(gameData?.id||'', gameData?.gameType||''))
+},[isLiveGame])
 
   return (
     <div className="DropContainer w-full max-w-full">

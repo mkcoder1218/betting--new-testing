@@ -184,12 +184,12 @@ function HorseRun({ gameType }: prop) {
       }
     };
   }, [_D_interval, dispatch, gameType, cashier?.KironCookieId, user.user?.Cashier.shopId]);
-const FetchGameDetail=(gameId:string,gameType:string)=>{
+// const FetchGameDetail=(gameId:string,gameType:string)=>{
 
-          setRestart(false);
-          dispatch(fetchEventDetail(gameId, gameType));
+//           setRestart(false);
+     
       
-}
+// }
   // Handler for when a game is toggled
   const handleGameToggle = (
     gameId: string,
@@ -357,7 +357,6 @@ const FetchGameDetail=(gameId:string,gameType:string)=>{
                 isPastGame={game.id === liveGameId}
                 gameNumber={gameDataAny.Number}
                 WhichGameSelected={gameType}
-                makeActiveFetch={FetchGameDetail}
                 isActiveClicked={(activated: boolean) => {
                   // Pass saved selections to the Drop component
                   handleGameToggle(
@@ -380,6 +379,7 @@ const FetchGameDetail=(gameId:string,gameType:string)=>{
                   setGameSelections(newSelections);
                 }}
                 // Handle timer end to fetch new games
+                isLiveGame={index===activeIndex}
                 index={index}
                 onTimerEnd={handleTimerEnd}
               />

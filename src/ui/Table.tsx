@@ -17,7 +17,7 @@ import Images from "./Images";
 import { RootEventData, GameData } from "../features/slices/RacingGameSlice";
 import { Entry } from "../config/types";
 import moment from "moment";
-import { ClearSelected, removemessage } from "../features/slices/gameType";
+import { ClearSelected, removemessage, sethasEntry } from "../features/slices/gameType";
 import { fetchEventResult } from "../features/slices/RacingGameSliceMultipleSports";
 
 // Extend RootEventData to include eventResult property
@@ -342,7 +342,10 @@ const BasicTable: React.FC<TableProp> = ({
   const hasEntries = useMemo(() => {
     return data?.eventDetail?.Event?.Race?.Entries?.length > 0;
   }, [data?.eventDetail?.Event?.Race?.Entries?.length]);
-
+useEffect(()=>{
+  if(!hasEntries)
+  dispatch(sethasEntry(false))
+},[hasEntries])
   const entries = useMemo(() => {
     return data?.eventDetail?.Event?.Race?.Entries || [];
   }, [data?.eventDetail?.Event?.Race?.Entries]);
@@ -704,7 +707,7 @@ const BasicTable: React.FC<TableProp> = ({
           aria-label="betting table"
           className="table"
         >
-          {TableHeader}
+          {hasEntries&&TableHeader}
           <TableBody className="tableBody">
             {hasEntries && entries.map((row, index: number) => (
               <MemoizedTableRow
