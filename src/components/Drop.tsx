@@ -154,7 +154,7 @@ const Drop: React.FC<DropProp> = ({
     // Log the action for debugging
     console.log('Clearing selections for drop:', id, 'game number:', gameNumber);
   }, [id, gameNumber, onSelectionsChange]);
-
+const hasEntry = useAppSelector((state) => state.gameType.hasEntry);
   const handleSelectCombo = useCallback((index: number) => {
     const newSelectCombo = [...selectCombo, index];
     setSelectCombo(newSelectCombo);
@@ -325,7 +325,7 @@ const Drop: React.FC<DropProp> = ({
           isPastGame={isPastGame}
         />
       </div>
-      {(isActive || activeGameForIcon) && data ? (
+      {(isActive || activeGameForIcon) && data  ? (
         <div className="container2 flex flex-col md:flex-row  pb-3 gap-2 w-full">
           <div className="w-full md:w-[80%]">
             {activeIndexValues !== 1 || isActiveGame ? (

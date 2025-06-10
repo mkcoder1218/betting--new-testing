@@ -41,7 +41,7 @@ export default function Login() {
         </div>
         {!userData.loading && userData?.error && (
               <p className="error shadow-sm shadow-red-400 rounded-sm bg-red-500 text-white p-1 text-sm w-full">
-                {userData?.error?.includes("Invalid") ? "Invalid username or password" : userData?.error}
+                {userData?.error?.includes("Invalid")||userData?.error?.includes("User not found") ? "Invalid username or password" : userData?.error}
               </p>
             )}
         <div>

@@ -157,7 +157,7 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
 
   // Save active game index to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem("activeGameIndex", JSON.stringify(isActive));
+    localStorage.setItem("activeGameIndex", 0);
   }, [isActive]);
 
   const toggleDropdown = () => {

@@ -64,7 +64,7 @@ function HorseRun({ gameType }: prop) {
   // Track games by ID instead of index to survive array replacements
   const [activeGameId, setActiveGameId] = useState<string | null>(null);
   const [liveGameId, setLiveGameId] = useState<string | null>(null);
-
+const hasEntry = useAppSelector((state) => state.gameType.hasEntry);
   const userIsActive = useAppSelector((state) => state.gameType.Active);
   if (!userIsActive) {
     window.location.reload();
@@ -109,6 +109,7 @@ function HorseRun({ gameType }: prop) {
         const newActiveGame = gameData.games[newActiveIndex];
 
         setActiveindex(newActiveIndex);
+
         setActiveGameId(newActiveGame.id);
         _D_setInterval(sortedOne[0].millisecond);
 

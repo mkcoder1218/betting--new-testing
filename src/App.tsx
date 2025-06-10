@@ -49,7 +49,7 @@ function App() {
   const oddData = useAppSelector((state) => state.odd);
   // const gameData = useAppSelector((state) => state.game);
   const [printerDialog, setPrinterDialog] = useState(false);
-  const [WhichGameSelected, setWhichgameSelected] = useState("SmartPlayKeno");
+  const [WhichGameSelected, setWhichgameSelected] = useState("KENO");
   const ticketExpiry = useAppSelector((state) => state.expiry);
   const ticketPicker = useAppSelector((state) => state.picker);
   const [open, setOpen] = useState(false);
@@ -352,7 +352,7 @@ if (gameTypeData.loading === false) {
       clearInterval(statusCheckIntervalId);
     };
   }, []);
-const hasEntry = useAppSelector((state) => state.gameType.hasEntry);
+
   return (
     <div className="bg-gray-50/80 fixed w-full h-full custom-scrollbar overflow-y-auto">
       <PrinterDialog
@@ -374,7 +374,7 @@ const hasEntry = useAppSelector((state) => state.gameType.hasEntry);
       {
         (WhichGameSelected !== "SmartPlayKeno" &&
         WhichGameSelected !== "SpinAndWin" &&
-        isGameDataStillLoading(WhichGameSelected)) &&!hasEntry&& (
+        isGameDataStillLoading(WhichGameSelected)) && (
           <div
             className="w-full h-full bg-gray-100 z-20 absolute flex justify-center"
             style={{ opacity: 0.9 }}

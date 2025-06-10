@@ -337,14 +337,16 @@ const BasicTable: React.FC<TableProp> = ({
 
   // Use useRef for interval to prevent unnecessary re-renders
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+const hasEntryopen = useAppSelector((state) => state.gameType.hasEntry);
 
   // Memoize expensive calculations
   const hasEntries = useMemo(() => {
     return data?.eventDetail?.Event?.Race?.Entries?.length > 0;
   }, [data?.eventDetail?.Event?.Race?.Entries?.length]);
 useEffect(()=>{
-  if(!hasEntries)
-  dispatch(sethasEntry(false))
+  if(hasEntries)
+  dispatch(sethasEntry(true))
+console.log('hasEntries',hasEntryopen)
 },[hasEntries])
   const entries = useMemo(() => {
     return data?.eventDetail?.Event?.Race?.Entries || [];
@@ -354,7 +356,6 @@ useEffect(()=>{
   const isGameLocked = useMemo(() => {
     return gameDatalist && moment(gameDatalist.startTime).diff(moment(), "seconds") < 0;
   }, [gameDatalist]);
-
   // Memoize winner entries for better performance
   const winnerEntries = useMemo(() => {
     return data?.eventResult?.Race?.Entries || [];
@@ -707,9 +708,9 @@ useEffect(()=>{
           aria-label="betting table"
           className="table"
         >
-          {hasEntries&&TableHeader}
+          {hasEntryopen&&TableHeader}
           <TableBody className="tableBody">
-            {hasEntries && entries.map((row, index: number) => (
+            {hasEntryopen && entries.map((row, index: number) => (
               <MemoizedTableRow
                 key={`${row.Name}-${index}`}
                 row={row}
