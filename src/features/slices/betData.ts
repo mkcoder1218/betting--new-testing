@@ -140,7 +140,7 @@ export const getTicketsToCancel =
   };
 
 export const getTicketsToRedeem =
-  (betslip: number | undefined, shopId: string) =>
+  (betslip: number | undefined) =>
   async (
     dispatch: (arg0: {
       payload: BetSlipState;
@@ -153,10 +153,7 @@ export const getTicketsToRedeem =
 
     try {
       const ticketsToCancel: BetSlipResponse = (
-        await axiosInstance.post(`ticket/betslip/byNumber/toRedeem`, {
-          betSlipNumber: betslip,
-          shopId: shopId,
-        })
+        await axiosInstance.get(`ticket/betslip/byNumber/toRedeem/${betslip}`)
       ).data;
 
       if (ticketsToCancel.message === "success") {
@@ -646,14 +643,7 @@ const printReedem = (data) => {
   };
 };
 export const redeemTicket =
-  (
-    betSlipId: string | undefined,
-    cashierRedeemId: string | undefined,
-    betslip: number | undefined,
-    userId: string,
-    shopName: string,
-    cashierName: string
-  ) =>
+  (cashierRedeemId: string | undefined, betslip: number | undefined) =>
   async (
     dispatch: (arg0: {
       payload: BetSlipState;
@@ -666,14 +656,7 @@ export const redeemTicket =
 
     try {
       const redeemTicketResposne = (
-        await axiosInstance.post("ticket/redeem", {
-          betSlipId,
-          cashierRedeemId,
-          betslip,
-          userId,
-          shopName,
-          cashierName,
-        })
+        await axiosInstance.post("ticket/redeem", { cashierRedeemId, betslip })
       ).data;
 
       if (redeemTicketResposne.message === "Ticket redeemed successfully") {

@@ -10,7 +10,7 @@ export const Jaguar = (props: SmartPlayProp) => (
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 67.5 18.1"
     data-svg-id="PlatinumHoundsSVG"
-    height={props.isSmall ? 9 : 14}
+    height={props.isSmall ? 10 : 14}
   >
     <path
       className="st0"

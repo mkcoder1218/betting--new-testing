@@ -23,7 +23,9 @@ const Result: React.FC<ResultsProp> = ({
       case "HarnessRacing":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "PreRecRealDogs":
-        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${index}.png`;
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
       case "horseRun":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "CycleRacing":
@@ -31,7 +33,9 @@ const Result: React.FC<ResultsProp> = ({
       case "SteepleChase":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "SpeedSkating":
-        return `https://games2.playbetman.com/Content/Images/SpeedSkatingFlags/Flag_0${index}.png`;
+        return `https://games2.playbetman.com/Content/Images/SpeedSkatingFlags/Flag_0${
+          index + 1
+        }.png`;
       case "SingleSeaterMotorRacing":
         return `https://games2.playbetman.com/Content/Images/SingleSeaterMotorRacing/Helmet_${row.SilkNumber}.png`;
       case "MotorRacing":
@@ -39,7 +43,9 @@ const Result: React.FC<ResultsProp> = ({
       case "DashingDerby":
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
       case "PlatinumHounds":
-        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${index}.png`;
+        return `https://games2.playbetman.com/Content/Images/GreyhoundJackets/raceguimarkers0${
+          index + 1
+        }.png`;
       default:
         return `https://games2.playbetman.com/Content/Images/HorseSilks/silk_${row.SilkNumber}.png`;
     }
@@ -56,15 +62,15 @@ const Result: React.FC<ResultsProp> = ({
         </div>
         <div className="flex-col w-full">
           <p className="-mb-2" style={{ fontSize: "22px" }}>
-            {gameData?.Race?.Name + " " + gameData?.Race?.Distance}
+            {gameData.Race.Name + " " + gameData.Race.Distance}
           </p>
           <div className="flex w-full gap-2 " style={{ fontSize: "14px" }}>
             <p>
-              {gameData?.AdjustedStartTime ? moment(gameData.AdjustedStartTime).format("DD/MM/YYYY hh:mm:ss") : ""}
+              {moment(gameData.AdjustedStartTime).format("DD/MM/YYYY hh:mm:ss")}
             </p>
 
             <p className="flex-1" style={{ fontSize: "15px" }}>
-              ID {gameData?.EventNumber || ""}
+              ID {gameData.EventNumber}
             </p>
           </div>
         </div>
@@ -79,21 +85,17 @@ const Result: React.FC<ResultsProp> = ({
           style={{ padding: "auto" }}
         >
           <div className="w-full flex flex-col items-center justify-center">
-            {gameData?.Race?.Entries && gameData.Race.Entries.length > 0 && (
-              <>
-                <ImagesResult
-                  src={silkGenerator(
-                    gameData.Race.Entries[0],
-                    gameType + "",
-                    gameData.Race.Entries[0].Draw
-                  )}
-                />
+            <ImagesResult
+              src={silkGenerator(
+                gameData.Race.Entries[0],
+                gameType + "",
+                gameData.Race.Entries[0].Draw
+              )}
+            />
 
-                <div className="text-sm -ml-10">
-                  {gameData.Race.Entries[0].Draw} {gameData.Race.Entries[0].Name}
-                </div>
-              </>
-            )}
+            <div className="text-sm -ml-10">
+              {gameData.Race.Entries[0].Draw} {gameData.Race.Entries[0].Name}
+            </div>
           </div>
         </div>{" "}
         <div
@@ -101,21 +103,17 @@ const Result: React.FC<ResultsProp> = ({
           style={{ padding: "auto" }}
         >
           <div className="w-full flex flex-col items-center justify-center">
-            {gameData?.Race?.Entries && gameData.Race.Entries.length > 1 && (
-              <>
-                <ImagesResult
-                  src={silkGenerator(
-                    gameData.Race.Entries[1],
-                    gameType + "",
-                    gameData.Race.Entries[1].Draw
-                  )}
-                />
+            <ImagesResult
+              src={silkGenerator(
+                gameData.Race.Entries[1],
+                gameType + "",
+                gameData.Race.Entries[1].Draw
+              )}
+            />
 
-                <div className="text-sm -ml-10">
-                  {gameData.Race.Entries[1].Draw} {gameData.Race.Entries[1].Name}
-                </div>
-              </>
-            )}
+            <div className="text-sm -ml-10">
+              {gameData.Race.Entries[1].Draw} {gameData.Race.Entries[1].Name}
+            </div>
           </div>
         </div>{" "}
         <div
@@ -123,51 +121,47 @@ const Result: React.FC<ResultsProp> = ({
           style={{ padding: "auto" }}
         >
           <div className="w-full flex flex-col items-center justify-center h-full">
-            {gameData?.Race?.Entries && gameData.Race.Entries.length > 2 && (
-              <>
-                <ImagesResult
-                  src={silkGenerator(
-                    gameData.Race.Entries[2],
-                    gameType + "",
-                    gameData.Race.Entries[2].Draw
-                  )}
-                />
+            <ImagesResult
+              src={silkGenerator(
+                gameData.Race.Entries[2],
+                gameType + "",
+                gameData.Race.Entries[2].Draw
+              )}
+            />
 
-                <div className="text-sm -ml-10">
-                  {gameData.Race.Entries[2].Draw} {gameData.Race.Entries[2].Name}
-                </div>
-              </>
-            )}
+            <div className="text-sm -ml-10">
+              {gameData.Race.Entries[2].Draw} {gameData.Race.Entries[2].Name}
+            </div>
           </div>
         </div>
       </div>
 
-      {gameData?.MarketResults && gameData.MarketResults.length > 0 && (
+      {gameData.MarketResults && gameData.MarketResults.length > 0 && (
         <div className="w-full">
           <ResultLists
             Name={"Last"}
-            value={gameData.MarketResults[0]?.WinningSelections?.[0]}
+            value={gameData.MarketResults[0].WinningSelections[0]}
           />
           <ResultLists
             Name={"Last 3"}
-            value={gameData.MarketResults[1]?.WinningSelections?.[0]}
+            value={gameData.MarketResults[1].WinningSelections[0]}
           />
           <ResultLists
             Name={"Head to Head"}
-            value={gameData.MarketResults[2]?.WinningSelections?.[0]}
+            value={gameData.MarketResults[2].WinningSelections[0]}
           />
           <ResultLists
             Name={"Head to Head"}
-            value={gameData.MarketResults[3]?.WinningSelections?.[0]}
+            value={gameData.MarketResults[3].WinningSelections[0]}
           />
           <ResultLists
             Name={"Head to Head"}
-            value={gameData.MarketResults[4]?.WinningSelections?.[0]}
+            value={gameData.MarketResults[4].WinningSelections[0]}
           />
         </div>
       )}
       <div className="w-full flex justify-center text-sm mt-1">
-        <p>Number Of Particepants:{gameData?.Race?.Name?.length || 0}</p>
+        <p>Number Of Particepants:{gameData.Race.Name.length}</p>
       </div>
     </div>
   );

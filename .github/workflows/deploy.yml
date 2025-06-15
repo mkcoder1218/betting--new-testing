@@ -3,7 +3,7 @@ name: Deploy Betting Cashier to S3
 on:
   push:
     branches:
-      - newprod
+      - prod
 
 jobs:
   build:

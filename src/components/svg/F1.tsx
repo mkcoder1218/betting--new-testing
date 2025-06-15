@@ -1,17 +1,13 @@
 import { SVGProps } from "react"
 
-interface isSmallProp {
-  isSmall?: boolean;
-}
-type CombinedProps = SVGProps<SVGSVGElement> & isSmallProp;
-export const F1 = (props: CombinedProps)  => (
+export const F1 = (props: SVGProps<SVGSVGElement>) => (
   <svg
     className="fill-current"
     xmlns="http://www.w3.org/2000/svg"
     x="0px"
     y="0px"
     viewBox="0 0 76.7 23.55"
-    height={ props.isSmall ? 10 : 17}
+    height={17}
     data-svg-id="FootballGroupSVG"
   >
     <g>

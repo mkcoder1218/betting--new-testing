@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import F from "./F";
 import BasicRating from "./Rating";
 import ButtonSizes from "./Win";
@@ -52,4 +52,4 @@ function MiniHeadtoHead() {
   );
 }
 
-export default memo(MiniHeadtoHead);
+export default MiniHeadtoHead;

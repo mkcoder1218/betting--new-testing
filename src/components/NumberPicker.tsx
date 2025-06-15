@@ -14,47 +14,45 @@ const NumberPicker: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center w-full ml-3">
-      <div className="flex flex-col items-center w-full">
-        <div className="mb-2 w-full flex justify-center">
-          <div className="grid gap-x-2 z-0 gap-y-2 grid-cols-5 sm:grid-cols-8 md:grid-cols-10 md:gap-x-9 md:gap-y-1 border-b fade-border">
-            {[...Array(40)].map((_, index) => {
-              const number = index + 1;
-              const isSelected = pickedNumbers.includes(number);
-              return (
-                <button
-                  style={{
-                    backgroundColor: `${isSelected ? "#008000" : "#c2410c"}`,
-                  }}
-                  key={number}
-                  className={`balls rounded-full w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-white text-sm md:text-base`}
-                  onClick={() => toggleNumber(number)}
-                >
-                  {number}
-                </button>
-              );
-            })}
-          </div>
+    <div className="mr-10">
+      <div className="mb-2 flex">
+        <div className="grid gap-x-4 z-0 md:gap-y-1 gap-y-2 md:gap-x-8 grid-cols-10 border-b fade-border">
+          {[...Array(40)].map((_, index) => {
+            const number = index + 1;
+            const isSelected = pickedNumbers.includes(number);
+            return (
+              <button
+                style={{
+                  backgroundColor: `${isSelected ? "#008000" : "#c2410c"}`,
+                }}
+                key={number}
+                className={`balls rounded-full w-10 h-10 text-white`}
+                onClick={() => toggleNumber(number)}
+              >
+                {number}
+              </button>
+            );
+          })}
         </div>
-        <div className="w-full flex justify-center">
-          <div className="grid gap-x-2 gap-y-2 grid-cols-5 sm:grid-cols-8 md:grid-cols-10 md:gap-x-9 md:gap-y-1">
-            {[...Array(40)].map((_, index) => {
-              const number = index + 41;
-              const isSelected = pickedNumbers.includes(number);
-              return (
-                <button
-                  style={{
-                    backgroundColor: `${isSelected ? "#008000" : "#ea580c"}`,
-                  }}
-                  key={number}
-                  className={`balls rounded-full w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-white text-sm md:text-base`}
-                  onClick={() => toggleNumber(number)}
-                >
-                  {number}
-                </button>
-              );
-            })}
-          </div>
+      </div>
+      <div className="flex">
+        <div className="grid gap-x-4 md:gap-y-1 gap-y-2 md:gap-x-8 grid-cols-10">
+          {[...Array(40)].map((_, index) => {
+            const number = index + 41;
+            const isSelected = pickedNumbers.includes(number);
+            return (
+              <button
+                style={{
+                  backgroundColor: `${isSelected ? "#008000" : "#ea580c"}`,
+                }}
+                key={number}
+                className={`balls rounded-full w-10 h-10 text-white`}
+                onClick={() => toggleNumber(number)}
+              >
+                {number}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

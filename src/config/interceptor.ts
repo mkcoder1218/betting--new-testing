@@ -18,8 +18,10 @@ const setUpAxiosInterceptors = () => {
   let userData: User | null = null;
   getUserData().then((data) => {
     userData = data;
+    console.log("USERDATA_TOKEN", userData);
   });
   if (process.env.NODE_ENV === "development") {
+    console.log("USERDATA_TOKEN", userData);
   }
   const axiosInstance = axios.create({
     baseURL: SERVER_URI,
@@ -27,6 +29,7 @@ const setUpAxiosInterceptors = () => {
 
   axiosInstance.interceptors.request.use(
     (config: any) => {
+      console.log("USERDATA_TOKEN", userData);
       if (userData && userData?.token) {
         const token = userData?.token;
         config.headers.Authorization = `Bearer ${token}`;
