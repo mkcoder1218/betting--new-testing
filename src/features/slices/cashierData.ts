@@ -1,8 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
-import { setuserActive } from "./gameType";
-import { ShopDataApiResponse, ShopDatas } from "../../utils/patch";
+import {  setuserActive } from './gameType';
 
 interface User {
   id: string;
@@ -41,7 +40,6 @@ interface CashierState {
   error: string | null;
   message: string | null;
   data: DataItem[] | null;
-  ShopData: ShopDatas | null;
 }
 
 const initialState: CashierState = {
@@ -49,7 +47,6 @@ const initialState: CashierState = {
   error: null,
   message: null,
   data: null,
-  ShopData: null,
 };
 
 const cashierSlice = createSlice({
@@ -61,7 +58,6 @@ const cashierSlice = createSlice({
       state.error = action.payload.error;
       state.message = action.payload.message;
       state.data = action.payload.data;
-      state.ShopData = action.payload.ShopData;
     },
   },
 });
@@ -86,21 +82,21 @@ export const getCashierNames =
       const cashierResponse: ApiResponse = (
         await axiosInstance.get(`cashier/${shopId}`)
       ).data;
-
-      const session = localStorage.getItem("user_session");
-      const user = session && JSON.parse(session)?.Cashier?.id;
-      const match =
-        cashierResponse?.data &&
-        cashierResponse.data.find((id) => id.id === user);
+    
+const session = localStorage.getItem("user_session");
+const user = session && JSON.parse(session)?.Cashier?.id;
+      const match = cashierResponse?.data && cashierResponse.data.find((id) => id.id === user)
+            console.log("netBalanceRes", cashierResponse, "id ", user,'Match',match);
       if (user === match?.id) {
         if (!match?.active) {
-          localStorage.clear();
-          window.location.href = "https://retail2.playbetman2.com";
-          dispatch(setuserActive(false));
-        } else {
-          dispatch(setuserActive(true));
+          localStorage.clear()
+         dispatch(setuserActive(false))
+          
         }
-      }
+        else {
+          dispatch(setuserActive(true))
+        }
+}
       if (cashierResponse.message === "success") {
         dispatch(
           addCashierData({
@@ -129,50 +125,6 @@ export const getCashierNames =
             : "Something went wrong",
           loading: false,
           data: null,
-        })
-      );
-    }
-  };
-export const getShopData =
-  () =>
-  async (
-    dispatch: (arg0: {
-      payload: CashierState;
-      type: "cashier/loadShopData";
-    }) => void
-  ) => {
-    try {
-      const cashierResponse: ShopDataApiResponse = (
-        await axiosInstance.get(`shop/loadShopData`)
-      ).data;
-
-      if (cashierResponse.message === "success") {
-        dispatch(
-          addCashierData({
-            loading: false,
-            error: null,
-            message: cashierResponse.message,
-            ShopData: cashierResponse.data,
-          })
-        );
-      } else {
-        dispatch(
-          addCashierData({
-            loading: false,
-            error: cashierResponse.error,
-            message: null,
-            // ShopData: null,
-          })
-        );
-      }
-    } catch (err: AxiosError | any) {
-      dispatch(
-        addCashierData({
-          message: "",
-          error: err?.response?.data
-            ? err.response.data.error
-            : "Something went wrong",
-          loading: false,
         })
       );
     }

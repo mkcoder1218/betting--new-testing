@@ -4,26 +4,3 @@ height: 17px;
 margin-top: 25px;
 
 }
-
-/* Icon CSS */
-.icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* High-performance animation with minimal property changes */
-@keyframes popAnimation {
-  0% { opacity: 0; transform: translateX(-20px); }
-  100% { opacity: 1; transform: translateX(0); }
-}
-
-.ticket-pop {
-  animation: popAnimation 0.2s ease-out forwards;
-  transform-origin: left center;
-  will-change: opacity, transform;
-  backface-visibility: hidden;
-  perspective: 1000px;
-  transform: translate3d(0, 0, 0);
-  contain: layout; /* Improve performance with CSS containment */
-}

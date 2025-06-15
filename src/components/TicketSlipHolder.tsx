@@ -6,7 +6,7 @@ import {
   addToBetSlip,
   clearNumbers,
 } from "../features/slices/pickerSlice";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { OddMultiplier } from "../features/slices/oddSlice";
 import { defaultStake } from "../config/constants";
 import { GameData } from "../features/slices/RacingGameSlice";
@@ -85,7 +85,6 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
           stakeInformation: stakeInformation,
           oddType: "Win",
           gameNumber: gameData.gameData.Number,
-          startTime: gameData.startTime,
         })
       );
     }
@@ -121,9 +120,9 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
     // writeToPrinter();
   }, [pickedNumbers]);
   const [isAddbutton, setIsAddbutton] = useState(true);
-  const handleAddandRemove = useCallback(() => {
-    setIsAddbutton(prev => !prev);
-  }, []);
+  const handleAddandRemove = () => {
+    setIsAddbutton(!isAddbutton);
+  };
   return (
     <div
       className=""
@@ -159,7 +158,6 @@ const TicketSlipHolder: React.FC<TicketHolderProp> = ({
                 gameId: gameState.game?.gamenumber,
                 gameType: gameType,
                 stakeInformation: "Win",
-                startTime: gameState.game?.startTime + "",
               });
               dispatch(removemessage(!removemessage));
             }}

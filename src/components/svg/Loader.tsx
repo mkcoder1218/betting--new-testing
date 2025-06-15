@@ -1,5 +1,5 @@
 import * as React from "react";
-import { memo } from "react";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import CircularProgress, {
@@ -17,9 +17,12 @@ function FacebookCircularProgress(props: CircularProgressProps) {
     <Box sx={{ position: "relative" }}>
       <CircularProgress
         variant="determinate"
-        sx={{
-          color: '#e0e0e0', // Equivalent to grey[200]
-        }}
+        sx={(theme) => ({
+          color: theme.palette.grey[200],
+          ...theme.applyStyles("dark", {
+            color: theme.palette.grey[800],
+          }),
+        })}
         size={50}
         thickness={5}
         {...props}
@@ -28,7 +31,7 @@ function FacebookCircularProgress(props: CircularProgressProps) {
       <CircularProgress
         variant="indeterminate"
         disableShrink
-        sx={{
+        sx={(theme) => ({
           color: "#008000",
           animationDuration: "1000ms",
           position: "absolute",
@@ -38,7 +41,10 @@ function FacebookCircularProgress(props: CircularProgressProps) {
           [`& .${circularProgressClasses.circle}`]: {
             strokeLinecap: "round",
           },
-        }}
+          ...theme.applyStyles("dark", {
+            color: "#308fe8",
+          }),
+        })}
         size={50}
         thickness={5}
         {...props}
@@ -47,12 +53,10 @@ function FacebookCircularProgress(props: CircularProgressProps) {
   );
 }
 
-function CircularUnderLoad() {
+export default function CircularUnderLoad() {
   return (
-    <Stack spacing={2} className="bg-black/10 min-w-[100vw] min-h-[100vw]" sx={{ flexGrow: 1 }} style={{display:'flex',justifyContent:'center',alignItems:"center",marginTop:'-30em'}}>
+    <Stack spacing={2} sx={{ flexGrow: 1 }} style={{display:'flex',justifyContent:'center',alignItems:"center",marginTop:'-20em'}}>
       <FacebookCircularProgress />
     </Stack>
   );
 }
-
-export default memo(CircularUnderLoad);

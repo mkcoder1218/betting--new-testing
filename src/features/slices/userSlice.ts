@@ -29,7 +29,6 @@ export interface Cashier {
   userId: string;
   createdAt: string;
   updatedAt: string;
-  isSuperCashier: boolean;
 }
 
 interface TokenPayload {
@@ -49,7 +48,6 @@ interface TokenPayload {
 export interface Data {
   user: User;
   token: string;
-  shop: { KironCookieId: string; name: string };
 }
 
 interface AuthResponse {
@@ -63,22 +61,14 @@ interface UserState {
   user: User | null;
   error: string | null;
   message: string | null;
-  updateError: string | null;
-  updateLoading: boolean;
-  shop: { KironCookieId: string; name: string } | null;
 }
 
 let initialState: UserState = {
   loading: false,
   error: null,
-  updateError: null,
-  updateLoading: false,
   message: "",
   user: localStorage.getItem(LOCAL_USER)
     ? JSON.parse(localStorage.getItem(LOCAL_USER)!)
-    : null,
-  shop: localStorage.getItem("kironCookieId")
-    ? JSON.parse(localStorage.getItem("kironCookieId")!)
     : null,
 };
 
@@ -94,10 +84,6 @@ const userSlice = createSlice({
 
       localStorage.setItem(LOCAL_USER, JSON.stringify(action.payload.user));
     },
-    setUpdateUser: (state, action: PayloadAction<UserState>) => {
-      state.updateError = action.payload.updateError;
-      state.updateLoading = action.payload.updateLoading;
-    },
     logoutUser: (state) => {
       state.user = null;
       localStorage.removeItem(LOCAL_USER);
@@ -106,7 +92,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { loginUser, logoutUser, setUpdateUser } = userSlice.actions;
+export const { loginUser, logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -115,37 +101,19 @@ export const authUser =
   async (
     dispatch: (arg0: { payload: UserState; type: "user/loginUser" }) => void
   ) => {
-    dispatch(
-      loginUser({
-        message: "",
-        error: "",
-        loading: true,
-        user: null,
-        shop: null,
-      })
-    );
+    dispatch(loginUser({ message: "", error: "", loading: true, user: null }));
 
     try {
       const loginResponse: AxiosResponseWrapper<AuthResponse> =
         await axiosInstance.post("user/login", { username, password });
       dispatch(
-        loginUser({
-          message: "",
-          error: "",
-          loading: false,
-          user: null,
-          shop: null,
-        })
+        loginUser({ message: "", error: "", loading: false, user: null })
       );
-
+      
       if (loginResponse.data.message === "login successful") {
         localStorage.setItem(
           LOCAL_USER,
           JSON.stringify(loginResponse.data.data.user)
-        );
-        localStorage.setItem(
-          "kironCookieId",
-          JSON.stringify(loginResponse.data.data.shop)
         );
         dispatch(
           loginUser({
@@ -153,10 +121,10 @@ export const authUser =
             error: "",
             loading: true,
             user: loginResponse.data.data.user,
-            shop: loginResponse.data.data.shop,
           })
+          
         );
-
+        console.log("loginResponse.data", loginResponse.data);
         handleLoginSuccess();
         // window.location.href = "/home"
       } else {
@@ -166,7 +134,6 @@ export const authUser =
             error: loginResponse.error,
             loading: true,
             user: null,
-            shop: null,
           })
         );
       }
@@ -179,44 +146,6 @@ export const authUser =
             : "Something went wrong",
           loading: false,
           user: null,
-          shop: null,
-        })
-      );
-    }
-  };
-export const updateUser =
-  (cashierId: string, password: string, confirmPassword: string) =>
-  async (
-    dispatch: (arg0: { payload: UserState; type: "user/updateUser" }) => void
-  ) => {
-    dispatch(
-      setUpdateUser({ message: "", error: "", updateLoading: true, user: null })
-    );
-    try {
-      const loginResponse: AxiosResponseWrapper<AuthResponse> =
-        await axiosInstance.post("cashier/updateCashierPassword", {
-          cashierId: cashierId,
-          password,
-          confirmpassword: confirmPassword,
-        });
-      localStorage.clear();
-      window.location.href = "https://retail2.playbetman2.com";
-      dispatch(
-        setUpdateUser({
-          message: "",
-          error: "",
-          updateLoading: false,
-          user: null,
-        })
-      );
-    } catch (err: AxiosError | any) {
-      dispatch(
-        setUpdateUser({
-          message: "",
-          updateError: err.response.data.error + "",
-          loading: false,
-          user: null,
-          updateLoading: false,
         })
       );
     }

@@ -129,22 +129,6 @@ function transformData(data) {
     ImageFileType: null,
     Underline: false,
   });
-  lineItems.push({
-    LineItem: data.shopName,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 2,
-    NewLine: true,
-    PartOfHeader: true,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false,
-  });
 
   lineItems.push({
     LineItem: data.cashierName,
@@ -638,13 +622,14 @@ export const createBetSlipAndTicket =
         data: null,
       })
     );
-
+ 
     try {
       const betSlipResponse: BetSlipResponse<ToPrint> = (
         await axiosInstance.post("ticket/betslip", data)
       ).data;
 
       if (betSlipResponse.message === "betslip added successfully") {
+
         dispatch(
           addTicketAndBetSlip({
             loading: false,
@@ -673,7 +658,6 @@ export const createBetSlipAndTicket =
             updateTicket.maxPayout = formatNumberWithCommas(
               parseFloat(updateTicket.maxPayout + "")
             );
-
             updateTicket.stake = updateTicket.stake.toFixed(2);
             updateTicket.tickets.map((ticket) => {
               const gameParts = ticket.game.split(" "); // Split the string into parts
