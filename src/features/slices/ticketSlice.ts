@@ -138,7 +138,6 @@ export const recallTickets =
       );
     }
   };
-
 function formatNumber(num) {
   if (num % 1 !== 0) {
     return num.toString();
@@ -148,26 +147,10 @@ function formatNumber(num) {
 }
 function transformData(data) {
   const lineItems = [];
-
+  console.log("daada", data);
   // Add header information
   lineItems.push({
     LineItem: data.betSlipNumber,
-    FontName: "Arial",
-    FontSize: 8,
-    Bold: false,
-    Italic: false,
-    Alignment: 2,
-    NewLine: true,
-    PartOfHeader: true,
-    PrintDoubleBlock: false,
-    RowsInDoubleBlock: 2,
-    IsImage: false,
-    IsTerms: false,
-    ImageFileType: null,
-    Underline: false,
-  });
-  lineItems.push({
-    LineItem: data.shopName,
     FontName: "Arial",
     FontSize: 8,
     Bold: false,
@@ -654,6 +637,7 @@ function transformData(data) {
 }
 export const printSelectedTickets = async (req: any) => {
   try {
+    console.log("req:", req);
     const printSelectedResponse = await axiosInstance.post(
       "ticket/printSelected",
       req
@@ -668,7 +652,7 @@ export const printSelectedTickets = async (req: any) => {
         parseFloat(updateTicket.maxPayout + "")
       );
       updateTicket.stake = parseFloat(updateTicket.stake).toFixed(2);
-
+      console.log("updateTicket", updateTicket);
       updateTicket.tickets.map((ticket) => {
         const gameParts = ticket.game.split(" "); // Split the string into parts
         const firstPart = gameParts[0];
@@ -681,7 +665,7 @@ export const printSelectedTickets = async (req: any) => {
             break;
           case "SpinAndWin":
             gameParts[0] = "Spin And Win";
-
+            console.log(selected);
             ColumnMap.col1.every((item) => selected.includes(Number(item)))
               ? ((selected =
                   "col1 " +
@@ -807,7 +791,7 @@ export const printSelectedTickets = async (req: any) => {
         ticket.selected = selected;
         ticket.oddType = oddType;
       });
-
+      console.log("update" + updateTicket);
       const printSelectedData = await axios.post(
         "http://localhost:8080/PRINT/",
         JSON.stringify(transformData(updateTicket)),
@@ -818,7 +802,9 @@ export const printSelectedTickets = async (req: any) => {
         }
       );
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log("errorslist", err);
+  }
 };
 
 export const isPrinterUp = async () => {

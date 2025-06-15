@@ -15,7 +15,6 @@ interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
   gameIdofBack?: string;
-  gameStartTime?: any;
 }
 type CircleState = {
   first12: boolean;
@@ -92,7 +91,6 @@ function Forthmini(prop: FirstMiniProp) {
           gameId: prop.gameId,
           stake: stake,
           oddType: oddType,
-          startTime: prop.gameStartTime + "",
           gameNumber: prop.gameNumber,
           gameType: "SpinAndWin",
           toWin: 10,

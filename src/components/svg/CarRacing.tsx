@@ -8,7 +8,7 @@ export const CarRacing = (props: CombinedProps) => (
     xmlns="http://www.w3.org/2000/svg"
     x="0px"
     y="0px"
-    height={props.isSmall ? 10 : 20}
+    height={props.isSmall ? 10 : 15}
     viewBox="0 0 110 35.8"
     data-svg-id="MotorRacingSVG"
     className="fill-current"

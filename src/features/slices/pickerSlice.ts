@@ -19,7 +19,6 @@ export interface Ticket {
   draw?: number;
   nameofPlayer?: string;
   gameNumber?: number;
-  startTime: string;
 }
 
 export interface PickerType {
@@ -85,31 +84,13 @@ const pickerSlice = createSlice({
       state.maxWin = totals.maxWin;
     },
     removeFromBetSlip: (state, action: PayloadAction<number>) => {
-      // Get the index of the ticket to remove
-      const indexToRemove = action.payload;
-
-      // Log for debugging
-      console.log('Removing bet slip item:', {
-        indexToRemove,
-        currentBetSlipLength: state.betSlip.length,
-        ticketToRemove: state.betSlip[indexToRemove]
-      });
-
-      // Make sure the index is valid
-      if (indexToRemove >= 0 && indexToRemove < state.betSlip.length) {
-        // Remove the specific ticket from the bet slip
-        state.betSlip = state.betSlip.filter(
-          (_, index) => index !== indexToRemove
-        );
-
-        // Recalculate totals
-        const totals = calculateTotals(state.betSlip);
-        state.maxWin = totals.maxWin;
-        state.totalStake = totals.totalStake;
-        state.totalToWin = totals.totalToWin;
-      } else {
-        console.error('Invalid index to remove from bet slip:', indexToRemove);
-      }
+      state.betSlip = state.betSlip.filter(
+        (item, index) => index !== action.payload
+      );
+      const totals = calculateTotals(state.betSlip);
+      state.maxWin = totals.maxWin;
+      state.totalStake = totals.totalStake;
+      state.totalToWin = totals.totalToWin;
     },
     updateBetSlipItem: (
       state,

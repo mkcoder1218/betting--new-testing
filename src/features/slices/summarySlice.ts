@@ -3,7 +3,6 @@ import axios, { AxiosError } from "axios";
 import axiosInstance from "../../config/interceptor";
 import { updateBetSlipItem } from "./pickerSlice";
 import moment from "moment";
-import { RootResultInterface } from "../../config/types";
 
 export interface CashierData {
   cashierCreateId: string;
@@ -14,8 +13,6 @@ export interface CashierData {
   totalRedeemAmount: string;
   totalCancelAmount: string;
   netAmount: string;
-  unclaimedCount: string;
-  unclaimedAmount: string;
   "Cashier.id": string;
   "Cashier.User.id": string;
   "Cashier.User.username": string;
@@ -27,7 +24,7 @@ export interface ResultData {
   eventId: string;
   gameTime: string;
   formattedTime: string;
-  result: RootResultInterface;
+  result: string[];
   shopName: string;
 }
 interface GameData {
@@ -101,8 +98,7 @@ export const getSummaryData =
     from: string | undefined,
     to: string | undefined,
     cashierId: string | undefined,
-    cashierIId: string | undefined,
-    isSuperCashier: boolean
+    cashierIId: string | undefined
   ) =>
   async (
     dispatch: (arg0: {
@@ -117,8 +113,8 @@ export const getSummaryData =
     try {
       const summaryData: Response = (
         await axiosInstance.post("ticket/summary", {
-          from: moment(from).format("YYYY-MM-DD"),
-          to: moment(to).format("YYYY-MM-DD"),
+          from: from,
+          to: to,
           cashierId: cashierId,
         })
       ).data;
@@ -129,11 +125,9 @@ export const getSummaryData =
             loading: false,
             error: null,
             message: summaryData.message,
-            data: isSuperCashier
-              ? summaryData.data
-              : summaryData.data.filter((value, index) => {
-                  return value["Cashier.id"] === cashierIId;
-                }),
+            data: summaryData.data.filter((value, index) => {
+              return value.cashierCreateId === cashierIId;
+            }),
           })
         );
       } else {
@@ -227,7 +221,7 @@ export const getEventResult =
   };
 const SummeryData = (data) => {
   const listItems = [];
-
+  console.log("datain", data);
   const currentDateTime = moment().format("YYYY-MM-DD HH:mm:ss");
 
   listItems.push(
@@ -571,11 +565,13 @@ export const printSummaryToBackend = async (data: any) => {
         }
       );
     }
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 const ResultData = (data) => {
   const listItems = [];
-
+  console.log("datain", data.gameTime);
   listItems.push(
     {
       LineItem: data.shopName,
@@ -771,9 +767,9 @@ const ResultData = (data) => {
     }
   );
   data.Game !== "Keno" && data.Game !== "Spin And Win"
-    ? data.result.Race.Entries.map((result) => {
+    ? data.result.map((result) => {
         listItems.push({
-          LineItem: `${result.Draw}:${result.Name}`,
+          LineItem: result,
           FontName: "Arial",
           FontSize: 8,
           Bold: false,
@@ -790,12 +786,7 @@ const ResultData = (data) => {
         });
       })
     : listItems.push({
-        LineItem:
-          data.Game === "SmartPlayKeno" || data.Game === "Spin And Win"
-            ? data.result.MarketResults[0].WinningSelections.slice()
-                .sort((a, b) => parseInt(a) - parseInt(b))
-                .join(" ")
-            : "",
+        LineItem: data.result,
         FontName: "Arial",
         FontSize: 8,
         Bold: false,
@@ -810,13 +801,10 @@ const ResultData = (data) => {
         ImageFileType: null,
         Underline: false,
       });
-  data.Game !== "Keno" &&
-  data.Game !== "Spin And Win" &&
-  data.result.MarketResults &&
-  data.result.MarketResults.length > 0
-    ? data.result.MarketResults.map((market) => {
+  data.Game !== "Keno" && data.Game !== "Spin And Win" && data.Market.length > 0
+    ? data.Market.map((data) => {
         listItems.push({
-          LineItem: `${market.MarketClassDescription}:${market.WinningSelections}`,
+          LineItem: data,
           FontName: "Arial",
           FontSize: 8,
           Bold: false,
@@ -882,5 +870,7 @@ export const printResultToBackend = async (data: any) => {
         },
       }
     );
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };

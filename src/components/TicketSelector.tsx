@@ -9,9 +9,6 @@ import {
 import React, { FormEvent, useState } from "react";
 import { defaultStake } from "../config/constants";
 import { GameData } from "../features/slices/RacingGameSlice";
-// Import mobile responsive styles
-import "./ticketSelector.css";
-
 interface TicketSelectorProp {
   gameType: string;
   gameData: GameData;
@@ -51,7 +48,6 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
     gameType,
     expiry,
     oddType,
-    startTime,
   }: Ticket) => {
     if (currentDate > ticketExpiry) {
       return;
@@ -67,7 +63,6 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
         gameId: gameData.id,
         gameType,
         oddType: oddType,
-        startTime: startTime,
       })
     );
   };
@@ -92,7 +87,7 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
         toWin: 2,
         stake: defaultStake,
         gameId: gameData.id,
-        startTime: gameData.startTime,
+
         gameType: "SmartPlayKeno",
         oddType: "Heads",
       });
@@ -121,7 +116,6 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
         gameId: gameData.id,
         oddType: "Evens",
         gameType: "SmartPlayKeno",
-        startTime: gameData.startTime,
       });
     }
   };
@@ -148,7 +142,6 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
         gameId: gameData.id,
         oddType: "Tails",
         gameType: "SmartPlayKeno",
-        startTime: gameData.startTime,
       });
     }
   };
@@ -174,13 +167,13 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
   };
 
   return (
-    <div className="flex items-center justify-start md:ml-16 mt-2 gap-1 w-full">
+    <div className="flex items-center content-center mt-2 gap-1 w-full">
       <div
         style={{ backgroundColor: "#008000" }}
-        className="text-sm p-2 rounded-sm flex font-light items-center justify-center gap-2 max-h-8 text-white"
+        className="text-sm p-2 rounded-sm flex font-bold items-center gap-2 max-h-8 text-white"
       >
-        <div className="flex gap-1 font-lg justify-center">
-          <p className="text-md">QUICK</p> <p className="text-md">PICK</p>
+        <div className="flex gap-1 font-lg">
+          <p className="text-lg">QUICK</p> <p className="text-lg">PICK</p>
         </div>
         <span className="text-black rounded-sm bg-gray-400">
           <select onChange={handleSelectChange}>
@@ -206,10 +199,10 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
           backgroundColor: `${!heads ? "#BC4307" : "#008000"}`,
         }}
         onClick={() => addHeads(!heads)}
-        className={`head-tail cursor-pointer ml-3 transition-all flex justify-center font-light p-1 max-h-8 text-md rounded-sm text-white`}
+        className={`head-tail cursor-pointer ml-3 transition-all flex font-bold p-1 max-h-8 text-md rounded-sm text-white`}
       >
         HEADS
-        <span className="text-black head-tail-sub text-lg flex items-center justify-center border border-green-500 font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
+        <span className="text-black head-tail-sub text-lg flex items-center border border-green-500 font-bold p-1 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
           2
         </span>
       </div>
@@ -218,10 +211,10 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
           backgroundColor: evens ? "#257832" : "#f87171",
         }}
         onClick={() => addEvens(!evens)}
-        className={`head-tail cursor-pointer transition-all flex justify-center font-light p-1 max-h-8 text-md rounded-sm text-white`}
+        className={`head-tail cursor-pointer transition-all flex font-bold p-1 max-h-8 text-md rounded-sm text-white`}
       >
         EVENS
-        <span className="text-black head-tail-sub text-lg text-center flex items-center justify-center border border-green-500 font-bold p-0.5 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
+        <span className="text-black head-tail-sub text-lg text-center flex items-center border border-green-500 font-bold p-0.5 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
           4
         </span>
       </div>
@@ -230,10 +223,10 @@ const TicketSelector: React.FC<TicketSelectorProp> = ({
           backgroundColor: `${!tails ? "#D75D1A" : "#008000"}`,
         }}
         onClick={() => addTails(!tails)}
-        className={`head-tail cursor-pointer transition-all flex justify-center font-light p-1 max-h-8 text-md rounded-sm text-white`}
+        className={`head-tail cursor-pointer transition-all flex font-bold p-1 max-h-8 text-md rounded-sm text-white`}
       >
         TAILS
-        <span className="text-black head-tail-sub text-lg text-center flex items-center justify-center border border-green-500 font-bold p-0.5 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
+        <span className="text-black head-tail-sub text-lg text-center flex items-center border border-green-500 font-bold p-0.5 pl-6 pr-6 ml-20 bg-amber-200 rounded-sm">
           2
         </span>
       </div>

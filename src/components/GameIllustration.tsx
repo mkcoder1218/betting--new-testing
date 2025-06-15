@@ -24,99 +24,71 @@ import DogVideo from "./svg/DogVideo";
 interface gameSelection {
   WhichGame: (val: string) => boolean;
 }
-
 const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dispatch = useAppDispatch();
+  const [selectedGame, setSelected] = useState(0);
+  const [selectedGametext, setSelectedGame] = useState("");
   const [isActive, setActive] = useState(() => {
-    const activeIndex = localStorage.getItem("activeGameIndex");
-    return activeIndex !== null ? JSON.parse(activeIndex) : 0;
+    const setisActive = localStorage.getItem("isActive");
+    return setisActive !== null ? JSON.parse(setisActive) : 0;
   });
-  // Define game options first so they're available for initialization
+
+  useEffect(() => {
+    localStorage.setItem("isActive", JSON.stringify(isActive));
+  }, [isActive]);
+  const [isSelectedindex, setIndexSelected] = useState<number | null>(null);
+  const dispatch = useAppDispatch();
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClickGame = (gameName: string, index: number) => {
+    setSelectedGame(gameName);
+    WhichGame(gameName);
+    dispatch(addGameType(gameName));
+    setSelected(index);
+  };
+
+  const toggleSelected = (item: number) => {
+    setSelected(item);
+    setIsOpen(false);
+    setIndexSelected(item);
+  };
+
   const dropdownItems = [
     {
       icon: <SmartPlay />,
-      icon2: <SmartPlay  />,
       text1: "SmartPlayKeno",
       text2: "KENO",
       text3: "KENO",
       width: "w-8",
     },
-     
-    
-
     {
-      icon: <Hockey />,
-      icon2: <Hockey  isSmall={true} isGreen={isActive===1?true:false}/>,
-      text1: "SpeedSkating",
-      text2: "SPEED SKATING",
-      width: "w-8",
-    },
-   
-    
-    {
-      icon: <Football/>,
-      icon2: <Football />,
-      text1: "ENGLISH LEAGUE",
-      text2: "ENGLISH LEAGUE",
-      text3: "SOCCERBET",
-      width: "w-8",
-    },
-    {
-      icon: <Jaguar />,
-      icon2: <Jaguar isSmall={true} />,
-      text1: "PlatinumHounds",
-      text2: "CHARGING CHARIOTS",
-      width: "w-8",
-    },
-    {
-      icon: <Garri />,
-      icon2: <Garri isSmall={true} />,
-      text1: "HarnessRacing",
-      text2: "CHARGING CHARIOTS",
-      width: "w-8",
-    },
-    
-    {
-      icon: <DashingDerby />,
-      icon2: <DashingDerby isSmall={true} />,
-      text1: "DashingDerby",
-      text2: "DASHING DERBY",
-      width: "w-8",
-    },
-
-    {
-      icon: <CarRacing />,
-      icon2: <CarRacing isSmall={true} />,
-      text1: "MotorRacing",
-      text2: "MAXCAR",
-      width: "w-8",
+      icon: <CircleDraw />,
+      text1: "SpinAndWin",
+      text2: "SPIN AND WIN",
+      width: "w-1",
     },
     {
       icon: <F1 />,
-      icon2: <F1 isSmall={true} />,
       text1: "SingleSeaterMotorRacing",
-      text2: "SS motor Racing",
-      text3: "Drive",
+      text2: "Drive",
+      text3: "SS motor Racing",
       width: "w-8",
     },
-    {
-      icon: <CircleDraw />,
-      icon2: <CircleDraw />,
-      text1: "SpinAndWin",
-      text2: "SPIN AND WIN",
-      width: "w-8",
-    },
-   
     {
       icon: <HorseJump />,
-      icon2: <HorseJump isSmall={true} />,
       text1: "SteepleChase",
       text2: "JUMPS",
       text3: "JUMPS",
-      width: "w-8",
+      width: "w-12",
     },
-    
+    {
+      icon: <Garri />,
+      text1: "HarnessRacing",
+      text2: "CHARGING CHARIOTS",
+      width: "w-12",
+    },
     // {
     //   icon: <DogVideo isGreen={isActive === 1} />,
     //   text1: "PreRecRealDogs",
@@ -126,77 +98,52 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
     // },
     {
       icon: <Bicycle />,
-      icon2: <Bicycle isSmall={true} />,
       text1: "CycleRacing",
       text2: "SLIP STREAM",
       text3: "Track Racing",
+      width: "w-12",
+    },
+
+    {
+      icon: <Hockey isGreen={isActive === 5} />,
+      text1: "SpeedSkating",
+      text2: "",
       width: "w-8",
-    }
+    },
+
+    {
+      icon: <CarRacing />,
+      text1: "MotorRacing",
+      text2: "MAXCAR",
+      width: "w-14",
+    },
+    {
+      icon: <DashingDerby />,
+      text1: "DashingDerby",
+      text2: "DASHING DERBY",
+      width: "w-10",
+    },
+
+    {
+      icon: <Jaguar />,
+      text1: "PlatinumHounds",
+      text2: "CHARGING CHARIOTS",
+      width: "w-12",
+    },
   ];
-
-  // Get initial active game index from localStorage or default to 0 (Keno)
-  
-
-  // Set selected game index based on active index
-  const [selectedGame, setSelected] = useState(isActive);
-
-  // Set selected game text based on active index
-  const [selectedGametext, setSelectedGame] = useState(() => {
-    // Get the game name from dropdownItems based on the active index
-    return dropdownItems[isActive]?.text1 || "SmartPlayKeno";
-  });
-
-  const [isSelectedindex, setIndexSelected] = useState<number | null>(null);
-
-  // Initialize the game on component mount
-  useEffect(() => {
-    // Set the selected game in game logic and Redux store
-    WhichGame(selectedGametext);
-    dispatch(addGameType(selectedGametext));
-  }, []);
-
-  // Save active game index to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem("activeGameIndex", 0);
-  }, [isActive]);
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClickGame = (gameName: string, index: number) => {
-    // Update the selected game name
-    setSelectedGame(gameName);
-
-    // Update the UI selection
-    setSelected(index);
-    setActive(index);
-
-    // Update the game logic and Redux store
-    WhichGame(gameName);
-    dispatch(addGameType(gameName));
-  };
-
-  const toggleSelected = (item: number) => {
-    setSelected(item);
-    setIsOpen(false);
-    setIndexSelected(item);
-  };
-
   const handleClick = (index: number) => {
-    // Handle any additional logic when a game is clicked
+    setActive(index);
   };
-
   return (
     <div
-      className="flex flex-col md:flex-row ml-1 md:ml-3 mb-4 pt-1 z-[9999] justify-between w-full"
+      className="flex ml-3 mb-4 pt-1 justify-between"
+      style={{ width: "100%" }}
     >
-      <div className="buttons flex flex-wrap gap-1 sm:gap-2 items-center w-full md:w-[75%] overflow-x-auto pb-2 md:pb-0">
+      <div className="buttons flex gap-2 items-center" style={{ width: "75%" }}>
         {dropdownItems
           ? dropdownItems.map((item: any, index: number) => {
               return (
                 <button
-                  key={index}
                   className={`text-gray-500 hover:text-green-500 ${
                     isActive === index ? "text-green-600" : ""
                   }`}
@@ -204,7 +151,6 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                     handleClickGame(item.text1, index);
                     handleClick(index);
                   }}
-                  disabled={item.text1 === "ENGLISH LEAGUE" ? true : false}
                 >
                   {item.icon}
                 </button>
@@ -212,30 +158,50 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
             })
           : ""}
       </div>
-      <div className="drop-down w-full md:w-1/3 md:ml-5 !z-[9999] flex mt-2 md:mt-0">
-        <div className="w-full items-center relative inline-block  text-left">
-          <div className="flex items-center cursor-pointer ">
+      <div className="drop-down w-1/2 ml-5 flex ">
+        <div className="w-full items-center relative inline-block text-left">
+          <div className="flex items-center cursor-pointer">
             <BsFillGrid3X3GapFill
               onClick={() => toggleDropdown()}
-              className="text-green-600 "
-              size={31}
+              className="text-green-600"
+              size={36}
             />
             <div
-              className={`flex ml-2  ${
-                selectedGame === 4 ? "gap-2" : selectedGame === 6 ? "gap-3" : ""
+              className={`flex ml-2 ${
+                selectedGame === 4 ? "gap-4" : selectedGame === 6 ? "gap-5" : ""
               } items-center`}
             >
               <button
-                className={`text-green-500 hover:text-green-300 transition-all text-sm ${dropdownItems[selectedGame].width}`}
+                className={`text-green-500 hover:text-green-300 transition-all ${dropdownItems[selectedGame].width}`}
               >
-                {dropdownItems[selectedGame].icon2}
+                {dropdownItems[selectedGame].icon}
               </button>
               <div className="flex flex-col">
-                <div className="text-gray-400 hover:text-green-300 transition-all text-sm ">
-                  {dropdownItems[selectedGame]?.text2?.toUpperCase() || ""}
+                <div className="text-gray-400 hover:text-green-300 transition-all text-sm ml-2">
+                  {dropdownItems[selectedGame].text2 === "KENO"
+                    ? dropdownItems[selectedGame].text2.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "PreRecRealDogs"
+                    ? dropdownItems[selectedGame]?.text3.toUpperCase()
+                    : dropdownItems[selectedGame].text2 === "Drive"
+                    ? dropdownItems[selectedGame]?.text3.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "SpinAndWin"
+                    ? dropdownItems[selectedGame].text2.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "CycleRacing"
+                    ? dropdownItems[selectedGame].text3.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "PlatinumHounds"
+                    ? "grayhound racing".toUpperCase()
+                    : dropdownItems[selectedGame].text1.toUpperCase()}
                 </div>
-                <div className="text-gray-400 hover:text-green-300 transition-all text-sm ">
-                  {dropdownItems[selectedGame]?.text3?.toUpperCase() || ""}
+                <div className="text-gray-400 hover:text-green-300 transition-all text-sm ml-2">
+                  {dropdownItems[selectedGame].text2 === "KENO" ||
+                  dropdownItems[selectedGame].text2 === "SPIN AND WIN" ||
+                  dropdownItems[selectedGame].text1 === "SpeedSkating"
+                    ? ""
+                    : dropdownItems[selectedGame].text1 === "PreRecRealDogs"
+                    ? dropdownItems[selectedGame].text2.toUpperCase()
+                    : dropdownItems[selectedGame].text1 === "PlatinumHounds"
+                    ? "Platinum Hounds".toUpperCase()
+                    : dropdownItems[selectedGame].text2.toUpperCase()}
                 </div>
               </div>
             </div>
@@ -243,13 +209,8 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
 
           {isOpen && (
             <div
-              className="absolute p-4 left-0 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 text-xs overflow-y-auto overflow-x-hidden !max-h-[200px] custom-scrollbar"
-              style={{ 
-                boxShadow: "#3dd463 1px 1px 5px 1px", 
-                zIndex: 9999,
-                position: "absolute",
-                top: "100%"
-              }}
+              className="absolute p-4 left-0 w-64 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-y-auto overflow-x-hidden h-64 z-10 custom-scrollbar"
+              style={{ boxShadow: "#3dd463 1px 1px 5px 1px", zIndex: 500 }}
             >
               <div className="py-1 w-64">
                 {dropdownItems.map((item, index) => (
@@ -278,17 +239,40 @@ const GameIllustration: React.FC<gameSelection> = ({ WhichGame }) => {
                       </button>
                     </div>
                     <div
-                      className={`ml-2 mt-2  text-green-600 ${
+                      className={`ml-2 text-green-600 ${
                         isSelectedindex === index || isActive === index
                           ? " text-white"
                           : "hover:bg-gray-100"
                       } hover:text-green-300 transition-all`}
                     >
                       <div className="text-md">
-                        {item.text2?.toUpperCase() || ""}
+                        {item.text2 === "KENO"
+                          ? item.text2
+                          : item.text1 === "PreRecRealDogs"
+                          ? item.text3?.toUpperCase()
+                          : item.text1 === "PlatinumHounds"
+                          ? "grayhound racing".toUpperCase()
+                          : item.text2 === "Drive"
+                          ? item.text3?.toUpperCase()
+                          : item.text1 === "SpinAndWin"
+                          ? item.text2.toUpperCase()
+                          : item.text1 === "CycleRacing"
+                          ? item.text3.toUpperCase()
+                          : item.text1.toUpperCase()}
                       </div>
-                      {item.text3?.toUpperCase() || ""}
-                      {item.text1?.toUpperCase() || ""}
+                      {item.text2 !== "KENO" && (
+                        <div className="text-xs">
+                          {item.text1 === "PreRecRealDogs"
+                            ? item.text2?.toUpperCase()
+                            : item.text1 === "PlatinumHounds"
+                            ? "Platinum Hounds".toUpperCase()
+                            : item.text1 === "Drive"
+                            ? item.text3?.toUpperCase()
+                            : item.text1 === "SpinAndWin"
+                            ? ""
+                            : item.text2.toUpperCase()}
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
