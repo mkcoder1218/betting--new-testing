@@ -3,7 +3,7 @@ name: Deploy Betting Cashier to S3
 on:
   push:
     branches:
-      - newprod # Trigger the workflow on push to the staging branch
+      - newprod
 
 jobs:
   build:
