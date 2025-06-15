@@ -45,7 +45,7 @@ box-shadow: inset 1px 1px 3px 3px rgba(0, 0, 0, 0.091);
   background-color: #008000;
 }
 .header-container{
-  box-shadow: rgb(201, 200, 200) 1px 1px 20px 6px;
+  box-shadow: rgba(216, 215, 215, 0.77) 1px 1px 10px 6px;
   border: white 1px solid;
 }
 .addtobetButton{

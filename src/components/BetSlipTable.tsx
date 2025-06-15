@@ -25,7 +25,6 @@ import { CarRacing } from "./svg/CarRacing";
 import { DashingDerby } from "./svg/DashingDerby";
 import moment from "moment";
 import ResultforSpin from "../ui/ResultforSpin";
-import { ComponentType } from "react";
 
 interface ActionType {
   type: string;
@@ -34,13 +33,25 @@ interface ActionType {
 
 const BetSlipTable = ({ type, data }: ActionType) => {
   const dispatch = useAppDispatch();
+  const gameState = useAppSelector((state) => state.game.game?.gamenumber);
+  // const gameResult = useAppSelector((state) => state.game.game?.result);
   const userData = useAppSelector((state) => state.user);
   const gameNumber = data.Tickets?.map((items) => items.Game.gamenumber);
-  const totalStake =
-    data.Tickets?.reduce((a, b) => a + (parseInt(b?.stake) || 0), 0) || 0;
-  const [selectedTicket, setSelectedTicket] = useState<any>(null);
-  const [resultVisible, setResultVisible] = useState(false);
-  const [gameResult, setGameResult] = useState<any>(null);
+  const totalStake = data.Tickets?.reduce((a, b) => a + parseInt(b?.stake), 0);
+  const [gameResult, setGameResult] = useState<GameData>();
+  const [resultVisible, toggleResult] = useState(false);
+  const gameResults = useAppSelector((state) => {
+    return state.summary.eventResult;
+  });
+  const printSelected = (item: Ticket) => {
+    const payload = {
+      betslipId: item.betSlipId,
+      shopId: userData.user?.Cashier.shopId,
+      cashierCreateId: userData.user?.Cashier.id,
+    };
+
+    printSelectedTickets(payload);
+  };
 
   const handleCancel = () => {
     dispatch(
@@ -51,165 +62,14 @@ const BetSlipTable = ({ type, data }: ActionType) => {
       )
     );
   };
-
-  const handleRedeem = () => {
-    if (!userData.user?.Cashier?.id) return;
-
-    dispatch(
-      redeemTicket(
-  data?.id,
-        userData.user.Cashier.id,
-        Number(data?.betSlipNumber),
-        userData.user.Cashier.userId,
-        userData.shop?.name || "",
-        userData.user.username || ""
-      )
-    );
-  };
-
-  const handlePrint = (ticket: any) => {
-    // Create printable content
-    const printContent = `
-      <html>
-      <head>
-        <title>Betslip Print</title>
-        <style>
-          body { font-family: Arial, sans-serif; }
-          .ticket { padding: 20px; }
-          .header { text-align: center; font-weight: bold; margin-bottom: 10px; }
-          .info { margin-bottom: 10px; }
-          table { width: 100%; border-collapse: collapse; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-          th { background-color: #f2f2f2; }
-        </style>
-      </head>
-      <body>
-        <div class="ticket">
-          <div class="header">Betslip</div>
-          <div class="info">
-            <p>ID: ${data.betSlipNumber}</p>
-            <p>Date: ${new Date(data.createdAt).toLocaleDateString()}</p>
-            <p>Time: ${new Date(data.createdAt).toLocaleTimeString()}</p>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>BetID</th>
-                <th>Game</th>
-                <th>Event No</th>
-                <th>Market</th>
-                <th>Selection</th>
-                <th>Win</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${ticket.ticketNumber}</td>
-                <td>${ticket.Game.gameType}</td>
-                <td>${ticket.Game.gamenumber}</td>
-                <td>${getMarketName(ticket)}</td>
-                <td>${ticket.nums && Array.isArray(ticket.nums) ? ticket.nums.join(", ") : ticket.nums}</td>
-                <td>Br ${(ticket.win > 0) ? Number(ticket.win).toFixed(2) : "0.00"}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </body>
-      </html>
-    `;
-
-    // Open print window
-    const printWindow = window.open('', '_blank');
-    printWindow?.document.write(printContent);
-    printWindow?.document.close();
-    printWindow?.print();
-  };
-
-  const handleViewResult = (ticket: any) => {
-    setSelectedTicket(ticket);
-    setGameResult(ticket.Game);
-    setResultVisible(true);
-  };
-
-  const closeResultView = () => {
-    setResultVisible(false);
-    setGameResult(null);
-    setSelectedTicket(null);
-  };
-
-  // Function to determine the market name based on the ticket data
-  const getMarketName = (ticket: any) => {
-    // If the game data is available and has market information
-    if (ticket.Game && ticket.Game.gameData) {
-      try {
-        // Try to parse the gameData if it's a string
-        const gameData = typeof ticket.Game.gameData === 'string'
-          ? JSON.parse(ticket.Game.gameData)
-          : ticket.Game.gameData;
-
-        // Check if marketType exists in the parsed data
-        if (gameData.marketType) {
-          return gameData.marketType;
-        }
-
-        // Check if there's a market field
-        if (gameData.market) {
-          return gameData.market;
-        }
-
-        // Check for specific game types
-        switch (ticket.Game.gameType) {
-          case "Keno":
-            return "Win";
-          case "PlatinumHounds":
-          case "HarnessRacing":
-          case "Virtual Dog race":
-          case "DashingDerby":
-          case "CycleRacing":
-          case "SteepleChase":
-          case "SpeedSkating":
-          case "SingleSeaterMotorRacing":
-          case "MotorRacing":
-          case "Dashing Derby":
-            // For racing games, determine market based on the selection format
-            if (ticket?.oddType) {
-              console.log('ticket nums',ticket?.oddType);
-              if (typeof ticket?.oddType === 'string') {
-                if (ticket?.oddType?.toLowerCase()?.includes('win')) return 'Win';
-                if (ticket?.oddType?.toLowerCase()?.includes('place')) return 'Place';
-                if (ticket?.oddType?.toLowerCase()?.includes('exacta')) return 'Exacta';
-                if (ticket?.oddType?.toLowerCase()?.includes('trifecta')) return 'Trifecta';
-                if (ticket?.oddType?.toLowerCase()?.includes('quinella')) return 'Quinella';
-                if (ticket?.oddType?.toLowerCase()?.includes('trio')) return 'Trio';
-                if (ticket?.oddType?.toLowerCase()?.includes('swinger')) return 'Swinger';
-              }
-              return "Win/Place";
-            }
-            return "Win";
-          default:
-            return "Win";
-        }
-      } catch (error) {
-        console.error("Error parsing game data:", error);
-        return "Win"; // Default fallback
-      }
-    }
-
-    // Default fallback based on game type
-    return ticket.Game.gameType === "Keno" ? "Win" : "Win/Place";
-  };
-
-  // Function to determine which icon to display based on game type
-  const gameTypeSelector = (gameType: string): ComponentType<any> | null => {
+  const gameTypeSelector = (gameType: string) => {
     switch (gameType) {
-      case "PlatinumHounds":
-        return Jaguar;
       case "HarnessRacing":
         return Garri;
-      case "Virtual Dog race":
+      case "PreRecRealDogs":
         return DogWithVideo;
-      case "DashingDerby":
-        return DashingDerby;
+      case "horseRun":
+        return HorseRun;
       case "CycleRacing":
         return Bicycle;
       case "SteepleChase":
@@ -220,107 +80,33 @@ const BetSlipTable = ({ type, data }: ActionType) => {
         return F1;
       case "MotorRacing":
         return CarRacing;
-      case "Dashing Derby":
+      case "DashingDerby":
         return DashingDerby;
+      case "PlatinumHounds":
+        return Jaguar;
       default:
-        return null;
+        return;
     }
+  };
+  const handleRedeem = () => {
+    dispatch(
+      redeemTicket(userData.user?.Cashier.id, parseInt(data?.betSlipNumber))
+    );
   };
 
   return (
-    <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
-      {resultVisible && gameResult ? (
-        <div className="right-flex pl-3 pr-3 w-full flex-grow ml-2 overflow-y-auto">
-          <div className="result-header flex text-gray-500 justify-between">
-            {gameResult.gameType === "SmartPlayKeno" && (
-              <div className="w-full">
-                <div className="flex w-full gap-3">
-                  <SmartPlay />
-                  <p className="mb-5">
-                    {moment(gameResult.startTime).format(
-                      "YYYY/MM/DD hh:mm:ss"
-                    )}{" "}
-                    ID{" "}
-                    {gameResult.gameType === "SmartPlayKeno"
-                      ? gameResult.gamenumber
-                      : gameResult.gamenumber}
-                  </p>
-                </div>
-                <div className="borderLine"></div>
-                <div className="w-full p-3 text-xl flex justify-center">
-                  <p>{"Results".toUpperCase()}</p>
-                </div>
-              </div>
-            )}
-
-            {gameResult.gameType !== "SmartPlayKeno" &&
-            gameResult.gameType !== "SpinAndWin" ? (
-              gameTypeSelector(gameResult.gameType) ? (
-                <Result
-                  Icon={gameTypeSelector(gameResult.gameType) as React.ComponentType}
-                  isSmall={true}
-                  gameData={gameResult.result}
-                  gameType={gameResult.gameType}
-                />
-              ) : (
-                <div className="p-4">
-                  <p>Results not available for this game type</p>
-                </div>
-              )
-            ) : gameResult.gameType === "SpinAndWin" ? (
-              <ResultforSpin gameData={gameResult.result} />
-            ) : (
-              ""
-            )}
-
-            <div>
-              <button
-                onClick={closeResultView}
-                className="flex w-36 p-1 justify-center border-gray-400 hover:bg-slate-200 transition-all items-center rounded-md"
-                style={{ border: "1px solid #cfcfcf" }}
-              >
-                <IoChevronBackOutline size={24} /> Back To List
-              </button>
-            </div>
-          </div>
-
-          <div className="results-content flex items-center flex-col w-full">
-            <div className="w-2/3 mr-20 mt-4">
-              <div className="mb-3">
-                <div className="grid gap-x-24 gap-y-1 grid-cols-10 -ml-14 pb-4 w-full">
-                  {gameResult.gameType === "SmartPlayKeno" &&
-                    gameResult &&
-                    gameResult?.result?.MarketResults[0]?.WinningSelections.slice()
-                      .sort((a: string, b: string) => parseInt(a) - parseInt(b))
-                      .map((selection: string) => {
-                        return (
-                          <button
-                            style={{
-                              backgroundColor: "#bc4307",
-                            }}
-                            key={selection}
-                            className={`balls rounded-full w-10 h-10 text-white`}
-                          >
-                            {selection}
-                          </button>
-                        );
-                      })}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="slip-header text-green-600 font-light text-xl">
+    <>
+      {!resultVisible && (
+        <div className="right-flex pl-3 pr-3 flex-grow border-l-2 border-slate-200 ml-6">
+          <div className="slip-header text-green-600 font-semibold text-xl">
             Betslip
           </div>
           <div className="slip-container mt-3 relative overflow-x-auto">
             <table className="w-full text-sm text-left rtl:text-right">
-              <thead className="text-xs border-b-2 uppercase">
+              <thead className="text-xs border-b-2 border-t-2 border-slate-300 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" className="px-3 py-3">
-                    ID
+                    Number
                   </th>
                   <th scope="col" className="px-3 py-3">
                     Date
@@ -345,20 +131,24 @@ const BetSlipTable = ({ type, data }: ActionType) => {
               </tbody>
             </table>
           </div>
-          <div className="slip-header text-green-600 font-light text-xl">
+          <div className="slip-header text-green-600 font-semibold text-xl">
             Bets
           </div>
-          <div className="slip-container mt-3 relative overflow-x-auto overflow-y-auto ">
+          <div className="slip-container mt-3 relative overflow-x-auto">
             <table className="w-full text-sm text-left rtl:text-right">
-              <thead className="text-xs border-b-2 uppercase sticky top-0 bg-white z-10">
+              <thead className="text-xs border-b-2 border-t-2 border-slate-300 text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  {type !== "cancel" && (
-                    <th scope="col" className="px-3 py-3">
+                  {type === "redeem" && (
+                    <th
+                      colSpan={1}
+                      scope="col"
+                      className="px-6 col-span-4 py-3"
+                    >
                       Actions
                     </th>
                   )}
                   <th scope="col" className="px-3 py-3">
-                    BetID
+                    Bet ID
                   </th>
                   <th scope="col" className="px-3 py-3">
                     Game
@@ -382,26 +172,25 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                   return (
                     <tr
                       key={item.id}
-                      className={`${item.win > 0 ? 'bg-[#d4b052]' : 'bg-white'} border-b`}
+                      className={`${
+                        item.win > 0 ? "bg-orange-300 text-white" : "bg-white"
+                      } border-b`}
                     >
-                      {type !== "cancel" && (
-                        <td className="px-3 py-2">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => handleViewResult(item)}
-                              className="w-10 h-10 flex items-center justify-center border bg-white border-green-500 text-green-500 rounded-sm hover:bg-[#c9a646] transition-all"
-                              title="View Result"
-                            >
-                              <FaEye size={18} color="green" />
-                            </button>
-                            <button
-                              onClick={() => handlePrint(item)}
-                              className="w-10 h-10 flex items-center justify-center border bg-white border-green-500 text-green-500 rounded-sm hover:bg-[#c9a646] transition-all"
-                              title="Print Ticket"
-                            >
-                              <IoIosPrint size={18} color="green" />
-                            </button>
-                          </div>
+                      {type === "redeem" && (
+                        <td scope="row" className="px-1 flex gap-4 py-2">
+                          <FaEye
+                            onClick={() => {
+                              toggleResult(true);
+                              setGameResult(item.Game);
+                            }}
+                            className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
+                            size={40}
+                          />
+                          <IoIosPrint
+                            onClick={() => printSelected(item)}
+                            className="text-green-500 border-2 bg-white border-green-300 rounded-md p-1 cursor-pointer"
+                            size={40}
+                          />
                         </td>
                       )}
                       <td scope="row" className="px-3 py-2">
@@ -409,22 +198,41 @@ const BetSlipTable = ({ type, data }: ActionType) => {
                       </td>
                       <td className="px-3 py-2">{item.Game.gameType}</td>
                       <td className="px-3 py-2">
-                        {item.Game.gamenumber === 0
-                          ? (item.Game.gameData && typeof item.Game.gameData === 'object')
-                            ? item.Game.gamenumber
-                            : item.Game.gamenumber
+                        {item.Game.gamenumber == 0
+                          ? item.Game.gameData.Number
                           : item.Game.gamenumber}
                       </td>
                       <td scope="row" className="px-3 py-2">
-                        {getMarketName(item)}
+                        {/* {((!item.nums.includes(-2) &&
+                      !item.nums.includes(-4) &&
+                      !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win > 0) && "Win"}
+                    {((!item.nums.includes(-2) &&
+                      !item.nums.includes(-4) &&
+                      !item.nums.includes(-6)) && item.Game.status === "COMPLETED" && item.win < 1) && "Lost"} */}
+                        {item.Game.gameType === "SmartPlayKeno" &&
+                          !item.nums.includes(-2) &&
+                          !item.nums.includes(-4) &&
+                          !item.nums.includes(-6) &&
+                          "Win"}
+                        {item.Game.gameType !== "SmartPlayKeno" && item.oddType}
+                        {(item.nums.includes(-2) ||
+                          item.nums.includes(-4) ||
+                          item.nums.includes(-6)) &&
+                          "Heads and Tails"}
                       </td>
                       <td className="px-3 py-2">
-                        {item.nums && Array.isArray(item.nums)
-                          ? item.nums.join(", ")
-                          : item.nums}
+                        {item.nums.includes(-2) ||
+                        item.nums.includes(-4) ||
+                        item.nums.includes(-6)
+                          ? ""
+                          : item.nums.join(", ")}
+                        {item.nums.includes(-2) && "Heads"}
+                        {item.nums.includes(-4) && "Evens"}
+                        {item.nums.includes(-6) && "Tails"}
                       </td>
                       <td className="px-3 py-2">
-                        Br {(item.win > 0) ? Number(item.win).toFixed(2) : "0.00"}
+                        {item&&item.win&& item.win > 0 ? parseInt(item.win).toFixed(2) : 0.0}{" "}
+                        Br
                       </td>
                     </tr>
                   );
@@ -433,47 +241,124 @@ const BetSlipTable = ({ type, data }: ActionType) => {
             </table>
           </div>
           <div className="bet-footer">
-            <div className="flex flex-col w-full mt-3 gap-2">
-              {type !== "cancel" && (
-                <>
-                  <div className="flex justify-between items-center">
-                    <div className="text-sm font-light text-gray-500">
-                      {new Date(data.createdAt).toLocaleDateString()} {new Date(data.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                    </div>
-                   
-                  </div>
-                  <div className="flex justify-end gap-3 items-center">
-                    <div className="font-semibold text-gray-800">
-                      Unclaimed Winnings Br {data.Tickets?.reduce((total: number, ticket: any) => total + (Number(ticket.win) || 0), 0).toFixed(2)}
-                    </div>
-                    <button
-                      onClick={handleRedeem}
-                      className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-all flex items-center"
-                    >
-                      Redeem $
-                    </button>
-                  </div>
-                </>
-              )}
-
-              {type === "cancel" && (
-                <div className="flex justify-between items-center">
-                  <div className="font-semibold text-gray-800">
-                    Total Stake Br {Number(totalStake).toFixed(2)}
-                  </div>
-                  <button
-                    onClick={handleCancel}
-                    className="px-6 py-2 bg-[#F0AD4E] text-white rounded-md hover:bg-[#ec971f] transition-all flex items-center"
-                  >
-                    Cancel <span className="ml-1">✓</span>
-                  </button>
+            <div className="flex justify-between text-sm items-center p-3">
+              <div>{new Date(data.createdAt).toLocaleDateString()} A.M</div>
+              <div className="mr-6">
+                {data.Tickets.reduce((a, b) => a + parseInt(b?.win), 0).toFixed(2)} Br
+              </div>
+            </div>
+            <div className="flex items-center justify-end mt-3">
+              {type === "redeem" ? (
+                <div className="font-bold text-l">
+                  {data.Tickets &&
+                    data.Tickets[0].Game.status === "COMPLETED" &&
+                   data.Tickets.reduce((a, b) => a + parseInt(b.win), 0) < 1 &&
+                    "Not a Winning Ticket"}
+                  {data.Tickets &&
+                  data.Tickets.reduce((a, b) => a + parseInt(b.win), 0) > 0 &&
+                    `Unclaimed Winnings Br. ${data.Tickets?.reduce(
+                      (a, b) => a + parseInt(b.win),
+                      0
+                    )}.00 `}
                 </div>
+              ) : (
+                <div className="font-bold text-l">
+                  Total Stake Br. {parseInt(totalStake).toFixed(2)}
+                </div>
+              )}
+              {type === "redeem" ? (
+                <button
+                  onClick={handleRedeem}
+                  className="ml-3 px-4 py-2 bg-green-600 text-white rounded-sm"
+                >
+                  Redeem $
+                </button>
+              ) : (
+                <button
+                  style={{ backgroundColor: "#F0AD4E" }}
+                  onClick={handleCancel}
+                  className="ml-3 px-4 py-2 text-white rounded-sm"
+                >
+                  Cancel $
+                </button>
               )}
             </div>
           </div>
-        </>
+        </div>
       )}
-    </div>
+      {resultVisible && (
+        <div className="right-flex pl-3 pr-3 w-full flex-grow ml-2">
+          <div className="result-header flex text-gray-500 justify-between">
+            {gameResult.gameType === "SmartPlayKeno" && (
+              <div className="w-full">
+                <div className="flex w-full gap-3">
+                  <SmartPlay />
+                  <p className="mb-5">
+                    {moment(gameResult.startTime).format("YYYY/MM/DD hh:mm:ss")}{" "}
+                    ID{" "}
+                    {gameResult.gameType === "SmartPlayKeno"
+                      ? gameResult.gamenumber
+                      : gameResult.gamenumber}
+                  </p>
+                </div>
+                <div className="borderLine"></div>
+                <div className="w-full p-3 text-xl flex justify-center">
+                  <p>{"Results".toUpperCase()}</p>
+                </div>
+              </div>
+            )}
+
+            {gameResult?.gameType !== "SmartPlayKeno" &&
+            gameResult?.gameType !== "SpinAndWin" ? (
+              <Result
+                Icon={gameTypeSelector(gameResult?.gameType)}
+                isSmall={true}
+                gameData={gameResult?.result}
+                gameType={gameResult?.gameType}
+              />
+            ) : (
+              gameResult?.gameType === "SpinAndWin"?<ResultforSpin gameData={gameResult?.result}/>:''
+            )}
+
+            <div>
+              <button
+                onClick={() => toggleResult(false)}
+                className="flex w-36 p-1 justify-center border-gray-400 hover:bg-slate-200 transition-all items-center rounded-md"
+                style={{ border: "1px solid #cfcfcf" }}
+              >
+                <IoChevronBackOutline size={24} /> Back To List
+              </button>
+            </div>
+          </div>
+
+          <div className="results-content flex items-center flex-col w-full">
+            <div className="w-2/3 mr-20 mt-4">
+              <div className="mb-3">
+                <div className="grid gap-x-24 gap-y-1 grid-cols-10 -ml-14 pb-4 w-full">
+                  {gameResult.gameType === "SmartPlayKeno" &&
+                    gameResult &&
+                    gameResult.result.MarketResults[0].WinningSelections.slice()
+                      .sort((a, b) => parseInt(a) - parseInt(b))
+                      .map((_) => {
+                        return (
+                          <button
+                            style={{
+                              backgroundColor: "#bc4307",
+                            }}
+                            key={_}
+                            className={`balls rounded-full w-10 h-10 text-white`}
+                          >
+                            {_}
+                          </button>
+                        );
+                      })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

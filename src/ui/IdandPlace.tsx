@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 
 interface IdandPlaceProp {
   Id: string;
@@ -13,7 +13,7 @@ const IdandPlace: React.FC<IdandPlaceProp> = ({
   isPastGame,
 }) => {
   return (
-    <div className="IdAndPlace flex !text-[10px] flex-col">
+    <div className="IdAndPlace flex flex-col">
       <p
         className="Place"
         style={{ color: isActive || isPastGame ? "white" : "" }}
@@ -30,4 +30,4 @@ const IdandPlace: React.FC<IdandPlaceProp> = ({
   );
 };
 
-export default memo(IdandPlace);
+export default IdandPlace;

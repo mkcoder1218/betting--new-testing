@@ -18,7 +18,6 @@ type CircleState = {
 };
 interface FirstMiniProp {
   gameId?: any;
-  gameStartTime?: any;
   gameNumber?: any;
   gameIdofBack?: string;
 }
@@ -113,8 +112,7 @@ function Thirdminicontainer(prop: FirstMiniProp) {
             oddType: oddType,
             gameType: "SpinAndWin",
             gameNumber: prop.gameNumber,
-            toWin:10,
-            startTime: prop.gameStartTime + "",
+            toWin:10
           })
         );
       }

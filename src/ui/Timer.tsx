@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef, memo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import moment from "moment";
+import Live from "./Live";
+import { useAppSelector } from "../features/hooks";
 
 interface Time {
   isLive: boolean;
@@ -7,15 +9,16 @@ interface Time {
   isgameActive: boolean;
   isPastGame?: boolean;
   isbecomeLive?: (val: boolean) => void;
-  onTimerEnd?: () => void; // Add callback for when timer reaches 0
 }
 
-const Timer: React.FC<Time> = ({ _time, isbecomeLive, onTimerEnd }) => {
+const Timer: React.FC<Time> = ({ _time, isPastGame, isbecomeLive }) => {
+  const initialTime = 0.5 * 60; // Initial time set to 30 seconds
   const [time, setTime] = useState<number>(
     moment(_time).diff(moment(), "seconds")
   ); // State to track the countdown
   const [isLive, setIsLive] = useState(false);
-  const timerIdRef = useRef<NodeJS.Timeout | null>(null); // Ref to hold the interval ID
+  const livegame = useAppSelector((state) => state.gameType.isLive);
+  const timerIdRef = useRef(null); // Ref to hold the interval ID
 
   useEffect(() => {
     // Set initial countdown time based on _time
@@ -31,14 +34,8 @@ const Timer: React.FC<Time> = ({ _time, isbecomeLive, onTimerEnd }) => {
     timerIdRef.current = setInterval(() => {
       setTime((prevTime) => {
         if (prevTime <= 0) {
-          if (timerIdRef.current) {
-            clearInterval(timerIdRef.current);
-            timerIdRef.current = null;
-          }
-          // Call onTimerEnd when timer reaches 0 to trigger new game fetch
-          if (onTimerEnd) {
-            onTimerEnd();
-          }
+          clearInterval(timerIdRef.current);
+          timerIdRef.current = null;
           return 0;
         }
         return prevTime - 1;
@@ -47,16 +44,9 @@ const Timer: React.FC<Time> = ({ _time, isbecomeLive, onTimerEnd }) => {
       // Check if the event should be marked as live
       if (moment(_time).diff(moment(), "seconds") < 1 && !isLive) {
         setIsLive(true);
-        if(isbecomeLive)
         isbecomeLive(true);
-        if (timerIdRef.current) {
-          clearInterval(timerIdRef.current); // Clear interval when event goes live
-          timerIdRef.current = null;
-        }
-        // Also call onTimerEnd when game goes live to ensure new games are fetched
-        if (onTimerEnd) {
-          onTimerEnd();
-        }
+        clearInterval(timerIdRef.current); // Clear interval when event goes live
+        timerIdRef.current = null;
       }
     }, 1000);
 
@@ -66,7 +56,7 @@ const Timer: React.FC<Time> = ({ _time, isbecomeLive, onTimerEnd }) => {
         clearInterval(timerIdRef.current);
       }
     };
-  }, [_time, isbecomeLive, onTimerEnd]);
+  }, [_time, isbecomeLive]);
   return (
     <>
       <div className="Timer">{moment(time * 1000).format("mm:ss")}</div>
@@ -74,4 +64,4 @@ const Timer: React.FC<Time> = ({ _time, isbecomeLive, onTimerEnd }) => {
   );
 };
 
-export default memo(Timer);
+export default Timer;

@@ -1,4 +1,4 @@
-import React, { useState, memo } from "react";
+import React, { useState } from "react";
 import Timer from "./Timer";
 import Live from "./Live";
 import moment from "moment";
@@ -9,7 +9,6 @@ interface TimerTextProp {
   isActive: boolean;
   isgameActive: boolean;
   isPastGame?: boolean;
-  onTimerEnd?: () => void; // Add callback for when timer reaches 0
 }
 const StartTimer: React.FC<TimerTextProp> = ({
   text,
@@ -17,12 +16,10 @@ const StartTimer: React.FC<TimerTextProp> = ({
   isActive = false,
   isgameActive,
   isPastGame,
-  onTimerEnd,
 }) => {
   const [isgameLive, setisLive] = useState(false);
   const handleLive = (val: boolean) => {
     setisLive(val);
-    onLive(val);
   };
   return (
     <div className="StartTime">
@@ -31,12 +28,11 @@ const StartTimer: React.FC<TimerTextProp> = ({
       ) : (
         isgameActive && (
           <Timer
-            isLive={isgameLive}
+            isLive={onLive}
             _time={text}
             isgameActive={isgameActive}
             isPastGame={isPastGame}
             isbecomeLive={handleLive}
-            onTimerEnd={onTimerEnd}
           />
         )
       )}
@@ -47,4 +43,4 @@ const StartTimer: React.FC<TimerTextProp> = ({
   );
 };
 
-export default memo(StartTimer);
+export default StartTimer;

@@ -29,9 +29,6 @@ function Formula1() {
         id="6000"
         time="00:00"
         activeIndexValues={activeIndexValue}
-        isActiveGame={false}
-        WhichGameSelected="Formula1"
-        isActiveClicked={() => {}}
       />
     </div>
   );

@@ -2,14 +2,8 @@ import React, { useEffect, useState } from "react";
 import generatehover, { disablehover } from "../../utils/generatehover";
 import Circle from "../svg/circle";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import {
-  addToBetSlip,
-  removeFromBetSlip,
-} from "../../features/slices/pickerSlice";
-import {
-  removemessage,
-  setIsClearCircle,
-} from "../../features/slices/gameType";
+import { addToBetSlip, removeFromBetSlip } from "../../features/slices/pickerSlice";
+import { removemessage, setIsClearCircle } from "../../features/slices/gameType";
 import { Input } from "@mui/material";
 import { DispatchParams } from "../../ui/Table";
 import { OddNUMBERMap } from "../../utils/odd";
@@ -24,8 +18,7 @@ type CircleState = {
 interface FirstMiniProp {
   gameId?: any;
   gameNumber?: any;
-  gameIdofBack?: string;
-  gameStartTime?: any;
+  gameIdofBack?:string
 }
 function Secondminicontainer(prop: FirstMiniProp) {
   const dispatch = useAppDispatch();
@@ -61,15 +54,18 @@ function Secondminicontainer(prop: FirstMiniProp) {
     }
   }, [isCircle]);
   const ticketExpiry = useAppSelector((state) => state.expiry.expiry);
-
+  
   const betSlip = useAppSelector((state) => state.picker.betSlip);
   const checkIsSelected = (oddType: string) => {
     for (let item of betSlip) {
+
       if (item.oddType === oddType) {
-        dispatch(removeFromBetSlip(betSlip.indexOf(item)));
+        dispatch(removeFromBetSlip(betSlip.indexOf(item)))
         return true;
       }
     }
+  
+
 
     return false;
   };
@@ -87,7 +83,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
       [area]: !prevState[area],
     }));
     if (!checkIsSelected(Props.oddType)) {
-      dispatch(removemessage(!removemessage));
+    dispatch(removemessage(!removemessage));
 
       dispatch(
         addToBetSlip({
@@ -97,12 +93,10 @@ function Secondminicontainer(prop: FirstMiniProp) {
           gameId: prop.gameId,
           stake: Props.stake,
           toWin: Props.toWin,
-
-          expiry: ticketExpiry,
+          expiry:ticketExpiry,
           oddType: Props.oddType,
           gameType: "SpinAndWin",
           gameNumber: prop.gameNumber,
-          startTime: prop.gameStartTime,
         })
       );
     }
@@ -114,7 +108,7 @@ function Secondminicontainer(prop: FirstMiniProp) {
         <p
           className={`first_twel ${
             background.first12 && !isCircle ? "greenClick relative" : "relative"
-          } `}
+          }`}
           onClick={() => {
             handleCircleClick("first12", {
               selected: range(1, 12),
