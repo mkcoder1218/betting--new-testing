@@ -171,7 +171,7 @@ function Firstminicontainer(prop: FirstMiniProp) {
           }}
         >
           <p className="relative">0</p>
-          {iszero ? <Fourrowhover row1={0} row2={0} row3={4} i={0} /> : ""}
+          {iszero ? <Fourrowhover gameNumber={prop.gameNumber} gameStartTime={prop.gameStartTime} gameId={prop.gameId} row1={0} row2={0} row3={4} i={0} /> : ""}
           <div className="zerocircle">
             {circleState.zero && <Circle pad={true} />}
           </div>

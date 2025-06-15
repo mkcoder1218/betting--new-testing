@@ -23,7 +23,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
+  width: 30px;
   height: 100%;
   background-color: rgb(28, 64, 28);
   color: white;
@@ -34,17 +34,19 @@
 
 .scroll-button.left {
   left: 0px;
+  box-shadow:rgba(28, 64, 28, 0.658) 1px 10px 15px 10px;
 }
 
 .scroll-button.right {
   right: 0;
+    box-shadow:rgba(28, 64, 28, 0.658) 1px 10px 5px 25px;
 }
 
 .numbers-container {
   flex: 1;
   display: flex;
   overflow-x: scroll;
-  padding: 0 32px;
+  padding: 0 10px;
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   max-width: calc(42vw * 30); /* Show roughly 30 numbers initially */
@@ -90,7 +92,18 @@
 }
 
 .number-item.hovered {
-  background-color: #1e3a1e !important; /* Green background for all hovered neighbors */
   border: 1px solid #34c759; /* Green border for hovered neighbors */
   opacity: 1;
+  z-index: 1;
+  position: relative;
 } 
+.hovered::after{
+content: '';
+min-width: 100%;
+min-height: 100%;
+background-color: #34c759a1;
+z-index: 0;
+position: absolute;
+top: 0;
+left: 0;
+}

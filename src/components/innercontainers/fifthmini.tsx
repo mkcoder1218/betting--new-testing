@@ -194,7 +194,7 @@ function Fifthmini(prop: FirstMiniProp) {
 
   return (
     <div className="neighbors-container">
-      <div className="neighbors-title">NEIGHBORS</div>
+      <div className="text-sm ml-1 font-light ">NEIGHBORS</div>
       <div className="neighbors-scroll-container">
         <button className="scroll-button left" onClick={scrollLeft}>
           <ChevronLeftIcon />

@@ -387,6 +387,10 @@ export const GenerateOption2 = (
           circles[i - start] && <Circle margin={true} />,
           hoverCircles[i - start] && (
             <Fourrowhover
+              gameNumber={gameNumber}
+              gameStartTime={gameStartTime}
+              gameId={gameId}
+            
               row1={i > 3 ? 3 : i == 1 ? 2 : 1}
               row2={2}
               row3={i >= 34 ? 0 : 3}
