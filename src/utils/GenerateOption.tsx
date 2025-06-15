@@ -134,7 +134,6 @@ const GenerateOption = (
     oddType: string,
     gameType: string
   ) => {
-    const startTime = gameStates.game?.startTime + "";
     const totalKeys = Array.from(CollactionNumbersMap.keys()).length;
     const number1 = CollactionNumbersMap.get(handlefindindex(i));
     const number2 = CollactionNumbersMap.get(
@@ -165,7 +164,6 @@ const GenerateOption = (
           oddType: oddType,
           gameType: "SpinAndWin",
           gameNumber: currentgameNumber,
-          startTime: startTime,
         })
       );
     }
@@ -248,8 +246,7 @@ export const GenerateOption2 = (
   start: number,
   number: number,
   gameId?: any,
-  gameNumber?: any,
-  gameStartTime?: any,
+  gameNumber?: any
 ): JSX.Element[] => {
   const result = [];
   const dispatch = useAppDispatch();
@@ -292,7 +289,6 @@ export const GenerateOption2 = (
     const isThirdrow = specialNumbers.therdRownumbers.includes(i);
 
     const handleclick = (index: number, i: number) => {
-      console.log('game start time',gameStartTime);
       const newCircles = [...circles];
       newCircles[index] = !newCircles[index];
       setCircles(newCircles);
@@ -311,7 +307,6 @@ export const GenerateOption2 = (
             oddType: "Win",
             gameNumber: gameNumber,
             gameType: "SpinAndWin",
-            startTime: gameStartTime + "",
           })
         );
       }
@@ -387,10 +382,6 @@ export const GenerateOption2 = (
           circles[i - start] && <Circle margin={true} />,
           hoverCircles[i - start] && (
             <Fourrowhover
-              gameNumber={gameNumber}
-              gameStartTime={gameStartTime}
-              gameId={gameId}
-            
               row1={i > 3 ? 3 : i == 1 ? 2 : 1}
               row2={2}
               row3={i >= 34 ? 0 : 3}

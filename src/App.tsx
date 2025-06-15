@@ -27,9 +27,9 @@ import HorseJumping from "./pages/HorseJumping";
 import DogWithOutVideo from "./pages/DogWithOutVideo";
 import Car from "./pages/Car";
 import Hockey from "./pages/Hokey";
+
 import Formula1 from "./pages/Formula1";
 import {
-  fetchEventDetail,
   GameData,
   getLastRacingGames,
 } from "./features/slices/RacingGameSliceMultipleSports";
@@ -38,28 +38,20 @@ import TestComponent from "./utils/Tst";
 import { useAxiosInterceptors } from "./config/interceptor";
 import CircularUnderLoad from "./components/svg/Loader";
 import { getLastGame } from "./features/slices/gameSlice";
-import { getNetBalance } from "./features/slices/netBalance";
-import { getShopData } from "./features/slices/cashierData";
-import setupCashierStatusCheck from "./utils/cashierStatusCheck";
-
 function App() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user);
-  const cashier = useAppSelector((state) => state.cashier);
   const oddData = useAppSelector((state) => state.odd);
   // const gameData = useAppSelector((state) => state.game);
   const [printerDialog, setPrinterDialog] = useState(false);
-  const [WhichGameSelected, setWhichgameSelected] = useState("KENO");
+  const [WhichGameSelected, setWhichgameSelected] = useState("SmartPlayKeno");
   const ticketExpiry = useAppSelector((state) => state.expiry);
   const ticketPicker = useAppSelector((state) => state.picker);
   const [open, setOpen] = useState(false);
   const [redeemOpen, setRedeemStatus] = useState(false);
   const [cancelRedeem, setCancelRedeem] = useState("redeem");
   const [lastCheck, setLastCheck] = useState(0);
-  const handleOpen = () => {
-    dispatch(getNetBalance(user.user?.Cashier.id, user.user?.Cashier.shopId));
-    setOpen(true);
-  };
+  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const gameData = useAppSelector((state) => state.racingGame);
   const handleRedeemOpen = () => setRedeemStatus(true);
@@ -68,7 +60,6 @@ function App() {
   const [game, setGame] = useState<GameData>();
   const [remainingTime, setRemainingTime] = useState(0);
   const [update, setUpdate] = useState(true);
-  const [loadCounter, setLoadCounter] = useState(0);
   useAxiosInterceptors();
   const handlePrintDialogClose = () => {
     setPrinterDialog(true);
@@ -79,37 +70,28 @@ function App() {
     dispatch(addRepeat({ repeat: parseInt(event.target.value) }));
   }
   useEffect(() => {
-    // Create a debounce function with proper cleanup
+    // Create a debounce function using lodash or use a custom debounce function.
     const debounceFetch = setTimeout(() => {
       if (WhichGameSelected === "KENO") {
         dispatch(addGameType(WhichGameSelected));
-      } else if (WhichGameSelected.length > 0) {
-        dispatch(addGameType(WhichGameSelected));
-        
-        // Only fetch games if we need to
+      } else {
+        if (WhichGameSelected.length > 0) {
+          dispatch(addGameType(WhichGameSelected));
+        }
         if (
           !gameData.gamesByType[WhichGameSelected] ||
-          gameData.gamesByType[WhichGameSelected].games.filter((game) => {
-            return moment().diff(moment(game.startTime), "seconds") < 0;
-          }).length <= 1
+          gameData.gamesByType[WhichGameSelected].games.length <= 2
         ) {
-          if (cashier.ShopData) {
-            dispatch(
-              getLastRacingGames(
-                user.user?.Cashier.shopId,
-                WhichGameSelected,
-                cashier.ShopData?.KironCookieId + ""
-              )
-            );
-            setLoadCounter(loadCounter + 1);
-          }
+          dispatch(
+            getLastRacingGames(user.user?.Cashier.shopId, WhichGameSelected)
+          );
         }
       }
-    }, 300); // Increased debounce time to prevent multiple calls
+    }, 500); // 2-second debounce
 
-    // Proper cleanup function to clear the timeout
+    // Cleanup function to clear the timeout when `WhichGameSelected` changes.
     return () => clearTimeout(debounceFetch);
-  }, [WhichGameSelected, cashier]);
+  }, [WhichGameSelected]);
 
   useEffect(() => {
     if (
@@ -119,6 +101,7 @@ function App() {
       gameData.gamesByType[WhichGameSelected].games &&
       update
     ) {
+      console.log("GamesFiltered", gameData);
       const gamesFiltered = gameData.gamesByType[WhichGameSelected].games
         ?.filter((gamedata) => {
           return moment(gamedata.startTime).diff(moment(), "seconds") > 0;
@@ -126,53 +109,19 @@ function App() {
         .sort((a, b) => {
           return moment(a.startTime).valueOf() - moment(b.startTime).valueOf();
         });
+      console.log("GamesFiltered", gamesFiltered.length);
+
       if (gamesFiltered && gamesFiltered.length > 0) {
         setGame(gamesFiltered[0]);
-        setLoadCounter(0);
         setUpdate(false);
-      } 
-      // else {
-      //   if (gameData.gamesByType[WhichGameSelected].games)
-      //     if (loadCounter < 3 && cashier) {
-
-      //       dispatch(
-      //         getLastRacingGames(
-      //           user.user?.Cashier.shopId,
-      //           "SmartPlayKeno",
-      //           cashier.ShopData?.KironCookieId + ""
-      //         )
-      //       );
-      //       setLoadCounter(loadCounter + 1);
-      //     } else {
-      //       dispatch(getShopData());
-      //     }
-      // }
-    } else if (
-      !gameData ||
-      (gameData && !gameData.gamesByType[WhichGameSelected]) ||
-      (gameData &&
-        gameData.gamesByType[WhichGameSelected] &&
-        !gameData.gamesByType[WhichGameSelected].games &&
-        WhichGameSelected !== "SmartPlayKeno")
-    ) {
-      if (!cashier.ShopData) {
-        dispatch(getShopData());
-        // dispatch(
-        //   getLastRacingGames(
-        //     user.user?.Cashier.shopId,
-        //     WhichGameSelected,
-        //     cashier.ShopData?.KironCookieId + ""
-        //   )
-        // );
       } else {
-        // dispatch(getShopData());
+        if (gameData.gamesByType[WhichGameSelected].games)
+          dispatch(
+            getLastRacingGames(user.user?.Cashier.shopId, "SmartPlayKeno")
+          );
       }
     }
   }, [gameData, update, WhichGameSelected]);
-
-  useEffect(() => {
-    dispatch(getShopData());
-  }, []);
 
   useEffect(() => {
     if (game) {
@@ -190,8 +139,10 @@ function App() {
           setRemainingTime(
             moment(game.startTime).diff(moment(), "milliseconds")
           );
+          dispatch(getLastBetSlip());
         }
       }
+
       const timer = setInterval(() => {
         setRemainingTime(moment(game.startTime).diff(moment(), "milliseconds"));
         if (lastCheck <= 10) {
@@ -204,15 +155,6 @@ function App() {
       return () => clearInterval(timer);
     }
   }, [game, update]);
-  useEffect(() => {
-    const intervalMs = 10 * 60 * 1000; // 10 minutes in milliseconds
-    const intervalId = setInterval(() => {
-      dispatch(getNetBalance(user.user?.Cashier.id, user.user?.Cashier.shopId));
-    }, intervalMs);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
-  }, []);
 
   useEffect(() => {
     if (remainingTime < 0 && !update) {
@@ -243,47 +185,12 @@ function App() {
 
   const checkStatus = async () => {
     const checkPrinter = await isPrinterUp();
-
+    console.log("CHECKING_PRINTER", checkPrinter);
     setPrinterDialog(checkPrinter);
   };
 
   const logout = () => {
     dispatch(logoutUser());
-  };
-
-  // Helper function to check if games are still loading or missing event details
-  const isGameDataStillLoading = (gameType: string) => {
-    const gameTypeData = gameData?.gamesByType[gameType];
-
-    // If no game data exists yet, we're still loading
-    if (!gameTypeData || !gameTypeData.games || gameTypeData.games.length === 0) {
-      return true;
-    }
-
-    // If the loading flag is true, we're still loading
-if (gameTypeData.loading === false) {
-      return false;
-    }
-    
-   
-
-      const visibleGames = gameTypeData.games.slice(0, 5); // Check first 5 games
-    const hasCompleteGame = visibleGames.some((game) => {
-      const gameDataObj = game.gameData;
-      return (
-        gameDataObj &&
-        typeof gameDataObj === "object" &&
-        "eventDetail" in gameDataObj &&
-        gameDataObj.eventDetail &&
-        gameDataObj.eventDetail.Event &&
-        gameDataObj.eventDetail.Event.Race &&
-        Array.isArray(gameDataObj.eventDetail.Event.Race.Entries) &&
-        gameDataObj.eventDetail.Event.Race.Entries.length > 0
-      );
-    });
-
-    // If at least one game has complete data, don't show loading
-    return !hasCompleteGame;
   };
 
   useEffect(() => {
@@ -297,38 +204,24 @@ if (gameTypeData.loading === false) {
   };
 
   const timerRef = useRef<any>(null);
-  const lastActivityRef = useRef<number>(Date.now());
 
   useEffect(() => {
-    const checkInactivity = () => {
-      const now = Date.now();
-      const inactiveTime = now - lastActivityRef.current;
-
-      // If inactive for 1 minute (60000 ms), logout
-      if (inactiveTime >= 10 * 60 * 1000) {
-        logoutAuto();
-      } else {
-        // Schedule next check
-        timerRef.current = setTimeout(checkInactivity, 60000); // Check every minute
-      }
-    };
-
     const handleUserActivity = () => {
-      lastActivityRef.current = Date.now(); // Update last activity timestamp
+      clearTimeout(timerRef.current);
+
+      timerRef.current = setTimeout(() => {
+        logoutAuto();
+      }, 20 * 60 * 1000);
     };
 
-    // Add event listeners for mouse activity
     window.addEventListener("mousemove", handleUserActivity);
-    window.addEventListener("mousedown", handleUserActivity);
     window.addEventListener("click", handleUserActivity);
 
-    // Start checking for inactivity
-    timerRef.current = setTimeout(checkInactivity, 60000);
+    handleUserActivity();
 
     return () => {
       clearTimeout(timerRef.current);
       window.removeEventListener("mousemove", handleUserActivity);
-      window.removeEventListener("mousedown", handleUserActivity);
       window.removeEventListener("click", handleUserActivity);
     };
   }, []);
@@ -336,25 +229,14 @@ if (gameTypeData.loading === false) {
   const handleIconSelect = (val: string) => {
     setWhichgameSelected(val);
   };
-  const userIsActive = useAppSelector((state) => state.gameType.Active);
-  if (!userIsActive) {
-    window.location.reload();
-
-    localStorage.clear();
-  }
-
-  useEffect(() => {
-    // Set up the cashier status check interval
-    const statusCheckIntervalId = setupCashierStatusCheck();
-
-    // Clean up the interval on component unmount
-    return () => {
-      clearInterval(statusCheckIntervalId);
-    };
-  }, []);
-
+const userIsActive = useAppSelector((state) => state.gameType.Active);
+if (!userIsActive) {
+  window.location.reload();
+  console.log("user Is Inactive");
+  localStorage.clear();
+}
   return (
-    <div className="bg-gray-50/80 fixed w-full h-full custom-scrollbar overflow-y-auto">
+    <div className="bg-white fixed w-full h-full custom-scrollbar overflow-y-auto">
       <PrinterDialog
         open={false}
         handleClose={handlePrintDialogClose}
@@ -371,35 +253,32 @@ if (gameTypeData.loading === false) {
         handleRedeemOpen={handleRedeemOpen}
         handleCancelRedeem={handleCancelRedeem}
       />
-      {
-        (WhichGameSelected !== "SmartPlayKeno" &&
-        WhichGameSelected !== "SpinAndWin" &&
-        isGameDataStillLoading(WhichGameSelected)) && (
+      {gameData &&
+        (!gameData.gamesByType[WhichGameSelected] ||
+          gameData.gamesByType[WhichGameSelected].loading) && (
           <div
-            className="w-full h-full bg-gray-100 z-20 absolute flex justify-center"
-            style={{ opacity: 0.9 }}
+            className="w-full h-full bg-gray-100 z-20 absolute  flex justify-center"
+            style={{ opacity: 0.5 }}
           >
             <CircularUnderLoad />
           </div>
         )}
       <div
-        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto md:flex-row flex-col px-2 md:px-0"
+        className="flex items-start justify-between h-full custom-scrollbar overflow-y-auto"
         style={{ scrollBehavior: "smooth" }}
       >
         <div
-          className="left flex overflow-x-hidden flex-col w-full md:w-[75%]"
+          className="left flex overflow-x-hidden flex-col"
+          style={{ width: "80%" }}
         >
-          <GameIllustration WhichGame={(val: string) => {
-            handleIconSelect(val);
-            return true;
-          }} />
+          <GameIllustration WhichGame={handleIconSelect} />
           {WhichGameSelected === "SmartPlayKeno" ? (
             <>
               {" "}
-              <div className="next-draw flex mt-4 max-w-[305px] justify-center mx-auto md:mx-0">
+              <div className="next-draw flex mt-4  ml-7">
                 {game && remainingTime > 0 ? (
                   <div
-                    className="!font-light text-sm p-1 h-fit flex bg-black items-center"
+                    className=" font-bold text-md p-1 h-fit flex items-center"
                     style={{
                       backgroundColor: "#f00",
                       borderTopLeftRadius: 4,
@@ -409,13 +288,13 @@ if (gameTypeData.loading === false) {
                     }}
                   >
                     NEXT DRAW{" "}
-                    <span className="font-bold ml-2" style={{ color: "#ff0" }}>
+                    <span className=" font-bold ml-2" style={{ color: "#ff0" }}>
                       {formatTime(minutes, seconds)}
                     </span>
                   </div>
                 ) : (
                   <div
-                    className="bg-red-500 text-sm flex font-light items-center"
+                    className="bg-red-500 text-sm flex font-bold items-center"
                     style={{
                       borderTopLeftRadius: 4,
                       borderBottomLeftRadius: 4,
@@ -430,7 +309,7 @@ if (gameTypeData.loading === false) {
                   </div>
                 )}
                 <div
-                  className="text-sm p-1 h-fit font-light"
+                  className="text-md p-1 h-fit font-bold"
                   style={{
                     borderTopRightRadius: 4,
                     borderBottomRightRadius: 4,
@@ -456,33 +335,33 @@ if (gameTypeData.loading === false) {
                   </span>
                 </div>
               </div>
-              <div className="picker-container flex  -ml-[calc(1.7vw)]  items-start  md:flex-row flex-col w-full md:w-[100%]">
-                <div className="picker-left w-full">
+              <div className="picker-container flex justify-stretch items-start ml-7">
+                <div className="picker-left basis-full">
                   <TicketSelector
                     gameType={WhichGameSelected}
-                    gameData={game as any}
+                    gameData={game}
                   />
                   <div
                     className={`${
-                      gameData.gamesByType[WhichGameSelected]?.loading ? "hidden" : "visible"
+                      gameData.loading ? "hidden" : "visible"
                     }number-picker mt-4 w-full`}
                   >
                     <NumberPicker />
                   </div>
                 </div>
                 <div
-                  className="flex flex-col gap-4 items-center md:items-start mt-2 w-full md:w-auto"
+                  className="flex flex-col gap-4 items-start mt-2"
                   style={{ flexBasis: "38%" }}
                 >
                   {game && (
                     <TicketSlipHolder
                       gameType={"SmartPlayKeno"}
-                      gameData={game as any}
+                      gameData={game}
                       update={update}
                     />
                   )}
                   <div
-                    className="max-w-[80%] speech !border-0  left !font-light mt-4 md:mt-2 max-lg:w-full"
+                    className="w-4/5 speech left mt-20 max-lg:w-full"
                     style={{
                       visibility:
                         ticketPicker.selected.length < 1 ? "visible" : "hidden",

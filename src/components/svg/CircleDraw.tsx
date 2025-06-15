@@ -5,7 +5,7 @@ export const CircleDraw = (props: SVGProps<SVGSVGElement>) => (
     className="fill-current"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 50 50"
-    height={30}
+    height={25}
   >
     <g>
       <path d="M24.5,0C11,0.3-0.3,11.4,0,25.7C0.3,39.1,11.4,50.2,25.4,50C39.2,49.7,49.9,38.6,50,25C49.9,10.9,38.4-0.2,24.5,0zM25,45.6C13.6,45.6,4.4,36.4,4.4,25C4.5,13.5,13.7,4.4,25,4.4C36.7,4.4,45.6,14,45.6,25C45.6,36.1,36.6,45.6,25,45.6z"></path>
