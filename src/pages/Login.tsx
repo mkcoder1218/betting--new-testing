@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { authUser } from "../features/slices/userSlice";
 import { SmallProgressCircular } from "../components/ProgressCircular";
+import { BsXCircle } from "react-icons/bs";
 
 export default function Login() {
   const dispatch = useAppDispatch();
@@ -40,7 +41,8 @@ export default function Login() {
           Cashier Login
         </div>
         {!userData.loading && userData?.error && (
-              <p className="error shadow-sm shadow-red-400 rounded-sm bg-red-500 text-white p-1 text-sm w-full">
+              <p className="error shadow-sm shadow-red-400 flex gap-1  border border-red-500/20 bg-red-500 text-white p-2 rounded-md text-sm w-full">
+                <BsXCircle className="w-4 h-4" />
                 {userData?.error?.includes("Invalid")||userData?.error?.includes("User not found") ? "Invalid username or password" : userData?.error}
               </p>
             )}

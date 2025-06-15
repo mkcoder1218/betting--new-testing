@@ -482,7 +482,7 @@ if (gameTypeData.loading === false) {
                     />
                   )}
                   <div
-                    className="max-w-[80%] speech !border-0 left !font-light mt-4 md:mt-20 max-lg:w-full"
+                    className="max-w-[80%] speech !border-0  left !font-light mt-4 md:mt-2 max-lg:w-full"
                     style={{
                       visibility:
                         ticketPicker.selected.length < 1 ? "visible" : "hidden",
