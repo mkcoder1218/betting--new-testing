@@ -193,14 +193,59 @@ export const getEventResult =
       ).data;
 
       if (summaryData.message === "success") {
+        const eventResults = Array.isArray(summaryData.data)
+          ? summaryData.data
+          : [];
+
         dispatch(
           udpateGameResult({
             loading: false,
             error: null,
             message: summaryData.message,
-            data: summaryData.data,
+            data: eventResults,
           })
         );
+
+        const missingResult = eventResults.some((game) => !game.result);
+
+        if (missingResult) {
+          const eventResultsWithDetails = await Promise.all(
+            eventResults.map(async (game) => {
+              if (game.result) {
+                return game;
+              }
+
+              try {
+                const resultResponse = await axiosInstance.post(
+                  "game/getEventResult",
+                  {
+                    eventId: game.id,
+                  }
+                );
+
+                const fetchedResult = resultResponse.data?.data?.result;
+
+                return fetchedResult
+                  ? {
+                      ...game,
+                      result: fetchedResult,
+                    }
+                  : game;
+              } catch {
+                return game;
+              }
+            })
+          );
+
+          dispatch(
+            udpateGameResult({
+              loading: false,
+              error: null,
+              message: summaryData.message,
+              data: eventResultsWithDetails,
+            })
+          );
+        }
       } else {
         dispatch(
           udpateGameResult({
